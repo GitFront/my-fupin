@@ -1,0 +1,22 @@
+config={
+		minValue: 0, 
+        maxValue: 100, 
+        waveRiseTime: 1000, // The amount of time in milliseconds for the wave to rise from 0 to it's final height.
+       waveAnimate: true, // Controls if the wave scrolls or is static.
+        valueCountUp: true, // If true, the displayed value counts up from 0 to it's final value upon loading. If false, the final value is displayed.
+        displayPercent: true, // If true, a % symbol is displayed after the value.
+		circleThickness : 0.1,
+		circleFillGap: 0.1,
+		circleColor:"#6cc3ff",
+		textColor:"#fff",
+		waveTextColor:"#fff",
+		waveColor:"#6cc3ff",
+		textVertPosition:0.5,
+		waveAnimateTime:1000,
+		waveHeight:0.05,
+		waveAnimate:true,
+		waveRise:false,
+		waveHeightScaling:false,
+		waveOffset:0.25,
+		textSize:0.75,
+		waveCount:3}

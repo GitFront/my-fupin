@@ -1,0 +1,27 @@
+{
+	"code": 0,
+	"msg": "获取信息成功",
+	"data": {
+		"file_name":"粤扶组[2017]22号",
+		"download_list":[
+			{
+				"title":"doc",
+				"download_url":"../../../data/test.doc"
+			},
+			{
+				"title":"jpg",
+				"download_url":"../../../data/test.jpg"
+			},
+			{
+				"title":"ppt",
+				"download_url":""
+			},
+			{
+				"title":"xls",
+				"download_url":""
+			}
+		],
+		"area_level":"province",
+		"area_id":"440000000000"
+	}
+}

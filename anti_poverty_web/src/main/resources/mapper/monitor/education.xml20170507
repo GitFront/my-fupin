@@ -1,0 +1,970 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+        
+<mapper namespace="com.aspire.birp.modules.antiPoverty.dao.EducationDao">
+	
+	<sql id="stat_time_sql">
+		<if test="null != year and ''!=null ">
+			and STAT_TIME=case
+			when to_number(SUBSTR(STAT_TIME,1,4))= to_number(to_char(sysdate,'yyyy')) 
+			
+			then to_number(#{TW_FAMILY_PROPERTY_CALC_DM})
+			
+			else to_number(SUBSTR(STAT_TIME,1,4)||'1201')
+			end  
+			
+			
+		
+		</if>
+	</sql>
+	
+	<select id="queryEducationChart3"  parameterType="hashmap" resultType="hashmap">
+		SELECT
+			'义务教育' S_NAME,
+			SUM(EDU_POP) S_VALUE -- 应该 
+			,
+			'应该' S_GROUP
+		FROM
+			TW_FAMILY_PROPERTY_CALC_D
+		<where>
+				<include refid="level_sql"/>
+				<include refid="year_sql"/>
+				and IF_CURR_POOR=1
+				
+		</where>
+		
+		GROUP BY <include refid="count_group_by_sql"/> 
+		
+		UNION ALL
+		
+		SELECT
+			'高中（中职）教育' S_NAME,
+			SUM(HI_EDU_POP) S_VALUE -- 应该 
+			,
+			'应该' S_GROUP
+		FROM
+			TW_FAMILY_PROPERTY_CALC_D
+		<where>
+				<include refid="level_sql"/>
+				<include refid="year_sql"/>
+				and IF_CURR_POOR=1
+				
+		</where>
+		
+		GROUP BY <include refid="count_group_by_sql"/> 
+		
+		UNION ALL
+		
+		SELECT
+			'义务教育' S_NAME,
+			SUM(EDU_POP_REAL) S_VALUE -- 落实 
+			,
+			'落实' S_GROUP
+		FROM
+			TW_FAMILY_PROPERTY_CALC_D
+		<where>
+				<include refid="level_sql"/>
+				<include refid="year_sql"/>
+				and IF_CURR_POOR=1
+		</where>
+		
+		GROUP BY <include refid="count_group_by_sql"/> 
+		
+		
+		UNION ALL
+		
+		SELECT
+			'高中（中职）教育' S_NAME,
+			SUM(HI_EDU_POP_REAL) S_VALUE -- 落实
+			,
+			'落实' S_GROUP
+		FROM
+			TW_FAMILY_PROPERTY_CALC_D
+		<where>
+				<include refid="level_sql"/>
+				<include refid="year_sql"/>
+				and IF_CURR_POOR=1
+				
+		</where>
+		
+		GROUP BY <include refid="count_group_by_sql"/> 
+		
+		UNION ALL
+		
+		SELECT
+			'义务教育' S_NAME,
+			SUM(EDU_POP_INDUSTRY) S_VALUE --重合
+			,
+			'重合' S_GROUP
+		FROM
+			TW_FAMILY_PROPERTY_CALC_D
+		<where>
+				<include refid="level_sql"/>
+				<include refid="year_sql"/>
+				and IF_CURR_POOR=1
+				
+		</where>
+		
+		GROUP BY <include refid="count_group_by_sql"/> 
+		
+		UNION ALL
+		
+		SELECT
+			'高中（中职）教育' S_NAME,
+			SUM(HI_EDU_POP_INDUSTRY) S_VALUE -- 应该 
+			,
+			'重合' S_GROUP
+		FROM
+			TW_FAMILY_PROPERTY_CALC_D
+		<where>
+				<include refid="level_sql"/>
+				<include refid="year_sql"/>
+				and IF_CURR_POOR=1
+				
+		</where>
+		
+		GROUP BY <include refid="count_group_by_sql"/> 
+
+	</select>
+	
+	<select id="queryEducationChart2"  parameterType="hashmap" resultType="hashmap">
+		SELECT
+			TO_CHAR(TO_DATE(STAT_TIME,'YYYY-MM-DD') ,'YYYY.MM')   S_NAME
+			,SUM ( 
+			
+			<choose>
+				<when test="'all' == edu_levels">HI_EDU_POP+EDU_POP</when>
+				<when test="'compulsory' == edu_levels">EDU_POP</when>
+				<when test="'high_school' == edu_levels">HI_EDU_POP</when>
+	
+			</choose>
+			
+			
+			
+			) S_VALUE -- 应该 
+			,'应该' S_GROUP
+			FROM
+			TW_FAMILY_PROPERTY_CALC_D
+			<where>
+				<include refid="level_sql"/>
+				<include refid="query_condition_sql2"/>
+				<if test="null != year and ''!=null ">
+					AND SUBSTR (STAT_TIME, 1, 4)= #{year}
+					and IF_CURR_POOR=1
+				</if>
+			</where>
+		
+			GROUP BY TO_CHAR(TO_DATE(STAT_TIME,'YYYY-MM-DD') ,'YYYY.MM') ,<include refid="count_group_by_sql"/> 
+			
+			
+			UNION ALL
+			SELECT
+			TO_CHAR(TO_DATE(STAT_TIME,'YYYY-MM-DD') ,'YYYY.MM')   S_NAME
+			,SUM(
+			
+			
+			
+			
+			<choose>
+				<when test="'all' == edu_levels">HI_EDU_POP_REAL+EDU_POP_REAL</when>
+				<when test="'compulsory' == edu_levels">EDU_POP_REAL</when>
+				<when test="'high_school' == edu_levels">HI_EDU_POP_REAL</when>
+	
+			</choose>
+			
+			) S_VALUE -- 落实 
+			
+			
+			
+			,'落实' S_GROUP
+			FROM
+			TW_FAMILY_PROPERTY_CALC_D
+			<where>
+				<include refid="level_sql"/>
+					<include refid="query_condition_sql2"/>
+				<if test="null != year and ''!=null ">
+					AND SUBSTR (STAT_TIME, 1, 4)= #{year}
+				</if>
+				and IF_CURR_POOR=1
+			</where>
+		
+			GROUP BY TO_CHAR(TO_DATE(STAT_TIME,'YYYY-MM-DD') ,'YYYY.MM') ,<include refid="count_group_by_sql"/> 
+			
+			
+			
+			UNION ALL
+			SELECT
+			TO_CHAR(TO_DATE(STAT_TIME,'YYYY-MM-DD') ,'YYYY.MM')  S_NAME
+			,SUM(EDU_POP_INDUSTRY) S_VALUE -- 重合 
+			,'重合' S_GROUP
+			FROM
+			TW_FAMILY_PROPERTY_CALC_D
+		
+	
+			<where>
+				<include refid="level_sql"/>
+					<include refid="query_condition_sql2"/>
+				and IF_CURR_POOR=1
+				<if test="null != year and ''!=null ">
+					AND SUBSTR (STAT_TIME, 1, 4)= #{year}
+				</if>
+			</where>
+		
+			GROUP BY TO_CHAR(TO_DATE(STAT_TIME,'YYYY-MM-DD') ,'YYYY.MM') ,<include refid="count_group_by_sql"/> 
+	
+	
+	</select>
+
+	<!--教育政策落实趋势 柱形-->
+	<select id="queryEducationChart1"  parameterType="hashmap" resultType="hashmap">
+		SELECT * FROM (SELECT
+		SUBSTR(STAT_TIME,1,4) || '年'  S_NAME
+		,sum(EDU_POP)  S_VALUE -- 应该
+		,'应该' S_GROUP
+		FROM
+		TW_FAMILY_PROPERTY_CALC_D
+		<where>
+			<include refid="level_sql"/>
+			<include refid="stat_time_sql"/>
+			AND IF_CURR_POOR=1 
+		</where>
+		
+			GROUP BY SUBSTR(STAT_TIME,1,4),<include refid="count_group_by_sql"/> 
+			ORDER BY SUBSTR (STAT_TIME, 1, 4))
+		union all
+		
+		SELECT * FROM (SELECT
+		SUBSTR(STAT_TIME,1,4) || '年'  S_NAME
+		,sum(EDU_POP_REAL)  S_VALUE -- 落实
+		,'落实' S_GROUP
+		FROM
+		TW_FAMILY_PROPERTY_CALC_D
+		<where>
+			<include refid="level_sql"/>
+			<include refid="stat_time_sql"/>
+			AND IF_CURR_POOR=1 
+		</where>
+		
+			GROUP BY SUBSTR(STAT_TIME,1,4),<include refid="count_group_by_sql"/>
+			ORDER BY SUBSTR (STAT_TIME, 1, 4))
+		union all
+		
+		SELECT * FROM (SELECT
+		SUBSTR(STAT_TIME,1,4) || '年'  S_NAME
+		,SUM(EDU_POP_INDUSTRY)  S_VALUE -- 重合
+		,'重合' S_GROUP
+		FROM
+		TW_FAMILY_PROPERTY_CALC_D
+		
+		<where>
+			<include refid="level_sql"/>
+			<include refid="stat_time_sql"/>
+			AND IF_CURR_POOR=1 
+		</where>
+		
+		
+		GROUP BY SUBSTR(STAT_TIME,1,4),<include refid="count_group_by_sql"/>
+		ORDER BY SUBSTR (STAT_TIME, 1, 4)	)	
+	
+		
+	
+	</select>
+
+
+	<!-- detail_area_sql  -->
+	<sql id="detail_area_sql">
+		
+			<if test=" '' != level and null != level and 'city' == level  ">
+				CITY_ID S_ID, CITY_NAME_S A2,
+			</if>
+			
+			<if test=" '' != level and null != level and 'county' == level  ">
+				COUNTY_ID S_ID,COUNTY_NAME_S A2,
+			</if>
+			
+			<if test=" '' != level and null != level and 'town' == level  ">
+				 TOWN_ID S_ID ,TOWN_NAME_S A2,
+			</if>
+			
+			<if test=" '' != level and null != level and 'country' == level  ">
+				COUNTRY_ID S_ID ,COUNTRY_NAME_S  A2,
+			</if>
+	</sql>
+
+
+	<!-- 排序详细 -->
+	<select id="queryEducationSortDetail"  parameterType="hashmap" resultType="hashmap">
+	
+		
+			SELECT
+			<include refid="detail_area_sql"/>
+			SUM(POP)  A3--贫困人口数
+			,SUM(EDU_POP) A4
+			,SUM(HI_EDU_POP) A5
+			,SUM(EDU_POP_REAL) A6
+			,SUM(HI_EDU_POP_REAL) A7
+			,CASE WHEN SUM(EDU_POP_REAL)=0 THEN '0' ELSE TRUNC(SUM(EDU_POP_REAL)/ SUM(EDU_POP)*100,2) || '%' END   A8
+			,CASE WHEN SUM(HI_EDU_POP_REAL)=0 THEN '0' ELSE TRUNC(SUM(HI_EDU_POP_REAL)/ SUM(HI_EDU_POP)*100,2) || '%' END   A9 
+			,SUM(EDU_POP_INDUSTRY)A10 
+			,SUM(HI_EDU_POP_INDUSTRY) A11 
+			,CASE WHEN SUM(POP) =0 THEN '0.00%' 
+						ELSE TRUNC(SUM(EDU_POP_INDUSTRY) / SUM(POP),2) || '%'
+			END A12
+			,CASE WHEN SUM(POP) =0 THEN '0.00%' 
+			ELSE TRUNC(SUM(HI_EDU_POP_INDUSTRY) / SUM(POP),2) || '%'
+						
+			END A13
+	
+			FROM					
+			TW_FAMILY_PROPERTY_CALC_D
+			
+			<where>
+				<include refid="level_sql"/>
+				<include refid="year_sql"/>
+				<include refid="query_condition_sql"/>
+				and IF_CURR_POOR=1
+			</where>
+		
+		
+			GROUP BY <include refid="count_group_by_sql"/>
+			
+	
+	
+	</select>
+
+
+
+
+	<!-- 排序总记录 -->
+	<select id="queryEducationSortCount"  parameterType="hashmap" resultType="long">
+			
+		SELECT count(*) FROM
+			
+			(
+			SELECT A1.S_ID,A1.A2,
+			TO_CHAR (A1.A3 , '9999990.00') ||'%' A3
+			,ROWNUM RM
+			FROM
+			(
+			
+			SELECT
+			<include refid="sort_area_sql"/>
+
+
+			<if test=" '' != taxis_indexes and null != taxis_indexes">
+					<if test="1 == taxis_indexes">TRUNC (case when sum(EDU_POP)=0 then 0  else (sum(EDU_POP_REAL)/sum(EDU_POP)) *100 end,2) as  A3</if>
+					<if test="2 == taxis_indexes">CASE WHEN SUM(POP) =0 THEN 0 
+			ELSE TRUNC(SUM(EDU_POP_INDUSTRY) / SUM(POP),2) *100
+			
+			END A3</if>
+			
+			</if>
+			
+			FROM					
+			TW_FAMILY_PROPERTY_CALC_D
+			<where>
+				<include refid="level_sql"/>
+				<include refid="year_sql"/>
+				<include refid="query_condition_sql"/>
+				and IF_CURR_POOR=1
+			</where>
+		
+		
+			GROUP BY <include refid="group_sort_area_sql"/>
+			ORDER BY A3 DESC
+			
+			) A1
+			)
+		
+		
+	
+	</select>
+	<!-- 排序  -->
+	<select id="queryEducationSort"  parameterType="hashmap" resultType="hashmap">
+			
+			SELECT * FROM
+			
+			(
+			
+			SELECT A1.S_ID,A1.A2,
+			TO_CHAR (A1.A3 , '9999990.00') ||'%' A3
+			,ROWNUM RM
+			FROM
+			(
+			
+			SELECT
+			<include refid="sort_area_sql"/>
+
+
+			<if test=" '' != taxis_indexes and null != taxis_indexes">
+					<if test="1 == taxis_indexes">TRUNC (case when sum(EDU_POP)=0 then 0  else (sum(EDU_POP_REAL)/sum(EDU_POP)) *100 end,2) as  A3</if>
+					<if test="2 == taxis_indexes">CASE WHEN SUM(POP) =0 THEN 0 
+			ELSE TRUNC(SUM(EDU_POP_INDUSTRY) / SUM(POP),2) *100
+			
+			END A3</if>
+			
+			</if>
+			
+			FROM					
+			TW_FAMILY_PROPERTY_CALC_D
+			<where>
+				<include refid="level_sql"/>
+				<include refid="year_sql"/>
+				and IF_CURR_POOR=1
+				<include refid="query_condition_sql"/>
+			</where>
+		
+			
+			GROUP BY <include refid="group_sort_area_sql"/>
+			ORDER BY A3 DESC
+			
+			) A1
+			)
+		
+		
+			<if test="page !=null">
+					WHERE RM BETWEEN #{pageSize}*(#{page}-1)+1 AND #{pageSize}  * #{page}
+			</if>
+			
+	
+	</select>
+
+
+
+	<!-- 教育明细总数  -->
+	<select id="queryEducationDetailCount"  parameterType="hashmap" resultType="long">
+	
+			select 
+
+				count(*)
+				
+				from
+				(
+				select t1.*,ROWNUM RM
+				from
+				(
+				 SELECT
+				
+				
+				t1.CITY_NAME_S A2
+				,t1.COUNTY_NAME_S A3
+				,t1.TOWN_NAME_S A4
+				,t1.COUNTRY_NAME_S A5
+				,t1.RESIDENCE_ID A6
+				,t1.HOUSE_HOLDER A7
+				,t1.MENEBER_NAME A8
+				,CASE EDU_STAGE 
+				WHEN 1 THEN '义务教育' 
+				WHEN 0 THEN '高中（中职）教育'
+				END A9
+				,CASE IF_EDU_REAL 
+				WHEN 1 THEN '是' 
+				WHEN 0 THEN '否'
+				END A10
+				,CASE IF_EDU_INDUSTRY 
+				WHEN 1 THEN '是' 
+				WHEN 0 THEN '否'
+				END A11
+				,t1.CITY_ID
+				,t1.COUNTY_ID
+				,t1.TOWN_ID
+				,t1.COUNTRY_ID
+				  from F_MEM_REAL_DETAIL_D t1 
+				   
+				 <where>
+					<include refid="level_sql"/>
+					and IF_CURR_POOR=1
+					<include refid="query_condition_sql"/>
+					<include refid="year_sql2"/>
+				</where>
+				) t1
+				
+				)
+				
+	</select>
+	<!-- 教育明细 -->
+	<select id="queryEducationDetail"  parameterType="hashmap" resultType="hashmap">
+			select 
+
+				*
+				
+				from
+				(
+				select t1.*,ROWNUM RM
+				from
+				(
+				 SELECT
+				
+				t1.CITY_NAME_S A2
+				,t1.COUNTY_NAME_S A3
+				,t1.TOWN_NAME_S A4
+				,t1.COUNTRY_NAME_S A5
+				,t1.RESIDENCE_ID A6
+				,t1.HOUSE_HOLDER A7
+				,t1.MENEBER_NAME A8
+				,CASE EDU_STAGE 
+				WHEN 1 THEN '义务教育' 
+				WHEN 0 THEN '高中（中职）教育'
+				END A9
+				,CASE IF_EDU_REAL 
+				WHEN 1 THEN '是' 
+				WHEN 0 THEN '否'
+				END A10
+				,CASE IF_EDU_INDUSTRY 
+				WHEN 1 THEN '是' 
+				WHEN 0 THEN '否'
+				END A11
+				,t1.CITY_ID
+				,t1.COUNTY_ID
+				,t1.TOWN_ID
+				,t1.COUNTRY_ID
+				from F_MEM_REAL_DETAIL_D t1 
+				   
+				 <where>
+					<include refid="level_sql"/>
+						and IF_CURR_POOR=1
+					<include refid="query_condition_sql"/>
+					<include refid="year_sql2"/>
+					
+				</where>	
+				) t1
+				
+				)
+				
+				<if test="page !=null">
+						WHERE RM BETWEEN #{pageSize}*(#{page}-1)+1 AND #{pageSize}  * #{page}
+				</if>
+						
+			
+	
+	</select>
+
+	<!-- 教育管理分析合计 -->
+	<select id="queryEducationManageTableC"  parameterType="hashmap" resultType="hashmap">
+			
+			select
+			<include refid="count_area_sql"/>
+			(select COUNT(1) from F_MEM_REAL_DETAIL_D
+			<where>
+				<include refid="level_sql"/>
+				<include refid="year_sql"/>
+				<include refid="query_condition_sql2"/>
+				and IF_CURR_POOR=1
+			</where>
+			)  A3--贫困人口数
+			,SUM(CASE WHEN EDU_STAGE IN (1,2) THEN 1 ELSE 0 END) A4--应享受教育政策
+			
+			,SUM(CASE WHEN IF_EDU_REAL=1 THEN 1 ELSE 0 END) A5--已经享受教育政策
+			
+			,TRUNC (case when sum(CASE WHEN EDU_STAGE IN (1,2) THEN 1 ELSE 0 END)=0 then 0  
+				else SUM(CASE WHEN IF_EDU_REAL=1 THEN 1 ELSE 0 END) / SUM(CASE WHEN EDU_STAGE IN (1,2) THEN 1 ELSE 0 END) *100 end,2) || '%' as A6 --政策落实率
+				
+			,SUM(CASE WHEN IF_EDU_INDUSTRY=1 THEN 1 ELSE 0 END) a7 --行业重合数
+			
+			,CASE WHEN SUM(CASE WHEN IF_EDU_REAL=1 THEN 1 ELSE 0 END) =0 THEN '0.00%' 
+			ELSE TO_CHAR(TRUNC(SUM(CASE WHEN IF_EDU_INDUSTRY=1 THEN 1 ELSE 0 END) / SUM(CASE WHEN IF_EDU_REAL=1 THEN 1 ELSE 0 END),2), '9999990.00') ||'%' END A8 --重合率	
+			from
+			
+			F_MEM_REAL_DETAIL_D
+			
+			<where>
+				<include refid="level_sql"/>
+				<include refid="year_sql"/>
+				<include refid="query_condition_sql2"/>
+				<if test=" '' != edu_levels and null != edu_levels">
+					<if test="'all' == edu_levels">AND EDU_STAGE IN (1,2)</if><!-- 全部 -->
+					<if test="'compulsory'== edu_levels">AND EDU_STAGE = 1</if><!-- 义务教育 -->
+					<if test="'high_school' == edu_levels">AND EDU_STAGE = 2</if><!--高中（中职）教育-->
+				</if>
+				and IF_CURR_POOR=1
+			</where>
+			GROUP BY <include refid="count_group_by_sql"/>
+		
+		
+	</select>
+
+
+	<!-- 教育管理分析 -->
+	<select id="queryEducationManageTable"  parameterType="hashmap" resultType="hashmap">
+			
+			select MAX(S_ID) S_ID,MAX(A2) A2,COUNT(ID) A3 ,MAX(A4) A4,MAX(A5) A5,MAX(A6) A6,MAX(A7) A7,MAX(A8) A8
+				from 		
+			(select
+			<include refid="level_area_sql"/>
+			
+			SUM(CASE WHEN EDU_STAGE IN (1,2) THEN 1 ELSE 0 END) A4--应享受教育政策
+			
+			,SUM(CASE WHEN IF_EDU_REAL=1 THEN 1 ELSE 0 END) A5--已经享受教育政策
+			
+			,TRUNC (case when sum(CASE WHEN EDU_STAGE IN (1,2) THEN 1 ELSE 0 END)=0 then 0  
+				else SUM(CASE WHEN IF_EDU_REAL=1 THEN 1 ELSE 0 END) / SUM(CASE WHEN EDU_STAGE IN (1,2) THEN 1 ELSE 0 END) *100 end,2) || '%' as A6 --政策落实率
+				
+			,SUM(CASE WHEN IF_EDU_INDUSTRY=1 THEN 1 ELSE 0 END) a7 --行业重合数
+			
+			,CASE WHEN SUM(CASE WHEN IF_EDU_REAL=1 THEN 1 ELSE 0 END) =0 THEN '0.00%' 
+			ELSE TO_CHAR(TRUNC(SUM(CASE WHEN IF_EDU_INDUSTRY=1 THEN 1 ELSE 0 END) / SUM(CASE WHEN IF_EDU_REAL=1 THEN 1 ELSE 0 END),2), '9999990.00') ||'%' END A8 --重合率	
+			from
+			
+			F_MEM_REAL_DETAIL_D
+			
+			<where>
+				<include refid="level_sql"/>
+				<include refid="year_sql"/>
+				<include refid="query_condition_sql2"/>
+				<if test=" '' != edu_levels and null != edu_levels">
+					<if test="'all' == edu_levels">AND EDU_STAGE IN (1,2)</if><!-- 全部 -->
+					<if test="'compulsory'== edu_levels">AND EDU_STAGE = 1</if><!-- 义务教育 -->
+					<if test="'high_school' == edu_levels">AND EDU_STAGE = 2</if><!--高中（中职）教育-->
+				</if>
+				and IF_CURR_POOR=1
+			</where>
+			GROUP BY <include refid="group_by_sql"/>) t1 , F_MEM_REAL_DETAIL_D 
+			<where>
+				<include refid="year_sql"/>
+				<include refid="query_condition_sql2"/>
+				<include refid="group_level_sql"/>
+				and IF_CURR_POOR=1
+			</where>
+			GROUP BY <include refid="group_by_sql"/>
+		
+	</select>
+
+	<sql id="count_group_by_sql">
+	
+			<if test=" '' != level and null != level and 'province' == level  ">
+				 1
+			</if>
+			<if test=" '' != level and null != level and 'city' == level  ">
+				 CITY_ID , CITY_NAME_S
+			</if>
+			
+			<if test=" '' != level and null != level and 'county' == level  ">
+				 COUNTY_ID ,COUNTY_NAME_S  
+			</if>
+			
+			<if test=" '' != level and null != level and 'town' == level  ">
+				   TOWN_ID ,TOWN_NAME_S 
+			</if>
+			
+			<if test=" '' != level and null != level and 'country' == level  ">
+				COUNTRY_ID  ,COUNTRY_NAME_S 
+			</if>
+	</sql>
+
+
+	<!-- 层级sql -->
+	<sql id="level_sql">
+			
+			<if test=" '' != level and null != level and 'province' == level  ">
+				
+			</if>
+			
+			<if test=" '' != level and null != level and 'city' == level  ">
+				AND CITY_ID = #{id}
+			</if>
+			
+			<if test=" '' != level and null != level and 'county' == level  ">
+				AND COUNTY_ID = #{id} 
+			</if>
+			
+			<if test=" '' != level and null != level and 'town' == level  ">
+				AND TOWN_ID = #{id} 
+			</if>
+			
+			<if test=" '' != level and null != level and 'country' == level  ">
+				AND COUNTRY_ID = #{id}
+			</if>
+	</sql>
+	
+	<!-- STAT_TIME  -->
+	<sql id="year_sql">
+	
+		<if test=" '' != year and null != year and null != TW_FAMILY_PROPERTY_CALC_DM">
+			<![CDATA[ 
+		
+				AND STAT_TIME=
+					CASE
+					
+						WHEN to_number(#{year}) = to_number(to_char(sysdate,'yyyy')) then to_number(#{TW_FAMILY_PROPERTY_CALC_DM}) 
+						WHEN to_number(#{year}) < to_number(to_char(sysdate,'yyyy')) then to_number(#{year}||'1201')
+						
+					END
+				
+		
+		
+		
+			]]>
+				
+		</if>
+	
+	</sql>
+	
+		<!-- STAT_TIME  -->
+	<sql id="year_sql2">
+	
+		<if test=" '' != year and null != year and null != F_MEM_REAL_DETAIL_DM">
+			<![CDATA[ 
+		
+				AND STAT_TIME=
+					CASE
+					
+						WHEN to_number(#{year}) = to_number(to_char(sysdate,'yyyy')) then to_number(#{F_MEM_REAL_DETAIL_DM}) 
+						WHEN to_number(#{year}) < to_number(to_char(sysdate,'yyyy')) then to_number(#{year}||'1201')
+						
+					END
+				
+		
+		
+		
+			]]>
+				
+		</if>
+	
+	</sql>
+	
+	
+	
+	<sql id="query_condition_sql">
+		
+		<if test=" '' != poor_status and null != poor_status">
+				AND POOR_STATUS =#{poor_status}
+		</if>
+	
+	
+		<if test=" '' != policy_implement and null != policy_implement">
+			<if test="2 == policy_implement">AND IF_EDU_REAL=1</if><!-- 已落实 -->
+			<if test="3 == policy_implement">AND IF_EDU_REAL=0</if><!-- 未落实-->
+		</if>
+		
+		<if test=" '' != industry and null != industry">
+			<if test="2 == industry">AND IF_EDU_INDUSTRY=1</if><!-- 重合 -->
+			<if test="3 == industry">AND IF_EDU_INDUSTRY=0</if><!-- 未重合 -->
+		</if>
+		
+	
+		<if test=" '' != scope and null != scope">
+			<if test="2 == scope">AND IF_FURTHER_POOR=1</if><!-- 贫困村 -->
+			<if test="3 == scope">AND IF_FURTHER_POOR=0</if><!-- 分散村 -->
+			<if test="4 == scope">AND IF_REVOLUTION_AREA=1</if><!-- 革命老区 -->
+			<if test="5 == scope">AND IF_SOVIET_AREA=1</if><!-- 中央苏区 -->
+		</if>
+		<if test=" '' != edu_stage and null != edu_stage">
+			<if test="1 == edu_stage">AND EDU_POP+HI_EDU_POP>0</if><!-- 全部 -->
+			<if test="2 == edu_stage">AND EDU_POP>0</if><!-- 义务教育 -->
+			<if test="3 == edu_stage">AND HI_EDU_POP>0</if><!--高中（中职）教育-->
+		</if>
+		<if test=" '' != edu_levels and null != edu_levels">
+			<if test="'all' == edu_levels">AND EDU_POP+HI_EDU_POP>0</if><!-- 全部 -->
+			<if test="'compulsory'== edu_levels">AND EDU_POP>0</if><!-- 义务教育 -->
+			<if test="'high_school' == edu_levels">AND HI_EDU_POP>0</if><!--高中（中职）教育-->
+		</if>
+		
+		
+		
+		<if test=" '' != edu_stage2 and null != edu_stage2">
+			<if test="2 == edu_stage2">AND EDU_STAGE=1</if><!-- 义务教育 -->
+			<if test="3 == edu_stage2">AND EDU_STAGE=0</if><!--高中（中职）教育-->
+		</if>
+				
+		<if test=" '' != poor_attribute and null != poor_attribute">
+			<if test="'normal' == poor_attribute">AND POOR_PROPERTY=1</if><!-- 一般贫困户 -->
+			<if test="'low' == poor_attribute">AND POOR_PROPERTY=2</if><!-- 低保户 -->
+			<if test="'five' == poor_attribute">AND POOR_PROPERTY=3</if><!-- 五保户 -->
+		</if>
+				
+		<if test=" '' != labor_attribute and null != labor_attribute">
+			<if test="'have_labor' == labor_attribute">AND IS_WB=1</if><!-- 有劳 -->
+			<if test="'no_labor' == labor_attribute">AND IS_WB=0</if><!-- 无劳 -->
+		</if>
+	
+	</sql>
+	
+	
+	<sql id="query_condition_sql2">
+		
+		
+	
+	
+		<if test=" '' != scope and null != scope">
+			<if test="2 == scope">AND IF_FURTHER_POOR=1</if><!-- 贫困村 -->
+			<if test="3 == scope">AND IF_FURTHER_POOR=0</if><!-- 分散村 -->
+			<if test="4 == scope">AND IF_REVOLUTION_AREA=1</if><!-- 革命老区 -->
+			<if test="5 == scope">AND IF_SOVIET_AREA=1</if><!-- 中央苏区 -->
+		</if>
+		
+				
+		<if test=" '' != poor_attribute and null != poor_attribute">
+			<if test="'normal' == poor_attribute">AND POOR_PROPERTY=1</if><!-- 一般贫困户 -->
+			<if test="'low' == poor_attribute">AND POOR_PROPERTY=2</if><!-- 低保户 -->
+			<if test="'five' == poor_attribute">AND POOR_PROPERTY=3</if><!-- 五保户 -->
+		</if>
+	
+	</sql>
+	
+	
+	<!--  -->
+	<sql id="level_area_sql">
+			
+			<if test=" '' != level and null != level and 'province' == level  ">
+				CITY_ID S_ID, CITY_NAME_S A2, 
+			</if>
+			<if test=" '' != level and null != level and 'city' == level  ">
+				COUNTY_ID S_ID,COUNTY_NAME_S A2,
+			</if>
+			
+			<if test=" '' != level and null != level and 'county' == level  ">
+				 TOWN_ID S_ID ,TOWN_NAME_S A2, 
+			</if>
+			
+			<if test=" '' != level and null != level and 'town' == level  ">
+				COUNTRY_ID S_ID ,COUNTRY_NAME_S  A2, 
+			</if>
+			
+			<if test=" '' != level and null != level and 'country' == level  ">
+				COUNTRY_ID S_ID ,COUNTRY_NAME_S  A2, 
+			</if>
+	</sql>
+	
+	<!--  -->
+	<sql id="level_return_sql">
+			
+			<if test=" '' != level and null != level and 'province' == level  ">
+				'city' s_level,
+			</if>
+			<if test=" '' != level and null != level and 'city' == level  ">
+				 'county' s_level,
+			</if>
+			
+			<if test=" '' != level and null != level and 'county' == level  ">
+				  'town' s_level,
+			</if>
+			
+			<if test=" '' != level and null != level and 'town' == level  ">
+				 'country' s_level,
+			</if>
+			
+			<if test=" '' != level and null != level and 'country' == level  ">
+				'country' s_level,
+			</if>
+	</sql>
+	
+	
+	<!-- count  -->
+	<sql id="count_area_sql">
+			<if test=" '' != level and null != level and 'province' == level  ">
+				'440000000000' S_ID , '合计' A2,
+			</if>
+			<if test=" '' != level and null != level and 'city' == level  ">
+				CITY_ID S_ID, '合计' A2,
+			</if>
+			
+			<if test=" '' != level and null != level and 'county' == level  ">
+				COUNTY_ID S_ID,'合计' A2,
+			</if>
+			
+			<if test=" '' != level and null != level and 'town' == level  ">
+				 TOWN_ID S_ID ,'合计' A2,
+			</if>
+			
+			<if test=" '' != level and null != level and 'country' == level  ">
+				COUNTRY_ID S_ID ,'合计'  A2,
+			</if>
+	</sql>
+	
+	
+	
+	
+	
+	<!--  -->
+	<sql id="sort_area_sql">
+			
+			<if test=" '' != sort_area and null != sort_area and 1 == sort_area  ">
+				CITY_ID S_ID, CITY_NAME_S A2,
+			</if>
+			<if test=" '' != sort_area and null != sort_area and 2 == sort_area  ">
+				COUNTY_ID S_ID,CITY_NAME_S||'>'||COUNTY_NAME_S A2,
+			</if>
+			
+			<if test=" '' != sort_area and null != sort_area and 3 == sort_area  ">
+				 TOWN_ID S_ID ,CITY_NAME_S||'>'||COUNTY_NAME_S||'>'||TOWN_NAME_S A2,
+			</if>
+			
+			<if test=" '' != sort_area and null != sort_area and 4 == sort_area  ">
+				COUNTRY_ID S_ID ,CITY_NAME_S||'>'||COUNTY_NAME_S||'>'||TOWN_NAME_S||'>'||COUNTRY_NAME_S  A2,
+			</if>
+			
+	</sql>
+	<!--  -->
+	<sql id="group_sort_area_sql">
+			
+			<if test=" '' != sort_area and null != sort_area and 1 == sort_area  ">
+				CITY_ID , CITY_NAME_S 
+			</if>
+			<if test=" '' != sort_area and null != sort_area and 2 == sort_area  ">
+				COUNTY_ID ,CITY_NAME_S||'>'||COUNTY_NAME_S 
+			</if>
+			
+			<if test=" '' != sort_area and null != sort_area and 3 == sort_area  ">
+				 TOWN_ID  ,CITY_NAME_S||'>'||COUNTY_NAME_S||'>'||TOWN_NAME_S 
+			</if>
+			
+			<if test=" '' != sort_area and null != sort_area and 4 == sort_area  ">
+				COUNTRY_ID  ,CITY_NAME_S||'>'||COUNTY_NAME_S||'>'||TOWN_NAME_S||'>'||COUNTRY_NAME_S  
+			</if>
+			
+	</sql>
+	
+	<!-- 层级分组 -->
+	<sql id="group_level_sql">
+	
+			<if test=" '' != level and null != level and 'province' == level  ">
+				 AND t1.S_ID = CITY_ID
+			</if>
+			<if test=" '' != level and null != level and 'city' == level  ">
+				 AND t1.S_ID  = COUNTY_ID 
+			</if>
+			
+			<if test=" '' != level and null != level and 'county' == level  ">
+				  AND t1.S_ID  = TOWN_ID 
+			</if>
+			
+			<if test=" '' != level and null != level and 'town' == level  ">
+				 AND t1.S_ID  = COUNTRY_ID 
+			</if>
+			
+			<if test=" '' != level and null != level and 'country' == level  ">
+				AND COUNTRY_ID = COUNTRY_ID 
+			</if>
+			
+		
+	</sql>
+	
+	<!-- 层级分组 -->
+	<sql id="group_by_sql">
+	
+			<if test=" '' != level and null != level and 'province' == level  ">
+				 CITY_ID , CITY_NAME_S 
+			</if>
+			<if test=" '' != level and null != level and 'city' == level  ">
+				 COUNTY_ID ,COUNTY_NAME_S 
+			</if>
+			
+			<if test=" '' != level and null != level and 'county' == level  ">
+				   TOWN_ID ,TOWN_NAME_S 
+			</if>
+			
+			<if test=" '' != level and null != level and 'town' == level  ">
+				 COUNTRY_ID  ,COUNTRY_NAME_S 
+			</if>
+			
+			<if test=" '' != level and null != level and 'country' == level  ">
+				COUNTRY_ID  ,COUNTRY_NAME_S 
+			</if>
+			
+		
+	</sql>
+	
+	
+	
+</mapper>

@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>登录-广东省扶贫云</title>
+	<link rel="stylesheet" href="../../../static/themes/css/fupin/login.css">
+</head>
+
+<body>
+<div class="main-wrap">
+	<form id="formLogin">
+		<div class="input-group username">
+			<input class="input" id="inputUsername" type="text" placeholder="请输入用户名">
+		</div>
+		<div class="input-group password">
+			<input class="input" id="inputPassword" type="password" placeholder="请输入密码">
+		</div>
+		<div class="input-group code">
+			<input class="input" id="inputCode" type="text">
+			<img id="imgCode" data-src="../../../data/images/login/code.jpg" src="../../../data/images/login/code.jpg" alt="验证码" title="点击刷新验证码">
+		</div>
+		<div class="btn-submit" id="btnSubmit">登录</div>
+		<div class="footer">
+			<label>
+				<input type="checkbox" id="checkboxRemember">
+				<i></i>
+				<span>记住用户名</span>
+			</label>
+			<a href="" class="link-find-password">找回密码</a>
+		</div>
+		<p class="msg-err" id="msgErr"></p>
+	</form>
+	<div class="copyright">版权所有：广东省扶贫开发办公室&nbsp;&nbsp;&nbsp;&nbsp;技术支持：中国移动通信集团广东有限公司</div>
+</div>
+
+<script src="../../../static/js/modules/fupin/libs/jquery.min.js"></script>
+<script src="../../../static/js/modules/fupin_strategy/common/urls_mock.js"></script>
+
+<script src="../../../static/js/modules/fupin_strategy/login.js"></script>
+</body>
+</html>

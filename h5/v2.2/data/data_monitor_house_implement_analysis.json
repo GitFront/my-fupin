@@ -1,0 +1,13 @@
+{
+	"code": 0,
+	"msg": "获取信息成功",
+	"data": {
+		//危房进度趋势(户数)
+		"chart_config_trend": {},
+		//各级别危房改造(户数)
+		"chart_config_levels": {},
+		//统计表，同data_monitor_table.json定义
+		"table": {}
+	}
+}
+

@@ -1,0 +1,23 @@
+{
+	"data":{
+		"belong_organization":"兴宁市统计局",
+		"list":[
+			{
+				"id":"441481117207",
+				"order":1,
+				"contact_phone":"13509098143",
+				"contact_name":"曾新华",
+				"country_name":"下宝龙村委会"
+			},
+			{
+				"id":"441481117202",
+				"order":2,
+				"contact_phone":"13723648286",
+				"contact_name":"温伟华",
+				"country_name":"西一村委会"
+			}
+		]
+	},
+	"code":0,
+	"msg":"获取信息成功"
+}

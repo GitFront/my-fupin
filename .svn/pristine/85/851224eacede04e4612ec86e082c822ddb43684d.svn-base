@@ -1,0 +1,33 @@
+{
+	"code": 0,
+	"msg": "获取信息成功",
+	"data": {
+		"summary": {
+			"total": 8,
+			"cur_year": 8
+		},
+		"table": {
+			"organization": 0,
+			"helper_city": {
+				"city_finance": 0,
+				"district_town_finance": 0,
+				"social_money": 0
+			},
+			"central_province": {
+				"central_finance": 0,
+				"province_finance": 0,
+				"central_industry": 0,
+				"province_industry": 0,
+				"social_money": 0
+			},
+			"helped_city": {
+				"city_finance": 0,
+				"county_town_finance": 0,
+				"city_industry": 0,
+				"county_town_industry": 0,
+				"social_money": 0
+			}
+		}
+	}
+}
+

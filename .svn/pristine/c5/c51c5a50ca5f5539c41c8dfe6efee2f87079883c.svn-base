@@ -1,0 +1,80 @@
+{
+    "code": 0,
+    "msg": "获取信息成功",
+    "data": {
+        "chart_config_tab": [{
+            "tooltip" : {
+                "trigger": "item",
+                "formatter": "{a} <br/>{b} : {c} ({d}%)"
+            },
+            "series" : [
+                {
+                    "name": "文化程度",
+                    "type": "pie",
+                    "radius": ["50%", "70%"],
+                    "label": {
+                        "normal": {
+                            "show": true
+                        }
+                    },
+                    "data":[
+                        {"value":12080, "name":"小学"},
+                        {"value":11289, "name":"初中"},
+                        {"value":4313, "name":"文盲或半文盲"},
+                        {"value":2297, "name":"未选择"},
+                        {"value":1933, "name":"高中"},
+                        {"value":0, "name":"中专"},
+                        {"value":0, "name":"大专以上"},
+                        {"value":0, "name":"学龄儿童"}
+                    ],
+                    "itemStyle": {
+                        "emphasis": {
+                            "shadowBlur": 40
+                        }
+                    }
+                }
+            ]
+        },{
+            "tooltip": {
+                "trigger": "item",
+                "formatter": "{a} <br/>{b} : {c} ({d}%)"
+            },
+            "series" : [
+                {
+                    "name": "文化程度",
+                    "type": "pie",
+                    "radius": ["50%", "70%"],
+                    "label": {
+                        "normal": {
+                            "show": true
+                        }
+                    },
+                    "data":[
+                        {"value":2711, "name":"小学"},
+                        {"value":1135, "name":"初中"},
+                        {"value":1081, "name":"未选择"},
+                        {"value":996, "name":"高中"},
+                        {"value":0, "name":"中专"},
+                        {"value":0, "name":"学龄儿童"},
+                        {"value":0, "name":"大专以上"}
+                    ],
+                    "itemStyle": {
+                        "emphasis": {
+                            "shadowBlur": 40
+                        }
+                    }
+                }
+            ]
+        }]
+    }
+}
+
+
+
+
+
+
+
+
+
+

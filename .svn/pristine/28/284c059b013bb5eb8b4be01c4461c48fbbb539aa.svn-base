@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>教育扶持-广东省扶贫云</title>
+	<link rel="stylesheet" href="../../../static/themes/css/fupin/main_strategy.css">
+</head>
+
+<style>
+</style>
+
+<body>
+<div class="main-wrap edu-wrap">
+	<div>
+		<header>
+			<div class="logo"></div>
+			<ul class="nav-ul nav-country">
+				<li class="on"><a href="javascript:void(0);">战略地图</a>	</li>
+				<li><a href="">数据监控</a></li>
+				<li><a href="">责任监控</a></li>
+				<li><a href="">项目监控</a></li>
+				<li><a href="">绩效考核</a></li>
+				<li><a href="">东西协作</a></li>
+				<li><a href="">扶贫服务</a></li>
+				<li class="search" id="navSearch">
+					<div class="presearch-wrapper" id="presearchWrapper">
+						<div class="presearch-form">
+							<div class="select-wrapper">
+								<select id="selectPresearchTypes">
+									<option value="family" selected>贫困户</option>
+									<option value="country">相对贫困村</option>
+								</select>
+							</div>
+							<div class="input-wrapper">
+								<input type="text" id="inputPresearchField" class="input-presearch-field" placeholder="请输入搜索关键词">
+								<div id="btnClearPresearch" class="btn-clear-presearch"></div>
+							</div>
+						</div>
+						<div class="presearch-suggest" id="searchsSuggest"><ul></ul></div>
+					</div>
+				</li>
+			</ul>
+		</header>
+
+		<div id="pbd" class="pbd">
+			<section class="online">
+				<div class="title">在线课堂</div>
+				<ul class="clearfix">
+					<li>
+						<a class="clearfix" href="">
+							<img src="../../../data/images/edu/online1.jpg">
+							<div class="desc">
+								<h4>本期直播：高中数学难点放缩法</h4>
+								<p>直播时间：10月21日20:00</p>
+								<p>主讲：王杰航</p>
+								<p>公益播放次数：28458 次</p>
+								<p>下期预告：怎么变学霸（上）</p>
+							</div>
+						</a>
+					</li>
+					<li>
+						<a class="clearfix" href="">
+							<img src="../../../data/images/edu/online2.jpg">
+							<div class="desc">
+								<h4>本期直播：高中数学难点放缩法</h4>
+								<p>直播时间：10月21日20:00</p>
+								<p>主讲：王杰航</p>
+								<p>公益播放次数：28458 次</p>
+								<p>下期预告：怎么变学霸（上）</p>
+							</div>
+						</a>
+					</li>
+				</ul>
+			</section>
+			<section class="past">
+				<div class="title">往期精选</div>
+				<ul class="clearfix">
+					<li>
+						<a href="">
+							<img src="../../../data/images/edu/past1.jpg">
+							<div class="desc">
+								<h4>国家相册：胜利的日子</h4>
+								<p>主讲人：王小波</p>
+								<p>公益播放次数：1458 次</p>
+							</div>
+						</a>
+					</li>
+					<li>
+						<a href="">
+							<img src="../../../data/images/edu/past2.jpg">
+							<div class="desc">
+								<h4>国家相册：胜利的日子</h4>
+								<p>主讲人：王小波</p>
+								<p>公益播放次数：1458 次</p>
+							</div>
+						</a>
+					</li>
+					<li>
+						<a href="">
+							<img src="../../../data/images/edu/past3.jpg">
+							<div class="desc">
+								<h4>国家相册：胜利的日子</h4>
+								<p>主讲人：王小波</p>
+								<p>公益播放次数：1458 次</p>
+							</div>
+						</a>
+					</li>
+					<li>
+						<a href="">
+							<img src="../../../data/images/edu/past4.jpg">
+							<div class="desc">
+								<h4>国家相册：胜利的日子</h4>
+								<p>主讲人：王小波</p>
+								<p>公益播放次数：1458 次</p>
+							</div>
+						</a>
+					</li>
+					<li>
+						<a href="">
+							<img src="../../../data/images/edu/past4.jpg">
+							<div class="desc">
+								<h4>国家相册：胜利的日子</h4>
+								<p>主讲人：王小波</p>
+								<p>公益播放次数：1458 次</p>
+							</div>
+						</a>
+					</li>
+				</ul>
+			</section>
+			<section class="school">
+				<div class="title">名校资源</div>
+				<ul class="clearfix">
+					<li>
+						<a href="edu_school.html">
+							<img src="../../../data/images/edu/school1.jpg">
+							<div class="desc">
+								<h4>深圳外国语学校</h4>
+							</div>
+						</a>
+					</li>
+					<li>
+						<a href="edu_school.html">
+							<img src="../../../data/images/edu/school2.jpg">
+							<div class="desc">
+								<h4>深圳外国语学校</h4>
+							</div>
+						</a>
+					</li>
+					<li>
+						<a href="edu_school.html">
+							<img src="../../../data/images/edu/school3.jpg">
+							<div class="desc">
+								<h4>深圳外国语学校</h4>
+							</div>
+						</a>
+					</li>
+					<li>
+						<a href="edu_school.html">
+							<img src="../../../data/images/edu/school4.jpg">
+							<div class="desc">
+								<h4>深圳外国语学校</h4>
+							</div>
+						</a>
+					</li>
+					<li>
+						<a href="edu_school.html">
+							<img src="../../../data/images/edu/school1.jpg">
+							<div class="desc">
+								<h4>深圳外国语学校</h4>
+							</div>
+						</a>
+					</li>
+
+
+					<li>
+						<a href="edu_school.html">
+							<img src="../../../data/images/edu/school1.jpg">
+							<div class="desc">
+								<h4>深圳外国语学校</h4>
+							</div>
+						</a>
+					</li>
+					<li>
+						<a href="edu_school.html">
+							<img src="../../../data/images/edu/school2.jpg">
+							<div class="desc">
+								<h4>深圳外国语学校</h4>
+							</div>
+						</a>
+					</li>
+					<li>
+						<a href="edu_school.html">
+							<img src="../../../data/images/edu/school3.jpg">
+							<div class="desc">
+								<h4>深圳外国语学校</h4>
+							</div>
+						</a>
+					</li>
+					<li>
+						<a href="edu_school.html">
+							<img src="../../../data/images/edu/school4.jpg">
+							<div class="desc">
+								<h4>深圳外国语学校</h4>
+							</div>
+						</a>
+					</li>
+					<li>
+						<a href="edu_school.html">
+							<img src="../../../data/images/edu/school1.jpg">
+							<div class="desc">
+								<h4>深圳外国语学校</h4>
+							</div>
+						</a>
+					</li>
+				</ul>
+			</section>
+		</div>
+
+	</div>
+
+
+</div> <!-- end main-wrap -->
+
+<script id="tplPreSearch" type="text/html">
+	<ul>
+		<#for(var i = 0, len = result.length; i < len; i++){#>
+		<#var item = result[i];#>
+			<li data-id="<#=item.id#>"><#=item.name#><span> - <#=item.place#></span></li>
+			<#}#>
+	</ul>
+</script>
+
+<script src="../../../static/js/modules/fupin/libs/jquery.min.js"></script>
+<script src="../../../static/js/modules/fupin/libs/template-native.js"></script>
+<script src="../../../static/js/modules/fupin/libs/jquery.selectbox-0.2.js"></script>
+
+<script src="../../../static/js/modules/fupin_strategy/common/common.js"></script>
+<script src="../../../static/js/modules/fupin_strategy/search_common.js"></script>
+
+<!--<script src="../../../static/js/modules/fupin_strategy/edu.js"></script>-->
+</body>
+</html>
+
+
+

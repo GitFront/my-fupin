@@ -1,0 +1,107 @@
+{
+    "code": 0,
+    "msg": "获取信息成功",
+    "data": {
+        "summary": {
+            "avatar":"../data/images/hu-touxiang.png",
+            "house_holder": "潘伟中",
+            "tel": "15119360015",
+            "poor_property": "低保贫困户；无劳动能力户；残疾户。",
+            "poor_main_reason": "因残",
+            "family_income": "4241元"
+        },
+        "family_info": {
+            "member_count": "2人",
+            "house_area": "55.00平方米,危房级别：D",
+            "health_status": "长期慢性病2人，健康1人",
+            "work_ability": "丧失劳动力1人，普通劳动力2人",
+            "education": "在校1人，小学",
+            "basic_medical_insurance": "3人",
+            "basic_pension_insurance": "1人",
+            "serious_disease_insurance": "无"
+        },
+        "help_info": {
+            "helper_info": [
+                {
+                    "helper_name": "胡丽玲",
+                    "helper_unit": "广州市天河区商务和金融工作局",
+                    "helper_duty": "A09-乡科级正职",
+                    "helper_relative": "X06-区",
+                    "begin_date": "20160510 ",
+                    "end_date": ""
+                }
+            ],
+            "helper_plan": [
+                {
+                    "project_name": "",
+                    "project_content": "",
+                    "measurement_unit": "",
+                    "count": "",
+                    "total": "",
+                    "implement_date": ""
+                },
+                {
+                    "project_name": "",
+                    "project_content": "",
+                    "measurement_unit": "",
+                    "count": "",
+                    "total": "",
+                    "implement_date": ""
+                }
+            ],
+            "policies_support": [
+                {
+                    "category": "",
+                    "money": ""
+                },
+                {
+                    "category": "",
+                    "money": ""
+                }
+            ]
+        },
+        "album": {
+            "family": [
+                {
+                    "title": "2016",
+                    "img": "../data/images/jiating1.png"
+                },
+                {
+                    "title": "2016",
+                    "img": "../data/images/jiating2.png"
+                },
+                {
+                    "title": "2016",
+                    "img": "../data/images/jiating3.png"
+                }
+            ],
+            "house":[
+                {
+                    "title": "2016",
+                    "img": "../data/images/fangwu.png"
+                },
+                {
+                    "title": "2016",
+                    "img": "../data/images/fangwu2.png"
+                }
+            ],
+            "health":[
+                {
+                    "title": "2016",
+                    "img": "../data/images/jiankang1.png"
+                },
+                {
+                    "title": "2016",
+                    "img": "../data/images/jiankang2.png"
+                }
+            ],
+            "education":[
+                {
+                    "title": "2016",
+                    "img": "../data/images/jiaoyu.png"
+                }
+            ]
+        }
+    }
+}
+

@@ -1,0 +1,16 @@
+{
+	"data":{
+		"belong_organization":"广州市天河区商务和金融工作局",
+		"list":[
+			{
+				"id":"441481107224",
+				"order":1,
+				"contact_phone":"13539175089",
+				"contact_name":"丘奕元",
+				"country_name":"新寨村委会"
+			}
+		]
+	},
+	"code":0,
+	"msg":"获取信息成功"
+}

@@ -1,0 +1,16 @@
+{
+	"data":{
+		"belong_organization":"广州市天河区国土资源和规划局",
+		"list":[
+			{
+				"id":"441481111214",
+				"order":1,
+				"contact_phone":" 13902783969",
+				"contact_name":"廖福康",
+				"country_name":"石崖村委会"
+			}
+		]
+	},
+	"code":0,
+	"msg":"获取信息成功"
+}

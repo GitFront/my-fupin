@@ -1,0 +1,720 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+        
+<mapper namespace="com.aspire.birp.modules.antiPoverty.dao.DataMonDao">
+  <!-- 首页数据查询描述-->
+  
+    <select id="queryCountIndexData"  parameterType="hashmap"
+       resultType="IndexData">
+        SELECT
+ 		R.HELP_UNIT_CNT  amountOrg,
+		R.HELP_PERSON_CNT amountResponsible,
+		R.HELP_CADRE_CNT  amountLeader,
+		R.HELP_VISITS_CNT amountInterview,
+		
+		R.AID_POOR_FAM	successFamilyAmount, -- 脱贫户数
+		R.POOR_FAM 	poorFamilyAmount, -- 贫困户数
+		R.POOR_POP 	poorPeopleAmount, -- 贫困人口
+		R.AID_POOR_POP successPeopleAmount, -- 脱贫人口
+		CASE WHEN R.POOR_FAM !=0 THEN TRUNC((R.AID_POOR_FAM/R.POOR_FAM)*100,1) ELSE 0 END successFamilyRate,
+		CASE WHEN R.POOR_POP !=0 THEN TRUNC((R.AID_POOR_POP/R.POOR_POP)*100,1) ELSE 0 END successPeopleRate
+		FROM R_MONITOR_HOME_PAGE_D R
+		WHERE R.PAC=#{id}
+		<if test=" '' != scope and null != scope  ">
+			AND R.AREA_TYPE=#{scope} 
+		</if>
+		AND R.STAT_TIME=#{R_MONITOR_HOME_PAGE_D}
+		
+	</select> 
+	
+	 	<!-- 数据监控 获取区域名称-->
+	<select id="queryAreaName"  parameterType="hashmap"
+       resultType="String">
+ 		 select distinct <include refid="areaName_sql2"/> from DIM_AREA_5LVL 
+ 		 
+ 		  		<where>
+					<include refid="level_sql2"/>
+				</where>
+	</select> 
+     	<!-- 数据监控 获取区域描述-->
+	<select id="queryAreaDesc1"  parameterType="hashmap"
+       resultType="String">
+ 		 select AREA_DESC from F_COUNTRYFILE_AREA_DESC_D 
+ 		 where COUNTRY_PAC=#{id}
+	</select> 
+ 	<!-- 数据监控 区域描述-->
+	<select id="queryAreaDesc"  parameterType="hashmap"
+       resultType="hashmap">
+ 		SELECT R.PAC PAC,R.AREA_DESC AREA_DESC,R.PAN S_AREA_NAME
+ 		FROM R_MONITOR_HOME_PAGE_D R
+		WHERE R.PAC=#{id}
+		<if test=" '' != scope and null != scope  ">
+			AND R.AREA_TYPE=#{scope} 
+		</if>
+		AND R.STAT_TIME=#{R_MONITOR_HOME_PAGE_D}
+	</select> 
+	<!-- 出列村数 -->
+	<select id="queryCount"  parameterType="hashmap"
+       resultType="hashmap">
+
+ 		SELECT
+ 		
+		R.AID_POOR_FAM	S_SUCCESS_FAMILY_AMOUNT, -- 脱贫户数
+		R.POOR_FAM 	S_POOR_FAMILY_AMOUNT, -- 贫困户数
+		
+		R.POOR_POP 	S_POOR_PEOPLE_AMOUNT, -- 贫困人口
+		R.AID_POOR_POP S_SUCCESS_PEOPLE_AMOUNT, -- 脱贫人口
+		 		
+ 		
+ 		R.PAC PAC,SCORE SCORE_A,AREA_TYPE,
+		CASE WHEN R.POOR_FAM !=0 THEN TRUNC((R.AID_POOR_FAM/R.POOR_FAM)*100,1) ELSE 0 END SUCCESS_FAMILY_R,
+		CASE WHEN R.POOR_POP !=0 THEN TRUNC((R.AID_POOR_POP/R.POOR_POP)*100,1) ELSE 0 END SUCCESS_PEOPLE_R,
+		R.HELP_UNIT_CNT AMOUNT_ORG,
+		R.HELP_PERSON_CNT AMOUNT_RESPONSIBLE,
+		R.HELP_CADRE_CNT AMOUNT_LEADER,
+		R.HELP_VISITS_CNT AMOUNT_INTERVIEW
+		FROM R_MONITOR_HOME_PAGE_D R
+		WHERE R.PAC=#{id}
+		<if test=" '' != scope and null != scope  ">
+			AND R.AREA_TYPE=#{scope} 
+		</if>
+		AND R.STAT_TIME=#{R_MONITOR_HOME_PAGE_D}
+	</select> 
+	
+	<select id="queryCountIndex"  parameterType="hashmap"
+       resultType="IndexData">
+
+ 		SELECT
+ 		
+		R.AID_POOR_FAM	successFamilyAmount, -- 脱贫户数
+		R.POOR_FAM 	poorFamilyAmount, -- 贫困户数
+		
+		R.POOR_POP 	poorPeopleAmount, -- 贫困人口
+		R.AID_POOR_POP successPeoplePmount, -- 脱贫人口
+		 		
+		CASE WHEN R.POOR_FAM !=0 THEN TRUNC((R.AID_POOR_FAM/R.POOR_FAM)*100,1) ELSE 0 END successFamilyRate,
+		CASE WHEN R.POOR_POP !=0 THEN TRUNC((R.AID_POOR_POP/R.POOR_POP)*100,1) ELSE 0 END successPeopleRate,
+		R.HELP_UNIT_CNT amountOrg,
+		R.HELP_PERSON_CNT amountResponsible,
+		R.HELP_CADRE_CNT amountLeader,
+		R.HELP_VISITS_CNT amountInterview
+		FROM R_MONITOR_HOME_PAGE_D R
+		WHERE R.PAC=#{id}
+		<if test=" '' != scope and null != scope  ">
+			AND R.AREA_TYPE=#{scope} 
+		</if>
+		AND R.STAT_TIME=#{R_MONITOR_HOME_PAGE_D}
+	</select> 
+	
+	<!-- 地图上数据出列村数 -->
+	<select id="queryMapCun"  parameterType="hashmap"
+       resultType="hashmap" fetchSize="30">
+       SELECT  DL1.LSB_PAC PAC,DL2.LSB_PAC PPAC,r.pac P,
+ 		R.AID_POOR_FAM AID_POOR_FAM, -- 脱贫户数
+ 		R.AID_POOR_POP AID_POOR_POP, -- 脱贫人口
+		R.POOR_FAM POOR_FAM, -- 贫困户
+ 		CASE WHEN POOR_FAM !=0 THEN TRUNC((R.AID_POOR_FAM/R.POOR_FAM)*100,1) ELSE 0 END AID_POOR_FAM_R,-- 脱贫户比例
+ 		R.POOR_POP POOR_POP, -- 贫困人口
+ 		CASE WHEN POOR_POP !=0 THEN TRUNC((R.AID_POOR_POP/R.POOR_POP)*100,1) ELSE 0 END AID_POOR_POP_R --脱贫率
+		FROM
+        ( select STAT_TIME, pac,ppac, AID_POOR_FAM, AID_POOR_POP,POOR_FAM,POOR_POP ,AREA_TYPE 
+        from R_MONITOR_HOME_PAGE_D i 
+              <!-- 数据权限处理 -->
+			<if test=" null != userPac and '440000000000' != userPac ">
+		        <!-- 分层查询(下级查询) -->
+		        ,  (
+		        		<choose>
+		        			<when test="map_level == 1">
+		        			<!-- 市级查询 -->
+		        			select distinct city_id dd from DIM_AREA_5LVL where country_id=#{userPac} or town_id=#{userPac} or county_id=#{userPac} or city_id=#{userPac} or PROV_ID=#{userPac}
+		        			</when>
+		        			<when test="map_level == 2">
+		        			<!-- 区级查询 -->
+		        			select  county_id dd from DIM_AREA_5LVL where country_id=#{userPac} or town_id=#{userPac} or county_id=#{userPac} or city_id=#{userPac} or PROV_ID=#{userPac}
+		        			UNION
+    						select  city_id dd from DIM_AREA_5LVL where country_id=#{userPac} or town_id=#{userPac} or county_id=#{userPac} or city_id=#{userPac} or PROV_ID=#{userPac}
+		        			</when>
+		        			<when test="map_level == 3">
+		        			<!-- 县级查询 -->
+		        			select town_id dd from DIM_AREA_5LVL where country_id=#{userPac} or town_id=#{userPac} or county_id=#{userPac} or city_id=#{userPac} or PROV_ID=#{userPac}
+		        			UNION
+		        			select county_id dd from DIM_AREA_5LVL where country_id=#{userPac} or town_id=#{userPac} or county_id=#{userPac} or city_id=#{userPac} or PROV_ID=#{userPac}
+		        			UNION
+    						select city_id dd from DIM_AREA_5LVL where country_id=#{userPac} or town_id=#{userPac} or county_id=#{userPac} or city_id=#{userPac} or PROV_ID=#{userPac}
+		        			</when>
+		        			<when test="map_level == 4">
+		        			<!-- 镇级查询 -->
+					       select country_id dd from DIM_AREA_5LVL where country_id=#{userPac} or town_id=#{userPac} or county_id=#{userPac} or city_id=#{userPac} or PROV_ID=#{userPac} 
+			                UNION 
+			               select town_id dd from DIM_AREA_5LVL where country_id=#{userPac} or town_id=#{userPac} or county_id=#{userPac} or city_id=#{userPac} or PROV_ID=#{userPac} 
+			                UNION 
+			               select county_id dd from DIM_AREA_5LVL where country_id=#{userPac} or town_id=#{userPac} or county_id=#{userPac} or city_id=#{userPac} or PROV_ID=#{userPac}
+			                UNION 
+			               select city_id dd from DIM_AREA_5LVL where country_id=#{userPac} or town_id=#{userPac} or county_id=#{userPac} or city_id=#{userPac} or PROV_ID=#{userPac}
+		        			</when>
+		        			<otherwise>
+		        				<!-- 村级查询 -->
+					       select country_id dd from DIM_AREA_5LVL where country_id=#{userPac} or town_id=#{userPac} or county_id=#{userPac} or city_id=#{userPac} or PROV_ID=#{userPac} 
+			                UNION 
+			               select town_id dd from DIM_AREA_5LVL where country_id=#{userPac} or town_id=#{userPac} or county_id=#{userPac} or city_id=#{userPac} or PROV_ID=#{userPac} 
+			                UNION 
+			               select county_id dd from DIM_AREA_5LVL where country_id=#{userPac} or town_id=#{userPac} or county_id=#{userPac} or city_id=#{userPac} or PROV_ID=#{userPac}
+			                UNION 
+			               select city_id dd from DIM_AREA_5LVL where country_id=#{userPac} or town_id=#{userPac} or county_id=#{userPac} or city_id=#{userPac} or PROV_ID=#{userPac}
+					        </otherwise>
+		        		</choose>
+		        		) j 
+				</if>
+              
+       where i.STAT_TIME=#{newDate}  
+       <if test=" null != userPac and '440000000000' != userPac ">
+       		and i.pac=j.dd
+       </if>
+       <if test=" '' != scope and null != scope  ">
+			AND i.AREA_TYPE=#{scope} 
+		</if>
+     ) R,
+	 DIM_LRB_PAC_MAP DL1,DIM_LRB_PAC_MAP DL2 
+	 WHERE R.PAC=DL1.PAC AND R.PPAC = DL2.PAC 
+	<!-- 分层查询处理 -->
+		<if test=" null != map_pac and '' != map_pac ">
+			AND DL2.LSB_PAC  IN <!--  =  #{map_pac} -->
+			<foreach item="item" index="index" collection="map_pac_level" open="(" separator="," close=")">
+				#{item}
+			</foreach>
+		</if>
+		
+	</select>
+	<!-- 两不愁 -->
+	<!-- 劳动能力人均可支配 -->
+ 	<select id="queryDis" parameterType="hashmap" resultType="hashmap">
+ 	
+ 	SELECT CASE WHEN SUM(pop_number) > 0  THEN trunc(SUM(fam_income-fam_expense) / SUM(pop_number)* 100, 1) ELSE 0 END CHART_CONFIG_LABOR
+	FROM R_DW_POOROBJ_FAM_Y 
+	WHERE acc_year = to_number(to_char(SYSDATE,'yyyy'))
+	AND labor_type = '1'
+ 	<include refid="level_zj_sql"/>
+ 	<include refid="query_scope_sql2"/>
+ 	
+ 	</select> 
+ 	<!-- 兜底 -->
+ 	<select id="queryBottom" parameterType="hashmap" resultType="hashmap">
+ 		
+ 		select  CASE WHEN COUNT(pop_id) !=0 THEN  TRUNC((SUM(CASE WHEN poor_type2 in ('1','2','3') AND (IS_IMP_LOW=1 OR IS_IMP_FIVE=1) THEN 1 ELSE 0 END) / COUNT(pop_id)) * 100, 1) 
+        ELSE 0 END CHART_CONFIG_SOCIETY
+		from R_DW_POOROBJ_POP_Y 
+		where acc_year = to_number(to_char(SYSDATE,'yyyy')) 
+ 		<include refid="level_zj_sql"/>
+ 		<include refid="query_scope_sql2"/>
+ 		AND IS_CURRENT=1
+ 		
+ 	</select> 	
+ 	<!-- 三保障-->
+ 	<!-- 义务教育 -->
+ 	<select id="queryYwjy" parameterType="hashmap" resultType="hashmap">
+ 		
+ 		SELECT CASE WHEN SUM(CASE WHEN IS_ENJOY_COMPULSORY = '1' THEN 1 ELSE 0 END) > 0 THEN TRUNC((sum(CASE WHEN IS_IMP_COMPULSORY = '1' THEN 1 ELSE 0 END) / SUM(CASE WHEN IS_ENJOY_COMPULSORY = '1' THEN 1 ELSE 0 END)) * 100, 1) 
+       		   ELSE 0 END YWJY
+		FROM R_DW_POOROBJ_POP_Y 
+		WHERE acc_year = to_number(to_char(SYSDATE,'yyyy'))
+ 		<include refid="level_zj_sql"/>
+ 		<include refid="query_scope_sql2"/>
+ 	</select>
+ 	<!-- 基本医疗 -->
+ 	<select id="queryJbyl" parameterType="hashmap" resultType="hashmap">
+ 		
+ 		SELECT CASE WHEN COUNT(POP_ID) > 0 THEN  TRUNC(sum(CASE WHEN IS_IMP_MEDICAL='1' THEN 1 ELSE 0 END) / COUNT(POP_ID) * 100, 1) ELSE 0 END JBYL 
+		FROM R_DW_POOROBJ_POP_Y 
+		WHERE acc_year = to_number(to_char(SYSDATE,'yyyy'))
+ 		<include refid="level_zj_sql"/>
+ 		<include refid="query_scope_sql2"/>
+ 		
+ 	</select> 
+ 	<!-- 住房安全 -->
+ 	<select id="queryZfaq" parameterType="hashmap" resultType="hashmap">
+ 	
+ 		select CASE WHEN SUM(CASE WHEN IS_DANGEROUS_HOUSE='1' THEN 1 ELSE 0 END) > 0 THEN TRUNC(SUM(CASE WHEN IS_IMP_HOUSE='1' THEN 1 ELSE 0 END) / SUM(CASE WHEN IS_DANGEROUS_HOUSE='1' THEN 1 ELSE 0 END) * 100, 1) 
+       		   ELSE 0 END ZFAQ
+		from R_DW_POOROBJ_FAM_Y 
+		where acc_year = to_number(to_char(SYSDATE,'yyyy'))
+		AND DANGEROUS_LEVEL IN ('C', 'D')
+ 		<include refid="level_zj_sql"/>
+ 		<include refid="query_scope_sql2"/>
+ 	
+ 	</select>
+	<!-- 一相当 -->
+ 	<select id="queryYxd" parameterType="hashmap" resultType="hashmap">
+	select 
+		 CASE WHEN COUNT(COUNTRY_PAC)=0 THEN '0.00' ELSE to_char(trunc(nvl(SUM(CASE WHEN IS_IMP_ROAD=1 THEN 1 ELSE 0 END),0) /  COUNT(COUNTRY_PAC) * 100, 2), '9999990.00') END  DLYH
+		 ,CASE WHEN COUNT(COUNTRY_PAC)=0 THEN '0.00' ELSE to_char(trunc(nvl(SUM(CASE WHEN IS_IMP_SAFE_DRINK=1 THEN 1 ELSE 0 END) ,0) /  COUNT(COUNTRY_PAC) * 100, 2), '9999990.00') END  AQYS 
+		 ,CASE WHEN COUNT(COUNTRY_PAC)=0 THEN '0.00' ELSE to_char(trunc(nvl(SUM(CASE WHEN IS_IMP_ELECTRICITY=1 THEN 1 ELSE 0 END),0) /  COUNT(COUNTRY_PAC) * 100, 2), '9999990.00') END   DWGZ
+		 ,CASE WHEN (COUNT(COUNTRY_PAC))=0 THEN '0.00' ELSE to_char(TRUNC(nvl(SUM(CASE WHEN IS_IMP_HEALTH_STATION=1 THEN 1 ELSE 0 END),0) /COUNT(COUNTRY_PAC)*100,2),'9999990.00') END  WSZ
+		 ,CASE WHEN COUNT(COUNTRY_PAC)=0 THEN '0.00' ELSE to_char(trunc(nvl(SUM(CASE WHEN IS_IMP_BROADCAST=1 THEN 1 ELSE 0 END),0) /  COUNT(COUNTRY_PAC) * 100, 2), '9999990.00') END  GBDS
+		 ,CASE WHEN COUNT(COUNTRY_PAC)=0 THEN '0.00' ELSE to_char(trunc(nvl(SUM(case when IS_IMP_NETWORK = 1 then 1 else 0 end),0)  /  COUNT(COUNTRY_PAC) * 100, 2), '9999990.00') END  KDWL
+		 from 
+		 R_DW_POOROBJ_COUNTRY_Y
+		 <where>
+				 <include refid="year_sql_wq"/>
+				<include refid="level_sql_wq"/>
+				<include refid="query_condition_wq"/>
+			</where>
+ 	</select> 
+ 	<sql id="year_sql_wq">
+	
+	<if test=" '' != yearwq and null != yearwq">
+			AND ACC_YEAR = 	#{yearwq}		
+		</if>
+		
+	</sql>
+ 	<sql id="query_condition_wq">
+		<if test=" '' != scope and null != scope">
+			<if test="2 == scope">AND IS_KEY_POVERTY=1</if><!-- 贫困村 -->
+			<if test="3 == scope">AND IS_KEY_POVERTY=0</if><!-- 分散村 -->
+			<if test="4 == scope">AND IS_OLD_REVOLUTIONARY=1</if><!-- 革命老区 -->
+			<if test="5 == scope">AND IS_CENTRAL_SOVIET=1</if><!-- 中央苏区 -->
+		</if>
+	</sql> 
+	<!-- 层级sql -->
+	<sql id="level_sql_wq">
+			
+			<if test=" '' != level and null != level and 'province' == level  ">
+				
+			</if>
+			
+			<if test=" '' != level and null != level and 'city' == level  ">
+				AND CITY_PAC = #{id}
+			</if>
+			
+			<if test=" '' != level and null != level and 'county' == level  ">
+				AND COUNTY_PAC = #{id} 
+			</if>
+			
+			<if test=" '' != level and null != level and 'town' == level  ">
+				AND TOWN_PAC = #{id} 
+			</if>
+			
+			<if test=" '' != level and null != level and 'country' == level  ">
+				AND COUNTRY_PAC = #{id}
+			</if>
+	</sql>
+
+ 	<!-- 贫困分析 -->
+ 	<select id="queryPkfx" parameterType="hashmap" resultType="hashmap">
+		 	select (select POOR_MAIN_REASON_NAME from DIM_POOR_MAIN_REASON 
+			where POOR_MAIN_REASON = nvl(t.POOR_MAIN_REASON,'0') ) S_NAME,
+			count(nvl(t.POOR_MAIN_REASON,'0')) S_VALUE 
+			from r_dw_poorobj_fam_y t
+			<where>
+				<include refid="year_sql"/>
+				<include refid="level_zj_sql"/>
+				<!-- <include refid="month_sql"/> -->
+				<include refid="query_scope_sql2"/>
+				and acc_year = to_number(to_char(SYSDATE,'yyyy'))
+			</where>
+			group by t.POOR_MAIN_REASON ORDER BY S_VALUE DESC	
+ 		
+ 	</select> 
+ 	
+ 	<!-- 项目资金 总数 -->
+ 	<select id="queryXmzjCount" parameterType="hashmap" resultType="hashmap">
+ 		select 
+          TRUNC(SUM(REAL_CAPITAL) / 10000, 2) S_INVESTED
+         ,sum(REAL_CAPITAL) S_COUNT
+         ,count(PROJ_ID) S_PROJECTS
+         ,CASE WHEN count(PROJ_ID) != 0 THEN
+          TRUNC((count(CASE WHEN PROJ_STATUS = '完成' then PROJ_ID ELSE NULL END) / count(PROJ_ID)) * 100, 1)
+          ELSE
+          0 END S_RATE_COMPLETED
+          from R_DW_HELP_PROJECT_Y 
+          <where>
+		    <include refid="level_zj_sql"/>
+			<include refid="query_scope_sql3"/>
+		</where>
+ 	</select>
+ 	<!-- 项目资金统计图 -->
+ 	<select id="queryXmzj" parameterType="hashmap" resultType="hashmap">
+ 		 select PROJ_CLASS S_NAME
+         ,sum(REAL_CAPITAL) ZJ
+         ,count(PROJ_ID) GS
+         ,CASE WHEN count(PROJ_ID) != 0 THEN
+          TRUNC((count(CASE WHEN PROJ_STATUS = '完成' then PROJ_ID ELSE NULL END) / count(PROJ_ID)) * 100, 1)
+          ELSE
+          0 END WCL
+          FROM R_DW_HELP_PROJECT_Y 
+		<where>
+		    <include refid="level_zj_sql"/>
+			<include refid="query_scope_sql3"/>
+		</where>
+		group by PROJ_CLASS
+ 	</select>
+ 	
+ 	<!-- 预警监控-->
+ 	<select id="queryYjjk" parameterType="hashmap" resultType="hashmap">
+ 		select (select count(1) from r_dw_pop_identification_y t 
+ 		
+ 			   <where>
+					<include refid="year_sql"/>
+					<include refid="level_zj_sql"/>
+					and t.is_exception=1 
+					and acc_year = to_number(to_char(SYSDATE,'yyyy'))
+				</where> ) FAMILY,
+
+		(select count(1) from R_DW_EXCEPTION_MONITOR_Y t  
+		    <where>
+					<include refid="year_sql"/>
+					<include refid="level_zj_sql"/>
+					and t.is_exception=1 
+					and acc_year = to_number(to_char(SYSDATE,'yyyy'))
+				</where>) RECORDS,
+
+		(select count(1) from r_dw_poorobj_country_y t 
+		       <where>
+					<include refid="year_sql"/>
+					<include refid="level_zj_sql"/>
+					and t.IS_HELP_FUND_EXCEPTION=1
+					and t.IS_KEY_POVERTY=1
+					and acc_year = to_number(to_char(SYSDATE,'yyyy'))
+				</where>) COUNTRY,
+		(select count(1) from R_DW_POOROBJ_FAM_Y t 
+		        <where>
+					<include refid="year_sql"/>
+					<include refid="level_zj_sql"/>
+					and t.IS_VISIT_EXCEPTION=1
+				    and is_merge=0 
+					and is_revoked=0 
+					and is_termination=0 
+					and acc_year = to_number(to_char(SYSDATE,'yyyy'))
+				</where> ) FAMILY_NOT_VISITED from dual
+
+ 	</select>
+ 	
+ 	<!-- 首页数据统计 -->
+	<select id="queryHomePageCount"  parameterType="hashmap"
+       resultType="hashmap">
+
+ 		SELECT
+ 		PAC PAC
+ 		,SCORE SCORE_A
+ 		,PAN S_AREA_NAME
+ 		,FURTER_POOR_COUNTRY_CNT S_FURTER_POOR_COUNTRY_CNT --相对贫困村数
+		,AID_POOR_FAM S_SUCCESS_FAMILY_AMOUNT --脱贫户数
+		,POOR_FAM S_POOR_FAMILY_AMOUNT  --贫困户数
+		,POOR_POP S_POOR_PEOPLE_AMOUNT  --贫困人口
+		,AID_POOR_POP S_SUCCESS_PEOPLE_AMOUNT  -- 脱贫人口
+		,CASE WHEN POOR_FAM !=0 THEN TRUNC((AID_POOR_FAM/POOR_FAM)*100,1) ELSE 0 END SUCCESS_FAMILY_R
+		,CASE WHEN POOR_POP !=0 THEN TRUNC((AID_POOR_POP/POOR_POP)*100,1) ELSE 0 END SUCCESS_PEOPLE_R
+		,DPI_LABOR CHART_CONFIG_LABOR --有劳动能力可支配收入
+		,IMP_LOWFIVE_RATIO CHART_CONFIG_SOCIETY -- 二不愁-社会保障兜底
+		,IMP_COMPULSORY_RATIO YWJY --义务教育落实比例
+		,IMP_MEDICAL_RATIO JBYL --基本医疗落实比例
+		,IMP_HOUSE_RATIO  ZFAQ --住房安全落实比例
+		,IMP_ROAD_RATIO DLYH --道路硬底化比例
+		,IMP_DRINK_RATIO AQYS --安全饮水比例
+		,IMP_ELECTRICITY_RATIO DWGZ --生活用电比例
+		,IMP_HEALTH_RATIO WSZ --医疗设施比例
+		,IMP_BROADCAST_RATIO GBDS  --广播电视比例
+		,IMP_NETWORK_RATIO  KDWL --网络覆盖比例
+		,POV_DIST_EXP FAMILY --贫困识别异常个数
+		,BUILD_CARD_EXP  RECORDS --建档立卡异常个数
+		,HELP_FUNDS_EXP  COUNTRY --扶贫资金异常村数
+		,HELP_VISIT_EXP  FAMILY_NOT_VISITED --预警监控 贫困走访异常户数
+		,BUILD_CARD_MONITOR S_BUILD_CARD_MONITOR
+		,POV_CAUSE_FAM_1  PC1 --贫困分析第1名户数
+		,POV_CAUSE_NAME_1 PN1 --贫困分析第1名属性名
+		,POV_CAUSE_FAM_2  PC2
+		,POV_CAUSE_NAME_2  PN2
+		,POV_CAUSE_FAM_3  PC3
+		,POV_CAUSE_NAME_3  PN3
+		,POV_CAUSE_FAM_4  PC4
+		,POV_CAUSE_NAME_4  PN4
+		,POV_CAUSE_FAM_5  PC5
+		,POV_CAUSE_NAME_5  PN5
+		,POV_CAUSE_FAM_OTHER  OTHER --贫困分析其他
+		,HELP_UNIT_CNT AMOUNT_ORG  --帮扶单位个数
+		,HELP_CADRE_CNT AMOUNT_LEADER  --驻村干部数
+		,HELP_PERSON_CNT AMOUNT_RESPONSIBLE  --帮扶责任人个数
+		,HELP_VISITS_CNT AMOUNT_INTERVIEW --帮扶走访量
+		FROM R_MONITOR_HOME_PAGE_D R
+		WHERE R.PAC=#{id}
+		<if test=" '' != scope and null != scope  ">
+			AND R.AREA_TYPE=#{scope} 
+		</if>
+		AND R.STAT_TIME=#{R_MONITOR_HOME_PAGE_D}
+	</select>
+	
+	<!-- 首页项目和资金的 总数 PROJECT_CAPITAL-->
+ 	<select id="queryProjectCapitalCount" parameterType="hashmap" resultType="hashmap">
+ 		select TRUNC(SUM(project_capital)/10000, 2) S_INVESTED
+		,SUM(t.project_cnt) S_PROJECTS
+		,to_char(TRUNC(SUM(t.project_complete)/SUM(t.project_cnt),2)*100,'fm9990.00') || '%' S_RATE_COMPLETED
+		from R_MONITOR_PROJECT_CAPITAL_D t
+          WHERE
+          
+			<choose>
+       			<when test=" '' != level and null != level and 'province' == level  ">
+       			<!-- 省级查询 -->
+		        t.PPAC = #{id}
+       			</when>
+       			<otherwise>
+       				<!-- 其他级查询 -->
+		       t.PAC = #{id}
+		        </otherwise>
+       		</choose>
+			
+          
+		<if test=" '' != scope and null != scope  ">
+			AND t.AREA_TYPE=#{scope} 
+		</if>
+		AND t.STAT_TIME=#{R_MONITOR_PROJECT_CAPITAL_D}
+ 	</select>
+ 	<!-- 项目资金统计图 -->
+ 	<select id="queryCapitalCount" parameterType="hashmap" resultType="hashmap">
+ 		 select PROJECT_TYPE S_NAME
+		,TRUNC(SUM(project_capital)/10000, 2) ZJ
+		,SUM(t.project_cnt) GS
+		,TRUNC(SUM(t.project_complete)/SUM(t.project_cnt)*100,2) WCL
+		from R_MONITOR_PROJECT_CAPITAL_D t
+		 WHERE 
+		 <choose>
+      			<when test=" '' != level and null != level and 'province' == level  ">
+      			<!-- 省级查询 -->
+	        	t.PPAC = #{id}
+      			</when>
+      			<otherwise>
+      				<!-- 其他级查询 -->
+	       		t.PAC = #{id}
+	        	</otherwise>
+       	</choose>
+		 
+		<if test=" '' != scope and null != scope  ">
+			AND t.AREA_TYPE=#{scope} 
+		</if>
+		AND t.STAT_TIME=#{R_MONITOR_PROJECT_CAPITAL_D} 
+		group by PROJECT_TYPE
+ 	</select>
+ 	
+ 	
+ 	<!-- 层级sql -->
+	<sql id="level_sql">
+			
+			<if test=" '' != level and null != level and 'province' == level  ">
+				
+			</if>
+			
+			<if test=" '' != level and null != level and 'city' == level  ">
+				AND CITY_ID = #{id}
+			</if>
+			
+			<if test=" '' != level and null != level and 'county' == level  ">
+				AND COUNTY_ID = #{id} 
+			</if>
+			
+			<if test=" '' != level and null != level and 'town' == level  ">
+				AND TOWN_ID = #{id} 
+			</if>
+			
+			<if test=" '' != level and null != level and 'country' == level  ">
+				AND COUNTRY_ID = #{id}
+			</if>
+	</sql>
+	
+	<!-- 层级sql -->
+	<sql id="level_zj_sql">
+			
+			<if test=" '' != level and null != level and 'province' == level  ">
+				
+			</if>
+			
+			<if test=" '' != level and null != level and 'city' == level  ">
+				AND CITY_PAC = #{id}
+			</if>
+			
+			<if test=" '' != level and null != level and 'county' == level  ">
+				AND COUNTY_PAC = #{id} 
+			</if>
+			
+			<if test=" '' != level and null != level and 'town' == level  ">
+				AND TOWN_PAC = #{id} 
+			</if>
+			
+			<if test=" '' != level and null != level and 'country' == level  ">
+				AND COUNTRY_PAC = #{id}
+			</if>
+	</sql>
+	
+	<!-- 层级sql -->
+	<sql id="level_sql2">
+			
+			<if test=" '' != level and null != level and 'province' == level  ">
+				PROV_ID = #{id}
+			</if>
+			
+			<if test=" '' != level and null != level and 'city' == level  ">
+				CITY_ID = #{id}
+			</if>
+			
+			<if test=" '' != level and null != level and 'county' == level  ">
+				COUNTY_ID = #{id} 
+			</if>
+			
+			<if test=" '' != level and null != level and 'town' == level  ">
+				TOWN_ID = #{id} 
+			</if>
+			
+			<if test=" '' != level and null != level and 'country' == level  ">
+				COUNTRY_ID = #{id}
+			</if>
+	</sql>
+	
+	<sql id="areaName_sql2">
+			
+			<if test=" '' != level and null != level and 'province' == level  ">
+				PROV_NAME_S AREANAME
+			</if>
+			
+			<if test=" '' != level and null != level and 'city' == level  ">
+				CITY_NAME_S AREANAME
+			</if>
+			
+			<if test=" '' != level and null != level and 'county' == level  ">
+				COUNTY_NAME_S AREANAME 
+			</if>
+			
+			<if test=" '' != level and null != level and 'town' == level  ">
+				TOWN_NAME_S AREANAME 
+			</if>
+			
+			<if test=" '' != level and null != level and 'country' == level  ">
+				COUNTRY_NAME_S AREANAME
+			</if>
+	</sql>
+	
+	<!-- 层级sql -->
+	<sql id="level_sql1">
+			
+			<if test=" '' != level and null != level and 'province' == level  ">
+				
+			</if>
+			
+			<if test=" '' != level and null != level and 'city' == level  ">
+				AND CITY_PAC = #{id}
+			</if>
+			
+			<if test=" '' != level and null != level and 'county' == level  ">
+				AND CITY_PAC = #{id} 
+			</if>
+			
+			<if test=" '' != level and null != level and 'town' == level  ">
+				AND CITY_PAC = #{id} 
+			</if>
+			
+			<if test=" '' != level and null != level and 'country' == level  ">
+				AND CITY_PAC = #{id}
+			</if>
+	</sql>
+	
+	<sql id="year_sql">
+				<if test="'' != year and null != year">
+				ACC_YEAR = #{year} 
+			</if>
+	</sql>
+	
+	<sql id="query_scope_sql">
+		<if test=" '' != scope and null != scope">
+			<if test=" 2 == scope">AND IF_FURTHER_POOR=1</if><!-- 贫困村 -->
+			<if test=" 3 == scope">AND IF_FURTHER_POOR=0</if><!-- 分散村 -->
+			<if test=" 4 == scope">AND IF_REVOLUTION_AREA=1</if><!-- 革命老区 -->
+			<if test=" 5 == scope">AND IF_SOVIET_AREA=1</if><!-- 中央苏区 -->
+		</if>
+		and IF_CURR_POOR=1
+	</sql>
+	
+	<sql id="query_scope_sql2">
+		<if test=" '' != scope and null != scope">
+			<if test=" 2 == scope">AND IS_KEY_POVERTY=1</if><!-- 贫困村 -->
+			<if test=" 3 == scope">AND IS_KEY_POVERTY=0</if><!-- 分散村 -->
+			<if test=" 4 == scope">AND IS_OLD_REVOLUTIONARY=1</if><!-- 革命老区 -->
+			<if test=" 5 == scope">AND IS_CENTRAL_SOVIET=1</if><!-- 中央苏区 -->
+		</if>
+		AND IS_CURRENT = 1 <!-- 当前贫困户 -->
+	</sql>
+	
+	<sql id="query_scope_sql3">
+		<if test=" '' != scope and null != scope">
+			<if test=" 2 == scope">AND IS_KEY_POVERTY=1</if><!-- 贫困村 -->
+			<if test=" 3 == scope">AND IS_KEY_POVERTY=0</if><!-- 分散村 -->
+			<if test=" 4 == scope">AND IS_OLD_REVOLUTIONARY=1</if><!-- 革命老区 -->
+			<if test=" 5 == scope">AND IS_CENTRAL_SOVIET=1</if><!-- 中央苏区 -->
+		</if>
+	</sql>
+	
+	<!-- 合计用  -->
+	<sql id="count_group_by_sql">
+	
+			<if test=" '' != level and null != level and 'province' == level  ">
+				 1
+			</if>
+			<if test=" '' != level and null != level and 'city' == level  ">
+				 CITY_PAC , CITY_NAME
+			</if>
+			
+			<if test=" '' != level and null != level and 'county' == level  ">
+				 COUNTY_PAC ,COUNTY_NAME  
+			</if>
+			
+			<if test=" '' != level and null != level and 'town' == level  ">
+				   TOWN_PAC ,TOWN_NAME 
+			</if>
+			
+			<if test=" '' != level and null != level and 'country' == level  ">
+				COUNTRY_PAC  ,COUNTRY_NAME 
+			</if>
+	</sql>
+	
+	<select id="queryAreaById"  parameterType="hashmap"
+       resultType="hashmap">
+		SELECT PAC S_ID,
+		PAN S_NAME,
+		CASE WHEN LVL=2 THEN 'province'
+		WHEN LVL=3 THEN 'city'
+		WHEN LVL=4 THEN 'county'
+		WHEN LVL=5 THEN 'town'
+		WHEN LVL=6 THEN 'country' END S_LEVEL
+		FROM
+		DIM_AREA_FLAT
+		WHERE PAC = #{PAC}
+	</select>  
+	
+	<select id="queryMsgByUserId"  parameterType="hashmap"
+       resultType="hashmap">
+		SELECT 
+		USERID,
+		NOTICEID,
+		STATUS
+		FROM
+		FPY_USER_NOTICE
+		WHERE USERID = #{USERID,jdbcType=VARCHAR}
+		AND NOTICEID = #{NOTICEID} 
+		AND ROWNUM = 1
+	</select>
+	
+	<select id="queryMsgById"  parameterType="hashmap"
+       resultType="hashmap">
+       SELECT 
+       NOTICEID, 
+       NOTICEDETAIL 
+       FROM 
+       (SELECT 
+       NOTICEID, 
+       NOTICEDETAIL 
+       FROM FPY_NOTICE 
+       order by ADDTIME desc) 
+       where ROWNUM=1 
+	</select>  
+		
+	<insert id="insertUserMsg"  parameterType="hashmap">
+		insert into FPY_USER_NOTICE (USERID,NOTICEID,STATUS) values (#{USERID,jdbcType=VARCHAR},#{NOTICEID},#{STATUS})
+	</insert>  
+	
+</mapper>

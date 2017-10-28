@@ -1,0 +1,323 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+        
+<mapper namespace="com.aspire.birp.modules.antiPoverty.dao.TreeDataDao">
+	<!-- 层级sql -->
+	<sql id="level_sql">
+			
+			<if test=" '' != level and null != level and 'city' == level  ">
+				AND CITY_ID = #{ID}
+			</if>
+			
+			<if test=" '' != level and null != level and 'county' == level  ">
+				AND COUNTY_ID = #{ID} 
+			</if>
+			
+			<if test=" '' != level and null != level and 'town' == level  ">
+				AND TOWN_ID = #{ID} 
+			</if>
+			
+			<if test=" '' != level and null != level and 'country' == level  ">
+				AND COUNTRY_ID = #{ID}
+			</if>
+			
+			
+	</sql>
+
+
+
+
+	<!-- PPAC 查询区域 -->
+	<select id="queryAreaBySubId"  parameterType="hashmap"
+       resultType="hashmap">
+		SELECT 
+		PAC S_ID,
+		PAN S_NAME,
+		PPAC S_PID,
+		PPAN S_PNAME,
+		LVL S_LEVEL
+		FROM
+		DIM_AREA_FLAT START WITH PAC = #{PAC} CONNECT BY PRIOR PPAC = PAC
+	</select> 
+	
+
+ 	<!-- PPAC 查询区域 -->
+	<select id="queryAreaByPPAC"  parameterType="hashmap"
+       resultType="hashmap">
+		SELECT 
+		PAC S_ID,
+		PAN S_NAME,
+		LVL S_LEVEL
+		FROM
+		DIM_AREA_FLAT
+		WHERE PPAC=#{PPAC}
+	
+	</select> 
+	
+	
+	
+	
+	
+	
+	<!-- PPAC 查询区域 -->
+	<select id="queryAreaDataByCondition"  parameterType="hashmap"
+       resultType="hashmap">
+		SELECT
+		A.PAC  S_ID,
+		A.PPAC S_PID,
+			
+		<!-- 扶贫对象 -->
+		<if test="null != wintype and  'poor' ==  wintype " >
+			<if test="null !=tabtype and 'change_management' == tabtype">NOW_POP S_VALUE</if>  <!--变动管理-当前贫困人口  -->
+			<if test="null !=tabtype and 'change_analysis' == tabtype">NOW_POP S_VALUE</if>  <!--变动分析-当前贫困人口  -->
+			<if test="null !=tabtype and 'change_order' == tabtype">NOW_POP S_VALUE</if>  <!--变动排序-当前贫困人口 -->
+		</if>
+		
+		<!-- 脱贫成效 -->
+		<if test="null != wintype and  'result' ==  wintype " >
+			<if test="null !=tabtype and 'plan_management' == tabtype">AID_POP S_VALUE</if>  <!--计划管理-年累计脱贫人口  -->
+			
+			<if test="null !=tabtype and 'result_analysis' == tabtype">
+			CASE  WHEN AID_POP=0  THEN 0 ELSE TRUNC(ALL_AID_POP /AID_POP  *100,2) END S_VALUE </if><!--成效分析-累计脱贫人口/年累计脱贫人口  -->
+			
+			<if test="null !=tabtype and 'not_success_analysis' == tabtype">
+			CASE  WHEN AID_POP=0  THEN 0 ELSE TRUNC(ALL_AID_POP /AID_POP  *100,2) END S_VALUE </if><!--未脱贫分析-累计脱贫人口/年累计脱贫人口 -->
+			
+			<if test="null !=tabtype and 'result_order' == tabtype">
+			CASE  WHEN AID_POP=0  THEN 0 ELSE TRUNC(ALL_AID_POP /AID_POP  *100,2) END S_VALUE</if> <!--排序-累计脱贫人口/年累计脱贫人口 -->
+			
+		</if>
+		
+		<!-- 人均可支配收入监控 -->
+		<if test="null != wintype and  'average_income' ==  wintype " >
+		
+			<if test="null !=tabtype and 'income_management' == tabtype">WB_INCOME S_VALUE</if>  <!--收入管理-有劳动能力的贫困户人均可支配收入  -->
+			
+			<!-- 脱贫户分析 -->
+			<if test="null !=tabtype and 'success_analysis' == tabtype">AID_WB_INCOME S_VALUE </if> <!--有劳动能力的脱贫户人均可支配收入-->
+			<if test="null !=tabtype and 'success_analysis_transferred_payment' == tabtype">AID_WB_INCOME S_VALUE</if>   <!--转移性支出分析-有劳动能力的脱贫户人均可支配收入 -->
+			<if test="null !=tabtype and 'success_analysis_transferred_income' == tabtype">AID_WB_INCOME S_VALUE</if>  <!--转移性收入分析-有劳动能力的脱贫户人均可支配收入  -->
+			
+	
+			<!-- 贫困户分析  -->
+			<if test="null !=tabtype and 'poor_analysis' == tabtype">WB_INCOME S_VALUE </if>  <!--收入管理-有劳动能力的贫困户人均可支配收入  -->
+			<if test="null !=tabtype and 'poor_analysis_transferred_payment' == tabtype">WB_INCOME S_VALUE</if>  <!-- 转移性支出分析-有劳动能力的贫困户人均可支配收入  -->
+			<if test="null !=tabtype and 'poor_analysis_transferred_income' == tabtype">WB_INCOME S_VALUE</if>  <!-- 转移性收入分析-有劳动能力的贫困户人均可支配收入-->
+			 <!-- 收入排序  -->
+			<if test="null !=tabtype and 'income_order' == tabtype">WB_INCOME S_VALUE</if> 
+		</if>
+		
+		
+		
+		<!-- 低五保政策落实监控  -->
+		<if test="null != wintype and  'five_low' ==  wintype " >
+			<!--  低五保落实人口 / 低五保应享人口-->
+			<if test="null !=tabtype and 'implement_management' == tabtype">CASE  WHEN LF_POP=0  THEN 0 ELSE TRUNC(LF_POP_REAL /LF_POP  *100,2) END S_VALUE </if>  <!-- 落实管理  -->
+			<if test="null !=tabtype and 'implement_analysis' == tabtype">CASE  WHEN LF_POP=0  THEN 0 ELSE TRUNC(LF_POP_REAL /LF_POP  *100,2) END S_VALUE </if>  <!-- 落实分析-->
+			<if test="null !=tabtype and 'implement_order' == tabtype">CASE  WHEN LF_POP=0  THEN 0 ELSE TRUNC(LF_POP_REAL /LF_POP  *100,2) END S_VALUE </if>  <!-- 落实排序  -->
+			
+		</if>
+		
+		
+		
+		<!-- 教育政策落实监控  -->
+		<if test="null != wintype and  'edu' ==  wintype " >
+		
+			<if test="null !=tabtype and 'implement_management' == tabtype">CASE  WHEN EDU_POP=0  THEN 0 ELSE TRUNC(EDU_POP_REAL /EDU_POP  *100,2) END S_VALUE</if>  <!-- 落实管理  -->
+			<if test="null !=tabtype and 'implement_analysis' == tabtype">CASE  WHEN EDU_POP=0  THEN 0 ELSE TRUNC(EDU_POP_REAL /EDU_POP  *100,2) END S_VALUE</if>  <!-- 落实分析-->
+			<if test="null !=tabtype and 'implement_order' == tabtype">CASE  WHEN EDU_POP=0  THEN 0 ELSE TRUNC(EDU_POP_REAL /EDU_POP  *100,2) END S_VALUE</if>  <!-- 落实排序  -->
+			
+		</if>
+		
+		
+		
+		<!-- 医疗政策落实监控  -->
+		<if test="null != wintype and  'medical_policy' ==  wintype " >
+		
+			<if test="null !=tabtype and 'implement_management' == tabtype">CASE  WHEN MED_POP2=0  THEN 0 ELSE TRUNC(MED_POP_REAL /MED_POP2  *100,2) END S_VALUE</if>  <!-- 落实管理  -->
+			<if test="null !=tabtype and 'implement_analysis' == tabtype">CASE  WHEN MED_POP2=0  THEN 0 ELSE TRUNC(MED_POP_REAL /MED_POP2  *100,2) END S_VALUE</if>  <!-- 落实分析-->
+			<if test="null !=tabtype and 'implement_order' == tabtype">CASE  WHEN MED_POP2=0  THEN 0 ELSE TRUNC(MED_POP_REAL /MED_POP2  *100,2) END S_VALUE</if>  <!-- 落实排序  -->
+			
+		</if>
+		
+		
+		<!-- 住房政策落实监控  -->
+		<if test="null != wintype and  'house' ==  wintype " >
+		
+			<if test="null !=tabtype and 'implement_management' == tabtype">CASE  WHEN HOUSE_CD_FAM=0  THEN 0 ELSE TRUNC(HOUSE_CD_FAM_REAL /HOUSE_CD_FAM  *100,2)  END S_VALUE</if>  <!-- 落实管理  -->
+			<if test="null !=tabtype and 'implement_analysis' == tabtype">CASE  WHEN HOUSE_FAM=0  THEN 0 ELSE TRUNC(HOUSE_FAM_REAL /HOUSE_FAM  *100,2)  END S_VALUE</if>  <!-- 落实分析-->
+			<if test="null !=tabtype and 'implement_order' == tabtype">CASE  WHEN HOUSE_FAM=0  THEN 0 ELSE TRUNC(HOUSE_FAM_REAL /HOUSE_FAM  *100,2)  END S_VALUE</if>  <!-- 落实排序  -->
+			
+		</if>
+		<!--道路硬底化监控  -->
+		<if test="null != wintype and  'road' ==  wintype " >
+		
+			<if test="null !=tabtype and 'implement_management' == tabtype">CASE  WHEN ROAD_CNT=0  THEN 0 ELSE TRUNC(ROAD_CNT_REAL /ROAD_CNT  *100,2)  END S_VALUE</if>  <!-- 落实管理  -->
+			<if test="null !=tabtype and 'implement_analysis' == tabtype">CASE  WHEN ROAD_CNT=0  THEN 0 ELSE TRUNC(ROAD_CNT_REAL /ROAD_CNT  *100,2)  END S_VALUE</if>  <!-- 落实分析-->
+			<if test="null !=tabtype and 'implement_order' == tabtype">CASE  WHEN ROAD_CNT=0  THEN 0 ELSE TRUNC(ROAD_CNT_REAL /ROAD_CNT  *100,2)  END S_VALUE</if>  <!-- 落实排序  -->
+			
+		</if>
+		<!--安全饮水监控  -->
+		<if test="null != wintype and  'water' ==  wintype " >
+		
+			<if test="null !=tabtype and 'implement_management' == tabtype">CASE  WHEN WATER_FAM=0  THEN 0 ELSE TRUNC(WATER_FAM_REAL /WATER_FAM  *100,2)  END S_VALUE</if>  <!-- 落实管理  -->
+			<if test="null !=tabtype and 'implement_analysis' == tabtype">CASE  WHEN WATER_FAM=0  THEN 0 ELSE TRUNC(WATER_FAM_REAL /WATER_FAM  *100,2)  END S_VALUE</if>  <!-- 落实分析-->
+			<if test="null !=tabtype and 'implement_order' == tabtype">CASE  WHEN WATER_FAM=0  THEN 0 ELSE TRUNC(WATER_FAM_REAL /WATER_FAM  *100,2)  END S_VALUE</if>  <!-- 落实排序  -->
+			
+		</if>
+		<!--生活用电监控  -->
+		<if test="null != wintype and  'electricity' ==  wintype " >
+		
+			<if test="null !=tabtype and 'implement_management' == tabtype">CASE  WHEN ELETRIC_FAM=0  THEN 0 ELSE TRUNC(ELETRIC_FAM_REAL /ELETRIC_FAM  *100,2)  END S_VALUE</if>  <!-- 落实管理  -->
+			<if test="null !=tabtype and 'implement_analysis' == tabtype">CASE  WHEN ELETRIC_FAM=0  THEN 0 ELSE TRUNC(ELETRIC_FAM_REAL /ELETRIC_FAM  *100,2)  END S_VALUE</if>  <!-- 落实分析-->
+			<if test="null !=tabtype and 'implement_order' == tabtype">CASE  WHEN ELETRIC_FAM=0  THEN 0 ELSE TRUNC(ELETRIC_FAM_REAL /ELETRIC_FAM  *100,2)  END S_VALUE</if>  <!-- 落实排序  -->
+			
+		</if>
+		<!-- 医疗设施监控 -->
+		<if test="null != wintype and  'medical_facility' ==  wintype " >
+		
+			<if test="null !=tabtype and 'implement_management' == tabtype">CASE  WHEN CLINIC_CNT=0  THEN 0 ELSE TRUNC(CLINIC_CNT_NEW /CLINIC_CNT  *100,2)  END S_VALUE</if>  <!-- 落实管理  -->
+			<if test="null !=tabtype and 'implement_analysis' == tabtype">CASE  WHEN CLINIC_CNT=0  THEN 0 ELSE TRUNC(CLINIC_CNT_NEW /CLINIC_CNT  *100,2)  END S_VALUE</if>  <!-- 落实分析-->
+			<if test="null !=tabtype and 'implement_order' == tabtype">CASE  WHEN CLINIC_CNT=0  THEN 0 ELSE TRUNC(CLINIC_CNT_NEW /CLINIC_CNT  *100,2)  END S_VALUE</if>  <!-- 落实排序  -->
+			
+		</if>
+		<!-- 通广播电视监控 -->
+		<if test="null != wintype and  'broadcast' ==  wintype " >
+		
+			<if test="null !=tabtype and 'implement_management' == tabtype">CASE  WHEN ELETRIC_FAM=0  THEN 0 ELSE TRUNC(ELETRIC_FAM_REAL /ELETRIC_FAM  *100,2)  END S_VALUE</if>  <!-- 落实管理  -->
+			<if test="null !=tabtype and 'implement_analysis' == tabtype">CASE  WHEN ELETRIC_FAM=0  THEN 0 ELSE TRUNC(ELETRIC_FAM_REAL /ELETRIC_FAM  *100,2)  END S_VALUE</if>  <!-- 落实分析-->
+			<if test="null !=tabtype and 'implement_order' == tabtype">CASE  WHEN ELETRIC_FAM=0  THEN 0 ELSE TRUNC(ELETRIC_FAM_REAL /ELETRIC_FAM  *100,2)  END S_VALUE</if>  <!-- 落实排序  -->
+			
+		</if>
+		<!-- 网络覆盖监控-->
+		<if test="null != wintype and  'net' ==  wintype " >
+		
+			<if test="null !=tabtype and 'implement_management' == tabtype">CASE  WHEN NONET_FAM_CNT=0  THEN 0 ELSE TRUNC(NONET_FAM_NOW /NONET_FAM_CNT  *100,2)  END S_VALUE</if>  <!-- 落实管理  -->
+			<if test="null !=tabtype and 'implement_analysis' == tabtype">CASE  WHEN NONET_FAM_CNT=0  THEN 0 ELSE TRUNC(NONET_FAM_NOW /NONET_FAM_CNT  *100,2)  END S_VALUE</if>  <!-- 落实分析-->
+			<if test="null !=tabtype and 'implement_order' == tabtype">CASE  WHEN NONET_FAM_CNT=0  THEN 0 ELSE TRUNC(NONET_FAM_NOW /NONET_FAM_CNT  *100,2)  END S_VALUE</if>  <!-- 落实排序  -->
+			
+		</if>
+		<!-- 贫困分析 -->
+		<if test="null != wintype and  'poor_analysis' ==  wintype " >
+		
+			<if test="null !=tabtype and 'poor_analysis' == tabtype">NOW_POP S_VALUE</if>  <!--贫困分析 -->
+		</if>
+		
+		<!-- 责任监控 -->
+		<if test="null != wintype and  'duty' ==  wintype " >
+		
+			<if test="null !=tabtype and 'duty_management' == tabtype">HELP_CADRE_CNT S_VALUE</if>  <!--贫困分析 -->
+			<if test="null !=tabtype and 'duty_analysis' == tabtype">HELP_CADRE_CNT S_VALUE</if>  <!--贫困分析 -->
+		</if>
+		<!-- 项目监控-->
+		<if test="null != wintype and  'project' ==  wintype " >
+		
+			<if test="null !=tabtype and 'project_management' == tabtype">WB_INCOME S_VALUE</if>  <!--项目管理 -->
+			<if test="null !=tabtype and 'project_analysis' == tabtype">WB_INCOME S_VALUE</if>  <!--项目分析 -->
+			<if test="null !=tabtype and 'project_order' == tabtype">WB_INCOME S_VALUE</if>  <!--项目排序 -->
+		</if>
+	
+		<!-- 项目监控户扶贫项目分析-->
+		<if test="null != wintype and  'project_family' ==  wintype " >
+		
+			<if test="null !=tabtype and 'industry' == tabtype">WB_INCOME S_VALUE</if>  <!--产业扶贫 -->
+			<if test="null !=tabtype and 'finance' == tabtype">WB_INCOME S_VALUE</if>  <!--金融扶贫 -->
+			<if test="null !=tabtype and 'house' == tabtype">WB_INCOME S_VALUE</if>  <!--住房改造 -->
+			<if test="null !=tabtype and 'property' == tabtype">WB_INCOME S_VALUE</if>  <!--资产扶贫 -->
+			<if test="null !=tabtype and 'visit' == tabtype">WB_INCOME S_VALUE</if>  <!--慰问扶贫-->
+			<if test="null !=tabtype and 'employment' == tabtype">WB_INCOME S_VALUE</if>  <!--就业扶贫 -->
+			<if test="null !=tabtype and 'skill' == tabtype">WB_INCOME S_VALUE</if>  <!--技能培训 -->
+			<if test="null !=tabtype and 'edu' == tabtype">WB_INCOME S_VALUE</if>  <!--教育扶贫 -->
+		</if>
+	
+		<!-- 项目监控村扶贫项目分析-->
+		<if test="null != wintype and  'project_country' ==  wintype " >
+		
+			<if test="null !=tabtype and 'road' == tabtype">WB_INCOME S_VALUE</if>  <!--村道硬底化 -->
+			<if test="null !=tabtype and 'water' == tabtype">WB_INCOME S_VALUE</if>  <!--饮水工程 -->
+			<if test="null !=tabtype and 'recreation_sport' == tabtype">WB_INCOME S_VALUE</if>  <!--文体设施 -->
+			<if test="null !=tabtype and 'arts_sports' == tabtype">WB_INCOME S_VALUE</if>  <!--卫生设施 -->
+			<if test="null !=tabtype and 'lamp' == tabtype">WB_INCOME S_VALUE</if>  <!--路灯安装-->
+			<if test="null !=tabtype and 'farm' == tabtype">WB_INCOME S_VALUE</if>  <!--农田水利-->
+			<if test="null !=tabtype and 'public_facility' == tabtype">WB_INCOME S_VALUE</if>  <!--公共设施-->
+			<if test="null !=tabtype and 'collective_economy' == tabtype">WB_INCOME S_VALUE</if>  <!--集体经济-->
+			<if test="null !=tabtype and 'edu' == tabtype">WB_INCOME S_VALUE</if>  <!--教育教学 -->
+		</if>
+		
+		
+		<!-- 预警监控贫困识别监控-->
+		<if test="null != wintype and  'alarmed_poor' ==  wintype " >
+		
+			<if test="null !=tabtype and 'exception_monitor' == tabtype">WB_INCOME S_VALUE</if>  <!--异常监控 -->
+			<if test="null !=tabtype and 'exception_order' == tabtype">WB_INCOME S_VALUE</if>  <!--异常排序 -->
+			
+		</if>
+		<!-- 预警监控建档立卡异常记录监控-->
+		<if test="null != wintype and  'alarmed_records' ==  wintype " >
+		
+			<if test="null !=tabtype and 'exception_monitor' == tabtype">WB_INCOME S_VALUE</if>  <!--异常监控 -->
+			<if test="null !=tabtype and 'exception_order' == tabtype">WB_INCOME S_VALUE</if>  <!--异常排序 -->
+			
+		</if>
+		<!-- 预警监控帮扶资金监控 -->
+		<if test="null != wintype and  'alarmed_money' ==  wintype " >
+		
+			<if test="null !=tabtype and 'money_monitor' == tabtype">WB_INCOME S_VALUE</if>  <!--异常监控 -->
+			<if test="null !=tabtype and 'money_order' == tabtype">WB_INCOME S_VALUE</if>  <!--异常排序 -->
+			
+		</if>
+		
+		<!-- 预警监控贫困户走访监控 	-->
+		<if test="null != wintype and  'alarmed_visit' ==  wintype " >
+		
+			<if test="null !=tabtype and 'visit_monitor' == tabtype">WB_INCOME S_VALUE</if>  <!--异常监控 -->
+			<if test="null !=tabtype and 'visit_order' == tabtype">WB_INCOME S_VALUE</if>  <!--异常排序 -->
+			
+		</if>
+	 	
+
+		FROM DIM_AREA_FLAT A,TW_COUNTRY_CALC_D B 
+		
+		<where>
+		
+			<include refid="level2_sql"/><!-- 层级 -->
+			
+			<if test=" '' != LVL and null != LVL ">
+				AND B.LVL=#{LVL}
+			</if>
+			
+			
+		</where>
+		
+	
+	
+	</select> 
+	
+	
+
+	
+	
+	<!-- 层级sql -->
+	<sql id="level2_sql">
+			
+			<if test=" '' != level and null != level and 'city' == level  ">
+				AND A.PAC=B.CITY_ID
+			</if>
+			
+			<if test=" '' != level and null != level and 'county' == level  ">
+				AND A.PAC=B.COUNTY_ID
+			</if>
+			
+			<if test=" '' != level and null != level and 'town' == level  ">
+				AND A.PAC=B.TOWN_ID
+			</if>
+			
+			<if test=" '' != level and null != level and 'country' == level  ">
+				AND A.PAC=B.COUNTRY_ID
+			</if>
+			
+			
+	</sql>
+	
+</mapper>

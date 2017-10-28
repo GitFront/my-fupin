@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+        
+<mapper namespace="aspire.bi.common.povertygeometry">
+
+	<!-- 地图区域经纬度 -->
+	<select id="queryMapGeoData"  parameterType="string"
+       resultType="hashmap">
+ 		<choose>
+ 			<when test=" 5 == map_level  ">
+ 				SELECT  t.*,1 IF_FURTHER_POOR
+	 			FROM DIM_POVERTY_GEOMETRY t
+	 			WHERE 1=1 
+					AND t.PAC=#{map_pac}
+ 			</when>
+ 			<otherwise>
+ 				SELECT  t.*,0 IF_FURTHER_POOR
+	 			FROM DIM_POVERTY_GEOMETRY t
+	 			WHERE 1=1 
+					AND t.PPAC=#{map_pac}
+ 			</otherwise>
+ 		</choose>
+	</select> 
+
+	<!-- 地图位置点经纬度（户） -->
+	<select id="queryMappiontGeoForFam"  parameterType="hashmap"
+	       resultType="hashmap">
+	       <choose>
+	 			<when test="5 == map_level and '' != map_pac">
+	 					SELECT  	
+	 						t.FAM_ID PAC,t.FAM_NAME NAME,d.LSB_PAC PPAC,t.LONGITUDE LONGITUDE,t.LATITUDE LATITUDE,'PKH' POINT_TYPE
+	 					FROM 
+	 						F_FAMILYFILE_BASIC_INFO_D t ,DIM_LRB_PAC_MAP d
+	 					WHERE 1=1 
+	 					<!-- 分层筛选 -->
+	 					<choose>
+			 				<when test="4 == map_level">
+			 					AND t.TOWN_PAC=d.PAC
+								AND d.LSB_PAC=#{map_pac} 
+			 				</when>
+			 				<when test="5 == map_level">
+			 					AND t.COUNTRY_PAC=d.PAC
+								AND d.LSB_PAC=#{map_pac} 
+			 				</when>
+			 			</choose>
+			 			<!-- 权限筛选 -->
+	 					<if test=" '' != userLevel and null != userLevel">
+				 			<choose>
+				 				<when test="2 == userLevel">
+				 					AND t.CITY_PAC=#{userPac}  
+				 				</when>
+				 				<when test="3 == userLevel">
+				 					AND t.COUNTY_PAC=#{userPac}  
+				 				</when>
+				 				<when test="4 == userLevel">
+				 					AND t.TOWN_PAC=#{userPac}  
+				 				</when>
+				 				<when test="5 == userLevel">
+				 					AND t.COUNTRY_PAC=#{userPac}  
+				 				</when>
+				 			</choose>
+						</if>
+						<if test=" '' != isOut and null != isOut">
+				 			<choose>
+				 				<when test="0 == isOut">
+				 					AND t.IF_CURR_POOR = 1 		
+				 					AND t.AID_TIME = '29991231'
+				 				</when>
+				 				<when test="1 == isOut">
+				 					AND (t.AID_TIME &lt; to_char(sysdate,'yyyymmdd') OR t.AID_TIME = to_char(sysdate,'yyyymmdd'))
+				 				</when>
+				 			</choose>
+						</if>
+				 		<![CDATA[ AND t.LONGITUDE >109 AND t.LONGITUDE < 118 AND t.LATITUDE >20 AND t.LATITUDE < 26 ]]>
+	 			</when>
+	 			<otherwise>
+	 					SELECT  	FAM_ID PAC,FAM_NAME NAME,'440000000000' PPAC,LONGITUDE LONGITUDE,LATITUDE LATITUDE,'PKH' POINT_TYPE
+	 					FROM F_FAMILYFILE_BASIC_INFO_D WHERE 1 &lt;&gt; 1 
+	 			</otherwise>
+	 		</choose>
+	</select> 
+	
+	<!-- 地图位置点经纬度（相对贫困村） -->
+	<select id="queryMappiontGeoForCountry"  parameterType="hashmap"
+       resultType="hashmap">
+       <choose>
+	 			<when test=" 2 == map_level or 4 == map_level or 3 == map_level  and '' != map_pac">
+	 					SELECT  	
+	 						t.COUNTRY_PAC PAC,t.COUNTRY_NAME NAME,d.LSB_PAC PPAC,t.LONGITUDE LONGITUDE,t.LATITUDE LATITUDE,'PKC' POINT_TYPE
+	 					FROM 
+	 						F_COUNTRYFILE_BASIC_INFO_D t ,DIM_LRB_PAC_MAP d
+	 					WHERE 1=1 
+	 					<!-- 分层筛选 -->
+				 		<choose>
+				 			<when test="2 == map_level">
+				 				AND t.CITY_PAC=d.PAC
+								AND d.LSB_PAC=#{map_pac} 
+				 			</when>
+				 			<when test="3 == map_level">
+				 				AND t.COUNTY_PAC=d.PAC
+								AND d.LSB_PAC=#{map_pac} 
+				 			</when>
+				 			<when test="4 == map_level">
+				 				AND t.TOWN_PAC=d.PAC
+								AND d.LSB_PAC=#{map_pac} 
+				 			</when>
+				 		</choose>
+			 			<!-- 权限筛选 -->
+	 					<if test=" '' != userLevel and null != userLevel">
+				 			<choose>
+				 				<when test="2 == userLevel">
+				 					AND t.CITY_PAC=#{userPac}  
+				 				</when>
+				 				<when test="3 == userLevel">
+				 					AND t.COUNTY_PAC=#{userPac}  
+				 				</when>
+				 				<when test="4 == userLevel">
+				 					AND t.TOWN_PAC=#{userPac}  
+				 				</when>
+				 				<when test="5 == userLevel">
+				 					AND t.COUNTRY_PAC=#{userPac}  
+				 				</when>
+				 			</choose>
+						</if>
+				 		AND t.IF_FURTHER_POOR=1 
+				 		<![CDATA[ AND t.LONGITUDE >109 AND t.LONGITUDE < 118 AND t.LATITUDE >20 AND t.LATITUDE < 26 ]]>
+	 			</when>
+	 			<when test="1 == map_level">
+	 					SELECT  	t.COUNTRY_PAC PAC,t.COUNTRY_NAME NAME,'440000000000' PPAC,t.LONGITUDE LONGITUDE,t.LATITUDE LATITUDE,'PKC' POINT_TYPE
+	 					FROM F_COUNTRYFILE_BASIC_INFO_D t 
+	 					WHERE 1 = 1 
+	 					<!-- 权限筛选 -->
+	 					<if test=" '' != userLevel and null != userLevel">
+				 			<choose>
+				 				<when test="2 == userLevel">
+				 					AND t.CITY_PAC=#{userPac}  
+				 				</when>
+				 				<when test="3 == userLevel">
+				 					AND t.COUNTY_PAC=#{userPac}  
+				 				</when>
+				 				<when test="4 == userLevel">
+				 					AND t.TOWN_PAC=#{userPac}  
+				 				</when>
+				 				<when test="5 == userLevel">
+				 					AND t.COUNTRY_PAC=#{userPac}  
+				 				</when>
+				 			</choose>
+						</if>
+				 		AND t.IF_FURTHER_POOR=1 
+				 		<![CDATA[ AND t.LONGITUDE >109 AND t.LONGITUDE < 118 AND t.LATITUDE >20 AND t.LATITUDE < 26 ]]>
+	 			</when>
+	 			<otherwise>
+	 					SELECT  	t.COUNTRY_PAC PAC,t.COUNTRY_NAME NAME,'440000000000' PPAC,t.LONGITUDE LONGITUDE,t.LATITUDE LATITUDE,'PKC' POINT_TYPE
+	 					FROM F_COUNTRYFILE_BASIC_INFO_D t WHERE 1 &lt;&gt; 1 
+	 			</otherwise>
+	 		</choose>
+	</select> 
+	
+	<!-- PAC转换 -->
+	<select id="lsbPacToPac"  parameterType="string"
+       resultType="string">
+ 		SELECT 
+ 		PAC
+ 		FROM DIM_LRB_PAC_MAP
+ 		WHERE LSB_PAC=#{PAC}
+	</select> 
+	
+	<!-- PAC转换 -->
+	<select id="pacTolsbPac"  parameterType="string"
+       resultType="hashmap">
+ 		SELECT 
+ 		LSB_PAC,LSB_PAC_NAME 
+ 		FROM DIM_LRB_PAC_MAP
+ 		WHERE PAC=#{PAC}
+	</select> 
+	<!-- 首页地图数据 -->
+	<select id="queryIndexMap"  parameterType="hashmap"
+       resultType="hashmap">
+ 		SELECT  DL1.LSB_PAC PAC,
+ 		R.POOR_POP "value" -- 贫困人口
+		FROM R_MONITOR_HOME_PAGE_D R,DIM_LRB_PAC_MAP DL1
+		WHERE 
+		R.PAC=DL1.PAC AND r.PPAC='440000000000'
+			AND R.AREA_TYPE=1 AND R.STAT_TIME=(SELECT MAX(STAT_TIME) FROM R_MONITOR_HOME_PAGE_D WHERE PPAC='440000000000')
+		</select>
+		
+</mapper>

@@ -1,0 +1,247 @@
+{
+	"code": 0,
+	"msg": "获取信息成功",
+	"data": {
+		"area_path":[
+		{
+			"level": "province",
+			"selected_id": 1,
+			"selected_name":"广东省",
+			"list": [
+				{
+					"name": "广东省",
+					"id": 1
+				}
+			]
+		},
+		{
+			"level": "city",
+			"selected_id":2,
+			"selected_name":"广州市",
+			"list": [
+				{
+					"name": "全部",
+					"id": null
+				},
+				{
+					"name": "广州市",
+					"id": 2
+				},
+				{
+					"name": "深圳市",
+					"id": 3
+				}
+			]
+		},
+		{
+			"level": "county",
+			"selected_id":null,
+			"selected_name":"全部",
+			"list": [
+				{
+					"name": "全部",
+					"id": null
+				},
+				{
+					"name": "五华县",
+					"id": 4
+				},
+				{
+					"name": "吴县",
+					"id": 5
+				},
+				{
+					"name": "五华县",
+					"id": 4
+				},
+				{
+					"name": "吴县",
+					"id": 5
+				}
+			,
+				{
+					"name": "五华县五华县",
+					"id": 4
+				},
+				{
+					"name": "吴县",
+					"id": 5
+				},
+				{
+					"name": "五华县五华县",
+					"id": 4
+				},
+				{
+					"name": "吴县",
+					"id": 5
+				},
+				{
+					"name": "五华县五华县",
+					"id": 4
+				},
+				{
+					"name": "吴县",
+					"id": 5
+				},
+				{
+					"name": "五华县五华县",
+					"id": 4
+				},
+				{
+					"name": "吴县",
+					"id": 5
+				}
+			]
+		}
+	 ],
+		"time_update": "2017-2-11",
+		"personal": {
+			"chart_config_doing": {
+			"convert_method":"genChartLegendBarsConfig",
+			"config":[
+			{
+				"name":"一周内",
+				"group":"一周内",
+				"value":0
+			},
+			{
+				"name":"1-4周",
+				"group":"1-4周",
+				"value":0
+			},
+			{
+				"name":"1-3个月",
+				"group":"1-3个月",
+				"value":0
+			},
+			{
+				"name":"3-6个月",
+				"group":"户数",
+				"value":0
+			},
+			{
+				"name":"半年以上",
+				"group":"半年以上",
+				"value":0
+			}
+			]
+		},
+			"chart_config_done":  {
+			"convert_method":"genChartLegendBarsConfig",
+			"config":[
+			{
+				"name":"一周内",
+				"group":"一周内",
+				"value":4
+			},
+			{
+				"name":"1-4周",
+				"group":"1-4周",
+				"value":0
+			},
+			{
+				"name":"1-3个月",
+				"group":"1-3个月",
+				"value":0
+			},
+			{
+				"name":"3-6个月",
+				"group":"户数",
+				"value":0
+			},
+			{
+				"name":"半年以上",
+				"group":"半年以上",
+				"value":0
+			}
+			]
+		}
+		},
+		"legal_person": {
+			"chart_config_doing": {
+			"convert_method":"genChartLegendBarsConfig",
+			"config":[
+			{
+				"name":"一周内",
+				"group":"一周内",
+				"value":0
+			},
+			{
+				"name":"1-4周",
+				"group":"1-4周",
+				"value":0
+			},
+			{
+				"name":"1-3个月",
+				"group":"1-3个月",
+				"value":0
+			},
+			{
+				"name":"3-6个月",
+				"group":"户数",
+				"value":0
+			},
+			{
+				"name":"半年以上",
+				"group":"半年以上",
+				"value":0
+			}
+			]
+		},
+			"chart_config_done":  {
+			"convert_method":"genChartLegendBarsConfig",
+			"config":[
+			{
+				"name":"一周内",
+				"group":"一周内",
+				"value":0
+			},
+			{
+				"name":"1-4周",
+				"group":"1-4周",
+				"value":0
+			},
+			{
+				"name":"1-3个月",
+				"group":"1-3个月",
+				"value":0
+			},
+			{
+				"name":"3-6个月",
+				"group":"户数",
+				"value":0
+			},
+			{
+				"name":"半年以上",
+				"group":"半年以上",
+				"value":0
+			}
+			]
+		}
+		},
+		"business": {
+			"lingnan": {
+				"selected_name": "2017年01月",
+				"selected_value": "2017.1",
+				"list": [
+					{
+						"name": "2017年01月",
+						"value": "2017.1"
+					},
+					{
+						"name": "2017年02月",
+						"value": "2017.2"
+					},
+					{
+						"name": "2017年03月",
+						"value": "2017.3"
+					},
+					{
+						"name": "2017年04月",
+						"value": "2017.4"
+					}
+				]
+			}
+		}
+	}
+}

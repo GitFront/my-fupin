@@ -1,0 +1,135 @@
+{
+	"code": 0,
+	"msg": "获取信息成功",
+	"data": {
+		//收入状况
+		"income": {
+			//农民人均可支配收入
+			"average": "7200元",
+			//村级集体经济收入
+			"collective": "8000万元"
+		},
+		//社会保障
+		"social_security": {
+			//参加新型农村合作医疗
+			"rural_medical": "2926人",
+			//参加城乡居民基本养老保险
+			"pension_insurance": "320人",
+			//获得医疗救助人次
+			"medical_help": "15人次"
+		},
+		//危房改造
+		"danger_house": {
+			//危房户数
+			"amount": "39户"
+		},
+		//村级道路硬底化
+		"country_road": {
+			//行政村到乡镇未通里程
+			"distance_admin_to_town": "0公里",
+			//行政村是否通客运班车
+			"bus_available": "否",
+			//自然村到行政村未通村数
+			"amount_natural_to_admin": "2个",
+			//自然村到行政村未通里程数
+			"distance_natural_to_admin": "3公里"
+		},
+		//农村电力保障
+		"electricity": {
+			//未通生活用电的自然村数
+			"not_enabled_living_country": "0个",
+			//未通生产用电的自然村数
+			"not_enabled_production_country": "0个",
+			//未通生活用电户数
+			"not_enabled_living_family": "0户",
+			//已通电自然村数
+			"enabled_country": "11个"
+		},
+		//饮水安全
+		"water_safety": {
+			//未实现饮水安全户数
+			"unsafe": "0户",
+			//饮水困难户数
+			"difficult": "0户"
+		},
+		//特色产业增收
+		"industry": {
+			//特色产业农民专业合作社
+			"amount_fsc": "0个",
+			//特色产业农民专业合作社贫困户数
+			"amount_family_fsc": "0户"
+		},
+		//乡村旅游
+		"travel": {
+			//开展乡村旅游的户数
+			"travel_family": "0户",
+			//乡村旅游从业人员数
+			"travel_people": "0人",
+			//经营农家乐的户数
+			"rural_inn_family": "0户",
+			//经营农家乐户年均收入
+			"rural_inn_average": "0元"
+		},
+		//文化建设
+		"culture": {
+			//行政村文化(图书)室个数
+			"library": "0户",
+			//通广播电视户数
+			"tv": "500户"
+		},
+		//卫生和计划生育
+		"health": {
+			//卫生室个数
+			"office": "1个",
+			//执业(助理)医师人数
+			"doctor": "1人",
+			//公共卫生厕所个数
+			"toilet": "0个",
+			//生产生活垃圾集中堆放点,
+			"garbage": "0个"
+		},
+		//贫困村信息化
+		"information": {
+			//通宽带户数
+			"broadband_family": "15户",
+			//能手机上网的户数
+			"mobile_family": "532户",
+			//通宽带的自然村数
+			"broadband_natural": "11个",
+			//通宽带的村小数个数
+			"broadband_country": "1个",
+			//行政村信息员
+			"admin_staff": "1个"
+		},
+		//易地扶贫搬迁
+		"move": {
+			//符合两不具备搬迁扶持条件，2016年-2018年有搬迁意愿户/人
+			"amount": "0户/0人"
+		},
+		//雨露计划
+		"rain": {
+			//初中毕业未升入高中的新劳动力
+			"middle_school": "7人",
+			//已参加雨露计划人数
+			"joined": "0人",
+			//高中毕业未升大学等的新劳动力
+			"high_school": "5人"
+		},
+		//扶贫小额信贷
+		"loan": {
+			//批复的扶贫小额信贷户数
+			"allow": "0户",
+			//当年贷款户数
+			"cur_year": "0户",
+			//逾期还款户数
+			"due": "0户"
+		},
+		//党员情况
+		"party": {
+			//中共党员数
+			"amount": "71人",
+			//党员占全村人口比例
+			"ratio": "2.4%"
+		}
+	}
+}

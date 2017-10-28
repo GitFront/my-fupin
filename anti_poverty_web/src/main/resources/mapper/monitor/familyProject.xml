@@ -1,0 +1,1769 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+        
+<mapper namespace="com.aspire.birp.modules.antiPoverty.dao.FamilyProjectDao">
+	
+	<sql id="count_group_by_sql">
+	
+			<if test=" '' != level and null != level and 'province' == level  ">
+				 1
+			</if>
+			<if test=" '' != level and null != level and 'city' == level  ">
+				CITY_PAC , CITY_NAME  
+			</if>
+			
+			<if test=" '' != level and null != level and 'county' == level  ">
+				 COUNTY_PAC ,COUNTY_NAME  
+			</if>
+			
+			<if test=" '' != level and null != level and 'town' == level  ">
+				   TOWN_PAC ,TOWN_NAME 
+			</if>
+			
+			<if test=" '' != level and null != level and 'country' == level  ">
+				COUNTRY_PAC  ,COUNTRY_NAME 
+			</if>
+	</sql>
+	<!-- 项目到户的筛选条件sql -->
+   <sql id="query_condition_sql_family">
+   
+		<if test=" '' != scope and null != scope">
+			<if test="2 == scope">AND IS_KEY_POVERTY = 1</if><!-- 贫困村 -->
+			<if test="3 == scope">AND IS_KEY_POVERTY = 0</if><!-- 分散村 -->
+			<if test="4 == scope">AND IS_OLD_REVOLUTIONARY = 1</if><!-- 革命老区 -->
+			<if test="5 == scope">AND IS_CENTRAL_SOVIET = 1 </if><!-- 中央苏区 -->
+		</if>	
+			
+		<if test=" '' != poor_attribute and null != poor_attribute">
+			<!-- <if test="'all' == poor_attribute">AND POOR_TYPE in(1,2,3)</if>全部 -->
+			<if test="'normal' == poor_attribute">AND POOR_TYPE = 1</if><!-- 一般贫困户 -->
+			<if test="'low' == poor_attribute">AND POOR_TYPE = 2</if><!-- 低保户 -->
+			<if test="'five' == poor_attribute">AND POOR_TYPE = 3</if><!-- 五保户 -->
+			
+		</if>
+				
+		<if test=" '' != labor_attribute and null != labor_attribute">
+			<if test="'have_labor' == labor_attribute">AND LABOR_TYPE=1</if><!-- 有劳 -->
+			<if test="'no_labor' == labor_attribute">AND LABOR_TYPE=0</if><!-- 无劳 -->
+		</if>
+	<if test="list!=null and list.size()>0">
+			AND PROJ_STATUS in  
+			<foreach item="item" index="index" collection="list" open="(" separator="," close=")">  
+			 #{item}  
+			</foreach>  
+		</if>
+	</sql>
+<!-- 新的筛选条件sql -->
+   <sql id="query_condition_sql_new">
+		
+		<if test=" '' != status_attribute and null != status_attribute">
+			<if test=" all == status_attribute"> 
+			 
+			</if><!-- 全部 -->
+			<if test="poor_cur == status_attribute">
+				  AND IS_CURRENT = 1 <!-- 当前 -->
+			</if>
+			<if test="poor_add == status_attribute">
+				 AND IS_NEW = 1<!-- 新增 -->
+			</if>
+			<if test="poor_end == status_attribute">
+				AND IS_TERMINATION = 1 <!-- 终止 -->
+			</if>
+			<if test="natural_change == status_attribute">
+				AND  CHANGES_TYPE in (0,1)<!-- 自然 -->
+			</if>
+		</if>
+	
+	
+		<if test=" '' != scope and null != scope">
+			<if test="2 == scope">AND IS_KEY_POVERTY = 1</if><!-- 贫困村 -->
+			<if test="3 == scope">AND IS_KEY_POVERTY = 0</if><!-- 分散村 -->
+			<if test="4 == scope">AND IS_OLD_REVOLUTIONARY = 1</if><!-- 革命老区 -->
+			<if test="5 == scope">AND IS_CENTRAL_SOVIET = 1 </if><!-- 中央苏区 -->
+		</if>
+				
+		<if test=" '' != poor_attribute and null != poor_attribute">
+			<if test="'all' == poor_attribute">AND POOR_TYPE2 in(1,2,3)</if><!-- 全部 -->
+			<if test="'normal' == poor_attribute">AND POOR_TYPE2 = 1</if><!-- 一般贫困户 -->
+			<if test="'low' == poor_attribute">AND POOR_TYPE2 = 2</if><!-- 低保户 -->
+			<if test="'five' == poor_attribute">AND POOR_TYPE2 = 3</if><!-- 五保户 -->
+			
+		</if>
+				
+		<if test=" '' != labor_attribute and null != labor_attribute">
+			<if test="'have_labor' == labor_attribute">AND LABOR_TYPE=1</if><!-- 有劳 -->
+			<if test="'no_labor' == labor_attribute">AND LABOR_TYPE=0</if><!-- 无劳 -->
+		</if>
+	
+	</sql>
+	
+	<!-- 层级sql -->
+	<sql id="level_sql">
+			
+			<if test=" '' != level and null != level and 'province' == level  ">
+				
+			</if>
+			
+			<if test=" '' != level and null != level and 'city' == level  ">
+				AND CITY_PAC = #{id}
+			</if>
+			
+			<if test=" '' != level and null != level and 'county' == level  ">
+				AND COUNTY_PAC = #{id} 
+			</if>
+			
+			<if test=" '' != level and null != level and 'town' == level  ">
+				AND TOWN_PAC = #{id} 
+			</if>
+			
+			<if test=" '' != level and null != level and 'country' == level  ">
+				AND COUNTRY_PAC = #{id}
+			</if>
+	</sql>
+	<!-- 层级分组 -->
+	<sql id="group_by_sql">
+	
+			<if test=" '' != level and null != level and 'province' == level  ">
+				CITY_PAC , CITY_NAME  
+			</if>
+			<if test=" '' != level and null != level and 'city' == level  ">
+				 COUNTY_PAC ,COUNTY_NAME 
+			</if>
+			
+			<if test=" '' != level and null != level and 'county' == level  ">
+				 TOWN_PAC ,TOWN_NAME 
+			</if>
+			
+			<if test=" '' != level and null != level and 'town' == level  ">
+				COUNTRY_PAC  ,COUNTRY_NAME 
+			</if>
+			
+			<if test=" '' != level and null != level and 'country' == level  ">
+				COUNTRY_PAC  ,COUNTRY_NAME 
+			</if>		
+	</sql>
+	<!--  -->
+	<sql id="level_area_sql">
+			
+			<if test=" '' != level and null != level and 'province' == level  ">
+				CITY_PAC S_ID, CITY_NAME A2, 
+			</if>
+			<if test=" '' != level and null != level and 'city' == level  ">
+				COUNTY_PAC S_ID,COUNTY_NAME A2,
+			</if>
+			
+			<if test=" '' != level and null != level and 'county' == level  ">
+				 TOWN_PAC S_ID ,TOWN_NAME A2, 
+			</if>
+			
+			<if test=" '' != level and null != level and 'town' == level  ">
+				COUNTRY_PAC S_ID ,COUNTRY_NAME  A2, 
+			</if>
+			
+			<if test=" '' != level and null != level and 'country' == level  ">
+				COUNTRY_PAC S_ID ,COUNTRY_NAME  A2, 
+			</if>
+	</sql>
+	
+	<!--  -->
+	<sql id="level_return_sql">
+			
+			<if test=" '' != level and null != level and 'province' == level  ">
+				'city' s_level,
+			</if>
+			<if test=" '' != level and null != level and 'city' == level  ">
+				 'county' s_level,
+			</if>
+			
+			<if test=" '' != level and null != level and 'county' == level  ">
+				  'town' s_level,
+			</if>
+			
+			<if test=" '' != level and null != level and 'town' == level  ">
+				 'country' s_level,
+			</if>
+			
+			<if test=" '' != level and null != level and 'country' == level  ">
+				'country' s_level,
+			</if>
+	</sql>
+	
+	
+	<!-- detail_area_sql  -->
+	<sql id="detail_area_sql">
+		
+			<if test=" '' != level and null != level and 'city' == level  ">
+				CITY_PAC S_ID, CITY_NAME A2,
+			</if>
+			
+			<if test=" '' != level and null != level and 'county' == level  ">
+				COUNTY_PAC S_ID,COUNTY_NAME A2,
+			</if>
+			
+			<if test=" '' != level and null != level and 'town' == level  ">
+				 TOWN_PAC S_ID ,TOWN_NAME A2,
+			</if>
+			
+			<if test=" '' != level and null != level and 'country' == level  ">
+				COUNTRY_PAC S_ID ,COUNTRY_NAME  A2,
+			</if>
+	</sql>
+	
+	
+	
+	<!-- count  -->
+	<sql id="count_area_sql">
+			<if test=" '' != level and null != level and 'province' == level  ">
+				'440000000000' S_ID , '合计' A2,
+			</if>
+			<if test=" '' != level and null != level and 'city' == level  ">
+				CITY_PAC S_ID, '合计' A2,
+			</if>
+			
+			<if test=" '' != level and null != level and 'county' == level  ">
+				COUNTY_PAC S_ID,'合计' A2,
+			</if>
+			
+			<if test=" '' != level and null != level and 'town' == level  ">
+				 TOWN_PAC S_ID ,'合计' A2,
+			</if>
+			
+			<if test=" '' != level and null != level and 'country' == level  ">
+				COUNTRY_PAC S_ID ,'合计'  A2,
+			</if>
+	</sql>
+	
+	
+	<!--  -->
+	<sql id="sort_area_sql">
+			
+			<if test=" '' != sort_area and null != sort_area and 1 == sort_area  ">
+				CITY_PAC S_ID, CITY_NAME A2,
+			</if>
+			<if test=" '' != sort_area and null != sort_area and 2 == sort_area  ">
+				COUNTY_PAC S_ID,CITY_NAME||'>'||COUNTY_NAME A2,
+			</if>
+			
+			<if test=" '' != sort_area and null != sort_area and 3 == sort_area  ">
+				 TOWN_PAC S_ID ,CITY_NAME||'>'||COUNTY_NAME||'>'||TOWN_NAME A2,
+			</if>
+			
+			<if test=" '' != sort_area and null != sort_area and 4 == sort_area  ">
+				COUNTRY_PAC S_ID ,CITY_NAME||'>'||COUNTY_NAME||'>'||TOWN_NAME||'>'||COUNTRY_NAME  A2,
+			</if>
+			
+	</sql>
+	<!--  -->
+	<sql id="group_sort_area_sql">
+			
+			<if test=" '' != sort_area and null != sort_area and 1 == sort_area  ">
+				CITY_PAC , CITY_NAME 
+			</if>
+			<if test=" '' != sort_area and null != sort_area and 2 == sort_area  ">
+				COUNTY_PAC ,CITY_NAME||'>'||COUNTY_NAME
+			</if>
+			
+			<if test=" '' != sort_area and null != sort_area and 3 == sort_area  ">
+				 TOWN_PAC  ,CITY_NAME||'>'||COUNTY_NAME||'>'||TOWN_NAME 
+			</if>
+			
+			<if test=" '' != sort_area and null != sort_area and 4 == sort_area  ">
+				COUNTRY_PAC ,CITY_NAME||'>'||COUNTY_NAME||'>'||TOWN_NAME||'>'||COUNTRY_NAME 
+			</if>
+			
+	</sql>
+	<sql id="group_sql">
+			AND PROJ_TYPE = 2 
+            AND STAT_MONTH between #{year_a} and #{year_b}
+	</sql>
+	<!-- 项目分析-到户-产业扶贫 # -->
+	<select id="queryMoneyTrendChart"  parameterType="hashmap" resultType="hashmap">
+			SELECT
+        * from (SELECT 
+            S_NAME,
+            CASE WHEN u_type='A_PLAN' THEN '项目数'
+                 WHEN u_type='B_IMP' THEN '项目收益(万元)'
+             END S_GROUP,
+             u_value as S_VALUE
+          FROM ( select 
+        TO_CHAR(TO_DATE( STAT_MONTH,'YYYYMM'),'YYYY.MM') S_NAME,
+        SUM(PROJECT_NUM) A_PLAN,
+        trunc(SUM(PROJ_PROFIT)/10000, 2) B_IMP
+        from R2_DM_PROJFUNDS_PROJTYPE_M t
+			where 1=1
+           <include refid="group_sql"/>
+            AND PROJ_CLASS2 = '产业扶贫'
+				<include refid="query_condition_sql_family"/>
+				<include refid="level_sql"/>
+			GROUP BY STAT_MONTH ) 
+			unpivot (u_value for u_type in (A_PLAN, B_IMP))
+			 ORDER BY S_NAME desc)
+       WHERE  ROWNUM&lt;11
+       ORDER BY S_NAME 
+	</select>
+	
+	<!-- 项目分析-到户-产业扶贫 # -->
+	<select id="queryMoneyTrendChartByArea"  parameterType="hashmap" resultType="hashmap">
+			SELECT 
+            S_NAME,
+            CASE WHEN u_type='A_PLAN' THEN '项目数'
+                 WHEN u_type='B_IMP' THEN '项目收益(万元)'
+             END S_GROUP,
+             u_value as S_VALUE
+          FROM ( select 
+             CITY_NAME S_NAME,
+        SUM(PROJECT_NUM) A_PLAN,
+        trunc(SUM(PROJ_PROFIT)/10000, 2) B_IMP
+        from R2_DM_FAM_PROJECT_CTY_Y t
+			where 1=1
+            AND STAT_YEAR = #{year}
+            
+            AND PROJ_CLASS2 = '产业扶贫'
+			<include refid="query_condition_sql_family"/>
+			<include refid="level_sql"/>
+			  GROUP BY CITY_NAME  
+			  ORDER BY B_IMP desc) 
+			  unpivot (u_value for u_type in (A_PLAN, B_IMP))
+			   WHERE rownum&lt;11
+	</select>
+		
+	   <!-- 项目分析-到户-产业扶贫-统计表 # -->
+	<select id="queryMoneyTrendAllTable"  parameterType="hashmap" resultType="hashmap">
+			SELECT 
+			R1.*
+			FROM
+			(SELECT
+			<include refid="level_area_sql"/>
+			 <!-- 项目数 --> 
+			SUM(PROJECT_NUM)  A3, 
+			 <!-- 投入金额 --> 
+			trunc(SUM(PLAN_CAPITAL)/10000, 2) A4, 
+			 <!-- 项目收益 --> 
+			trunc(SUM(PROJ_PROFIT)/10000, 2)  A5, 
+			<!--  项目受益 -->
+			SUM(PROJ_FAM_NUM) A6,
+			SUM(PROJ_POP_NUM) A7
+			FROM R2_DM_FAM_PROJECT_CTY_Y  
+			where 1=1
+            AND STAT_YEAR = #{year}
+            
+            AND PROJ_CLASS2 = '产业扶贫'
+			<include refid="query_condition_sql_family"/>
+			<include refid="level_sql"/>
+			GROUP BY <include refid="group_by_sql"/>) R1
+			ORDER BY A3 ASC
+	</select>
+	 <!-- 项目分析-到户-产业扶贫-统计表中合计 # -->
+	<select id="queryMoneyTrendAllTableC"  parameterType="hashmap" resultType="hashmap">
+			SELECT 
+			R1.*
+			FROM
+			(SELECT
+			<include refid="count_area_sql"/>
+			 <!-- 项目数 --> 
+			SUM(PROJECT_NUM)  A3, 
+			 <!-- 投入金额 --> 
+			trunc(SUM(PLAN_CAPITAL)/10000, 2) A4, 
+			 <!-- 项目收益 --> 
+			trunc(SUM(PROJ_PROFIT)/10000, 2)  A5, 
+			<!--  项目受益 -->
+			SUM(PROJ_FAM_NUM) A6,
+			SUM(PROJ_POP_NUM) A7
+			FROM R2_DM_FAM_PROJECT_CTY_Y
+			where 1=1
+            AND STAT_YEAR = #{year}
+            
+            AND PROJ_CLASS2 = '产业扶贫'
+				<include refid="query_condition_sql_family"/>
+				<include refid="level_sql"/>
+			 GROUP BY <include refid="count_group_by_sql"/>) R1
+			ORDER BY A3 ASC
+	</select>
+	
+	<!-- 项目分析-到户-金融扶贫 # -->
+	<select id="queryFinanceTrendChart"  parameterType="hashmap" resultType="hashmap">
+			SELECT
+        * from (SELECT 
+            S_NAME,
+            CASE WHEN u_type='A_PLAN' THEN '贷款户数'
+                 WHEN u_type='B_IMP' THEN '贷款金额(万元)'
+             END S_GROUP,
+             u_value as S_VALUE
+          FROM ( select 
+        TO_CHAR(TO_DATE( STAT_MONTH,'YYYYMM'),'YYYY.MM') S_NAME,
+        SUM(PROJ_FAM_NUM) A_PLAN,
+        trunc(SUM(LOAN_AMOUNT)/10000, 2) B_IMP
+        from R2_DM_PROJFUNDS_PROJTYPE_M t
+			where 1=1
+            <include refid="group_sql"/>
+            AND PROJ_CLASS2 = '贷款贴息' 
+			<include refid="query_condition_sql_family"/>
+			<include refid="level_sql"/>
+			GROUP BY STAT_MONTH ) 
+			unpivot (u_value for u_type in (A_PLAN, B_IMP))
+			 ORDER BY S_NAME desc)
+       WHERE  ROWNUM&lt;11
+       ORDER BY S_NAME 
+	</select>
+	<!-- 项目分析-到户-金融扶贫 # -->
+	<select id="queryFinanceTrendChartByArea"  parameterType="hashmap" resultType="hashmap">
+			SELECT 
+            S_NAME,
+            CASE WHEN u_type='A_PLAN' THEN '贷款户数'
+                 WHEN u_type='B_IMP' THEN '贷款利息(万元)'
+             END S_GROUP,
+             u_value as S_VALUE
+          FROM ( select 
+             CITY_NAME S_NAME,
+       SUM(PROJ_FAM_NUM) A_PLAN,
+        trunc(SUM(LOAN_INTERSET)/10000, 2) B_IMP
+        from R2_DM_FAM_PROJECT_CTY_Y t
+			where 1=1
+            AND STAT_YEAR = #{year}
+            AND PROJ_CLASS2 = '贷款贴息' 
+            
+				<include refid="query_condition_sql_family"/>
+				<include refid="level_sql"/>
+			  GROUP BY CITY_NAME  
+			  ORDER BY B_IMP desc) 
+			  unpivot (u_value for u_type in (A_PLAN, B_IMP))
+			  WHERE rownum&lt;11
+	</select>
+	
+	 <!-- 项目分析-到户-金融扶贫-统计表 # -->
+	<select id="queryFinanceTrendAllTable"  parameterType="hashmap" resultType="hashmap">
+			SELECT 
+			R1.*
+			FROM
+			(SELECT
+			<include refid="level_area_sql"/>
+			 <!-- 贷款户数 --> 
+			 SUM(PROJ_FAM_NUM)  A3, 
+       		<!--- 贷款项目数 --> 
+      		SUM(PROJECT_NUM)  A4, 
+			 <!-- 贷款金额 --> 
+			trunc(SUM(LOAN_AMOUNT) /10000, 2)  A5, 
+			<!--  贷款利息 -->
+			trunc( SUM(LOAN_INTERSET) /10000, 2) A6
+			
+			FROM R2_DM_FAM_PROJECT_CTY_Y  
+			where 1=1
+            AND STAT_YEAR = #{year}
+            AND PROJ_CLASS2 = '贷款贴息'
+             
+				<include refid="query_condition_sql_family"/>
+				<include refid="level_sql"/>
+			GROUP BY <include refid="group_by_sql"/>) R1
+			ORDER BY A3 ASC
+	</select>
+	 <!-- 项目分析-到户-金融扶贫-统计表中合计 # -->
+	<select id="queryFinanceTrendAllTableC"  parameterType="hashmap" resultType="hashmap">
+			SELECT 
+			R1.*
+			FROM
+			(SELECT
+			<include refid="count_area_sql"/>
+			 <!-- 贷款户数 --> 
+			 SUM(PROJ_FAM_NUM)  A3, 
+       		<!--- 贷款项目数 --> 
+      		SUM(PROJECT_NUM)  A4, 
+			 <!-- 贷款金额 --> 
+			trunc(SUM(LOAN_AMOUNT) /10000, 2)  A5, 
+			<!--  贷款利息 -->
+			trunc( SUM(LOAN_INTERSET) /10000, 2) A6
+			
+			FROM R2_DM_FAM_PROJECT_CTY_Y 
+			where 1=1
+            AND STAT_YEAR = #{year}
+            AND PROJ_CLASS2 = '贷款贴息'
+             
+				<include refid="query_condition_sql_family"/>
+				<include refid="level_sql"/>
+			 GROUP BY <include refid="count_group_by_sql"/>) R1
+			ORDER BY A3 ASC
+	</select>
+	
+	<!-- 项目分析-到户-住房改造 # -->
+	<select id="queryHouseTrendChart"  parameterType="hashmap" resultType="hashmap">
+			SELECT
+        * from (SELECT 
+            S_NAME,
+            CASE WHEN u_type='A_PLAN' THEN '完成改造户数'
+                 WHEN u_type='B_IMP' THEN '改造金额 (万元)'
+             END S_GROUP,
+             u_value as S_VALUE
+          FROM ( select 
+        TO_CHAR(TO_DATE( STAT_MONTH,'YYYYMM'),'YYYY.MM') S_NAME,
+        SUM(PROJ_FAM_NUM ) A_PLAN,
+       trunc(SUM(REAL_CAPITAL) /10000, 2) B_IMP
+        from R2_DM_PROJFUNDS_PROJTYPE_M t
+			where 1=1
+            <include refid="group_sql"/>
+            AND PROJ_CLASS2 = '住房改造' 
+            
+			<include refid="query_condition_sql_family"/>
+			<include refid="level_sql"/>
+			GROUP BY STAT_MONTH ) 
+			unpivot (u_value for u_type in (A_PLAN, B_IMP))
+			ORDER BY S_NAME desc)
+	       WHERE  ROWNUM&lt;11
+	       ORDER BY S_NAME 
+	</select>
+	<!-- 项目分析-到户-住房改造 # -->
+	<select id="queryHouseTrendChartByArea"  parameterType="hashmap" resultType="hashmap">
+			SELECT 
+            S_NAME,
+            CASE WHEN u_type='A_PLAN' THEN '完成改造户数'
+                 WHEN u_type='B_IMP' THEN '改造金额 (万元)'
+             END S_GROUP,
+             u_value as S_VALUE
+          FROM ( select 
+             CITY_NAME S_NAME,
+    	  SUM(PROJ_FAM_NUM) A_PLAN,
+        trunc(SUM(REAL_CAPITAL) /10000, 2) B_IMP
+        from R2_DM_FAM_PROJECT_CTY_Y t
+			where 1=1
+            AND STAT_YEAR = #{year}
+            AND PROJ_CLASS2 = '住房改造' 
+            
+			<include refid="query_condition_sql_family"/>
+			<include refid="level_sql"/>
+			 GROUP BY CITY_NAME  
+			  ORDER BY B_IMP desc) 
+			  unpivot (u_value for u_type in (A_PLAN, B_IMP))
+			  WHERE rownum&lt;11
+	</select>
+	
+	 <!-- 项目分析-到户-住房改造-统计表 # -->
+	<select id="queryHouseTrendAllTable"  parameterType="hashmap" resultType="hashmap">
+			SELECT 
+			R1.*,
+			<!-- 完成比例 --> 
+			CASE WHEN A4=0 THEN '0%' ELSE  TO_CHAR(TRUNC( A3/ A4*100,2),'9999990.00') || '%' END A5
+			FROM
+			(SELECT
+			<include refid="level_area_sql"/>
+			 <!-- 计划改造户数 --> 
+			SUM(PLAN_HOUSE_FAM_NUM) A3, 
+			 <!-- 完成改造户数 --> 
+			SUM(PROJ_FAM_NUM) A4,  
+			 <!-- 项目数 --> 
+			SUM(PROJECT_NUM)  A6, 
+			<!--  改造投入金额-->
+			trunc(SUM(REAL_CAPITAL) /10000, 2) A7
+			
+			FROM R2_DM_FAM_PROJECT_CTY_Y  
+			where 1=1
+            AND STAT_YEAR = #{year}
+            AND PROJ_CLASS2 = '住房改造'
+             
+				<include refid="query_condition_sql_family"/>
+				<include refid="level_sql"/>
+			GROUP BY <include refid="group_by_sql"/>) R1
+			ORDER BY A3 ASC
+	</select>
+	 <!-- 项目分析-到户-住房改造-统计表中合计 # -->
+	<select id="queryHouseTrendAllTableC"  parameterType="hashmap" resultType="hashmap">
+			SELECT 
+			R1.*,
+			<!-- 完成比例 --> 
+			CASE WHEN A4=0 THEN '0%' ELSE  TO_CHAR(TRUNC( A3/ A4*100,2),'9999990.00') || '%' END A5
+			FROM
+			(SELECT
+			<include refid="count_area_sql"/>
+			 <!-- 计划改造户数 --> 
+			SUM(PLAN_HOUSE_FAM_NUM) A3, 
+			 <!-- 完成改造户数 --> 
+			SUM(PROJ_FAM_NUM) A4,  
+			 <!-- 项目数 --> 
+			SUM(PROJECT_NUM)  A6, 
+			<!--  改造投入金额-->
+			trunc(SUM(REAL_CAPITAL) /10000, 2) A7
+			
+			FROM R2_DM_FAM_PROJECT_CTY_Y   
+			where 1=1
+            AND STAT_YEAR = #{year}
+            AND PROJ_CLASS2 = '住房改造'
+             
+			<include refid="query_condition_sql_family"/>
+			<include refid="level_sql"/>
+			 GROUP BY <include refid="count_group_by_sql"/>) R1
+			ORDER BY A3 ASC
+	</select>
+
+	<!-- 项目分析-到户-资产扶贫 # -->
+	<select id="queryPropertyTrendChart"  parameterType="hashmap" resultType="hashmap">
+			SELECT
+        * from (SELECT 
+            S_NAME,
+            CASE WHEN u_type='A_PLAN' THEN '投入资金 (万元)'
+                 WHEN u_type='B_IMP' THEN '项目收益(万元)'
+                 WHEN u_type='C_IMP' THEN '参与户数'
+             END S_GROUP,
+             u_value as S_VALUE
+          FROM ( select 
+        TO_CHAR(TO_DATE( STAT_MONTH,'YYYYMM'),'YYYY.MM') S_NAME,
+       trunc(SUM(REAL_CAPITAL)/10000, 2)  A_PLAN,
+       trunc(SUM(PROJ_PROFIT)/10000, 2)  B_IMP,
+      SUM( PROJ_FAM_NUM) C_IMP
+        from R2_DM_PROJFUNDS_PROJTYPE_M t
+			where 1=1
+           <include refid="group_sql"/>
+            AND PROJ_CLASS2 = '资产扶贫' 
+            
+			<include refid="query_condition_sql_family"/>
+			<include refid="level_sql"/>
+			GROUP BY STAT_MONTH ) 
+			unpivot (u_value for u_type in (A_PLAN, B_IMP,C_IMP))
+			 ORDER BY S_NAME desc)
+	       WHERE  ROWNUM&lt;16
+	       ORDER BY S_NAME 
+	</select>
+	<!-- 项目分析-到户-资产扶贫 # -->
+	<select id="queryPropertyTrendChartByArea"  parameterType="hashmap" resultType="hashmap">
+			SELECT 
+            S_NAME,
+            CASE WHEN u_type='A_PLAN' THEN '投入资金(万元)'
+                 WHEN u_type='B_IMP' THEN '项目收益(万元)'
+                 WHEN u_type='C_IMP' THEN '参与户数'
+             END S_GROUP,
+             u_value as S_VALUE
+          FROM ( select 
+             CITY_NAME S_NAME,
+         trunc(SUM(REAL_CAPITAL)/10000, 2) A_PLAN,
+         trunc(SUM(PROJ_PROFIT)/10000, 2) B_IMP,
+        SUM( PROJ_FAM_NUM) C_IMP
+        from R2_DM_FAM_PROJECT_CTY_Y t
+			where 1=1
+            AND STAT_YEAR = #{year}
+            AND PROJ_CLASS2 = '资产扶贫' 
+            
+			<include refid="query_condition_sql_family"/>
+			<include refid="level_sql"/>
+			 GROUP BY CITY_NAME  
+			  ORDER BY B_IMP desc) 
+			  unpivot (u_value for u_type in (A_PLAN, B_IMP,C_IMP))
+			  WHERE rownum&lt;16
+	</select>
+	
+	 <!-- 项目分析-到户-资产扶贫-统计表 # -->
+	<select id="queryPropertyTrendAllTable"  parameterType="hashmap" resultType="hashmap">
+			SELECT 
+			R1.*
+			FROM
+			(SELECT
+			<include refid="level_area_sql"/>
+			 <!-- 参与户数 --> 
+			SUM(PROJ_FAM_NUM) A3, 
+			 <!-- 项目数 --> 
+			SUM(PROJECT_NUM)  A4, 
+			 <!-- 投入金额 --> 
+			trunc(SUM(REAL_CAPITAL)/10000, 2)  A5, 
+			<!--  项目收益 -->
+			trunc(SUM(PROJ_PROFIT)/10000, 2) A6
+			
+			FROM R2_DM_FAM_PROJECT_CTY_Y  
+			where 1=1
+            AND STAT_YEAR = #{year}
+            AND PROJ_CLASS2 = '资产扶贫'
+             
+			<include refid="query_condition_sql_family"/>
+			<include refid="level_sql"/>
+			GROUP BY <include refid="group_by_sql"/>) R1
+			ORDER BY A3 ASC
+	</select>
+	 <!-- 项目分析-到户-资产扶贫-统计表中合计 # -->
+	<select id="queryPropertyTrendAllTableC"  parameterType="hashmap" resultType="hashmap">
+			SELECT 
+			R1.*
+			FROM
+			(SELECT
+			<include refid="count_area_sql"/>
+			 <!-- 参与户数 --> 
+			SUM(PROJ_FAM_NUM) A3, 
+			 <!-- 项目数 --> 
+			SUM(PROJECT_NUM)  A4, 
+			 <!-- 投入金额 --> 
+			trunc(SUM(REAL_CAPITAL)/10000, 2)  A5, 
+			<!--  项目收益 -->
+			trunc(SUM(PROJ_PROFIT)/10000, 2) A6
+			
+			FROM R2_DM_FAM_PROJECT_CTY_Y   
+			where 1=1
+            AND STAT_YEAR = #{year}
+            AND PROJ_CLASS2 = '资产扶贫'
+             
+			<include refid="query_condition_sql_family"/>
+			<include refid="level_sql"/>
+			 GROUP BY <include refid="count_group_by_sql"/>) R1
+			ORDER BY A3 ASC
+	</select>
+	
+	<!-- 项目分析-到户-慰问 # -->
+	<select id="queryVisitTrendChart"  parameterType="hashmap" resultType="hashmap">
+			SELECT
+        * from (SELECT 
+            S_NAME,
+            CASE WHEN u_type='A_PLAN' THEN '慰问户数'
+                 WHEN u_type='B_IMP' THEN '慰问金额(万元)'
+             END S_GROUP,
+             u_value as S_VALUE
+          FROM ( select 
+        TO_CHAR(TO_DATE( STAT_MONTH,'YYYYMM'),'YYYY.MM') S_NAME,
+        SUM(PROJ_FAM_NUM) A_PLAN,
+        trunc(SUM(REAL_CAPITAL)/10000, 2) B_IMP
+        from R2_DM_PROJFUNDS_PROJTYPE_M t
+			where 1=1
+           <include refid="group_sql"/>
+            AND PROJ_CLASS2 = '慰问' 
+            
+			<include refid="query_condition_sql_family"/>
+			<include refid="level_sql"/>
+			GROUP BY STAT_MONTH ) 
+			unpivot (u_value for u_type in (A_PLAN, B_IMP))
+			ORDER BY S_NAME desc)
+       WHERE  ROWNUM&lt;11
+       ORDER BY S_NAME 
+	</select>
+	<!-- 项目分析-到户-慰问 # -->
+	<select id="queryVisitTrendChartByArea"  parameterType="hashmap" resultType="hashmap">
+			SELECT 
+            S_NAME,
+            CASE WHEN u_type='A_PLAN' THEN '慰问户数'
+                 WHEN u_type='B_IMP' THEN  '慰问金额(万元)'
+             END S_GROUP,
+             u_value as S_VALUE
+          FROM ( select 
+             CITY_NAME S_NAME,
+        SUM(PROJ_FAM_NUM) A_PLAN,
+        trunc(SUM(REAL_CAPITAL)/10000, 2) B_IMP
+        from R2_DM_FAM_PROJECT_CTY_Y t
+			where 1=1
+            AND STAT_YEAR = #{year}
+            AND PROJ_CLASS2 = '慰问' 
+            
+				<include refid="query_condition_sql_family"/>
+				<include refid="level_sql"/>
+			 GROUP BY CITY_NAME  
+			  ORDER BY B_IMP desc) 
+			  unpivot (u_value for u_type in (A_PLAN, B_IMP))
+			  WHERE rownum&lt;11
+	</select>
+	
+	 <!-- 项目分析-到户-慰问-统计表 # -->
+	<select id="queryVisitTrendAllTable"  parameterType="hashmap" resultType="hashmap">
+			SELECT 
+			R1.*
+			FROM
+			(SELECT
+			<include refid="level_area_sql"/>
+			 <!-- 慰问户数 --> 
+			SUM(PROJ_FAM_NUM) A3, 
+			 <!-- 项目数 --> 
+			SUM(PROJECT_NUM)  A4, 
+			 <!-- 慰问金额 --> 
+			trunc(SUM(REAL_CAPITAL)/10000, 2)  A5
+			
+			FROM R2_DM_FAM_PROJECT_CTY_Y  
+			where 1=1
+            AND STAT_YEAR = #{year}
+            AND PROJ_CLASS2 = '慰问'
+             
+				<include refid="query_condition_sql_family"/>
+				<include refid="level_sql"/>
+			GROUP BY <include refid="group_by_sql"/>) R1
+			ORDER BY A3 ASC
+	</select>
+	 <!-- 项目分析-到户-慰问-统计表中合计 # -->
+	<select id="queryVisitTrendAllTableC"  parameterType="hashmap" resultType="hashmap">
+			SELECT 
+			R1.*
+			FROM
+			(SELECT
+			<include refid="count_area_sql"/>
+			<!-- 慰问户数 --> 
+			SUM(PROJ_FAM_NUM) A3, 
+			 <!-- 项目数 --> 
+			SUM(PROJECT_NUM)  A4, 
+			 <!-- 慰问金额 --> 
+			trunc(SUM(REAL_CAPITAL)/10000, 2)  A5
+			
+			FROM R2_DM_FAM_PROJECT_CTY_Y 
+			where 1=1
+            AND STAT_YEAR = #{year}
+            AND PROJ_CLASS2 = '慰问'
+             
+				<include refid="query_condition_sql_family"/>
+				<include refid="level_sql"/>
+			 GROUP BY <include refid="count_group_by_sql"/>) R1
+			ORDER BY A3 ASC
+	</select>
+	 <!-- 项目分析-到户-就业扶贫 # -->
+	<select id="queryEmploymentTrendChart"  parameterType="hashmap" resultType="hashmap">
+			SELECT
+        * from (SELECT 
+            S_NAME,
+            CASE WHEN u_type='A_PLAN' THEN '就业人数'
+                 WHEN u_type='B_IMP' THEN '就业收益(万元)'
+             END S_GROUP,
+             u_value as S_VALUE
+          FROM ( select 
+        TO_CHAR(TO_DATE( STAT_MONTH,'YYYYMM'),'YYYY.MM') S_NAME,
+       SUM(PROJ_POP_NUM) A_PLAN,
+        trunc( SUM(PROJ_PROFIT)/10000, 2) B_IMP
+        from R2_DM_PROJFUNDS_PROJTYPE_M t
+			where 1=1
+           <include refid="group_sql"/>
+            AND PROJ_CLASS2 = '就业扶贫' 
+            
+			<include refid="query_condition_sql_family"/>
+			<include refid="level_sql"/>
+			GROUP BY STAT_MONTH ) 
+			unpivot (u_value for u_type in (A_PLAN, B_IMP))
+			ORDER BY S_NAME desc)
+	       WHERE  ROWNUM&lt;11
+	       ORDER BY S_NAME 
+	</select>
+	<!-- 项目分析-到户-就业扶贫 # -->
+	<select id="queryEmploymentTrendChartByArea"  parameterType="hashmap" resultType="hashmap">
+			SELECT 
+            S_NAME,
+            CASE WHEN u_type='A_PLAN' THEN '就业人数'
+                 WHEN u_type='B_IMP' THEN '就业收益(万元)'
+             END S_GROUP,
+             u_value as S_VALUE
+          FROM ( select 
+             CITY_NAME S_NAME,
+        SUM(PROJ_POP_NUM)  A_PLAN,
+        trunc(SUM(PROJ_PROFIT)/10000, 2) B_IMP
+        from R2_DM_FAM_PROJECT_CTY_Y t
+			where 1=1
+            AND STAT_YEAR = #{year}
+            AND PROJ_CLASS2 = '就业扶贫' 
+            
+			<include refid="query_condition_sql_family"/>
+			<include refid="level_sql"/>
+			 GROUP BY CITY_NAME  
+			  ORDER BY B_IMP desc) 
+			  unpivot (u_value for u_type in (A_PLAN, B_IMP))
+			  WHERE rownum&lt;11
+	</select>
+	
+	 <!-- 项目分析-到户-就业扶贫-统计表 # -->
+	<select id="queryEmploymentTrendAllTable"  parameterType="hashmap" resultType="hashmap">
+			SELECT 
+			R1.*,
+			<!-- 年人均就业收入-->
+			CASE WHEN A5=0 THEN '0' ELSE  TO_CHAR(TRUNC( A6/ A5,2),'9999990.00') END  A7
+			FROM
+			(SELECT
+			<include refid="level_area_sql"/>
+			 <!-- 项目数（个） --> 
+			SUM(PROJECT_NUM)  A3, 
+			 <!-- 参与户数--> 
+			SUM(PROJ_FAM_NUM) A4,  
+			 <!-- 就业人数 --> 
+			SUM(PROJ_POP_NUM)  A5, 
+			<!-- 就业收益-->
+			 trunc( SUM(PROJ_PROFIT)/10000, 2) A6  
+			
+			FROM R2_DM_FAM_PROJECT_CTY_Y  
+			where 1=1
+            AND STAT_YEAR = #{year}
+            AND PROJ_CLASS2 = '就业扶贫'
+             
+				<include refid="query_condition_sql_family"/>
+				<include refid="level_sql"/>
+			GROUP BY <include refid="group_by_sql"/>) R1
+			ORDER BY A3 ASC
+	</select>
+	 <!-- 项目分析-到户-就业扶贫-统计表中合计 # -->
+	<select id="queryEmploymentTrendAllTableC"  parameterType="hashmap" resultType="hashmap">
+			SELECT 
+			R1.*,
+			<!-- 年人均就业收入-->
+			CASE WHEN A5=0 THEN '0' ELSE  TO_CHAR(TRUNC( A6/ A5,2),'9999990.00') END  A7
+			FROM
+			(SELECT
+			<include refid="count_area_sql"/>
+			<!-- 项目数（个） --> 
+			SUM(PROJECT_NUM)  A3, 
+			 <!-- 参与户数--> 
+			SUM(PROJ_FAM_NUM) A4,  
+			 <!-- 就业人数 --> 
+			SUM(PROJ_POP_NUM)  A5, 
+			<!-- 就业收益-->
+			 trunc( SUM(PROJ_PROFIT)/10000, 2) A6 
+			
+			FROM R2_DM_FAM_PROJECT_CTY_Y 
+			where 1=1
+            AND STAT_YEAR = #{year}
+            AND PROJ_CLASS2 = '就业扶贫'
+             
+			<include refid="query_condition_sql_family"/>
+			<include refid="level_sql"/>
+			 GROUP BY <include refid="count_group_by_sql"/>) R1
+			ORDER BY A3 ASC
+	</select>
+	 
+	 <!-- 项目分析-到户-技能培训 # -->
+	<select id="querySkillTrendChart"  parameterType="hashmap" resultType="hashmap">
+			SELECT
+        * from ( SELECT 
+            S_NAME,
+            CASE WHEN u_type='A_PLAN' THEN '投入资金(万元)'
+                 WHEN u_type='B_IMP' THEN '培训人数'
+             END S_GROUP,
+             u_value as S_VALUE
+          FROM ( select 
+        TO_CHAR(TO_DATE( STAT_MONTH,'YYYYMM'),'YYYY.MM') S_NAME,
+       trunc(SUM(REAL_CAPITAL)/10000, 2) A_PLAN,
+       SUM(PROJ_POP_NUM) B_IMP 
+        from R2_DM_PROJFUNDS_PROJTYPE_M t
+			where 1=1
+           <include refid="group_sql"/>
+            AND PROJ_CLASS2 = '技能培训' 
+            
+			<include refid="query_condition_sql_family"/>
+			<include refid="level_sql"/>
+			GROUP BY STAT_MONTH ) 
+			unpivot (u_value for u_type in (A_PLAN, B_IMP))
+			ORDER BY S_NAME desc)
+       WHERE  ROWNUM&lt;11
+       ORDER BY S_NAME 
+	</select>
+	<!-- 项目分析-到户-技能培训 # -->
+	<select id="querySkillTrendChartByArea"  parameterType="hashmap" resultType="hashmap">
+			SELECT 
+            S_NAME,
+            CASE WHEN u_type='A_PLAN' THEN '培训人数'
+                 WHEN u_type='B_IMP' THEN '投入资金(万元)'
+             END S_GROUP,
+             u_value as S_VALUE
+          FROM ( select 
+             CITY_NAME S_NAME,
+       SUM(PROJ_POP_NUM) A_PLAN,
+        trunc( SUM(REAL_CAPITAL)/10000, 2) B_IMP
+        from R2_DM_FAM_PROJECT_CTY_Y t
+			where 1=1
+            AND STAT_YEAR = #{year}
+            AND PROJ_CLASS2 = '技能培训' 
+            
+			<include refid="query_condition_sql_family"/>
+			<include refid="level_sql"/>
+			 GROUP BY CITY_NAME  
+			  ORDER BY B_IMP desc) 
+			  unpivot (u_value for u_type in (A_PLAN, B_IMP))
+			  WHERE rownum&lt;11
+	</select>
+	
+	 <!-- 项目分析-到户-技能培训-统计表 # -->
+	<select id="querySkillTrendAllTable"  parameterType="hashmap" resultType="hashmap">
+			SELECT 
+			R1.*
+			FROM
+			(SELECT
+			<include refid="level_area_sql"/>
+			 <!-- 在家务农人数 --> 
+			SUM(FARMING_POP_NUM) A3, 
+			 <!-- 项目数 --> 
+			SUM(PROJECT_NUM)  A4,
+			 <!-- 参与户数 --> 
+			SUM(PROJ_FAM_NUM)  A5, 
+			<!--  培训人数-->
+			SUM(PROJ_POP_NUM) A6 ,
+			<!-- 投入资金-->
+			  trunc( SUM(REAL_CAPITAL) /10000, 2) A7
+			FROM R2_DM_FAM_PROJECT_CTY_Y  
+			where 1=1
+            AND STAT_YEAR = #{year}
+            AND PROJ_CLASS2 = '技能培训'
+             
+				<include refid="query_condition_sql_family"/>
+				<include refid="level_sql"/>
+			GROUP BY <include refid="group_by_sql"/>) R1
+			ORDER BY A3 ASC
+	</select>
+	 <!-- 项目分析-到户-住技能培训-统计表中合计 # -->
+	<select id="querySkillTrendAllTableC"  parameterType="hashmap" resultType="hashmap">
+			SELECT 
+			R1.*
+			FROM
+			(SELECT
+			<include refid="count_area_sql"/>
+			 <!-- 在家务农人数 --> 
+			SUM(FARMING_POP_NUM) A3, 
+			 <!-- 项目数 --> 
+			SUM(PROJECT_NUM)  A4,
+			 <!-- 参与户数 --> 
+			SUM(PROJ_FAM_NUM)  A5, 
+			<!--  培训人数-->
+			SUM(PROJ_POP_NUM) A6 ,
+			<!-- 投入资金-->
+			  trunc( SUM(REAL_CAPITAL) /10000, 2) A7
+			FROM R2_DM_FAM_PROJECT_CTY_Y    
+			where 1=1
+            AND STAT_YEAR = #{year}
+            AND PROJ_CLASS2 = '技能培训'
+             
+			<include refid="query_condition_sql_family"/>
+			<include refid="level_sql"/>
+			 GROUP BY <include refid="count_group_by_sql"/>) R1
+			ORDER BY A3 ASC
+	</select>
+	 <!-- 项目分析-到户-教育扶贫 # -->
+	<select id="queryEduTrendChart"  parameterType="hashmap" resultType="hashmap">
+			SELECT
+        * from (SELECT 
+            S_NAME,
+            CASE WHEN u_type='A_PLAN' THEN '教育扶贫人数'
+                 WHEN u_type='B_IMP' THEN '投入资金(万元)'
+             END S_GROUP,
+             u_value as S_VALUE
+          FROM ( select 
+        TO_CHAR(TO_DATE( STAT_MONTH,'YYYYMM'),'YYYY.MM') S_NAME,
+        SUM(PROJ_POP_NUM) A_PLAN,
+         trunc(SUM(REAL_CAPITAL)/10000, 2) B_IMP  
+        from R2_DM_PROJFUNDS_PROJTYPE_M t
+			where 1=1
+            <include refid="group_sql"/>
+            AND PROJ_CLASS2 = '教育扶贫' 
+            
+			<include refid="query_condition_sql_family"/>
+			<include refid="level_sql"/>
+			GROUP BY STAT_MONTH ) 
+			unpivot (u_value for u_type in (A_PLAN, B_IMP))
+			 ORDER BY S_NAME desc)
+	       WHERE  ROWNUM&lt;11
+	       ORDER BY S_NAME 
+	</select>
+	<!-- 项目分析-到户-教育扶贫 # -->
+	<select id="queryEduTrendChartByArea"  parameterType="hashmap" resultType="hashmap">
+			SELECT 
+            S_NAME,
+            CASE WHEN u_type='A_PLAN' THEN '教育扶贫人数'
+                 WHEN u_type='B_IMP' THEN '投入资金(万元)'
+             END S_GROUP,
+             u_value as S_VALUE
+          FROM ( select 
+             CITY_NAME S_NAME,
+        SUM(PROJ_POP_NUM) A_PLAN,
+         trunc(SUM(REAL_CAPITAL)/10000, 2) B_IMP
+        from R2_DM_FAM_PROJECT_CTY_Y t
+			where 1=1
+            AND STAT_YEAR = #{year}
+            AND PROJ_CLASS2 = '教育扶贫' 
+            
+			<include refid="query_condition_sql_family"/>
+			<include refid="level_sql"/>
+			 GROUP BY CITY_NAME  
+			  ORDER BY B_IMP desc) 
+			  unpivot (u_value for u_type in (A_PLAN, B_IMP))
+			  WHERE rownum&lt;11
+	</select>
+	
+	 <!-- 项目分析-到户-教育扶贫-统计表 # -->
+	<select id="queryEduTrendAllTable"  parameterType="hashmap" resultType="hashmap">
+			SELECT 
+			R1.*
+			FROM
+			(SELECT
+			<include refid="level_area_sql"/>
+			 <!-- 项目数 --> 
+			SUM(PROJECT_NUM)  A3,
+			 <!-- 参与户数 --> 
+			SUM(PROJ_FAM_NUM)  A4, 
+			<!--  教育扶贫人数-->
+			SUM(PROJ_POP_NUM) A5 ,
+			<!-- 投入资金-->
+			trunc(SUM(REAL_CAPITAL)/10000, 2) A6
+			FROM R2_DM_FAM_PROJECT_CTY_Y  
+			where 1=1
+            AND STAT_YEAR = #{year}
+            AND PROJ_CLASS2 = '教育扶贫'
+             
+				<include refid="query_condition_sql_family"/>
+				<include refid="level_sql"/>
+			GROUP BY <include refid="group_by_sql"/>) R1
+			ORDER BY A3 ASC
+	</select>
+	 <!-- 项目分析-到户-教育扶贫-统计表中合计 # -->
+	<select id="queryEduTrendAllTableC"  parameterType="hashmap" resultType="hashmap">
+			SELECT 
+			R1.*
+			FROM
+			(SELECT
+			<include refid="count_area_sql"/>
+			 <!-- 项目数 --> 
+			SUM(PROJECT_NUM)  A3,
+			 <!-- 参与户数 --> 
+			SUM(PROJ_FAM_NUM)  A4, 
+			<!--  教育扶贫人数-->
+			SUM(PROJ_POP_NUM) A5 ,
+			<!-- 投入资金-->
+			trunc(SUM(REAL_CAPITAL)/10000, 2) A6
+			FROM R2_DM_FAM_PROJECT_CTY_Y  
+			where 1=1
+            AND STAT_YEAR = #{year}
+            AND PROJ_CLASS2 = '教育扶贫'
+             
+			<include refid="query_condition_sql_family"/>
+			<include refid="level_sql"/>
+			 GROUP BY <include refid="count_group_by_sql"/>) R1
+			ORDER BY A3 ASC
+	</select>
+	<!-- 项目监控户扶贫项目分析-产业扶贫-明细表 # -->
+	<select id="queryIndustryDetail"  parameterType="hashmap" resultType="hashmap">
+			select * from
+			(
+			SELECT 	
+			a1.*,ROWNUM RM
+			FROM
+			(
+			
+			SELECT 
+			CITY_NAME A2,
+			COUNTY_NAME A3,
+			TOWN_NAME A4,
+			COUNTRY_NAME A5,
+			FAM_CODE A6,
+			FAM_ID S_ID,
+			FAM_NAME A7,
+			CASE POOR_TYPE 
+					WHEN 1 THEN '一般贫困户' 
+					WHEN 2 THEN '低保户'
+          			WHEN 3 THEN '五保户'
+         	 END as  A8,
+			CASE LABOR_TYPE 
+					WHEN 1 THEN '有劳动能力' 
+					WHEN 0 THEN '无劳动能力'
+         	 END as  A9,
+			PROJ_NAME A10,
+			to_char(to_date(BEGIN_TIME,'yyyymmdd'),'yyyy.mm') A11,
+			PROJ_CNT  A12, 
+			trunc(REAL_CAPITAL/10000, 2) A13, 
+			trunc(PROJ_PROFIT/10000, 2)  A14, 
+			PROJ_STATUS A15
+			FROM
+			R_DW_HELP_PROJECT_FAM_Y
+			where 1=1
+            AND ACC_YEAR = #{year}
+            AND PROJ_CLASS2 = '产业扶贫' 
+				<include refid="query_condition_sql_family"/>
+				<include refid="level_sql"/>
+			 ) a1
+			) 
+			<if test="page !=null">
+					WHERE RM BETWEEN #{pageSize}*(#{page}-1)+1 AND #{pageSize}  * #{page}				
+			</if>	
+	</select>
+	<!-- 项目监控户扶贫项目分析-产业扶贫-明细表总数  -->
+	<select id="queryIndustryDetailCount"  parameterType="hashmap" resultType="long">
+	
+			select 
+				count(*)
+				from
+				(
+				select t1.*,ROWNUM RM
+				from
+				(	
+				SELECT 
+				CITY_NAME A2,
+				COUNTY_NAME A3,
+				TOWN_NAME A4,
+				COUNTRY_NAME A5,
+				FAM_CODE A6,
+			 	FAM_ID S_ID,
+				FAM_NAME A7,
+				CASE POOR_TYPE 
+					WHEN 1 THEN '一般贫困户' 
+					WHEN 2 THEN '低保户'
+          			WHEN 3 THEN '五保户'
+         	 END as  A8,
+				CASE LABOR_TYPE 
+					WHEN 1 THEN '有劳动能力' 
+					WHEN 0 THEN '无劳动能力'
+         	 END as  A9,
+				PROJ_NAME A10,
+				to_char(to_date(BEGIN_TIME,'yyyymmdd'),'yyyy.mm') A11,
+				PROJ_CNT  A12, 
+				trunc(REAL_CAPITAL/10000, 2)  A13, 
+				trunc(PROJ_PROFIT/10000, 2)   A14, 
+				PROJ_STATUS A15
+				from 
+				R_DW_HELP_PROJECT_FAM_Y 
+				where 1=1
+               AND ACC_YEAR = #{year}
+               AND PROJ_CLASS2 = '产业扶贫' 
+				<include refid="query_condition_sql_family"/>
+				<include refid="level_sql"/>
+				) t1			
+				)		
+	</select>
+	<!-- 项目监控户扶贫项目分析-金融扶贫-明细表 # -->
+	<select id="queryFinanceDetail"  parameterType="hashmap" resultType="hashmap">
+			select * from
+			(
+			SELECT 	
+			a1.*,ROWNUM RM
+			FROM
+			(
+			
+			SELECT 
+			CITY_NAME A2,
+			COUNTY_NAME A3,
+			TOWN_NAME A4,
+			COUNTRY_NAME A5,
+			FAM_CODE A6,
+			FAM_ID S_ID,
+			FAM_NAME A7,
+			CASE POOR_TYPE 
+					WHEN 1 THEN '一般贫困户' 
+					WHEN 2 THEN '低保户'
+          			WHEN 3 THEN '五保户'
+         	 END as   A8,
+			POP_NAME A9,
+			to_char(to_date(BEGIN_TIME,'yyyymmdd'),'yyyy.mm') A10, 
+			trunc(LOAN_AMOUNT/10000, 2)  A11, 
+			trunc(LOAN_INTERSET/10000, 2)  A12, 
+			PROJ_STATUS A13
+			FROM
+			R_DW_HELP_PROJECT_FAM_Y
+			where 1=1
+            AND ACC_YEAR = #{year}
+            AND PROJ_CLASS2 = '贷款贴息' 
+				<include refid="query_condition_sql_family"/>
+				<include refid="level_sql"/>
+			 ) a1
+			) 
+			<if test="page !=null">
+					WHERE RM BETWEEN #{pageSize}*(#{page}-1)+1 AND #{pageSize}  * #{page}				
+			</if>	
+	</select>
+	<!-- 项目监控户扶贫项目分析-金融扶贫-明细表总数  -->
+	<select id="queryFinanceDetailCount"  parameterType="hashmap" resultType="long">
+	
+			select 
+				count(*)
+				from
+				(
+				select t1.*,ROWNUM RM
+				from
+				(	
+				SELECT 
+				CITY_NAME A2,
+				COUNTY_NAME A3,
+				TOWN_NAME A4,
+				COUNTRY_NAME A5,
+				FAM_CODE A6,
+				FAM_ID S_ID,
+				FAM_NAME A7,
+				CASE POOR_TYPE 
+					WHEN 1 THEN '一般贫困户' 
+					WHEN 2 THEN '低保户'
+          			WHEN 3 THEN '五保户'
+         	 END as   A8,
+				POP_NAME A9,
+				to_char(to_date(BEGIN_TIME,'yyyymmdd'),'yyyy.mm') A10, 
+				trunc(LOAN_AMOUNT/10000, 2)  A11, 
+				trunc(LOAN_INTERSET/10000, 2)   A12, 
+				PROJ_STATUS A13
+				from 
+				R_DW_HELP_PROJECT_FAM_Y 
+				where 1=1
+               AND ACC_YEAR = #{year}
+               AND PROJ_CLASS2 = '贷款贴息' 
+				<include refid="query_condition_sql_family"/>
+				<include refid="level_sql"/>
+				) t1			
+				)		
+	</select>
+	<!-- 项目监控户扶贫项目分析-住房改造-明细表 # -->
+	<select id="queryHouseDetail"  parameterType="hashmap" resultType="hashmap">
+			select * from
+			(
+			SELECT 	
+			a1.*,ROWNUM RM
+			FROM
+			(
+			
+			SELECT 
+			CITY_NAME A2,
+			COUNTY_NAME A3,
+			TOWN_NAME A4,
+			COUNTRY_NAME A5,
+			FAM_CODE A6,
+			FAM_ID S_ID,
+			FAM_NAME A7,
+			CASE POOR_TYPE 
+					WHEN 1 THEN '一般贫困户' 
+					WHEN 2 THEN '低保户'
+          			WHEN 3 THEN '五保户'
+         	 END as   A8,
+			to_char(to_date(BEGIN_TIME,'yyyymmdd'),'yyyy.mm') A9,
+			
+			CASE IS_IMP_HOUSE 
+					WHEN 1 THEN '完成改造' 
+					WHEN 0 THEN '未完成'
+         	 END as  A10, 
+			trunc(REAL_CAPITAL/10000, 2)  A11, 
+			PROJ_STATUS A12
+			FROM
+			R_DW_HELP_PROJECT_FAM_Y
+			where 1=1
+            AND ACC_YEAR = #{year}
+            AND PROJ_CLASS2 = '住房改造' 
+				<include refid="query_condition_sql_family"/>
+				<include refid="level_sql"/>
+			 ) a1
+			) 
+			<if test="page !=null">
+					WHERE RM BETWEEN #{pageSize}*(#{page}-1)+1 AND #{pageSize}  * #{page}				
+			</if>	
+	</select>
+	<!-- 项目监控户扶贫项目分析-住房改造-明细表总数  -->
+	<select id="queryHouseDetailCount"  parameterType="hashmap" resultType="long">
+	
+			select 
+				count(*)
+				from
+				(
+				select t1.*,ROWNUM RM
+				from
+				(	
+				SELECT 
+				CITY_NAME A2,
+				COUNTY_NAME A3,
+				TOWN_NAME A4,
+				COUNTRY_NAME A5,
+				FAM_CODE A6,
+				FAM_ID S_ID,
+				FAM_NAME A7,
+				CASE POOR_TYPE 
+					WHEN 1 THEN '一般贫困户' 
+					WHEN 2 THEN '低保户'
+          			WHEN 3 THEN '五保户'
+         	 END as   A8,
+				to_char(to_date(BEGIN_TIME,'yyyymmdd'),'yyyy.mm') A9,
+				CASE IS_IMP_HOUSE 
+					WHEN 1 THEN '完成改造' 
+					WHEN 0 THEN '未完成'
+         	 END as  A10, 
+				trunc(REAL_CAPITAL/10000, 2)  A11, 
+				PROJ_STATUS A12
+				from 
+				R_DW_HELP_PROJECT_FAM_Y 
+				where 1=1
+               AND ACC_YEAR = #{year}
+               AND PROJ_CLASS2 = '住房改造' 
+				<include refid="query_condition_sql_family"/>
+				<include refid="level_sql"/>
+				) t1			
+				)		
+	</select>
+	<!-- 项目监控户扶贫项目分析-资产扶贫-明细表 # -->
+	<select id="queryPropertyDetail"  parameterType="hashmap" resultType="hashmap">
+			select * from
+			(
+			SELECT 	
+			a1.*,ROWNUM RM
+			FROM
+			(
+			
+			SELECT 
+			CITY_NAME A2,
+			COUNTY_NAME A3,
+			TOWN_NAME A4,
+			COUNTRY_NAME A5,
+			FAM_CODE A6,
+			FAM_ID S_ID,
+			FAM_NAME A7,
+			CASE POOR_TYPE 
+					WHEN 1 THEN '一般贫困户' 
+					WHEN 2 THEN '低保户'
+          			WHEN 3 THEN '五保户'
+         	 END as   A8,
+			to_char(to_date(BEGIN_TIME,'yyyymmdd'),'yyyy.mm') A9,
+			trunc(REAL_CAPITAL/10000, 2)  A10, 
+			trunc(PROJ_PROFIT/10000, 2)  A11, 
+			PROJ_STATUS A12
+			FROM
+			R_DW_HELP_PROJECT_FAM_Y
+			where 1=1
+            AND ACC_YEAR = #{year}
+            AND PROJ_CLASS2 = '资产扶贫' 
+				<include refid="query_condition_sql_family"/>
+				<include refid="level_sql"/>
+			 ) a1
+			) 
+			<if test="page !=null">
+					WHERE RM BETWEEN #{pageSize}*(#{page}-1)+1 AND #{pageSize}  * #{page}				
+			</if>	
+	</select>
+	<!-- 项目监控户扶贫项目分析-资产扶贫-明细表总数  -->
+	<select id="queryPropertyDetailCount"  parameterType="hashmap" resultType="long">
+	
+			select 
+				count(*)
+				from
+				(
+				select t1.*,ROWNUM RM
+				from
+				(	
+				SELECT 
+				CITY_NAME A2,
+				COUNTY_NAME A3,
+				TOWN_NAME A4,
+				COUNTRY_NAME A5,
+				FAM_CODE A6,
+				FAM_ID S_ID,
+				FAM_NAME A7,
+				CASE POOR_TYPE 
+					WHEN 1 THEN '一般贫困户' 
+					WHEN 2 THEN '低保户'
+          			WHEN 3 THEN '五保户'
+         	 END as   A8,
+				to_char(to_date(BEGIN_TIME,'yyyymmdd'),'yyyy.mm') A9,
+				trunc(REAL_CAPITAL/10000, 2) A10, 
+				trunc(PROJ_PROFIT/10000, 2) A11, 
+				PROJ_STATUS A12
+				from 
+				R_DW_HELP_PROJECT_FAM_Y 
+				where 1=1
+               AND ACC_YEAR = #{year}
+               AND PROJ_CLASS2 = '资产扶贫' 
+				<include refid="query_condition_sql_family"/>
+				<include refid="level_sql"/>
+				) t1			
+				)		
+	</select>
+	<!-- 项目监控户扶贫项目分析- 就业扶贫-明细表 # -->
+	<select id="queryEmploymentDetail"  parameterType="hashmap" resultType="hashmap">
+			select * from
+			(
+			SELECT 	
+			a1.*,ROWNUM RM
+			FROM
+			(
+			
+			SELECT 
+			ACC_YEAR A2,
+			CITY_NAME A3,
+			COUNTY_NAME A4,
+			TOWN_NAME A5,
+			COUNTRY_NAME A6,
+			FAM_ID A7,
+			FAM_NAME A8,
+			CASE POOR_TYPE 
+					WHEN 1 THEN '一般贫困户' 
+					WHEN 2 THEN '低保户'
+          			WHEN 3 THEN '五保户'
+         	 END as   A9,
+			POP_NAME A10,
+			UNIT_ADDRESS A11,
+			WORK_TYPE A12,
+			trunc(PROJ_PROFIT/10000, 2) A13,
+			PROJ_STATUS A14
+			FROM
+			R_DW_HELP_PROJECT_FAM_Y
+			where 1=1
+            AND ACC_YEAR = #{year}
+            AND PROJ_CLASS2 = '就业扶贫' 
+				<include refid="query_condition_sql_family"/>
+				<include refid="level_sql"/>
+			 ) a1
+			) 
+			<if test="page !=null">
+					WHERE RM BETWEEN #{pageSize}*(#{page}-1)+1 AND #{pageSize}  * #{page}				
+			</if>	
+	</select>
+	<!-- 项目监控户扶贫项目分析- 就业扶贫-明细表总数  -->
+	<select id="queryEmploymentDetailCount"  parameterType="hashmap" resultType="long">
+	
+			select 
+				count(*)
+				from
+				(
+				select t1.*,ROWNUM RM
+				from
+				(	
+				SELECT 
+				ACC_YEAR A2,
+				CITY_NAME A3,
+				COUNTY_NAME A4,
+				TOWN_NAME A5,
+				COUNTRY_NAME A6,
+				FAM_ID A7,
+				FAM_NAME A8,
+				CASE POOR_TYPE 
+					WHEN 1 THEN '一般贫困户' 
+					WHEN 2 THEN '低保户'
+          			WHEN 3 THEN '五保户'
+         	 END as   A9,
+				POP_NAME A10,
+				UNIT_ADDRESS A11,
+				WORK_TYPE A12,
+				trunc(PROJ_PROFIT/10000, 2) A13,
+				PROJ_STATUS A14
+				from 
+				R_DW_HELP_PROJECT_FAM_Y 
+				where 1=1
+               AND ACC_YEAR = #{year}
+               AND PROJ_CLASS2 = '就业扶贫' 
+				<include refid="query_condition_sql_family"/>
+				<include refid="level_sql"/>
+				) t1			
+				)		
+	</select>
+	<!-- 项目监控户扶贫项目分析-技能培训-明细表 # -->
+	<select id="querySkillDetail"  parameterType="hashmap" resultType="hashmap">
+			select * from
+			(
+			SELECT 	
+			a1.*,ROWNUM RM
+			FROM
+			(
+			
+			SELECT 
+			CITY_NAME A2,
+			COUNTY_NAME A3,
+			TOWN_NAME A4,
+			COUNTRY_NAME A5,
+			FAM_CODE A6,
+			FAM_ID S_ID,
+			FAM_NAME A7,
+			CASE POOR_TYPE 
+					WHEN 1 THEN '一般贫困户' 
+					WHEN 2 THEN '低保户'
+          			WHEN 3 THEN '五保户'
+         	 END as   A8,
+			POP_NAME A9,
+			TRAINNING_CONTENT A10,
+			to_char(to_date(TRAINNING_DATE,'yyyymmdd'),'yyyy.mm') A11,
+			trunc(REAL_CAPITAL/10000, 2) A12, 
+			PROJ_STATUS A13
+			FROM
+			R_DW_HELP_PROJECT_FAM_Y
+			where 1=1
+            AND ACC_YEAR = #{year}
+            AND PROJ_CLASS2 = '技能培训' 
+				<include refid="query_condition_sql_family"/>
+				<include refid="level_sql"/>
+			 ) a1
+			) 
+			<if test="page !=null">
+					WHERE RM BETWEEN #{pageSize}*(#{page}-1)+1 AND #{pageSize}  * #{page}				
+			</if>	
+	</select>
+	<!-- 项目监控户扶贫项目分析-技能培训-明细表总数  -->
+	<select id="querySkillDetailCount"  parameterType="hashmap" resultType="long">
+	
+			select 
+				count(*)
+				from
+				(
+				select t1.*,ROWNUM RM
+				from
+				(	
+				SELECT 
+				CITY_NAME A2,
+				COUNTY_NAME A3,
+				TOWN_NAME A4,
+				COUNTRY_NAME A5,
+				FAM_CODE A6,
+				FAM_ID S_ID,
+				FAM_NAME A7,
+				CASE POOR_TYPE 
+					WHEN 1 THEN '一般贫困户' 
+					WHEN 2 THEN '低保户'
+          			WHEN 3 THEN '五保户'
+         	 END as   A8,
+				POP_NAME A9,
+				TRAINNING_CONTENT A10,
+				to_char(to_date(TRAINNING_DATE,'yyyymmdd'),'yyyy.mm') A11,
+				trunc(REAL_CAPITAL/10000, 2) A12, 
+				PROJ_STATUS A13
+				from 
+				R_DW_HELP_PROJECT_FAM_Y 
+				where 1=1
+               AND ACC_YEAR = #{year}
+               
+               AND PROJ_CLASS2 = '技能培训' 
+				<include refid="query_condition_sql_family"/>
+				<include refid="level_sql"/>
+				) t1			
+				)		
+	</select>
+	<!-- 项目监控户扶贫项目分析-教育扶贫-明细表 # -->
+	<select id="queryEduDetail"  parameterType="hashmap" resultType="hashmap">
+			select * from
+			(
+			SELECT 	
+			a1.*,ROWNUM RM
+			FROM
+			(
+			
+			SELECT 
+			CITY_NAME A2,
+			COUNTY_NAME A3,
+			TOWN_NAME A4,
+			COUNTRY_NAME A5,
+			FAM_CODE A6,
+			FAM_ID S_ID,
+			FAM_NAME A7,
+			CASE  POOR_TYPE
+		          WHEN 1 THEN '一般贫困户' 
+		          WHEN 2 THEN '低保户'
+		          WHEN 3 THEN '五保户'
+            END as   A8,
+			
+			POP_NAME A9,
+			CASE SCHOOL_STATUS 
+					WHEN 0 THEN '非在校生' 
+					WHEN 1 THEN '学期教育' 
+					WHEN 2 THEN '小学'
+          			WHEN 3 THEN '七年级'
+          			WHEN 4 THEN '八年级'
+          			WHEN 5 THEN '九年级'
+          			WHEN 6 THEN '中职一年级'
+          			WHEN 7 THEN '中职二年级'
+          			WHEN 8 THEN '中职三年级'
+          			WHEN 9 THEN '高中一年级'
+          			WHEN 10 THEN '高中二年级'
+          			WHEN 11 THEN '高中三年级'
+          			WHEN 12 THEN '高职一年级'
+          			WHEN 13 THEN '高职二年级'
+          			WHEN 14 THEN '高职三年级'
+          			WHEN 15 THEN '大专及以上'
+         	 END as   A10,
+			to_char(to_date(EDU_HELP_MONTH,'yyyymm'),'yyyy.mm') A11,
+			trunc(REAL_CAPITAL/10000, 2)  A12, 
+			PROJ_STATUS A13
+			FROM
+			R_DW_HELP_PROJECT_FAM_Y
+			where 1=1
+            AND ACC_YEAR = #{year}
+            AND PROJ_CLASS2 = '教育扶贫' 
+				<include refid="query_condition_sql_family"/>
+				<include refid="level_sql"/>
+			 ) a1
+			) 
+			<if test="page !=null">
+					WHERE RM BETWEEN #{pageSize}*(#{page}-1)+1 AND #{pageSize}  * #{page}				
+			</if>	
+	</select>
+	<!-- 项目监控户扶贫项目分析-教育扶贫-明细表总数  -->
+	<select id="queryEduDetailCount"  parameterType="hashmap" resultType="long">
+	
+			select 
+				count(*)
+				from
+				(
+				select t1.*,ROWNUM RM
+				from
+				(	
+				SELECT 
+				CITY_NAME A2,
+				COUNTY_NAME A3,
+				TOWN_NAME A4,
+				COUNTRY_NAME A5,
+				FAM_CODE A6,
+				FAM_ID S_ID,
+				FAM_NAME A7,
+				CASE POOR_TYPE 
+					WHEN 1 THEN '一般贫困户' 
+					WHEN 2 THEN '低保户'
+          			WHEN 3 THEN '五保户'
+         	 END as   A8,
+				POP_NAME A9,
+				SCHOOL_STATUS A10,
+				to_char(to_date(EDU_HELP_MONTH,'yyyymm'),'yyyy.mm') A11,
+				trunc(REAL_CAPITAL/10000, 2)  A12, 
+				PROJ_STATUS A13
+				from 
+				R_DW_HELP_PROJECT_FAM_Y 
+				where 1=1
+               AND ACC_YEAR = #{year}
+               
+               AND PROJ_CLASS2 = '教育扶贫' 
+				<include refid="query_condition_sql_family"/>
+				<include refid="level_sql"/>
+				) t1			
+				)		
+	</select>
+	<!-- 项目监控户扶贫项目分析-慰问-明细表 # -->
+	<select id="queryVisitDetail"  parameterType="hashmap" resultType="hashmap">
+			select * from
+			(
+			SELECT 	
+			a1.*,ROWNUM RM
+			FROM
+			(
+			
+			SELECT 
+			CITY_NAME A2,
+			COUNTY_NAME A3,
+			TOWN_NAME A4,
+			COUNTRY_NAME A5,
+			FAM_CODE A6,
+			FAM_ID S_ID,
+			FAM_NAME A7,
+			CASE POOR_TYPE 
+					WHEN 1 THEN '一般贫困户' 
+					WHEN 2 THEN '低保户'
+          			WHEN 3 THEN '五保户'
+         	 END as   A8,
+			to_char(to_date(CONDOLENCES_MONTH,'yyyymm'),'yyyy.mm') A9,
+			trunc(REAL_CAPITAL/10000, 2)  A10, 
+			PROJ_STATUS A11
+			FROM
+			R_DW_HELP_PROJECT_FAM_Y
+			where 1=1
+            AND ACC_YEAR = #{year}
+            AND PROJ_CLASS2 = '慰问' 
+				<include refid="query_condition_sql_family"/>
+				<include refid="level_sql"/>
+			 ) a1
+			) 
+			<if test="page !=null">
+					WHERE RM BETWEEN #{pageSize}*(#{page}-1)+1 AND #{pageSize}  * #{page}				
+			</if>	
+	</select>
+	<!-- 项目监控户扶贫项目分析-慰问-明细表总数  -->
+	<select id="queryVisitDetailCount"  parameterType="hashmap" resultType="long">
+	
+			select 
+				count(*)
+				from
+				(
+				select t1.*,ROWNUM RM
+				from
+				(	
+				SELECT 
+				CITY_NAME A2,
+				COUNTY_NAME A3,
+				TOWN_NAME A4,
+				COUNTRY_NAME A5,
+				FAM_CODE A6,
+				FAM_ID S_ID,
+				FAM_NAME A7,
+				CASE POOR_TYPE 
+					WHEN 1 THEN '一般贫困户' 
+					WHEN 2 THEN '低保户'
+          			WHEN 3 THEN '五保户'
+         	 END as   A8,
+				to_char(to_date(CONDOLENCES_MONTH,'yyyymm'),'yyyy.mm') A9,
+				trunc(REAL_CAPITAL/10000, 2)  A10, 
+				PROJ_STATUS A11
+				from 
+				R_DW_HELP_PROJECT_FAM_Y 
+				where 1=1
+               AND ACC_YEAR = #{year}
+               AND PROJ_CLASS2 = '慰问' 
+				<include refid="query_condition_sql_family"/>
+				<include refid="level_sql"/>
+				) t1			
+				)		
+	</select>
+</mapper>

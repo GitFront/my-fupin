@@ -1,0 +1,37 @@
+{
+  "code": 0,
+  "msg": "获取信息成功",
+  "data":{
+    //贫困户名片
+    "poor_business_card":{
+      //贫困户id
+      "id":1,
+      //头像
+      "avatar":"xxx.jpg",
+      //名字
+      "name":"李老根",
+      //贫困户属性
+      "poor_attribute":"一般困难户",
+      //致贫原因
+      "poor_reason":"",
+      //帮扶接口人
+      "help_people":"陈星",
+      //联系电话
+      "contact_tel":"0755-2111654"
+    },
+    //帮扶政策
+    "help_policy":[
+      {
+        //id
+        "id":1,
+        //标题
+        "title":"广东省教育厅xxxx"
+      }
+    ],
+    //在办项目
+    "project_working":{
+      //办理中总数
+      "amount":5
+    }
+  }
+}

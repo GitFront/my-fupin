@@ -1,0 +1,14 @@
+{
+	"code": 0,
+	"msg": "获取信息成功",
+	"data": {
+		//按区域属性
+		"chart_config_by_scope": {},
+		//按贫困属性
+		"chart_config_by_poor_attribute": {},
+		//按劳动能力属性
+		"chart_config_by_labor_attribute": {},
+		//统计表，同data_monitor_table.json定义
+		"table": {}
+	}
+}

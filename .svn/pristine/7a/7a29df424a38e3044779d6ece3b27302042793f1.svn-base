@@ -1,0 +1,14 @@
+{
+	"code": 0,
+	"msg": "获取信息成功",
+	"data": {
+		//区域类型可用的状态，键值参考区域类型取值
+		"scope_available": {
+			"1": true,
+			"2": true,
+			"3": true,
+			"4": true,
+			"5": true
+		}
+	}
+}

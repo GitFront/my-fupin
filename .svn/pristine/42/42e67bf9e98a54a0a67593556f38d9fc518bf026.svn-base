@@ -1,0 +1,25 @@
+{
+  "code": 0,
+  "msg": "获取信息成功",
+  "data": {
+    //行政区域ID
+    "district_id": 101,
+    "title": {
+      "name": "省领导联系市",
+      "responsible_person": "责任人名",
+      "organization": "帮扶单位"
+    },
+    "list": [
+      {
+        //行政区域ID
+        "district_id":1,
+        //行政区域名
+        "district_name": "阳江市",
+        //仅县需要此字段
+        "responsible_person": "责任人名",
+        //仅县需要此字段
+        "organization": "帮扶单位"
+      }
+    ]
+  }
+}

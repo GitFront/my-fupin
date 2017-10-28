@@ -1,0 +1,53 @@
+$img-monitor-path:'../../images/fupin_strategy/';
+/* 颜色 */
+$m-c:#6691f9;  //主要颜色
+$border-c:#343c4a;
+$font-black-c:#252525;
+$work-light-blue:#95ffff;
+$table-border:#e9e9eb;
+	//半透明颜色
+$ml-rgba-c:rgba(47,47,58, 0.2);  //左边透明颜色
+$mr-rgba-c:rgba(44,52,60, 0.74); //右边透明颜色
+$shrink-rgba-c:rgba(37,37,43, 0.7);
+
+$m-shadow:0px 0px 10px  #2075c6;
+$div-shadow:0px 0px 10px  #0d2033;
+$shadow-c:rgba(20,20,20, 0.5);
+$btn-shadow: 0 2px 2px  rgba(0,0,0, .55);
+
+$yellow: #f3e627;
+$blue: #96b5ff;
+$light-blue: #82def1;
+$cyan: #83dff2;
+$green: #69db1d;
+$colorDetailTxt: #c6c6c6;
+/* end 颜色 */
+
+/* 长宽 */
+$m-w:1366px;
+$m-h:768px;
+$hearder-h:50px;
+$m-content-h:$m-h - $hearder-h;
+$m-radius:18px;
+
+/*end 长宽 */
+
+
+/* 间距 */
+
+
+/*end 间距 */
+
+/* 层叠关系 */
+$zIndexCommonDialog: 1000;
+$zIndexLoading: 300;
+$zIndexFamilyFile: 100;
+$zIndexPresearch: $zIndexFamilyFile + 10;
+$zIndexCountryFile: $zIndexFamilyFile - 10;
+$zIndexFileDetail: $zIndexCountryFile - 10;
+//$zIndexDataAnalyse: $zIndexCountryFile - 10;
+$zIndexDataExport: $zIndexCountryFile - 5;
+$zIndexDataMonitorPopup: $zIndexCountryFile - 10;
+$zIndexDataMonitor: $zIndexDataMonitorPopup - 10;
+$zIndexDataAreaDesc: $zIndexDataMonitor - 10;
+/* 层叠关系 */

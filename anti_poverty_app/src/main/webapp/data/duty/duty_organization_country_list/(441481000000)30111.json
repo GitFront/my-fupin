@@ -1,0 +1,16 @@
+{
+	"data":{
+		"belong_organization":"兴宁市委党校",
+		"list":[
+			{
+				"id":"441481131208",
+				"order":1,
+				"contact_phone":"13902783245",
+				"contact_name":"刘灼辉",
+				"country_name":"井下村委会"
+			}
+		]
+	},
+	"code":0,
+	"msg":"获取信息成功"
+}

@@ -1,0 +1,16 @@
+{
+	"data":{
+		"belong_organization":"兴宁市农业银行",
+		"list":[
+			{
+				"id":"441481136210",
+				"order":1,
+				"contact_phone":"07533877236",
+				"contact_name":"陈苑平",
+				"country_name":"福丰村委会"
+			}
+		]
+	},
+	"code":0,
+	"msg":"获取信息成功"
+}

@@ -1,0 +1,43 @@
+//参数列表，会被收集提交到渲染表格的接口中
+{
+	"code": 0,
+	"msg": "获取信息成功",
+	"data": [
+		{
+			//参数名
+			"key": "scope",
+			//用于显示给用户的参数名
+			"label": "区域范围",
+			/*
+				参数类型：
+				radio: 单选
+				check: 多选，提交参数时会变成简易数组
+			*/
+			"type": "check",
+			/*
+				选中的的值
+				单选时类型为String
+				多选时类型为Array<String>
+			*/
+			"selected_value": [
+				"country"
+			],
+			/*
+				是否特殊地在前面加一个“全选”项在当前参数中
+				如为true则加上，仅在type为check时才需要此属性
+			*/
+			"has_check_all": true,
+			//可选的值
+			"values": [
+				{
+					//用于显示给用户的参数值名
+					"label": "全部",
+					//值
+					"value": "country",
+					//是否被禁用
+					"disabled": false
+				}
+			]
+		}
+	]
+}

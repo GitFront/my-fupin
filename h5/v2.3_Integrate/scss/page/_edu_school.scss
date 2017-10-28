@@ -1,0 +1,70 @@
+.edu-school-wrap {
+  $totalW: 1302px;
+  header {
+    margin-bottom: 36px;
+  }
+  .crumb {
+    .back {
+      color: $cyan;
+      padding-left: 36px;
+      line-height: 19px;
+      @include bgPng(edu_school_back_ico);
+    }
+    color: #ede374;
+    font-size: 16px;
+    width: $totalW;
+    margin: 0 auto 26px;
+  }
+  .pbd {
+    ul {
+      width: $totalW;
+      margin: 0 auto;
+      background-color: rgba(36, 36, 57, .7);
+      box-shadow: 0 12px 38px rgba(29, 33, 45, .51), inset 0 1px rgba(220, 236, 251, .23), inset 0 0 8px rgba(139, 171, 255, .55);
+    }
+    margin: 0 auto;
+    li {
+      .title {
+        color: #FFF;
+        font-size: 16px;
+        line-height: 69px;
+      }
+      .right {
+        float: right;
+        @extend .clearfix;
+      }
+      .meta {
+        font-size: 12px;
+        line-height: 24px;
+        width: 150px;
+        color: $blue;
+        float: left;
+        padding-top: 12px;
+      }
+      .btn-download {
+        $w: 98px;
+        $h: 37px;
+        display: block;
+        float: left;
+        text-align: center;
+        line-height: $h - 4px;
+        width: $w;
+        height: $h;
+        padding-right: 2px;
+        color: $cyan;
+        font-size: 16px;
+        margin-top: 20px;
+        box-sizing: border-box;
+        @include bgPng(edu_school_download_btn);
+      }
+      &:last-child {
+        border: none;
+      }
+      @extend .clearfix;
+      padding: 0 20px 0 24px;
+      border-bottom: 1px solid #282840;
+    }
+  }
+  height: auto;
+  padding: 0 0 36px;
+}

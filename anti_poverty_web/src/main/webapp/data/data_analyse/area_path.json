@@ -1,0 +1,97 @@
+{
+	"code": 0,
+	"msg": "获取信息成功",
+	"data": [
+		{
+			"level": "province",
+			"authority":false,
+			"selected_id": 1,
+			"selected_name":"广东省",
+			"list": [
+				{
+					"name": "广东省",
+					"id": 1
+				}
+			]
+		},
+		{
+			"level": "city",
+			"selected_id":2,
+			"selected_name":"广州市",
+			"list": [
+				{
+					"name": "全部",
+					"id": null
+				},
+				{
+					"name": "广州市",
+					"id": 2
+				},
+				{
+					"name": "深圳市",
+					"id": 3
+				}
+			]
+		},
+		{
+			"level": "county",
+			"selected_id":null,
+			"selected_name":"全部",
+			"list": [
+				{
+					"name": "全部",
+					"id": null
+				},
+				{
+					"name": "五华县五华县五华县五华县",
+					"id": 4
+				},
+				{
+					"name": "吴县",
+					"id": 5
+				},
+				{
+					"name": "五华县五华县",
+					"id": 4
+				},
+				{
+					"name": "吴县",
+					"id": 5
+				}
+			,
+				{
+					"name": "五华县五华县",
+					"id": 4
+				},
+				{
+					"name": "吴县",
+					"id": 5
+				},
+				{
+					"name": "五华县五华县",
+					"id": 4
+				},
+				{
+					"name": "吴县",
+					"id": 5
+				},
+				{
+					"name": "五华县五华县",
+					"id": 4
+				},
+				{
+					"name": "吴县",
+					"id": 5
+				},
+				{
+					"name": "五华县五华县",
+					"id": 4
+				},
+				{
+					"name": "吴县",
+					"id": 5
+				}
+			]
+		}
+	]
+}

@@ -1,0 +1,36 @@
+{
+	"code": 0,
+	"msg": "获取信息成功",
+	"data": {
+		"summary": {
+			"house_holder_name": "陈志环",
+			"house_holder_avatar": "../../../data/images/poor_file/avatar1.jpg",
+			"house_holder_phone": "13000000000",
+			"poor_attribute": "低保贫困户，有部分劳动能力",
+			"poor_reason": "因残、缺技术、缺资金",
+			"start_income": "3295元",
+			"country_leader_name": "王硕平",
+			"country_leader_avatar": "../../../data/images/poor_file/avatar2.jpg",
+			"country_leader_phone": "15000000000",
+			"country_leader_org": "广东省农村信用合作社联合社",
+			"country_leader_start_time": "2016年4月23日"
+		},
+		"stat": {
+			"income": "3295",
+			"edu_total": 3,
+			"edu_achieved": 2,
+			"medical_security_total": 70,
+			"medical_security_achieved": 50,
+			"is_danger_house": false,
+			"has_house_become_safe": false,
+			"house_danger_level": "D",
+			"index": 43.33,
+			"has_achieved": false
+		},
+		"status": {
+			"date": "2017年3月4日",
+			"code": 1,
+			"name": "预脱贫"
+		}
+	}
+}

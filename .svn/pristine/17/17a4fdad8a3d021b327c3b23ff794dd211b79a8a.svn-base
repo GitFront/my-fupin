@@ -1,0 +1,577 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ <!-- 医疗 -->
+<mapper namespace="com.aspire.birp.modules.antiPoverty.dao.MedicalDao">
+	
+	<sql id="dim_area_sql">
+		INNER JOIN
+		(SELECT 
+		  PAC,
+		  SORT
+		  FROM
+		  DIM_AREA_INFO
+		  WHERE 1=1
+		  <include refid="p_area_sql"/>
+		  ) B ON(A.S_ID=B.PAC)
+		ORDER BY B.SORT 
+	</sql>
+	
+	<sql id="p_area_sql">
+		 <if test=" '' != level and null != level and 'province' == level  ">
+				AND PPAC = #{id}
+			</if>
+			
+			<if test=" '' != level and null != level and 'city' == level  ">
+				AND PPAC = #{id}
+			</if>
+			
+			<if test=" '' != level and null != level and 'county' == level  ">
+				AND PPAC = #{id} 
+			</if>
+			
+			<if test=" '' != level and null != level and 'town' == level  ">
+				AND PPAC = #{id} 
+			</if>
+			
+			<if test=" '' != level and null != level and 'country' == level  ">
+				AND PAC = #{id}
+			</if>
+	</sql>
+	<!-- 扶贫对象变动排序详细#    -->
+	<select id="querySortDetail"  parameterType="hashmap" resultType="hashmap">
+			SELECT 
+			 S_ID,A2,A3,A4,
+			 CASE WHEN A3 = 0 THEN '0.00%' ELSE TO_CHAR(TRUNC(A4 / A3 * 100, 2), '9999990.00') || '%' END A5,
+			 A6,
+			 CASE WHEN A4 = 0 THEN '0.00%' ELSE TO_CHAR(TRUNC(A6 / A4 * 100, 2),'9999990.00') || '%' END A7
+			FROM(SELECT <include refid="detail_area_sql"/>
+			       COUNT(POP_ID) A3 ,
+			       SUM(CASE WHEN IS_IMP_MEDICAL=1 THEN 1 ELSE 0 END) A4,
+			       SUM(CASE WHEN IS_MEDICAL_COINCIDE=1 THEN 1 ELSE 0 END) A6
+			  from R_DW_POOROBJ_POP_Y
+			  WHERE 1=1
+			 	<include refid="level_sql"/>
+				<include refid="stat_year_sql"/>
+				<include refid="year_sql"/>
+				<include refid="query_condition_sql"/>
+			  	AND IS_CURRENT=1
+				AND POP_CHANGES IN (0,1)
+			  GROUP BY <include refid="count_group_by_sql"/>)
+	</select>
+	
+	<select id="queryMedicalChart2"  parameterType="hashmap" resultType="hashmap">
+			SELECT t1.* FROM (
+			SELECT 
+			 TO_CHAR(TO_DATE( STAT_MONTH,'YYYYMM'),'YYYY.MM') S_NAME,
+			 CASE WHEN u_type='POP_1' THEN '应该'
+			      WHEN u_type='POP_2' THEN '落实'
+			      WHEN u_type='POP_3' THEN '重合' END S_GROUP,
+			 u_value as S_VALUE
+			FROM (select 
+			   STAT_MONTH,
+			   SUM(ENJOY_MED_POP_NUM) POP_1,
+			   SUM(IMP_MED_POP_NUM) POP_2,
+			   SUM(COINCIDE_MED_POP_NUM) POP_3
+			from R2_DM_POOROBJ_POORTYPE_M
+			where 1=1
+			<include refid="level_sql"/>
+			<include refid="stat_month_sql"/>
+			<include refid="query_condition_sql"/>
+			GROUP BY STAT_MONTH ) 
+			unpivot (u_value for u_type in (POP_1, POP_2, POP_3))
+			ORDER BY STAT_MONTH,U_TYPE ) t1 
+		  WHERE ROWNUM &lt;= 6
+		  ORDER BY t1.S_NAME
+			
+	</select>
+	<!--医疗政策落实趋势 年-->
+	<select id="queryMedicalChart1"  parameterType="hashmap" resultType="hashmap">
+		
+		SELECT 
+		 STAT_YEAR as S_NAME,
+		 CASE WHEN u_type='A_SHOULD' THEN '应该'
+		      WHEN u_type='B_IMP' THEN '落实'
+		      WHEN u_type='C_COINCIDE' THEN '重合'
+		   ELSE '其它' END S_GROUP,
+		 u_value as S_VALUE
+		FROM (select 
+		   STAT_YEAR,
+		   COUNT(POP_ID) A_SHOULD,
+		   SUM(CASE WHEN IS_IMP_MEDICAL=1 THEN 1 ELSE 0 END) B_IMP,
+		   SUM(CASE WHEN IS_MEDICAL_COINCIDE=1 THEN 1 ELSE 0 END) C_COINCIDE
+		from R_DW_POOROBJ_POP_Y
+		WHERE 1=1
+		AND IS_CURRENT = 1
+		AND POP_CHANGES IN (0,1)
+		<include refid="level_sql"/>
+		<include refid="acc_year_sql"/>
+		GROUP BY STAT_YEAR ) 
+		unpivot (u_value for u_type in (A_SHOULD, B_IMP, C_COINCIDE))
+		ORDER BY S_NAME,u_type
+		
+	</select>
+
+	<!-- 排序总记录 -->
+	<select id="queryMedicalSortCount"  parameterType="hashmap" resultType="long">
+			
+		SELECT <include refid="count_sort_area_sql"/>
+			
+			FROM R_DW_POOROBJ_POP_Y
+            WHERE 1=1
+              AND IS_CURRENT=1
+			  AND POP_CHANGES IN (0,1)
+			  <include refid="level_sql"/>
+			  <include refid="stat_year_sql"/>
+			  <include refid="year_sql"/>
+			  <include refid="query_condition_sql"/>
+		      <include refid="query_poor_sql"/>
+		
+	
+	</select>
+	<!-- 排序  -->
+	<select id="queryMedicalSort"  parameterType="hashmap" resultType="hashmap">
+			
+			SELECT * FROM (
+			SELECT A1.S_ID,A1.A2,
+			TO_CHAR (A1.A3 , '9999990.00') ||'%' A3
+			,ROWNUM RM FROM (
+			
+			SELECT
+			<include refid="sort_area_sql"/>
+
+			<if test=" '' != taxis_indexes and null != taxis_indexes">
+				<if test="1 == taxis_indexes">CASE WHEN COUNT(POP_ID) = 0 THEN 0 ELSE TRUNC((sum(CASE WHEN IS_IMP_MEDICAL=1 THEN 1 ELSE 0 END) / COUNT(POP_ID)) * 100, 2) END as A3</if>
+				<if test="2 == taxis_indexes">CASE WHEN SUM(CASE WHEN IS_IMP_MEDICAL=1 THEN 1 ELSE 0 END) = 0 THEN 0 ELSE TRUNC(SUM(CASE WHEN IS_MEDICAL_COINCIDE=1 THEN 1 ELSE 0 END) / SUM(CASE WHEN IS_IMP_MEDICAL=1 THEN 1 ELSE 0 END) * 100, 2) END as A3</if>
+			</if>
+			
+			FROM R_DW_POOROBJ_POP_Y
+            WHERE 1=1
+              AND IS_CURRENT=1
+			  AND POP_CHANGES IN (0,1)
+			  <include refid="level_sql"/>
+			  <include refid="stat_year_sql"/>
+			  <include refid="year_sql"/>
+			  <include refid="query_condition_sql"/>		
+			  <include refid="query_poor_sql"/>
+			GROUP BY <include refid="group_sort_area_sql"/>
+			ORDER BY A3 DESC
+			) A1
+			)
+			<if test="page !=null">
+					WHERE RM BETWEEN #{pageSize}*(#{page}-1)+1 AND #{pageSize}  * #{page}
+			</if>
+	</select>
+
+
+	<!-- 医疗明细总数  -->
+	<select id="queryMedicalDetailCount"  parameterType="hashmap" resultType="long">
+	
+			select  count(POP_ID)
+				from R_DW_POOROBJ_POP_Y
+                WHERE 1=1
+                 AND IS_CURRENT=1
+				 AND POP_CHANGES IN (0,1)
+				 <include refid="level_sql"/>
+				 <include refid="stat_year_sql"/>
+				 <include refid="year_sql"/>
+				 <include refid="query_condition_sql"/>
+				
+	</select>
+	<!-- 医疗明细 -->
+	<select id="queryMedicalDetail"  parameterType="hashmap" resultType="hashmap">
+			select  * from (
+				select t.*,ROWNUM RM from (
+				 SELECT FAM_ID as S_ID,
+				 	   CITY_NAME A2,
+                       COUNTY_NAME A3,
+                       TOWN_NAME A4,
+                       COUNTRY_NAME A5,
+                       FAM_CODE A6,
+                       FAM_NAME A7,
+                       POP_NAME A8,
+                       CASE IS_IMP_MEDICAL WHEN 1 THEN '是'
+                                           WHEN 0 THEN '否'
+                       END A9,
+                       CASE IS_MEDICAL_COINCIDE WHEN 1 THEN '是'
+                                                WHEN 0 THEN '否'
+                       END A10
+                  from R_DW_POOROBJ_POP_Y
+                 WHERE 1=1
+                 	AND IS_CURRENT=1
+					AND POP_CHANGES IN (0,1)
+					<include refid="level_sql"/>
+					<include refid="stat_year_sql"/>
+					<include refid="year_sql"/>
+					<include refid="query_condition_sql"/>
+				) t			
+				)
+				
+				<if test="page !=null">
+					WHERE RM BETWEEN #{pageSize}*(#{page}-1)+1 AND #{pageSize}  * #{page}
+				</if>
+						
+			
+	
+	</select>
+
+	<!-- 医疗管理分析合计 -->
+	<select id="queryMedicalManageTableC"  parameterType="hashmap" resultType="hashmap">
+			
+			SELECT 
+			 S_ID,A2,A3,A4,
+			 case when A3 = 0 then '0.00' else TO_CHAR(TRUNC(A4 / A3 * 100, 2),'9999990.00') end || '%' as A5,
+			 A6,
+			 case when A4 = 0 then '0.00' else TO_CHAR(TRUNC(A6/ A4 * 100, 2),'9999990.00') end || '%' as A7
+			FROM( select <include refid="count_area_sql"/>
+			       COUNT(POP_ID) A3 --贫困人口数 
+			      ,SUM(CASE WHEN IS_IMP_MEDICAL=1 THEN 1 ELSE 0 END) A4 --已购买医疗保险人数 
+			      ,SUM(CASE WHEN IS_MEDICAL_COINCIDE=1 THEN 1 ELSE 0 END) A6 --行业重合数 
+			  from R_DW_POOROBJ_POP_Y
+			  WHERE 1=1
+			  AND IS_CURRENT = 1
+			  AND POP_CHANGES IN (0,1)
+			  <include refid="level_sql"/>
+			  <include refid="stat_year_sql"/>
+			  <include refid="year_sql"/>
+			  <include refid="query_condition_sql"/>
+			 GROUP BY <include refid="count_group_by_sql"/>)
+	
+	</select>
+
+
+	<!-- 医疗管理分析 -->
+	<select id="queryMedicalManageTable"  parameterType="hashmap" resultType="hashmap">
+			
+			
+			SELECT 
+			 S_ID,A2,A3,A4,
+			 case when A3 = 0 then '0.00' else TO_CHAR(TRUNC(A4 / A3 * 100, 2),'9999990.00') end || '%' as A5,
+			 A6,
+			 case when A4 = 0 then '0.00' else TO_CHAR(TRUNC(A6/ A4 * 100, 2),'9999990.00') end || '%' as A7
+			FROM( select <include refid="level_area_sql"/>
+			       COUNT(POP_ID) A3 --贫困人口数 
+			      ,SUM(CASE WHEN IS_IMP_MEDICAL=1 THEN 1 ELSE 0 END) A4 --已购买医疗保险人数 
+			      ,SUM(CASE WHEN IS_MEDICAL_COINCIDE=1 THEN 1 ELSE 0 END) A6 --行业重合数 
+			  from R_DW_POOROBJ_POP_Y
+			  WHERE 1=1
+			  AND IS_CURRENT = 1
+			  AND POP_CHANGES IN (0,1)
+			  <include refid="level_sql"/>
+			  <include refid="stat_year_sql"/>
+			  <include refid="year_sql"/>
+			  <include refid="query_condition_sql"/>
+			  group by <include refid="group_by_sql"/>) A
+			 <include refid="dim_area_sql"/>
+		
+	</select>
+
+	<sql id="count_group_by_sql">
+	
+			<if test=" '' != level and null != level and 'province' == level  ">
+				 1
+			</if>
+			<if test=" '' != level and null != level and 'city' == level  ">
+				 CITY_PAC , CITY_NAME
+			</if>
+			
+			<if test=" '' != level and null != level and 'county' == level  ">
+				 COUNTY_PAC ,COUNTY_NAME  
+			</if>
+			
+			<if test=" '' != level and null != level and 'town' == level  ">
+				   TOWN_PAC ,TOWN_NAME 
+			</if>
+			
+			<if test=" '' != level and null != level and 'country' == level  ">
+				COUNTRY_PAC  ,COUNTRY_NAME 
+			</if>
+	</sql>
+
+
+	<!-- 层级sql -->
+	<sql id="level_sql">
+			
+			<if test=" '' != level and null != level and 'province' == level  ">
+				
+			</if>
+			
+			<if test=" '' != level and null != level and 'city' == level  ">
+				AND CITY_PAC = #{id}
+			</if>
+			
+			<if test=" '' != level and null != level and 'county' == level  ">
+				AND COUNTY_PAC = #{id} 
+			</if>
+			
+			<if test=" '' != level and null != level and 'town' == level  ">
+				AND TOWN_PAC = #{id} 
+			</if>
+			
+			<if test=" '' != level and null != level and 'country' == level  ">
+				AND COUNTRY_PAC = #{id}
+			</if>
+	</sql>
+	<!-- 层级分组 -->
+	<sql id="">
+	
+			<if test=" '' != level and null != level and 'province' == level  ">
+				 CITY_PAC , CITY_NAME 
+			</if>
+			<if test=" '' != level and null != level and 'city' == level  ">
+				 COUNTY_PAC ,COUNTY_NAME 
+			</if>
+			
+			<if test=" '' != level and null != level and 'county' == level  ">
+				   TOWN_PAC ,TOWN_NAME 
+			</if>
+			
+			<if test=" '' != level and null != level and 'town' == level  ">
+				 COUNTRY_PAC  ,COUNTRY_NAME 
+			</if>
+			
+			<if test=" '' != level and null != level and 'country' == level  ">
+				COUNTRY_PAC  ,COUNTRY_NAME 
+			</if>
+			
+		
+	</sql>
+	<!-- STAT_TIME  -->
+	<sql id="year_sql">
+		<if test=" '' != year and null != year">
+			AND ACC_YEAR = #{year}				
+		</if>
+	</sql>
+	
+	<sql id="stat_year_sql">
+		<if test=" '' != year and null != year ">
+			AND STAT_YEAR = #{year}
+		</if>
+	</sql>
+	
+	<sql id="stat_month_sql">
+			<if test=" '' != year and null != year ">
+				 AND STAT_MONTH BETWEEN to_number(#{year} || '01')  AND to_number(#{year} || '12')
+			</if>
+	</sql>
+	
+	<!-- 累计年份  -->
+	<sql id="acc_year_sql">
+		<if test=" '' != year and null != year ">
+			AND STAT_YEAR BETWEEN 0 AND to_number(#{year})
+			AND ACC_YEAR BETWEEN 0 AND to_number(#{year})
+		</if>
+	</sql>
+	
+	<sql id="query_condition_sql">
+
+		<if test=" '' != scope and null != scope">
+			<if test="2 == scope">AND IS_KEY_POVERTY=1</if><!-- 贫困村 -->
+			<if test="3 == scope">AND IS_KEY_POVERTY=0</if><!-- 分散村 -->
+			<if test="4 == scope">AND IS_OLD_REVOLUTIONARY=1</if><!-- 革命老区 -->
+			<if test="5 == scope">AND IS_CENTRAL_SOVIET=1</if><!-- 中央苏区 -->
+		</if>
+				
+		<if test=" '' != poor_attribute and null != poor_attribute">
+			<if test="'normal' == poor_attribute">AND POOR_TYPE=1</if><!-- 一般贫困户 -->
+			<if test="'low' == poor_attribute">AND POOR_TYPE=2</if><!-- 低保户 -->
+			<if test="'five' == poor_attribute">AND POOR_TYPE=3</if><!-- 五保户 -->
+		</if>
+				
+		<if test=" '' != labor_attribute and null != labor_attribute">
+			<if test="'have_labor' == labor_attribute">AND LABOR_TYPE=1</if><!-- 有劳 -->
+			<if test="'no_labor' == labor_attribute">AND LABOR_TYPE=0</if><!-- 无劳 -->
+		</if>
+		
+		<if test=" '' != policy_implement and null != policy_implement">
+			<if test="2 == policy_implement">AND IS_IMP_MEDICAL=1</if><!-- 已落实 -->
+			<if test="3 == policy_implement">AND IS_IMP_MEDICAL=0</if><!-- 未落实-->
+		</if>
+		
+		<if test=" '' != industry and null != industry">
+			<if test="2 == industry">AND IS_MEDICAL_COINCIDE=1</if><!-- 重合 -->
+			<if test="3 == industry">AND IS_MEDICAL_COINCIDE=0</if><!-- 未重合 -->
+		</if>
+		
+	
+	</sql>
+	
+	<sql id="query_poor_sql">
+		<if test=" '' != poor_attribute and null != poor_attribute">
+			<if test="2 == poor_attribute">AND POOR_TYPE=1</if><!-- 一般贫困户 -->
+			<if test="3 == poor_attribute">AND POOR_TYPE=2</if><!-- 低保户 -->
+			<if test="4 == poor_attribute">AND POOR_TYPE=3</if><!-- 五保户 -->
+		</if>
+	</sql>
+	
+	
+	<!--  -->
+	<sql id="level_area_sql">
+			
+			<if test=" '' != level and null != level and 'province' == level  ">
+				CITY_PAC S_ID, CITY_NAME A2, 
+			</if>
+			<if test=" '' != level and null != level and 'city' == level  ">
+				COUNTY_PAC S_ID,COUNTY_NAME A2,
+			</if>
+			
+			<if test=" '' != level and null != level and 'county' == level  ">
+				 TOWN_PAC S_ID ,TOWN_NAME A2, 
+			</if>
+			
+			<if test=" '' != level and null != level and 'town' == level  ">
+				COUNTRY_PAC S_ID ,COUNTRY_NAME  A2, 
+			</if>
+			
+			<if test=" '' != level and null != level and 'country' == level  ">
+				COUNTRY_PAC S_ID ,COUNTRY_NAME  A2, 
+			</if>
+	</sql>
+	
+	<!--  -->
+	<sql id="level_return_sql">
+			
+			<if test=" '' != level and null != level and 'province' == level  ">
+				'city' s_level,
+			</if>
+			<if test=" '' != level and null != level and 'city' == level  ">
+				 'county' s_level,
+			</if>
+			
+			<if test=" '' != level and null != level and 'county' == level  ">
+				  'town' s_level,
+			</if>
+			
+			<if test=" '' != level and null != level and 'town' == level  ">
+				 'country' s_level,
+			</if>
+			
+			<if test=" '' != level and null != level and 'country' == level  ">
+				'country' s_level,
+			</if>
+	</sql>
+	
+	
+	<!-- count  -->
+	<sql id="count_area_sql">
+			<if test=" '' != level and null != level and 'province' == level  ">
+				'440000000000' S_ID , '合计' A2,
+			</if>
+			<if test=" '' != level and null != level and 'city' == level  ">
+				CITY_PAC S_ID, '合计' A2,
+			</if>
+			
+			<if test=" '' != level and null != level and 'county' == level  ">
+				COUNTY_PAC S_ID,'合计' A2,
+			</if>
+			
+			<if test=" '' != level and null != level and 'town' == level  ">
+				 TOWN_PAC S_ID ,'合计' A2,
+			</if>
+			
+			<if test=" '' != level and null != level and 'country' == level  ">
+				COUNTRY_PAC S_ID ,'合计'  A2,
+			</if>
+	</sql>
+	
+	
+	<!--  -->
+	<sql id="sort_area_sql">
+			
+			<if test=" '' != sort_area and null != sort_area and 1 == sort_area  ">
+				CITY_PAC S_ID, CITY_NAME A2,
+			</if>
+			<if test=" '' != sort_area and null != sort_area and 2 == sort_area  ">
+				COUNTY_PAC S_ID,CITY_NAME||'>'||COUNTY_NAME A2,
+			</if>
+			
+			<if test=" '' != sort_area and null != sort_area and 3 == sort_area  ">
+				 TOWN_PAC S_ID ,CITY_NAME||'>'||COUNTY_NAME||'>'||TOWN_NAME A2,
+			</if>
+			
+			<if test=" '' != sort_area and null != sort_area and 4 == sort_area  ">
+				COUNTRY_PAC S_ID ,CITY_NAME||'>'||COUNTY_NAME||'>'||TOWN_NAME||'>'||COUNTRY_NAME  A2,
+			</if>
+			
+	</sql>
+	<!--  -->
+	<sql id="group_sort_area_sql">
+			
+			<if test=" '' != sort_area and null != sort_area and 1 == sort_area  ">
+				CITY_PAC , CITY_NAME 
+			</if>
+			<if test=" '' != sort_area and null != sort_area and 2 == sort_area  ">
+				COUNTY_PAC ,CITY_NAME||'>'||COUNTY_NAME 
+			</if>
+			
+			<if test=" '' != sort_area and null != sort_area and 3 == sort_area  ">
+				 TOWN_PAC  ,CITY_NAME||'>'||COUNTY_NAME||'>'||TOWN_NAME 
+			</if>
+			
+			<if test=" '' != sort_area and null != sort_area and 4 == sort_area  ">
+				COUNTRY_PAC  ,CITY_NAME||'>'||COUNTY_NAME||'>'||TOWN_NAME||'>'||COUNTRY_NAME  
+			</if>
+			
+	</sql>
+	
+	<!-- 层级分组 -->
+	<sql id="group_by_sql">
+	
+			<if test=" '' != level and null != level and 'province' == level  ">
+				 CITY_PAC , CITY_NAME 
+			</if>
+			<if test=" '' != level and null != level and 'city' == level  ">
+				 COUNTY_PAC ,COUNTY_NAME 
+			</if>
+			
+			<if test=" '' != level and null != level and 'county' == level  ">
+				   TOWN_PAC ,TOWN_NAME 
+			</if>
+			
+			<if test=" '' != level and null != level and 'town' == level  ">
+				 COUNTRY_PAC  ,COUNTRY_NAME 
+			</if>
+			
+			<if test=" '' != level and null != level and 'country' == level  ">
+				COUNTRY_PAC  ,COUNTRY_NAME 
+			</if>
+	</sql>
+	
+	<!-- detail_area_sql  -->
+	<sql id="detail_area_sql">
+		
+			<if test=" '' != level and null != level and 'city' == level  ">
+				CITY_PAC S_ID, CITY_NAME A2,
+			</if>
+			
+			<if test=" '' != level and null != level and 'county' == level  ">
+				COUNTY_PAC S_ID,COUNTY_NAME A2,
+			</if>
+			
+			<if test=" '' != level and null != level and 'town' == level  ">
+				 TOWN_PAC S_ID ,TOWN_NAME A2,
+			</if>
+			
+			<if test=" '' != level and null != level and 'country' == level  ">
+				COUNTRY_PAC S_ID ,COUNTRY_NAME  A2,
+			</if>
+	</sql>
+	
+	<sql id="count_sort_area_sql">
+		<if test=" '' != sort_area and null != sort_area and 1 == sort_area  ">
+		 	COUNT(DISTINCT CITY_PAC)  
+		</if>
+		<if test=" '' != sort_area and null != sort_area and 2 == sort_area  ">
+			COUNT(DISTINCT COUNTY_PAC)  
+		</if>
+			
+		<if test=" '' != sort_area and null != sort_area and 3 == sort_area  ">
+			COUNT(DISTINCT TOWN_PAC) 
+		</if>
+		<if test=" '' != sort_area and null != sort_area and 4 == sort_area  ">
+			COUNT(DISTINCT COUNTRY_PAC) 
+		</if>
+		
+	</sql>
+	
+</mapper>

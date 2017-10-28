@@ -1,0 +1,68 @@
+﻿{
+	"data": {
+		"chart_config_top_poor": {
+			"count": 10,
+			"list": [
+				{
+					"percent": "100.00%",
+					"name": "水口镇(1266户)",
+					"district_name": "水口镇"
+				},
+				{
+					"percent": "95.02%",
+					"name": "叶塘镇(1203户)",
+					"district_name": "叶塘镇"
+				},
+				{
+					"percent": "76.15%",
+					"name": "罗岗镇(964户)",
+					"district_name": "罗岗镇"
+				},
+				{
+					"percent": "65.80%",
+					"name": "大坪镇(833户)",
+					"district_name": "大坪镇"
+				},
+				{
+					"percent": "63.51%",
+					"name": "石马镇(804户)",
+					"district_name": "石马镇"
+				},
+				{
+					"percent": "63.35%",
+					"name": "永和镇(802户)",
+					"district_name": "永和镇"
+				},
+				{
+					"percent": "60.19%",
+					"name": "坭陂镇(762户)",
+					"district_name": "坭陂镇"
+				},
+				{
+					"percent": "57.11%",
+					"name": "龙田镇(723户)",
+					"district_name": "龙田镇"
+				},
+				{
+					"percent": "51.03%",
+					"name": "罗浮镇(646户)",
+					"district_name": "罗浮镇"
+				},
+				{
+					"percent": "49.84%",
+					"name": "新圩镇(631户)",
+					"district_name": "新圩镇"
+				}
+			]
+		},
+		"stat": {
+			"amount_poor_households": "35",
+			"amount_poor_people": "31912",
+			"amount_poor_families": "12650",
+			"rate_poor": "5.2%",
+			"amount_plan": "12650"
+		}
+	},
+	"code": 0,
+	"msg": "获取信息成功"
+}

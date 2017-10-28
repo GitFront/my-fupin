@@ -1,0 +1,23 @@
+{
+	"data":{
+		"belong_organization":"兴宁市邮政局",
+		"list":[
+			{
+				"id":"441481136200",
+				"order":1,
+				"contact_phone":"07533888245",
+				"contact_name":"潘红标",
+				"country_name":"乐仙村委会"
+			},
+			{
+				"id":"441481136202",
+				"order":2,
+				"contact_phone":"07533877243",
+				"contact_name":"李育明",
+				"country_name":"新元村委会"
+			}
+		]
+	},
+	"code":0,
+	"msg":"获取信息成功"
+}

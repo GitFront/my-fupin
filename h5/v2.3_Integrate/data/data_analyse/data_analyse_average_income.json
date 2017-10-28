@@ -1,0 +1,66 @@
+{
+	"code": 0,
+	"msg": "获取信息成功",
+	"data": {
+		"area_name": "广东省",
+		"balance": {
+			"total_income": 5495,
+			"total_payment": 5235,
+			"disposable_income": 230,
+			"average_disposable_income": 115
+		},
+		"stat": {
+			"poor_family": 2233,
+			"common_poor_family": 1182,
+			"have_labor_low_family": 335,
+			"no_labor_low_family": 223,
+			"five_family": 34,
+			"poor_people": 9955,
+			"common_poor_people": 5451,
+			"have_labor_low_people": 1343,
+			"no_labor_low_people": 1241,
+			"five_people": 122
+		},
+		"chart_config_bars": [
+			{
+				"name":"2016.06",
+				"group":"数值",
+				"value":55
+			},
+			{
+				"name":"2016.07",
+				"group":"数值",
+				"value":62
+			},
+			{
+				"name":"2016.08",
+				"group":"数值",
+				"value":78
+			},
+			{
+				"name":"2016.09",
+				"group":"数值",
+				"value":82
+			},
+			{
+				"name":"2016.10",
+				"group":"数值",
+				"value":90
+			},
+			{
+				"name":"2016.11",
+				"group":"数值",
+				"value":102
+			},
+			{
+				"name":"2016.12",
+				"group":"数值",
+				"value":130
+			}
+		],
+		"default_time": {
+			"year": 2016,
+			"month": 5
+		}
+	}
+}

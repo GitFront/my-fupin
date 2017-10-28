@@ -1,0 +1,16 @@
+{
+	"data":{
+		"belong_organization":"广州市天河区科技工业和信息化局",
+		"list":[
+			{
+				"id":"441481134201",
+				"order":1,
+				"contact_phone":"13549168966",
+				"contact_name":"刘建文",
+				"country_name":"黄坑村委会"
+			}
+		]
+	},
+	"code":0,
+	"msg":"获取信息成功"
+}

@@ -1,0 +1,37 @@
+{
+	"data":{
+		"belong_organization":"兴宁市公安局",
+		"list":[
+			{
+				"id":"441481117211",
+				"order":1,
+				"contact_phone":"18211465951",
+				"contact_name":"石小建",
+				"country_name":"黄溪村委会"
+			},
+			{
+				"id":"441481117210",
+				"order":2,
+				"contact_phone":"13539182877",
+				"contact_name":"曾佛生",
+				"country_name":"新村村委会"
+			},
+			{
+				"id":"441481117209",
+				"order":3,
+				"contact_phone":"0753-3408125",
+				"contact_name":"王国中",
+				"country_name":"宝丰村委会"
+			},
+			{
+				"id":"441481117208",
+				"order":4,
+				"contact_phone":"13826676137",
+				"contact_name":"李坤粦",
+				"country_name":"上宝龙村委会"
+			}
+		]
+	},
+	"code":0,
+	"msg":"获取信息成功"
+}

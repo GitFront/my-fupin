@@ -1,0 +1,691 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+        
+<mapper namespace="com.aspire.birp.modules.antiPoverty.dao.DutyDao">
+
+	<sql id="dim_area_sql">
+		INNER JOIN
+		(SELECT 
+		  PAC,
+		  SORT
+		  FROM
+		  DIM_AREA_INFO
+		  WHERE 1=1
+		  <include refid="area_sql"/>
+		  ) B ON(A.PAC=B.PAC)
+		ORDER BY B.SORT 
+	</sql>
+	
+	<sql id="stat_time_sql">
+		<if test="null != year and ''!=null ">
+			and STAT_TIME=case
+			when to_number(SUBSTR(STAT_TIME,1,4))=to_number(to_char(sysdate,'yyyy'))  
+			
+			then to_number(#{TW_FAMILY_INCOME_MM})
+			
+			else to_number(SUBSTR(STAT_TIME,1,4)||'1201')
+			end  
+		</if>
+	</sql>
+	<sql id="c_month_sql">
+		<if test="null != year and ''!=null ">
+			and MONTH_OF_ACC=case
+			when to_number(SUBSTR(MONTH_OF_ACC,1,4))=to_number(to_char(sysdate,'yyyy'))  
+			
+			then to_number(SUBSTR(#{TW_FAMILY_INCOME_MM},1,6))
+			
+			else to_number(SUBSTR(MONTH_OF_ACC,1,4)||'12')
+			end  
+		</if>
+	</sql>
+	
+	
+	<!-- detail_area_sql  -->
+	<sql id="detail_area_sql">
+		
+			<if test=" '' != level and null != level and 'city' == level  ">
+				CITY_ID S_ID, CITY_NAME_S A2,
+			</if>
+			
+			<if test=" '' != level and null != level and 'county' == level  ">
+				COUNTY_ID S_ID,COUNTY_NAME_S A2,
+			</if>
+			
+			<if test=" '' != level and null != level and 'town' == level  ">
+				 TOWN_ID S_ID ,TOWN_NAME_S A2,
+			</if>
+			
+			<if test=" '' != level and null != level and 'country' == level  ">
+				COUNTRY_ID S_ID ,COUNTRY_NAME_S  A2,
+			</if>
+	</sql>
+	
+	<!-- 合计用  -->
+	<sql id="count_group_by_sql">
+	
+			<if test=" '' != level and null != level and 'province' == level  ">
+				 1
+			</if>
+			<if test=" '' != level and null != level and 'city' == level  ">
+				 CITY_PAC , CITY_NAME
+			</if>
+			
+			<if test=" '' != level and null != level and 'county' == level  ">
+				 COUNTY_PAC ,COUNTY_NAME  
+			</if>
+			
+			<if test=" '' != level and null != level and 'town' == level  ">
+				   TOWN_PAC ,TOWN_NAME 
+			</if>
+			
+			<if test=" '' != level and null != level and 'country' == level  ">
+				COUNTRY_PAC  ,COUNTRY_NAME 
+			</if>
+	</sql>
+
+
+	<!-- 区域 -->
+	<sql id="level_area_sql">
+			
+			<if test=" '' != level and null != level and 'province' == level  ">
+				CITY_PAC S_ID, CITY_NAME A2,
+			</if>
+			<if test=" '' != level and null != level and 'city' == level  ">
+				COUNTY_PAC S_ID,COUNTY_NAME A2,
+			</if>
+			
+			<if test=" '' != level and null != level and 'county' == level  ">
+				 TOWN_PAC S_ID ,TOWN_NAME A2,
+			</if>
+			
+			<if test=" '' != level and null != level and 'town' == level  ">
+				COUNTRY_PAC S_ID ,COUNTRY_NAME  A2,
+			</if>
+			
+			<if test=" '' != level and null != level and 'country' == level  ">
+				COUNTRY_PAC S_ID ,COUNTRY_NAME  A2,
+			</if>
+	</sql>
+
+	<!-- 层级sql -->
+	<sql id="level_sql">
+			
+			<if test=" '' != level and null != level and 'province' == level  ">
+				
+			</if>
+			
+			<if test=" '' != level and null != level and 'city' == level  ">
+				AND CITY_PAC = #{id}
+			</if>
+			
+			<if test=" '' != level and null != level and 'county' == level  ">
+				AND COUNTY_PAC = #{id} 
+			</if>
+			
+			<if test=" '' != level and null != level and 'town' == level  ">
+				AND TOWN_PAC = #{id} 
+			</if>
+			
+			<if test=" '' != level and null != level and 'country' == level  ">
+				AND COUNTRY_PAC = #{id}
+			</if>
+	</sql>
+	<!-- 层级分组 -->
+	<sql id="group_by_sql">
+	
+			<if test=" '' != level and null != level and 'province' == level  ">
+				 CITY_PAC , CITY_NAME 
+			</if>
+			<if test=" '' != level and null != level and 'city' == level  ">
+				 COUNTY_PAC ,COUNTY_NAME 
+			</if>
+			
+			<if test=" '' != level and null != level and 'county' == level  ">
+				   TOWN_PAC ,TOWN_NAME 
+			</if>
+			
+			<if test=" '' != level and null != level and 'town' == level  ">
+				 COUNTRY_PAC  ,COUNTRY_NAME 
+			</if>
+			
+			<if test=" '' != level and null != level and 'country' == level  ">
+				COUNTRY_PAC  ,COUNTRY_NAME 
+			</if>
+			
+		
+	</sql>
+	<!-- STAT_TIME  -->
+	<sql id="year_sql">
+				<if test="'' != year and null != year">
+				and ACC_YEAR = #{year} 
+			</if>
+	</sql>
+	
+	<sql id="year_sql1">
+				<if test="'' != year and null != year">
+				and (ACC_YEAR &lt; #{year} OR ACC_YEAR = #{year})
+			</if>
+	</sql>
+	
+		<sql id="proj_status">
+			PROJ_STATUS not in ('终止')
+	   </sql>
+	   
+	   
+	<sql id="query_condition_sql2">
+		
+		<if test=" '' != scope and null != scope and 2 == scope  ">
+				  and IS_KEY_POVERTY = 1 
+		</if>
+		
+		<if test=" '' != scope and null != scope and 3 == scope  ">
+				  and IS_KEY_POVERTY = 0 
+		</if>
+		<if test=" '' != scope and null != scope and 4 == scope  ">
+				  and IS_OLD_REVOLUTIONARY = 1 
+		</if>
+		<if test=" '' != scope and null != scope and 5 == scope  ">
+				  and IS_CENTRAL_SOVIET = 1 
+		</if>
+		
+	</sql>
+	
+	<sql id="query_condition_sql1">
+		<if test=" '' == scope or null == scope or 1== scope">
+				  and AREA_TYPE = 1 
+		</if>
+		
+		<if test=" '' != scope and null != scope and 2 == scope  ">
+				  and AREA_TYPE = 2 
+		</if>
+		
+		<if test=" '' != scope and null != scope and 3 == scope  ">
+				  and AREA_TYPE = 3 
+		</if>
+		<if test=" '' != scope and null != scope and 4 == scope  ">
+				  and AREA_TYPE = 4 
+		</if>
+		<if test=" '' != scope and null != scope and 5 == scope  ">
+				  and AREA_TYPE = 5 
+		</if>
+		
+	</sql>
+	
+	<sql id="query_condition_sql">
+		
+		<if test=" '' != project_attribute and null != project_attribute and 'country' == project_attribute  ">
+				  and PROJ_TYPE = 1 
+		</if>
+		
+		<if test=" '' != project_attribute and null != project_attribute and 'family' == project_attribute  ">
+				   and PROJ_TYPE = 2 
+		</if>
+		
+	</sql>
+	
+	<!-- 合计用  -->
+	<sql id="count_area_sql">
+			<if test=" '' != level and null != level and 'province' == level  ">
+				'440000000000' S_ID , '合计' A2,
+			</if>
+			<if test=" '' != level and null != level and 'city' == level  ">
+				CITY_PAC S_ID, '合计' A2,
+			</if>
+			
+			<if test=" '' != level and null != level and 'county' == level  ">
+				COUNTY_PAC S_ID,'合计' A2,
+			</if>
+			
+			<if test=" '' != level and null != level and 'town' == level  ">
+				 TOWN_PAC S_ID ,'合计' A2,
+			</if>
+			
+			<if test=" '' != level and null != level and 'country' == level  ">
+				COUNTRY_PAC S_ID ,'合计'  A2,
+			</if>
+	</sql>
+
+	<sql id="month_sql">
+
+				<choose>
+					<when test="null != year and '' != year">
+					
+						AND ACC_YEAR=
+						CASE
+							WHEN to_number(#{year}) = to_number(to_char(sysdate,'yyyy')) then  to_number(substr(#{TW_FAMILY_INCOME_MM},1,6))
+							WHEN to_number(#{year}) &lt; to_number(to_char(sysdate,'yyyy')) then  to_number(#{year}||'12')
+						END
+						AND substr(ACC_YEAR,1,4)=#{year}		
+					
+					</when>
+					<otherwise>
+					
+							AND ACC_YEAR=
+							CASE
+								WHEN substr(ACC_YEAR,1,4) = to_char(sysdate,'yyyy') then  to_number(substr(#{TW_FAMILY_INCOME_MM},1,6))
+								WHEN substr(ACC_YEAR,1,4) &lt; to_char(sysdate,'yyyy') then  to_number(substr(MONTH_OF_ACC,1,4)||'12')
+							END
+				
+					
+					</otherwise>
+				</choose>
+	</sql>
+	
+	<!-- 排序类型 -->
+	<sql id="sort_area_sql">
+			
+			<if test=" '' != sort_area and null != sort_area and 1 == sort_area  ">
+				CITY_ID S_ID, CITY_NAME_S A2,
+			</if>
+			<if test=" '' != sort_area and null != sort_area and 2 == sort_area  ">
+				COUNTY_ID S_ID,CITY_NAME_S||'>'||COUNTY_NAME_S A2,
+			</if>
+			
+			<if test=" '' != sort_area and null != sort_area and 3 == sort_area  ">
+				 TOWN_ID S_ID ,CITY_NAME_S||'>'||COUNTY_NAME_S||'>'||TOWN_NAME_S A2,
+			</if>
+			
+			<if test=" '' != sort_area and null != sort_area and 4 == sort_area  ">
+				COUNTRY_ID S_ID ,CITY_NAME_S||'>'||COUNTY_NAME_S||'>'||TOWN_NAME_S||'>'||COUNTRY_NAME_S  A2,
+			</if>
+			
+	</sql>
+	<sql id="group_sort_area_sql">
+			<if test=" '' != sort_area and null != sort_area and 1 == sort_area  ">
+				CITY_ID , CITY_NAME_S 
+			</if>
+			<if test=" '' != sort_area and null != sort_area and 2 == sort_area  ">
+				COUNTY_ID ,CITY_NAME_S||'>'||COUNTY_NAME_S 
+			</if>
+			
+			<if test=" '' != sort_area and null != sort_area and 3 == sort_area  ">
+				 TOWN_ID  ,CITY_NAME_S||'>'||COUNTY_NAME_S||'>'||TOWN_NAME_S 
+			</if>
+			
+			<if test=" '' != sort_area and null != sort_area and 4 == sort_area  ">
+				COUNTRY_ID  ,CITY_NAME_S||'>'||COUNTY_NAME_S||'>'||TOWN_NAME_S||'>'||COUNTRY_NAME_S  
+			</if>
+			
+	</sql>
+	
+	<sql id="area_sql">
+		 <if test=" '' != level and null != level and 'province' == level  ">
+				AND PPAC = #{id}
+			</if>
+			
+			<if test=" '' != level and null != level and 'city' == level  ">
+				AND PPAC = #{id}
+			</if>
+			
+			<if test=" '' != level and null != level and 'county' == level  ">
+				AND PPAC = #{id} 
+			</if>
+			
+			<if test=" '' != level and null != level and 'town' == level  ">
+				AND PPAC = #{id} 
+			</if>
+			
+			<if test=" '' != level and null != level and 'country' == level  ">
+				AND PAC = #{id}
+			</if>
+	</sql>
+	
+	<sql id="area_sql1">
+		   <if test=" '' != level and null != level">
+				AND PPAC = #{id}
+			</if>
+	</sql>
+	
+	<sql id="area_sql2">
+		   <if test=" '' != level and null != level">
+				AND PAC = #{id}
+			</if>
+	</sql>
+	
+		<!-- 帮扶主体趋势 -->
+		<select id="dutyHelpTrends"  parameterType="hashmap" resultType="hashmap">
+				
+		select t.acc_year S_NAME
+		,sum(HELP_UNITS_NUM) S_VALUE --帮扶单位
+		,sum(HELP_CADRE_NUM) S_VALUE1 --驻村干部
+		,sum(POVERTY_HELPER_NUM) S_VALUE2 --帮扶责任人
+		from r_dm_helper_area_y t
+		 <where>
+			<include refid="year_sql"/>
+			<include refid="area_sql1"/>
+			and area_type=1
+		</where>
+		  GROUP BY ACC_YEAR
+		  ORDER BY ACC_YEAR
+	
+	</select>
+	
+	<!-- 帮扶主体分布 -->
+		<select id="dutyHelpFunds"  parameterType="hashmap" resultType="hashmap">
+
+	    select PAC,AREA_NAME S_NAME
+		,HELP_UNITS_NUM S_VALUE --帮扶单位
+		,HELP_CADRE_NUM S_VALUE1 --驻村干部
+		,POVERTY_HELPER_NUM S_VALUE2 --帮扶责任人
+		from r_dm_helper_area_y t
+		 <where>
+			<include refid="year_sql"/>
+			<include refid="area_sql"/>
+			<!-- <include refid="query_condition_sql"/> -->
+			and area_type=1
+		</where>
+	      ORDER BY S_VALUE2 DESC
+	   </select>
+	  
+	<!-- 责任监控管理统计 -->
+	<select id="dutyManagementCount"  parameterType="hashmap" resultType="hashmap">
+		SELECT A.*,B.SORT FROM
+		(select 
+		     PAC,AREA_NAME A2
+		  	,sum(HELP_UNITS_NUM) A3
+			,sum(HELP_CADRE_NUM) A4
+			,sum(POVERTY_HELPER_NUM) A5
+			,sum(HELP_VISIT) A6
+			from r_dm_helper_area_y t
+		where 1=1
+		  <include refid="year_sql"/> 
+		  <include refid="area_sql"/>
+		  and area_type=1
+		group by PAC,AREA_NAME) A
+		<include refid="dim_area_sql"/>
+	</select>
+	
+	<!-- 责任监控管理管理 合计  -->
+	<select id="dutyManagementTotal"  parameterType="hashmap" resultType="hashmap">
+	
+			select 
+		 	 PAC,AREA_NAME A2
+		   	,HELP_UNITS_NUM A3
+			,HELP_CADRE_NUM A4
+			,POVERTY_HELPER_NUM A5
+			,HELP_VISIT A6
+			from r_dm_helper_area_y t
+		where 1=1
+			<include refid="year_sql"/> 
+		  <include refid="area_sql2"/>
+		  and area_type=1
+		
+				
+	</select>
+	
+		<!-- 帮扶责任分布 -->
+		<select id="dutyAnalyseHelpTrends"  parameterType="hashmap" resultType="hashmap">
+				
+		select 
+		pac,
+		SUM(PROV_HELP_CTY_NUM) A1,SUM(PROV_HELP_FAM_NUM) A2,SUM(PROV_HELP_POP_NUM) A3,
+		SUM(GZ_HELP_CTY_NUM) B1,SUM(GZ_HELP_FAM_NUM) B2,SUM(GZ_HELP_POP_NUM) B3,
+		SUM(SZ_HELP_CTY_NUM) C1,SUM(SZ_HELP_FAM_NUM) C2,SUM(SZ_HELP_POP_NUM) C3,
+		SUM(ZH_HELP_CTY_NUM) D1,SUM(ZH_HELP_FAM_NUM) D2,SUM(ZH_HELP_POP_NUM) D3,
+		SUM(FS_HELP_CTY_NUM) E1,SUM(FS_HELP_FAM_NUM) E2,SUM(FS_HELP_POP_NUM) E3,
+		SUM(DG_HELP_CTY_NUM) F1,SUM(DG_HELP_FAM_NUM) F2,SUM(DG_HELP_POP_NUM) F3,
+		SUM(ZS_HELP_CTY_NUM) G1,SUM(ZS_HELP_FAM_NUM) G2,SUM(ZS_HELP_POP_NUM) G3
+		from r_dm_helper_area_y t
+		 <where>
+			<include refid="year_sql"/>
+			<include refid="area_sql2"/><!--本级条件  -->
+			<include refid="query_condition_sql1"/>
+		</where>
+		  group by pac
+	
+	</select>
+	
+	<!-- 帮扶力度分布 -->
+		<select id="dutyAnalyseHelpFunds"  parameterType="hashmap" resultType="hashmap">
+
+			select 
+			pac,
+			SUM(PROV_HELP_UNITS_NUM) A1,SUM(PROV_POVERTY_HELPER_NUM) A2,SUM(PROV_HELP_CADRE_NUM) A3,
+			SUM(GZ_HELP_UNITS_NUM) B1,SUM(GZ_POVERTY_HELPER_NUM) B2,SUM(GZ_HELP_CADRE_NUM) B3,
+			SUM(SZ_HELP_UNITS_NUM) C1,SUM(SZ_POVERTY_HELPER_NUM) C2,SUM(SZ_HELP_CADRE_NUM) C3,
+			SUM(ZH_HELP_UNITS_NUM) D1,SUM(ZH_POVERTY_HELPER_NUM) D2,SUM(ZH_HELP_CADRE_NUM) D3,
+			SUM(FS_HELP_UNITS_NUM) E1,SUM(FS_POVERTY_HELPER_NUM) E2,SUM(FS_HELP_CADRE_NUM) E3,
+			SUM(DG_HELP_UNITS_NUM) F1,SUM(DG_POVERTY_HELPER_NUM) F2,SUM(DG_HELP_CADRE_NUM) F3,
+			SUM(ZS_HELP_UNITS_NUM) G1,SUM(ZS_POVERTY_HELPER_NUM) G2,SUM(ZS_HELP_CADRE_NUM) G3
+			from r_dm_helper_area_y t
+			
+		 <where>
+		   <include refid="year_sql"/>
+			<include refid="area_sql2"/><!--本级条件  -->
+			<include refid="query_condition_sql1"/>
+		</where>
+		  group by pac
+	
+	   </select>
+
+	  
+	<!-- 责任监控分析统计 -->
+	<select id="dutyAnalyseCount"  parameterType="hashmap" resultType="hashmap">
+		 SELECT A.*,B.SORT FROM
+		(select pac,AREA_NAME A2,
+       SUM(PROV_HELP_CTY_NUM) A3,
+       SUM(PROV_HELP_FAM_NUM) A4,
+       SUM(PROV_HELP_POP_NUM) A5,
+       SUM(GZ_HELP_CTY_NUM) A6,
+       SUM(GZ_HELP_FAM_NUM) A7,
+       SUM(GZ_HELP_POP_NUM) A8,
+       SUM(SZ_HELP_CTY_NUM) A9,
+       SUM(SZ_HELP_FAM_NUM) A10,
+       SUM(SZ_HELP_POP_NUM) A11,
+       SUM(ZH_HELP_CTY_NUM) A12,
+       SUM(ZH_HELP_FAM_NUM) A13,
+       SUM(ZH_HELP_POP_NUM) A14,
+       SUM(FS_HELP_CTY_NUM) A15,
+       SUM(FS_HELP_FAM_NUM) A16,
+       SUM(FS_HELP_POP_NUM) A17,
+       SUM(DG_HELP_CTY_NUM) A18,
+       SUM(DG_HELP_FAM_NUM) A19,
+       SUM(DG_HELP_POP_NUM) A20,
+       SUM(ZS_HELP_CTY_NUM) A21,
+       SUM(ZS_HELP_FAM_NUM) A22,
+       SUM(ZS_HELP_POP_NUM) A23,
+       SUM(OWN_HELP_CTY_NUM) A24,
+       SUM(OWN_HELP_FAM_NUM) A25,
+       SUM(OWN_HELP_POP_NUM) A26
+  		from r_dm_helper_area_y t
+  		 <where>
+		  <include refid="year_sql"/> 
+		  <include refid="area_sql"/>
+		  <include refid="query_condition_sql1"/>
+		</where>
+		group by pac,AREA_NAME) A
+		<include refid="dim_area_sql"/>
+	</select>
+	
+	<!-- 责任监控分析 合计  -->
+	<select id="dutyAnalyseTotal"  parameterType="hashmap" resultType="hashmap">
+	
+	   select '合计' A2,
+       SUM(PROV_HELP_CTY_NUM) A3,
+       SUM(PROV_HELP_FAM_NUM) A4,
+       SUM(PROV_HELP_POP_NUM) A5,
+       SUM(GZ_HELP_CTY_NUM) A6,
+       SUM(GZ_HELP_FAM_NUM) A7,
+       SUM(GZ_HELP_POP_NUM) A8,
+       SUM(SZ_HELP_CTY_NUM) A9,
+       SUM(SZ_HELP_FAM_NUM) A10,
+       SUM(SZ_HELP_POP_NUM) A11,
+       SUM(ZH_HELP_CTY_NUM) A12,
+       SUM(ZH_HELP_FAM_NUM) A13,
+       SUM(ZH_HELP_POP_NUM) A14,
+       SUM(FS_HELP_CTY_NUM) A15,
+       SUM(FS_HELP_FAM_NUM) A16,
+       SUM(FS_HELP_POP_NUM) A17,
+       SUM(DG_HELP_CTY_NUM) A18,
+       SUM(DG_HELP_FAM_NUM) A19,
+       SUM(DG_HELP_POP_NUM) A20,
+       SUM(ZS_HELP_CTY_NUM) A21,
+       SUM(ZS_HELP_FAM_NUM) A22,
+       SUM(ZS_HELP_POP_NUM) A23,
+       SUM(OWN_HELP_CTY_NUM) A24,
+       SUM(OWN_HELP_FAM_NUM) A25,
+       SUM(OWN_HELP_POP_NUM) A26
+  		from r_dm_helper_area_y t
+  		 <where>
+		  <include refid="year_sql"/> 
+		  <include refid="area_sql"/>
+		  <include refid="query_condition_sql1"/>
+		</where>
+		
+	</select>
+	
+	<!--  责任监控分析明细 -->
+	<select id="dutyAnalysisDetail"  parameterType="hashmap" resultType="hashmap">
+		select 
+
+				*
+				
+				from
+				(
+				select t1.*,ROWNUM RM
+				from
+				(
+				 SELECT
+				
+				t1.CITY_NAME A2
+				,t1.COUNTY_NAME A3
+				,t1.TOWN_NAME A4
+				,t1.COUNTRY_NAME A5
+				,FAM_CODE  as A6 
+				,FAM_NAME a7 
+				,HELP_UNITS a8 
+				, '"'||HELP_CADRE||'"' a9 
+				,'"'||FAM_HELPER||'"' a10 
+				,TOTAL_VISIT_NUM  a11 
+				,FAM_ID S_ID
+				from
+				 R_DW_POOROBJ_FAM_Y t1 
+				   
+				 <where>
+					<include refid="level_sql"/>
+					<include refid="query_condition_sql2"/>
+					<include refid="year_sql"/>
+					
+				</where>	
+				) t1
+				
+				)
+				
+				<if test="page !=null">
+						WHERE RM BETWEEN #{pageSize}*(#{page}-1)+1 AND #{pageSize}  * #{page}
+				</if>
+				</select>		
+<!--  责任监控分析明细总数  -->
+	<select id="dutyAnalysisDetailCount"  parameterType="hashmap" resultType="long">
+	
+			select 
+
+				count(*)
+				
+				from
+				(
+				select t1.*,ROWNUM RM
+				from
+				(
+				 SELECT
+				
+				
+				t1.CITY_NAME A2
+				,t1.COUNTY_NAME A3
+				,t1.TOWN_NAME A4
+				,t1.COUNTRY_NAME A5
+				,FAM_CODE  as A6 
+				,FAM_NAME a7 
+				,HELP_UNITS a8 
+				,HELP_CADRE a9 
+				,FAM_HELPER a10 
+				,TOTAL_VISIT_NUM  a11 
+				   from 
+				R_DW_POOROBJ_FAM_Y t1 
+				 <where>
+					<include refid="level_sql"/>
+					<include refid="query_condition_sql2"/>
+					<include refid="year_sql"/>
+				</where>
+				) t1
+				
+				)
+				
+	</select>
+	
+	<!-- 排序类型 -->
+	<sql id="sort_area_sql1">
+			
+			<if test=" '' != sort_area and null != sort_area and 1 == sort_area  ">
+				CITY_PAC S_ID, CITY_NAME A2,
+			</if>
+			<if test=" '' != sort_area and null != sort_area and 2 == sort_area  ">
+				COUNTY_PAC S_ID,CITY_NAME||'>'||COUNTY_NAME A2,
+			</if>
+			
+			<if test=" '' != sort_area and null != sort_area and 3 == sort_area  ">
+				 TOWN_PAC S_ID ,CITY_NAME||'>'||COUNTY_NAME||'>'||TOWN_NAME A2,
+			</if>
+			
+			<if test=" '' != sort_area and null != sort_area and 4 == sort_area  ">
+				COUNTRY_PAC S_ID ,CITY_NAME||'>'||COUNTY_NAME||'>'||TOWN_NAME||'>'||COUNTRY_NAME  A2,
+			</if>
+			
+	</sql>
+	<sql id="group_sort_area_sql1">
+			<if test=" '' != sort_area and null != sort_area and 1 == sort_area  ">
+				CITY_PAC , CITY_NAME 
+			</if>
+			<if test=" '' != sort_area and null != sort_area and 2 == sort_area  ">
+				COUNTY_PAC ,CITY_NAME||'>'||COUNTY_NAME 
+			</if>
+			
+			<if test=" '' != sort_area and null != sort_area and 3 == sort_area  ">
+				TOWN_PAC ,CITY_NAME||'>'||COUNTY_NAME||'>'||TOWN_NAME
+			</if>
+			
+			<if test=" '' != sort_area and null != sort_area and 4 == sort_area  ">
+				COUNTRY_PAC ,CITY_NAME||'>'||COUNTY_NAME||'>'||TOWN_NAME||'>'||COUNTRY_NAME
+			</if>
+			
+	</sql>
+	
+	<!-- 排序类型 -->
+	<sql id="sort_area_sql2">
+			
+			<if test=" '' != level and null != level and 'city' == level  ">
+				CITY_PAC S_ID, CITY_NAME A2,
+			</if>
+			<if test=" '' != level and null != level and 'county' == level  ">
+				COUNTY_PAC S_ID,CITY_NAME||'>'||COUNTY_NAME A2,
+			</if>
+			
+			<if test=" '' != level and null != level and 'town' == level  ">
+				 TOWN_PAC S_ID ,CITY_NAME||'>'||COUNTY_NAME||'>'||TOWN_NAME A2,
+			</if>
+			
+			<if test=" '' != level and null != level and 'country' == level  ">
+				COUNTRY_PAC S_ID ,CITY_NAME||'>'||COUNTY_NAME||'>'||TOWN_NAME||'>'||COUNTRY_NAME  A2,
+			</if>
+			
+	</sql>
+	<sql id="group_sort_area_sql2">
+			<if test=" '' != level and null != level and 'city' == level  ">
+				CITY_PAC , CITY_NAME 
+			</if>
+			<if test=" '' != level and null != level and 'county' == level  ">
+				COUNTY_PAC ,CITY_NAME||'>'||COUNTY_NAME 
+			</if>
+			
+			<if test=" '' != level and null != level and 'town' == level  ">
+				TOWN_PAC ,CITY_NAME||'>'||COUNTY_NAME||'>'||TOWN_NAME
+			</if>
+			
+			<if test=" '' != level and null != level and 'country' == level  ">
+				COUNTRY_PAC ,CITY_NAME||'>'||COUNTY_NAME||'>'||TOWN_NAME||'>'||COUNTRY_NAME
+			</if>
+			
+	</sql>
+	
+</mapper>

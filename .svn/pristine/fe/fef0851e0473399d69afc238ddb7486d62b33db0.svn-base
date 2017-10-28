@@ -1,0 +1,177 @@
+/* 基本 */
+*{
+	box-sizing:content-box;
+}
+body{
+	color: #fff;
+	font-size: 14px;
+	font-family: dongQingHeiTi,'微软雅黑';
+	background: #1c1925;
+}
+
+a{
+	text-decoration: none;
+	color:$m-c;
+	&:link{
+		text-decoration: none;
+		//color: $active-c;
+	}
+	&:active{
+		text-decoration: none;
+		//color: $active-c;
+	}
+	
+	&:hover{
+		color:$m-c;
+		text-decoration: none;
+	}
+
+}
+
+.btn-link:hover{
+	text-decoration: underline;
+}
+.btn{
+	@extend %forbid-select-text;
+	cursor: pointer;
+	outline: none!important;
+}
+.yellow-btn{
+	@extend %forbid-select-text;
+	cursor: pointer;
+	display: block;
+	color: $yellow;
+	border: 1px solid $yellow;
+	&:hover{
+		color: $yellow;
+	}
+}
+.yellow-link-btn{
+	color:$yellow;
+	&:hover{
+		color: $yellow;
+	}
+}
+*:focus{
+	outline: none;
+}
+
+.yellow-c{
+	color: $yellow!important;
+}
+//
+.main-wrap{
+	position: relative;
+	margin: 0 auto;
+	width: $m-w;
+	height:$m-h;
+	overflow: hidden;
+	background:#1c1925 url(../../images/fupin_strategy/main_bg.jpg) no-repeat;
+	background-size: cover;
+}
+
+.disabled-btn{
+	background: #ddd!important;
+	cursor: not-allowed!important;
+}
+.disabled-btn:hover{
+	background: #ddd!important;
+	cursor: not-allowed!important;
+}
+
+.clearfix{ *zoom:1}
+.clearfix:before,
+.clearfix:after{ display:table; line-height:0; content:""}
+.clearfix:after{ clear:both;}
+/* end基本 */
+
+/* 常用 */
+.hide{
+	display: none!important;
+}
+.show{
+	display: block!important;
+}
+.txt-center{
+	text-align: center;
+}
+
+%BB{box-sizing:border-box;}
+
+%shade-wrap{
+	position: absolute;
+	left: 50%;
+	top:0;
+	margin-left:-$m-w / 2;
+	width: $m-w;
+	height:$m-h;
+	z-index:90;
+	background: rgba(0,0,0, .74);
+	overflow: hidden;
+}
+
+%forbid-select-text {
+	-moz-user-select: none;/*火狐*/
+	-webkit-user-select: none;/*webkit浏览器*/
+	-ms-user-select: none;/*IE10*/
+	-khtml-user-select: none;/*早期浏览器*/
+	user-select: none;
+}
+/* end 常用 */
+
+/* 通用样式 */
+//不透明-阴影-wrap
+.opacity-shadow-wrap{
+	box-shadow:0px 10px 38px #181827;
+	border:2px solid #414163;
+	background:linear-gradient(#272233,#282433);
+}
+//半透明-溢出-标题
+.transparent-overflow-title{
+	position:absolute;
+	top:-16px;
+	left:11px;
+	color:#FBDF16;
+	font-size:16px;
+	min-width:152px;
+	padding:0 20px;
+	height:30px;
+	line-height:30px;
+	text-align: center;
+	background: url('#{$img-monitor-path}poor_atrribute_chart_title.png') no-repeat;
+	background-size: 100% 100%;
+
+	em{
+		font-size: 12px;
+	}
+	.divide{
+		display: inline-block;
+		padding:0 10px;
+		&.thin{
+			transform:scale(.3,1);  
+		}
+	}
+}
+//蓝色tab
+.blue-tab{
+      li{
+        float: left;
+        padding:0 15px;
+        height: 28px;
+        line-height: 28px;
+        text-align: center;
+        color:$light-blue;
+        border:1px solid $light-blue;
+        cursor: pointer;
+        box-shadow: 0px 2px 0px  rgba(0,0,0, .55);
+        
+        &.active{
+          color: #202030;
+          background: $light-blue;
+        }
+      }
+}
+/* end 通用样式 */
+
+
+

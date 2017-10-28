@@ -1,0 +1,30 @@
+{
+	"data":{
+		"belong_organization":"兴宁市建设银行",
+		"list":[
+			{
+				"id":"441481003207",
+				"order":1,
+				"contact_phone":"3211639",
+				"contact_name":"曾灼钦",
+				"country_name":"洋里村委会"
+			},
+			{
+				"id":"441481003210",
+				"order":2,
+				"contact_phone":"3211623",
+				"contact_name":"罗春雄",
+				"country_name":"大圳村委会"
+			},
+			{
+				"id":"441481003209",
+				"order":3,
+				"contact_phone":"3213663",
+				"contact_name":"王海芬",
+				"country_name":"阳光村委会"
+			}
+		]
+	},
+	"code":0,
+	"msg":"获取信息成功"
+}

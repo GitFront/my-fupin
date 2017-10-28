@@ -1,0 +1,57 @@
+{
+	"code": 0,
+	"msg": "获取信息成功",
+	"data": {
+		"area_desc": "梅州市地势北高南低，兼有台地、丘陵、山地、阶地和平原五大类地貌类型 ，面积15876平方公里，2015年末户籍人口543.79万人。",
+		"area_id": 1,
+		"area_level": "province",
+		"area_name": "广东省",
+		"time_end": 1476431802040,
+		"average": {
+			"chart_config": {
+			}
+		},
+		"chart_config_guarantee": {},
+		"bars": [
+			{
+				"name": "道路硬化",
+				"percent": 100
+			},
+			{
+				"name": "安全饮水",
+				"percent": 92
+			},
+			{
+				"name": "电网改造",
+				"percent": 84
+			},
+			{
+				"name": "卫生站",
+				"percent": 55
+			},
+			{
+				"name": "广播电视",
+				"percent": 78
+			},
+			{
+				"name": "宽带网络",
+				"percent": 38
+			}
+		],
+		"alarm": {
+			"family": 0,
+			"project": 0,
+			"country": 0,
+			"responsible": 0
+		},
+		"capital": {
+			"stat": {
+				"invested": "105亿",
+				"projects": "22380个",
+				"rate_completed": "62.5%"
+			},
+			"chart_config_bubble": {}
+		},
+		"chart_config_poor_analysis":{}
+	}
+}

@@ -1,0 +1,2002 @@
+{
+	"type" : "FeatureCollection",
+	"features" : [{
+				"properties" : {
+					"name" : "南山村"
+				},
+				"type" : "Feature",
+				"geometry" : {
+					"type" : "Point",
+					"coordinates" : [116.821568,24.29711]
+				}
+			}, {
+				"properties" : {
+					"name" : "白罗村"
+				},
+				"type" : "Feature",
+				"geometry" : {
+					"type" : "Point",
+					"coordinates" : [116.811399,24.299637]
+				}
+			}, {
+				"properties" : {
+					"name" : "古村村"
+				},
+				"type" : "Feature",
+				"geometry" : {
+					"type" : "Point",
+					"coordinates" : [116.746786,24.591926]
+				}
+			}, {
+				"properties" : {
+					"name" : "恋墩村"
+				},
+				"type" : "Feature",
+				"geometry" : {
+					"type" : "Point",
+					"coordinates" : [116.746786,24.591926]
+				}
+			}, {
+				"properties" : {
+					"name" : "太宁村"
+				},
+				"type" : "Feature",
+				"geometry" : {
+					"type" : "Point",
+					"coordinates" : [116.721799,24.558552]
+				}
+			}, {
+				"properties" : {
+					"name" : "梅林村"
+				},
+				"type" : "Feature",
+				"geometry" : {
+					"type" : "Point",
+					"coordinates" : [116.692284,24.486193]
+				}
+			}, {
+				"properties" : {
+					"name" : "西湖村"
+				},
+				"type" : "Feature",
+				"geometry" : {
+					"type" : "Point",
+					"coordinates" : [116.666074,24.516998]
+				}
+			}, {
+				"properties" : {
+					"name" : "花窗村"
+				},
+				"type" : "Feature",
+				"geometry" : {
+					"type" : "Point",
+					"coordinates" : [116.653153,24.621104 ]
+				}
+			}, {
+				"properties" : {
+					"name" : "党坪村"
+				},
+				"type" : "Feature",
+				"geometry" : {
+					"type" : "Point",
+					"coordinates" : [116.659065,24.639831 ]
+				}
+			}, {
+				"properties" : {
+					"name" : "洋门村"
+				},
+				"type" : "Feature",
+				"geometry" : {
+					"type" : "Point",
+					"coordinates" : [115.798131,24.268768 ]
+				}
+			}, {
+				"properties" : {
+					"name" : "进滩村"
+				},
+				"type" : "Feature",
+				"geometry" : {
+					"type" : "Point",
+					"coordinates" : [116.87762,24.305053 ]
+				}
+			}, {
+				"properties" : {
+					"name" : "柘林村"
+				},
+				"type" : "Feature",
+				"geometry" : {
+					"type" : "Point",
+					"coordinates" : [116.902039,24.287641]
+				}
+			}, {
+				"properties" : {
+					"name" : "福光村"
+				},
+				"type" : "Feature",
+				"geometry" : {
+					"type" : "Point",
+					"coordinates" : [116.910627,24.274575]
+				}
+			}, {
+				"properties" : {
+					"name" : "白土村"
+				},
+				"type" : "Feature",
+				"geometry" : {
+					"type" : "Point",
+					"coordinates" : [ 116.931946,24.276097]
+				}
+			}, {
+				"properties" : {
+					"name" : "敬里村"
+				},
+				"type" : "Feature",
+				"geometry" : {
+					"type" : "Point",
+					"coordinates" : [116.614416,24.326397 ]
+				}
+			}, {
+				"properties" : {
+					"name" : "中兰村"
+				},
+				"type" : "Feature",
+				"geometry" : {
+					"type" : "Point",
+					"coordinates" : [116.564793, 24.335018]
+				}
+			}, {
+				"properties" : {
+					"name" : "大留村"
+				},
+				"type" : "Feature",
+				"geometry" : {
+					"type" : "Point",
+					"coordinates" :[116.507997,  24.3629]
+				}
+			}, {
+				"properties" : {
+					"name" : "小麻村"
+				},
+				"type" : "Feature",
+				"geometry" : {
+					"type" : "Point",
+					"coordinates" : [116.529078, 24.333901]
+				}
+			}, {
+				"properties" : {
+					"name" : "桃石村"
+				},
+				"type" : "Feature",
+				"geometry" : {
+					"type" : "Point",
+					"coordinates" : [116.440828, 24.417211]
+				}
+			}, {
+				"properties" : {
+					"name" : "丰溪林场溪上村"
+				},
+				"type" : "Feature",
+				"geometry" : {
+					"type" : "Point",
+					"coordinates" : [116.794456, 24.65129]
+				}
+			}, {
+				"properties" : {
+					"name" : "大埔角村"
+				},
+				"type" : "Feature",
+				"geometry" : {
+					"type" : "Point",
+					"coordinates" : [116.787846, 24.245211]
+				}
+			}, {
+				"properties" : {
+					"name" : "隔背村"
+				},
+				"type" : "Feature",
+				"geometry" : {
+					"type" : "Point",
+					"coordinates" : [116.805517, 24.215457]
+				}
+			}, {
+				"properties" : {
+					"name" : "下木村"
+				},
+				"type" : "Feature",
+				"geometry" : {
+					"type" : "Point",
+					"coordinates" : [116.873067, 24.226641]
+				}
+			}, {
+				"properties" : {
+					"name" : "四联村"
+				},
+				"type" : "Feature",
+				"geometry" : {
+					"type" : "Point",
+					"coordinates" : [116.867306, 24.247346]
+				}
+			}, {
+				"properties" : {
+					"name" : "梅溪村"
+				},
+				"type" : "Feature",
+				"geometry" : {
+					"type" : "Point",
+					"coordinates" : [116.893332, 24.261821]
+				}
+			}, {
+				"properties" : {
+					"name" : "党溪村"
+				},
+				"type" : "Feature",
+				"geometry" : {
+					"type" : "Point",
+					"coordinates" : [116.592576, 24.263001]
+				}
+			}, {
+				"properties" : {
+					"name" : "三洲村"
+				},
+				"type" : "Feature",
+				"geometry" : {
+					"type" : "Point",
+					"coordinates" : [116.571168, 24.151868]
+				}
+			}, {
+				"properties" : {
+					"name" : "赤坑村"
+				},
+				"type" : "Feature",
+				"geometry" : {
+					"type" : "Point",
+					"coordinates" : [116.539097, 24.151769]
+				}
+			}, {
+				"properties" : {
+					"name" : "逆流村"
+				},
+				"type" : "Feature",
+				"geometry" : {
+					"type" : "Point",
+					"coordinates" : [116.758358, 24.206252]
+				}
+			}, {
+				"properties" : {
+					"name" : "代富村"
+				},
+				"type" : "Feature",
+				"geometry" : {
+					"type" : "Point",
+					"coordinates" : [116.62192, 24.177892]
+				}
+			}, {
+				"properties" : {
+					"name" : "陂村村"
+				},
+				"type" : "Feature",
+				"geometry" : {
+					"type" : "Point",
+					"coordinates" : [116.62192, 24.177892]
+				}
+			}, {
+				"properties" : {
+					"name" : "尧溪村"
+				},
+				"type" : "Feature",
+				"geometry" : {
+					"type" : "Point",
+					"coordinates" : [116.686112, 24.169431]
+				}
+			}, {
+				"properties" : {
+					"name" : "罗基村"
+				},
+				"type" : "Feature",
+				"geometry" : {
+					"type" : "Point",
+					"coordinates" : [116.639252, 24.212836]
+				}
+			}, {
+				"properties" : {
+					"name" : "银滩村"
+				},
+				"type" : "Feature",
+				"geometry" : {
+					"type" : "Point",
+					"coordinates" : [116.561304, 24.273459]
+				}
+			}, {
+				"properties" : {
+					"name" : "上漳村"
+				},
+				"type" : "Feature",
+				"geometry" : {
+					"type" : "Point",
+					"coordinates" : [116.715824, 24.103769]
+				}
+			}, {
+				"properties" : {
+					"name" : "富岭村"
+				},
+				"type" : "Feature",
+				"geometry" : {
+					"type" : "Point",
+					"coordinates" : [116.748106, 24.146334]
+				}
+			}, {
+				"properties" : {
+					"name" : "青华村"
+				},
+				"type" : "Feature",
+				"geometry" : {
+					"type" : "Point",
+					"coordinates" : [116.6037, 24.627046	]			
+					}
+			}, {
+				"properties" : {
+					"name" : "祝丰村"
+				},
+				"type" : "Feature",
+				"geometry" : {
+					"type" : "Point",
+					"coordinates" : [116.5637, 24.513999]				
+					}
+			}, {
+				"properties" : {
+					"name" : "河背村"
+				},
+				"type" : "Feature",
+				"geometry" : {
+					"type" : "Point",
+					"coordinates" : [116.617137, 24.59565]
+				}
+			}, {
+				"properties" : {
+					"name" : "长丰村"
+				},
+				"type" : "Feature",
+				"geometry" : {
+					"type" : "Point",
+					"coordinates" : [116.654159, 24.560548]
+				}
+			}, {
+				"properties" : {
+					"name" : "小坑村"
+				},
+				"type" : "Feature",
+				"geometry" : {
+					"type" : "Point",
+					"coordinates" : [116.526311, 24.444226]
+				}
+			}, {
+				"properties" : {
+					"name" : "旧寨村"
+				},
+				"type" : "Feature",
+				"geometry" : {
+					"type" : "Point",
+					"coordinates" : [116.577379, 24.412047]
+				}
+			}, {
+				"properties" : {
+					"name" : "梓里村"
+				},
+				"type" : "Feature",
+				"geometry" : {
+					"type" : "Point",
+					"coordinates" : [116.526311, 24.444226]
+				}
+			}, {
+				"properties" : {
+					"name" : "团结村"
+				},
+				"type" : "Feature",
+				"geometry" : {
+					"type" : "Point",
+					"coordinates" : [116.654576, 24.081872]
+				}
+			}, {
+				"properties" : {
+					"name" : "漳溪村"
+				},
+				"type" : "Feature",
+				"geometry" : {
+					"type" : "Point",
+					"coordinates" : [116.756758, 24.489148]
+				}
+			}, {
+				"properties" : {
+					"name" : "上黄砂村"
+				},
+				"type" : "Feature",
+				"geometry" : {
+					"type" : "Point",
+					"coordinates" : [116.394059, 24.329687]
+				}
+			}, {
+				"properties" : {
+					"name" : "漳北村"
+				},
+				"type" : "Feature",
+				"geometry" : {
+					"type" : "Point",
+					"coordinates" : [116.75786, 24.494332]
+				}
+			}, {
+				"properties" : {
+					"name" : "纯德村"
+				},
+				"type" : "Feature",
+				"geometry" : {
+					"type" : "Point",
+					"coordinates" : [116.804108, 24.464007]
+				}
+			}, {
+				"properties" : {
+					"name" : "溪头村"
+				},
+				"type" : "Feature",
+				"geometry" : {
+					"type" : "Point",
+					"coordinates" : [116.82727, 24.471227]
+				}
+			}, {
+				"properties" : {
+					"name" : "汶水村"
+				},
+				"type" : "Feature",
+				"geometry" : {
+					"type" : "Point",
+					"coordinates" : [116.832364, 24.483655]
+				}
+			}, {
+				"properties" : {
+					"name" : "黄堂村"
+				},
+				"type" : "Feature",
+				"geometry" : {
+					"type" : "Point",
+					"coordinates" : [116.728863, 24.486285]
+				}
+			}, {
+				"properties" : {
+					"name" : "横溪村"
+				},
+				"type" : "Feature",
+				"geometry" : {
+					"type" : "Point",
+					"coordinates" : [116.843276, 24.389624]
+				}
+			}, {
+				"properties" : {
+					"name" : "南丰村"
+				},
+				"type" : "Feature",
+				"geometry" : {
+					"type" : "Point",
+					"coordinates" : [116.786134, 24.407688]
+				}
+			}, {
+				"properties" : {
+					"name" : "石涵村"
+				},
+				"type" : "Feature",
+				"geometry" : {
+					"type" : "Point",
+					"coordinates" : [116.784254, 24.444455]
+				}
+			}, {
+				"properties" : {
+					"name" : "明德村"
+				},
+				"type" : "Feature",
+				"geometry" : {
+					"type" : "Point",
+					"coordinates" : [116.452758, 24.269124]
+				}
+			}, {
+				"properties" : {
+					"name" : "明新村"
+				},
+				"type" : "Feature",
+				"geometry" : {
+					"type" : "Point",
+					"coordinates" : [116.452758, 24.269124]
+				}
+			}, {
+				"properties" : {
+					"name" : "大坑村"
+				},
+				"type" : "Feature",
+				"geometry" : {
+					"type" : "Point",
+					"coordinates" : [116.529385, 24.245104]
+				}
+			}, {
+				"properties" : {
+					"name" : "滩良村"
+				},
+				"type" : "Feature",
+				"geometry" : {
+					"type" : "Point",
+					"coordinates" : [115.976442, 23.703069]
+				}
+			}, {
+				"properties" : {
+					"name" : "银河村"
+				},
+				"type" : "Feature",
+				"geometry" : {
+					"type" : "Point",
+					"coordinates" : [115.933402, 23.69996]
+				}
+			}, {
+				"properties" : {
+					"name" : "拾荷村"
+				},
+				"type" : "Feature",
+				"geometry" : {
+					"type" : "Point",
+					"coordinates" : [116.111404, 23.862058]
+				}
+			}, {
+				"properties" : {
+					"name" : "大田村"
+				},
+				"type" : "Feature",
+				"geometry" : {
+					"type" : "Point",
+					"coordinates" : [116.323385, 24.063122]
+				}
+			}, {
+				"properties" : {
+					"name" : "长布村"
+				},
+				"type" : "Feature",
+				"geometry" : {
+					"type" : "Point",
+					"coordinates" : [116.306065, 24.091365]
+				}
+			}, {
+				"properties" : {
+					"name" : "华东村"
+				},
+				"type" : "Feature",
+				"geometry" : {
+					"type" : "Point",
+					"coordinates" : [116.379527, 24.094665]
+				}
+			}, {
+				"properties" : {
+					"name" : "龙北村"
+				},
+				"type" : "Feature",
+				"geometry" : {
+					"type" : "Point",
+					"coordinates" : [116.379527, 24.094665]
+				}
+			}, {
+				"properties" : {
+					"name" : "西厢村"
+				},
+				"type" : "Feature",
+				"geometry" : {
+					"type" : "Point",
+					"coordinates" : [116.210834, 23.957601]
+				}
+			}, {
+				"properties" : {
+					"name" : "丰京村"
+				},
+				"type" : "Feature",
+				"geometry" : {
+					"type" : "Point",
+					"coordinates" : [116.207737, 23.959994]
+				}
+			}, {
+				"properties" : {
+					"name" : "双溪村"
+				},
+				"type" : "Feature",
+				"geometry" : {
+					"type" : "Point",
+					"coordinates" : [116.218217, 23.988048]
+				}
+			}, {
+				"properties" : {
+					"name" : "复兴村"
+				},
+				"type" : "Feature",
+				"geometry" : {
+					"type" : "Point",
+					"coordinates" : [116.188333, 23.966339]
+				}
+			}, {
+				"properties" : {
+					"name" : "小椹村"
+				},
+				"type" : "Feature",
+				"geometry" : {
+					"type" : "Point",
+					"coordinates" : [116.20228, 23.977171]
+				}
+			}, {
+				"properties" : {
+					"name" : "璜溪村"
+				},
+				"type" : "Feature",
+				"geometry" : {
+					"type" : "Point",
+					"coordinates" : [116.212163, 23.917064]
+				}
+			}, {
+				"properties" : {
+					"name" : "三山村"
+				},
+				"type" : "Feature",
+				"geometry" : {
+					"type" : "Point",
+					"coordinates" : [116.193429, 23.880127]
+				}
+			}, {
+				"properties" : {
+					"name" : "嶂背村"
+				},
+				"type" : "Feature",
+				"geometry" : {
+					"type" : "Point",
+					"coordinates" : [116.372609, 23.972855]
+				}
+			}, {
+				"properties" : {
+					"name" : "双灵村"
+				},
+				"type" : "Feature",
+				"geometry" : {
+					"type" : "Point",
+					"coordinates" : [116.406302, 24.034811]
+				}
+			}, {
+				"properties" : {
+					"name" : "埔头角村"
+				},
+				"type" : "Feature",
+				"geometry" : {
+					"type" : "Point",
+					"coordinates" : [116.443074,23.961028 ]
+				}
+			}, {
+				"properties" : {
+					"name" : "埔东村"
+				},
+				"type" : "Feature",
+				"geometry" : {
+					"type" : "Point",
+					"coordinates" : [116.436272,23.969368 ]
+				}
+			}, {
+				"properties" : {
+					"name" : "杨石村"
+				},
+				"type" : "Feature",
+				"geometry" : {
+					"type" : "Point",
+					"coordinates" : [115.847924,24.297408 ]
+				}
+			}, {
+				"properties" : {
+					"name" : "坑尾村"
+				},
+				"type" : "Feature",
+				"geometry" : {
+					"type" : "Point",
+					"coordinates" : [116.448914,23.98863 ]
+				}
+			}, {
+				"properties" : {
+					"name" : "黄金村"
+				},
+				"type" : "Feature",
+				"geometry" : {
+					"type" : "Point",
+					"coordinates" : [116.393133,23.994097 ]
+				}
+			}, {
+				"properties" : {
+					"name" : "湖田村"
+				},
+				"type" : "Feature",
+				"geometry" : {
+					"type" : "Point",
+					"coordinates" : [116.387805,23.988491 ]
+				}
+			}, {
+				"properties" : {
+					"name" : "环西村"
+				},
+				"type" : "Feature",
+				"geometry" : {
+					"type" : "Point",
+					"coordinates" : [116.070959,23.922406 ]
+				}
+			}, {
+				"properties" : {
+					"name" : "新和村"
+				},
+				"type" : "Feature",
+				"geometry" : {
+					"type" : "Point",
+					"coordinates" : [116.172795,23.952103 ]
+				}
+			}, {
+				"properties" : {
+					"name" : "富足村"
+				},
+				"type" : "Feature",
+				"geometry" : {
+					"type" : "Point",
+					"coordinates" : [116.417989,23.903156 ]
+				}
+			}, {
+				"properties" : {
+					"name" : "高华村"
+				},
+				"type" : "Feature",
+				"geometry" : {
+					"type" : "Point",
+					"coordinates" : [116.419839,23.877534 ]
+				}
+			}, {
+				"properties" : {
+					"name" : "上围村"
+				},
+				"type" : "Feature",
+				"geometry" : {
+					"type" : "Point",
+					"coordinates" : [116.452381,23.882935 ]
+				}
+			}, {
+				"properties" : {
+					"name" : "黄砂坑村"
+				},
+				"type" : "Feature",
+				"geometry" : {
+					"type" : "Point",
+					"coordinates" : [116.657534,24.268857 ]
+				}
+			}, {
+				"properties" : {
+					"name" : "葛布村"
+				},
+				"type" : "Feature",
+				"geometry" : {
+					"type" : "Point",
+					"coordinates" : [116.491748,23.885829 ]
+				}
+			}, {
+				"properties" : {
+					"name" : "田坫村"
+				},
+				"type" : "Feature",
+				"geometry" : {
+					"type" : "Point",
+					"coordinates" : [116.478751,23.859846 ]
+				}
+			}, {
+				"properties" : {
+					"name" : "茶背村"
+				},
+				"type" : "Feature",
+				"geometry" : {
+					"type" : "Point",
+					"coordinates" : [116.450818,23.793378 ]
+				}
+			}, {
+				"properties" : {
+					"name" : "岽下村"
+				},
+				"type" : "Feature",
+				"geometry" : {
+					"type" : "Point",
+					"coordinates" : [116.422788,23.802107 ]
+				}
+			}, {
+				"properties" : {
+					"name" : "溪南村"
+				},
+				"type" : "Feature",
+				"geometry" : {
+					"type" : "Point",
+					"coordinates" : [116.473666,23.946096 ]
+				}
+			}, {
+				"properties" : {
+					"name" : "松梅村"
+				},
+				"type" : "Feature",
+				"geometry" : {
+					"type" : "Point",
+					"coordinates" : [116.26669,24.02258 ]
+				}
+			}, {
+				"properties" : {
+					"name" : "坪丰村"
+				},
+				"type" : "Feature",
+				"geometry" : {
+					"type" : "Point",
+					"coordinates" : [116.233272,24.034615 ]
+				}
+			}, {
+				"properties" : {
+					"name" : "中心村"
+				},
+				"type" : "Feature",
+				"geometry" : {
+					"type" : "Point",
+					"coordinates" : [116.338294,23.920081 ]
+				}
+			}, {
+				"properties" : {
+					"name" : "填江村"
+				},
+				"type" : "Feature",
+				"geometry" : {
+					"type" : "Point",
+					"coordinates" : [116.338021,23.922873 ]
+				}
+			}, {
+				"properties" : {
+					"name" : "松柏村"
+				},
+				"type" : "Feature",
+				"geometry" : {
+					"type" : "Point",
+					"coordinates" : [116.312394,23.921323 ]
+				}
+			}, {
+				"properties" : {
+					"name" : "横坑村"
+				},
+				"type" : "Feature",
+				"geometry" : {
+					"type" : "Point",
+					"coordinates" : [116.135461,23.683726 ]
+				}
+			}, {
+				"properties" : {
+					"name" : "采芝村"
+				},
+				"type" : "Feature",
+				"geometry" : {
+					"type" : "Point",
+					"coordinates" : [116.133207,23.661235 ]
+				}
+			}, {
+				"properties" : {
+					"name" : "南坑村"
+				},
+				"type" : "Feature",
+				"geometry" : {
+					"type" : "Point",
+					"coordinates" : [116.45338,24.116233 ]
+				}
+			}, {
+				"properties" : {
+					"name" : "黄花村"
+				},
+				"type" : "Feature",
+				"geometry" : {
+					"type" : "Point",
+					"coordinates" : [116.459254,24.145251 ]
+				}
+			}, {
+				"properties" : {
+					"name" : "占中村"
+				},
+				"type" : "Feature",
+				"geometry" : {
+					"type" : "Point",
+					"coordinates" : [116.459254,24.145251 ]
+				}
+			}, {
+				"properties" : {
+					"name" : "占山村"
+				},
+				"type" : "Feature",
+				"geometry" : {
+					"type" : "Point",
+					"coordinates" : [116.45159,24.161088 ]
+				}
+			}, {
+				"properties" : {
+					"name" : "粉輋村"
+				},
+				"type" : "Feature",
+				"geometry" : {
+					"type" : "Point",
+					"coordinates" : [116.536755,24.056306 ]
+				}
+			}, {
+				"properties" : {
+					"name" : "大胜村"
+				},
+				"type" : "Feature",
+				"geometry" : {
+					"type" : "Point",
+					"coordinates" : [116.556369,24.039886 ]
+				}
+			}, {
+				"properties" : {
+					"name" : "三洲溪村"
+				},
+				"type" : "Feature",
+				"geometry" : {
+					"type" : "Point",
+					"coordinates" : [116.496253,24.096645 ]
+				}
+			}, {
+				"properties" : {
+					"name" : "官下村"
+				},
+				"type" : "Feature",
+				"geometry" : {
+					"type" : "Point",
+					"coordinates" : [116.643717,24.02952 ]
+				}
+			}, {
+				"properties" : {
+					"name" : "银溪村"
+				},
+				"type" : "Feature",
+				"geometry" : {
+					"type" : "Point",
+					"coordinates" : [116.620267,24.004485 ]
+				}
+			}, {
+				"properties" : {
+					"name" : "中楼村"
+				},
+				"type" : "Feature",
+				"geometry" : {
+					"type" : "Point",
+					"coordinates" : [116.171272,23.782637 ]
+				}
+			}, {
+				"properties" : {
+					"name" : "黎峰村"
+				},
+				"type" : "Feature",
+				"geometry" : {
+					"type" : "Point",
+					"coordinates" : [116.176989,23.792326 ]
+				}
+			}, {
+				"properties" : {
+					"name" : "东里村"
+				},
+				"type" : "Feature",
+				"geometry" : {
+					"type" : "Point",
+					"coordinates" : [116.152943,23.79077 ]
+				}
+			}, {
+				"properties" : {
+					"name" : "横东村"
+				},
+				"type" : "Feature",
+				"geometry" : {
+					"type" : "Point",
+					"coordinates" : [116.267817,23.805579 ]
+				}
+			}, {
+				"properties" : {
+					"name" : "新楼村"
+				},
+				"type" : "Feature",
+				"geometry" : {
+					"type" : "Point",
+					"coordinates" : [116.206376,23.729994 ]
+				}
+			}, {
+				"properties" : {
+					"name" : "新埔园村"
+				},
+				"type" : "Feature",
+				"geometry" : {
+					"type" : "Point",
+					"coordinates" : [116.196695,23.716871 ]
+				}
+			}, {
+				"properties" : {
+					"name" : "双鹿村"
+				},
+				"type" : "Feature",
+				"geometry" : {
+					"type" : "Point",
+					"coordinates" : [116.134868,23.765546 ]
+				}
+			}, {
+				"properties" : {
+					"name" : "新岭村"
+				},
+				"type" : "Feature",
+				"geometry" : {
+					"type" : "Point",
+					"coordinates" : [116.152182,23.762027 ]
+				}
+			}, {
+				"properties" : {
+					"name" : "大罗村"
+				},
+				"type" : "Feature",
+				"geometry" : {
+					"type" : "Point",
+					"coordinates" : [116.103199,23.718206 ]
+				}
+			}, {
+				"properties" : {
+					"name" : "新兴村"
+				},
+				"type" : "Feature",
+				"geometry" : {
+					"type" : "Point",
+					"coordinates" : [116.114833,23.704383 ]
+				}
+			}, {
+				"properties" : {
+					"name" : "田背村"
+				},
+				"type" : "Feature",
+				"geometry" : {
+					"type" : "Point",
+					"coordinates" : [116.462667,24.066495 ]
+				}
+			}, {
+				"properties" : {
+					"name" : "礤下村"
+				},
+				"type" : "Feature",
+				"geometry" : {
+					"type" : "Point",
+					"coordinates" : [114.045646,24.193052 ]
+				}
+			}, {
+				"properties" : {
+					"name" : "石峰村"
+				},
+				"type" : "Feature",
+				"geometry" : {
+					"type" : "Point",
+					"coordinates" : [116.17076,24.841728 ]
+				}
+			}, {
+				"properties" : {
+					"name" : "洪才村"
+				},
+				"type" : "Feature",
+				"geometry" : {
+					"type" : "Point",
+					"coordinates" : [116.134752,24.847602 ]
+				}
+			}, {
+				"properties" : {
+					"name" : "金星村"
+				},
+				"type" : "Feature",
+				"geometry" : {
+					"type" : "Point",
+					"coordinates" : [116.161181,24.672459 ]
+				}
+			}, {
+				"properties" : {
+					"name" : "湖谷村"
+				},
+				"type" : "Feature",
+				"geometry" : {
+					"type" : "Point",
+					"coordinates" : [116.172345,24.652793 ]
+				}
+			}, {
+				"properties" : {
+					"name" : "峰口村"
+				},
+				"type" : "Feature",
+				"geometry" : {
+					"type" : "Point",
+					"coordinates" : [116.225807,24.646447 ]
+				}
+			}, {
+				"properties" : {
+					"name" : "高思村"
+				},
+				"type" : "Feature",
+				"geometry" : {
+					"type" : "Point",
+					"coordinates" : [116.277758,24.592186 ]
+				}
+			}, {
+				"properties" : {
+					"name" : "岭背村"
+				},
+				"type" : "Feature",
+				"geometry" : {
+					"type" : "Point",
+					"coordinates" : [116.364454,24.81551 ]
+				}
+			}, {
+				"properties" : {
+					"name" : "洋山村"
+				},
+				"type" : "Feature",
+				"geometry" : {
+					"type" : "Point",
+					"coordinates" : [116.394033,24.837094 ]
+				}
+			}, {
+				"properties" : {
+					"name" : "铁西村"
+				},
+				"type" : "Feature",
+				"geometry" : {
+					"type" : "Point",
+					"coordinates" : [116.077081,24.651938 ]
+				}
+			}, {
+				"properties" : {
+					"name" : "东岭村"
+				},
+				"type" : "Feature",
+				"geometry" : {
+					"type" : "Point",
+					"coordinates" : [116.098564,24.650663 ]
+				}
+			}, {
+				"properties" : {
+					"name" : "白湖村"
+				},
+				"type" : "Feature",
+				"geometry" : {
+					"type" : "Point",
+					"coordinates" : [116.202809,24.753803 ]
+				}
+			}, {
+				"properties" : {
+					"name" : "鹤湖村"
+				},
+				"type" : "Feature",
+				"geometry" : {
+					"type" : "Point",
+					"coordinates" : [116.21389,24.741522] 
+				}
+			}, {
+				"properties" : {
+					"name" : "潘田村"
+				},
+				"type" : "Feature",
+				"geometry" : {
+					"type" : "Point",
+					"coordinates" : [116.149704,24.541592 ]
+				}
+			}, {
+				"properties" : {
+					"name" : "下南村"
+				},
+				"type" : "Feature",
+				"geometry" : {
+					"type" : "Point",
+					"coordinates" : [116.154756,24.496466 ]
+				}
+			}, {
+				"properties" : {
+					"name" : "象岭村"
+				},
+				"type" : "Feature",
+				"geometry" : {
+					"type" : "Point",
+					"coordinates" : [116.142048,24.508704 ]
+				}
+			}, {
+				"properties" : {
+					"name" : "金沙村"
+				},
+				"type" : "Feature",
+				"geometry" : {
+					"type" : "Point",
+					"coordinates" : [116.138908,24.503712 ]
+				}
+			}, {
+				"properties" : {
+					"name" : "高陂村"
+				},
+				"type" : "Feature",
+				"geometry" : {
+					"type" : "Point",
+					"coordinates" : [116.17608,24.700633 ]
+				}
+			}, {
+				"properties" : {
+					"name" : "上村村"
+				},
+				"type" : "Feature",
+				"geometry" : {
+					"type" : "Point",
+					"coordinates" : [116.159166,24.640603 ]
+				}
+			}, {
+				"properties" : {
+					"name" : "神岗村"
+				},
+				"type" : "Feature",
+				"geometry" : {
+					"type" : "Point",
+					"coordinates" : [116.155936,24.634805 ]
+				}
+			}, {
+				"properties" : {
+					"name" : "筀竹村"
+				},
+				"type" : "Feature",
+				"geometry" : {
+					"type" : "Point",
+					"coordinates" : [115.833145,24.798238 ]
+				}
+			}, {
+				"properties" : {
+					"name" : "塘青村"
+				},
+				"type" : "Feature",
+				"geometry" : {
+					"type" : "Point",
+					"coordinates" : [116.204842,24.332089 ]
+				}
+			}, {
+				"properties" : {
+					"name" : "北联村"
+				},
+				"type" : "Feature",
+				"geometry" : {
+					"type" : "Point",
+					"coordinates" : [116.21971,24.34258] 
+				}
+			}, {
+				"properties" : {
+					"name" : "双黄村"
+				},
+				"type" : "Feature",
+				"geometry" : {
+					"type" : "Point",
+					"coordinates" : [116.198101,24.301482 ]
+				}
+			}, {
+				"properties" : {
+					"name" : "莆田村"
+				},
+				"type" : "Feature",
+				"geometry" : {
+					"type" : "Point",
+					"coordinates" : [116.216529,24.289103 ]
+				}
+			}, {
+				"properties" : {
+					"name" : "桃坪村"
+				},
+				"type" : "Feature",
+				"geometry" : {
+					"type" : "Point",
+					"coordinates" : [116.290713,24.238456 ]
+				}
+			}, {
+				"properties" : {
+					"name" : "新联村"
+				},
+				"type" : "Feature",
+				"geometry" : {
+					"type" : "Point",
+					"coordinates" : [116.241455,24.302013 ]
+				}
+			}, {
+				"properties" : {
+					"name" : "太平村"
+				},
+				"type" : "Feature",
+				"geometry" : {
+					"type" : "Point",
+					"coordinates" : [116.217831,23.71886 ]
+				}
+			}, {
+				"properties" : {
+					"name" : "直坑村"
+				},
+				"type" : "Feature",
+				"geometry" : {
+					"type" : "Point",
+					"coordinates" : [116.255533,24.277706 ]
+				}
+			}, {
+				"properties" : {
+					"name" : "嶂下村"
+				},
+				"type" : "Feature",
+				"geometry" : {
+					"type" : "Point",
+					"coordinates" : [116.137891,23.912311 ]
+				}
+			}, {
+				"properties" : {
+					"name" : "悦来村"
+				},
+				"type" : "Feature",
+				"geometry" : {
+					"type" : "Point",
+					"coordinates" : [116.209562,24.449786 ]
+				}
+			}, {
+				"properties" : {
+					"name" : "田头村"
+				},
+				"type" : "Feature",
+				"geometry" : {
+					"type" : "Point",
+					"coordinates" : [116.262783,24.373274 ]
+				}
+			}, {
+				"properties" : {
+					"name" : "郑均村"
+				},
+				"type" : "Feature",
+				"geometry" : {
+					"type" : "Point",
+					"coordinates" : [116.280669,24.332647 ]
+				}
+			}, {
+				"properties" : {
+					"name" : "玉水村"
+				},
+				"type" : "Feature",
+				"geometry" : {
+					"type" : "Point",
+					"coordinates" : [116.193643,24.419187 ]
+				}
+			}, {
+				"properties" : {
+					"name" : "莲塘村"
+				},
+				"type" : "Feature",
+				"geometry" : {
+					"type" : "Point",
+					"coordinates" : [116.187347,24.435747 ]
+				}
+			}, {
+				"properties" : {
+					"name" : "雷甘村"
+				},
+				"type" : "Feature",
+				"geometry" : {
+					"type" : "Point",
+					"coordinates" : [115.998915,24.36999 ]
+				}
+			}, {
+				"properties" : {
+					"name" : "三台村"
+				},
+				"type" : "Feature",
+				"geometry" : {
+					"type" : "Point",
+					"coordinates" : [115.951727,24.357738 ]
+				}
+			}, {
+				"properties" : {
+					"name" : "横庄村"
+				},
+				"type" : "Feature",
+				"geometry" : {
+					"type" : "Point",
+					"coordinates" : [116.357342,24.597086 ]
+				}
+			}, {
+				"properties" : {
+					"name" : "龙岗村"
+				},
+				"type" : "Feature",
+				"geometry" : {
+					"type" : "Point",
+					"coordinates" : [116.69406,24.365234 ]
+				}
+			}, {
+				"properties" : {
+					"name" : "南坑村"
+				},
+				"type" : "Feature",
+				"geometry" : {
+					"type" : "Point",
+					"coordinates" : [116.453476,24.116253 ]
+				}
+			}, {
+				"properties" : {
+					"name" : "水美村"
+				},
+				"type" : "Feature",
+				"geometry" : {
+					"type" : "Point",
+					"coordinates" : [116.124838,24.089497 ]
+				}
+			}, {
+				"properties" : {
+					"name" : "白面村"
+				},
+				"type" : "Feature",
+				"geometry" : {
+					"type" : "Point",
+					"coordinates" : [115.86575,24.436685 ]
+				}
+			}, {
+				"properties" : {
+					"name" : "崇化村"
+				},
+				"type" : "Feature",
+				"geometry" : {
+					"type" : "Point",
+					"coordinates" : [115.897207,24.415975 ]
+				}
+			}, {
+				"properties" : {
+					"name" : "竹香村"
+				},
+				"type" : "Feature",
+				"geometry" : {
+					"type" : "Point",
+					"coordinates" : [115.949283,24.278482 ]
+				}
+			}, {
+				"properties" : {
+					"name" : "瑶美村"
+				},
+				"type" : "Feature",
+				"geometry" : {
+					"type" : "Point",
+					"coordinates" : [115.934165,24.329605 ]
+				}
+			}, {
+				"properties" : {
+					"name" : "荷田村"
+				},
+				"type" : "Feature",
+				"geometry" : {
+					"type" : "Point",
+					"coordinates" : [116.011755,24.159206 ]
+				}
+			}, {
+				"properties" : {
+					"name" : "七贤村"
+				},
+				"type" : "Feature",
+				"geometry" : {
+					"type" : "Point",
+					"coordinates" : [116.00825,24.161501 ]
+				}
+			}, {
+				"properties" : {
+					"name" : "彰三村"
+				},
+				"type" : "Feature",
+				"geometry" : {
+					"type" : "Point",
+					"coordinates" : [115.97861,24.083819 ]
+				}
+			}, {
+				"properties" : {
+					"name" : "咸和村"
+				},
+				"type" : "Feature",
+				"geometry" : {
+					"type" : "Point",
+					"coordinates" : [116.011042,24.073196 ]
+				}
+			}, {
+				"properties" : {
+					"name" : "龙凤村村"
+				},
+				"type" : "Feature",
+				"geometry" : {
+					"type" : "Point",
+					"coordinates" : [115.868863,24.366545 ]
+				}
+			}, {
+				"properties" : {
+					"name" : "七朱村"
+				},
+				"type" : "Feature",
+				"geometry" : {
+					"type" : "Point",
+					"coordinates" : [115.86228,24.416683 ]
+				}
+			}, {
+				"properties" : {
+					"name" : "岭村村"
+				},
+				"type" : "Feature",
+				"geometry" : {
+					"type" : "Point",
+					"coordinates" : [115.826396,24.368744 ]
+				}
+			}, {
+				"properties" : {
+					"name" : "龙塘村村"
+				},
+				"type" : "Feature",
+				"geometry" : {
+					"type" : "Point",
+					"coordinates" : [115.870405,24.379771 ]
+				}
+			}, {
+				"properties" : {
+					"name" : "西南村"
+				},
+				"type" : "Feature",
+				"geometry" : {
+					"type" : "Point",
+					"coordinates" : [116.09952,24.449361 ]
+				}
+			}, {
+				"properties" : {
+					"name" : "鹅峰村"
+				},
+				"type" : "Feature",
+				"geometry" : {
+					"type" : "Point",
+					"coordinates" : [115.722179,24.297981 ]
+				}
+			}, {
+				"properties" : {
+					"name" : "桃宝村"
+				},
+				"type" : "Feature",
+				"geometry" : {
+					"type" : "Point",
+					"coordinates" : [116.460487,24.535661 ]
+				}
+			}, {
+				"properties" : {
+					"name" : "富坑村"
+				},
+				"type" : "Feature",
+				"geometry" : {
+					"type" : "Point",
+					"coordinates" : [116.521728,24.575659 ]
+				}
+			}, {
+				"properties" : {
+					"name" : "径口村"
+				},
+				"type" : "Feature",
+				"geometry" : {
+					"type" : "Point",
+					"coordinates" : [116.375997,24.730992 ]
+				}
+			}, {
+				"properties" : {
+					"name" : "园岭村"
+				},
+				"type" : "Feature",
+				"geometry" : {
+					"type" : "Point",
+					"coordinates" : [116.375921,24.738129 ]
+				}
+			}, {
+				"properties" : {
+					"name" : "湾溪村"
+				},
+				"type" : "Feature",
+				"geometry" : {
+					"type" : "Point",
+					"coordinates" : [116.425696,24.722165 ]
+				}
+			}, {
+				"properties" : {
+					"name" : "松林村"
+				},
+				"type" : "Feature",
+				"geometry" : {
+					"type" : "Point",
+					"coordinates" : [116.442637,24.609882 ]
+				}
+			}, {
+				"properties" : {
+					"name" : "麻坝村"
+				},
+				"type" : "Feature",
+				"geometry" : {
+					"type" : "Point",
+					"coordinates" : [116.443222,24.636716 ]
+				}
+			}, {
+				"properties" : {
+					"name" : "排下村"
+				},
+				"type" : "Feature",
+				"geometry" : {
+					"type" : "Point",
+					"coordinates" : [115.785024,24.767984 ]
+				}
+			}, {
+				"properties" : {
+					"name" : "黄沙村"
+				},
+				"type" : "Feature",
+				"geometry" : {
+					"type" : "Point",
+					"coordinates" : [115.852949,24.757548 ]
+				}
+			}, {
+				"properties" : {
+					"name" : "三达村"
+				},
+				"type" : "Feature",
+				"geometry" : {
+					"type" : "Point",
+					"coordinates" : [115.930836,24.899704 ]
+				}
+			}, {
+				"properties" : {
+					"name" : "湍溪村"
+				},
+				"type" : "Feature",
+				"geometry" : {
+					"type" : "Point",
+					"coordinates" : [116.033945,24.883447 ]
+				}
+			}, {
+				"properties" : {
+					"name" : "黄沙村"
+				},
+				"type" : "Feature",
+				"geometry" : {
+					"type" : "Point",
+					"coordinates" : [115.924992,24.590754 ]
+				}
+			}, {
+				"properties" : {
+					"name" : "田兴村"
+				},
+				"type" : "Feature",
+				"geometry" : {
+					"type" : "Point",
+					"coordinates" : [115.876249,24.533627 ]
+				}
+			}, {
+				"properties" : {
+					"name" : "坝头村"
+				},
+				"type" : "Feature",
+				"geometry" : {
+					"type" : "Point",
+					"coordinates" : [115.944669,24.610566 ]
+				}
+			}, {
+				"properties" : {
+					"name" : "锡水村"
+				},
+				"type" : "Feature",
+				"geometry" : {
+					"type" : "Point",
+					"coordinates" : [115.971879,24.710738 ]
+				}
+			}, {
+				"properties" : {
+					"name" : "汶水村"
+				},
+				"type" : "Feature",
+				"geometry" : {
+					"type" : "Point",
+					"coordinates" : [115.970366,24.681367 ]
+				}
+			}, {
+				"properties" : {
+					"name" : "茅坪村"
+				},
+				"type" : "Feature",
+				"geometry" : {
+					"type" : "Point",
+					"coordinates" : [115.993854,24.64828 ]
+				}
+			}, {
+				"properties" : {
+					"name" : "向阳村"
+				},
+				"type" : "Feature",
+				"geometry" : {
+					"type" : "Point",
+					"coordinates" : [115.880958,24.657216 ]
+				}
+			}, {
+				"properties" : {
+					"name" : "畲溪村"
+				},
+				"type" : "Feature",
+				"geometry" : {
+					"type" : "Point",
+					"coordinates" : [115.949598,24.828028 ]
+				}
+			}, {
+				"properties" : {
+					"name" : "飞龙村"
+				},
+				"type" : "Feature",
+				"geometry" : {
+					"type" : "Point",
+					"coordinates" : [115.888504,24.807351 ]
+				}
+			}, {
+				"properties" : {
+					"name" : "社南村"
+				},
+				"type" : "Feature",
+				"geometry" : {
+					"type" : "Point",
+					"coordinates" : [115.879367,24.83419 ]
+				}
+			}, {
+				"properties" : {
+					"name" : "八社村"
+				},
+				"type" : "Feature",
+				"geometry" : {
+					"type" : "Point",
+					"coordinates" : [116.038185,24.847659 ]
+				}
+			}, {
+				"properties" : {
+					"name" : "坪湖村"
+				},
+				"type" : "Feature",
+				"geometry" : {
+					"type" : "Point",
+					"coordinates" : [115.849131,24.515312 ]
+				}
+			}, {
+				"properties" : {
+					"name" : "中东村"
+				},
+				"type" : "Feature",
+				"geometry" : {
+					"type" : "Point",
+					"coordinates" : [115.852135,24.506313 ]
+				}
+			}, {
+				"properties" : {
+					"name" : "安南村"
+				},
+				"type" : "Feature",
+				"geometry" : {
+					"type" : "Point",
+					"coordinates" : [115.819275,24.532576 ]
+				}
+			}, {
+				"properties" : {
+					"name" : "文贵村"
+				},
+				"type" : "Feature",
+				"geometry" : {
+					"type" : "Point",
+					"coordinates" : [116.061395,24.796254 ]
+				}
+			}, {
+				"properties" : {
+					"name" : "快湖村"
+				},
+				"type" : "Feature",
+				"geometry" : {
+					"type" : "Point",
+					"coordinates" : [115.852756,24.694836 ]
+				}
+			}, {
+				"properties" : {
+					"name" : "蓝田村"
+				},
+				"type" : "Feature",
+				"geometry" : {
+					"type" : "Point",
+					"coordinates" : [115.6707,23.718754 ]
+				}
+			}, {
+				"properties" : {
+					"name" : "学少村"
+				},
+				"type" : "Feature",
+				"geometry" : {
+					"type" : "Point",
+					"coordinates" : [115.695202,23.723073 ]
+				}
+			}, {
+				"properties" : {
+					"name" : "青江村"
+				},
+				"type" : "Feature",
+				"geometry" : {
+					"type" : "Point",
+					"coordinates" : [115.694801,23.710166 ]
+				}
+			}, {
+				"properties" : {
+					"name" : "福江村"
+				},
+				"type" : "Feature",
+				"geometry" : {
+					"type" : "Point",
+					"coordinates" : [115.682033,23.704028 ]
+				}
+			}, {
+				"properties" : {
+					"name" : "吉水村"
+				},
+				"type" : "Feature",
+				"geometry" : {
+					"type" : "Point",
+					"coordinates" : [115.682006,23.651987 ]
+				}
+			}, {
+				"properties" : {
+					"name" : "三江村"
+				},
+				"type" : "Feature",
+				"geometry" : {
+					"type" : "Point",
+					"coordinates" : [115.677546,23.699731 ]
+				}
+			}, {
+				"properties" : {
+					"name" : "双福村"
+				},
+				"type" : "Feature",
+				"geometry" : {
+					"type" : "Point",
+					"coordinates" : [115.655708,23.694992 ]
+				}
+			}, {
+				"properties" : {
+					"name" : "文葵村"
+				},
+				"type" : "Feature",
+				"geometry" : {
+					"type" : "Point",
+					"coordinates" : [115.712718,23.766395 ]
+				}
+			}, {
+				"properties" : {
+					"name" : "葵樟村"
+				},
+				"type" : "Feature",
+				"geometry" : {
+					"type" : "Point",
+					"coordinates" : [115.696314,23.745606 ]
+				}
+			}, {
+				"properties" : {
+					"name" : "胜利村"
+				},
+				"type" : "Feature",
+				"geometry" : {
+					"type" : "Point",
+					"coordinates" : [115.758444,23.760163 ]
+				}
+			}, {
+				"properties" : {
+					"name" : "丰联村"
+				},
+				"type" : "Feature",
+				"geometry" : {
+					"type" : "Point",
+					"coordinates" : [115.767581,23.752761 ]
+				}
+			}, {
+				"properties" : {
+					"name" : "空南村"
+				},
+				"type" : "Feature",
+				"geometry" : {
+					"type" : "Point",
+					"coordinates" : [115.965052,23.847266 ]
+				}
+			}, {
+				"properties" : {
+					"name" : "横塘村"
+				},
+				"type" : "Feature",
+				"geometry" : {
+					"type" : "Point",
+					"coordinates" : [115.926762,23.844913 ]
+				}
+			}, {
+				"properties" : {
+					"name" : "高榕村"
+				},
+				"type" : "Feature",
+				"geometry" : {
+					"type" : "Point",
+					"coordinates" : [115.786093,23.93815 ]
+				}
+			}, {
+				"properties" : {
+					"name" : "下陶村"
+				},
+				"type" : "Feature",
+				"geometry" : {
+					"type" : "Point",
+					"coordinates" : [115.860663,23.921434 ]
+				}
+			}, {
+				"properties" : {
+					"name" : "和民村"
+				},
+				"type" : "Feature",
+				"geometry" : {
+					"type" : "Point",
+					"coordinates" : [115.863816,23.941227 ]
+				}
+			}, {
+				"properties" : {
+					"name" : "高车塘村"
+				},
+				"type" : "Feature",
+				"geometry" : {
+					"type" : "Point",
+					"coordinates" : [115.889968,23.929445 ]
+				}
+			}, {
+				"properties" : {
+					"name" : "三田村"
+				},
+				"type" : "Feature",
+				"geometry" : {
+					"type" : "Point",
+					"coordinates" : [115.824708,23.799295 ]
+				}
+			}, {
+				"properties" : {
+					"name" : "黄坑村"
+				},
+				"type" : "Feature",
+				"geometry" : {
+					"type" : "Point",
+					"coordinates" : [115.78133,23.835104 ]
+				}
+			}, {
+				"properties" : {
+					"name" : "林石村"
+				},
+				"type" : "Feature",
+				"geometry" : {
+					"type" : "Point",
+					"coordinates" : [115.798912,23.872305 ]
+				}
+			}, {
+				"properties" : {
+					"name" : "黎塘村"
+				},
+				"type" : "Feature",
+				"geometry" : {
+					"type" : "Point",
+					"coordinates" : [115.779889,23.862278 ]
+				}
+			}, {
+				"properties" : {
+					"name" : "西湖村"
+				},
+				"type" : "Feature",
+				"geometry" : {
+					"type" : "Point",
+					"coordinates" : [115.752343,23.879297 ]
+				}
+			}, {
+				"properties" : {
+					"name" : "叶湖村"
+				},
+				"type" : "Feature",
+				"geometry" : {
+					"type" : "Point",
+					"coordinates" : [115.757373,23.8766 ]
+				}
+			}]
+}

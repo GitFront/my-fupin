@@ -1,0 +1,130 @@
+{
+	"code": 0,
+	"msg": "获取信息成功",
+	"data": {
+		"time_end": 1609430400000,
+		"top": {
+			"amount_peer_county": 77,
+			"rate_peer_county": 19.2,
+			"amount_poor_people": 493.61,
+			"rate_poor_people": 23.8
+		},
+		"bottom": {
+			"amount_help_group": 5,
+			"amount_group_member": 46
+		},
+		"help_targets": {
+			"guizhou": {
+				"amount_peer_county": 17,
+				"amount_poor_people": 173.74,
+				"peer_popup_title":"贵州省结对县名单",
+				"peer_county_list":[
+					"荔波县",
+					"平塘县",
+					"独山县",
+					"三都县",
+					"罗甸县",
+					"长顺市",
+					"瓮安县",
+					"贵定县",
+					"惠水县",
+					"龙里县",
+					"大方县",
+					"纳雍县",
+					"七星关区",
+					"黔西县",
+					"织金县",
+					"威宁县",
+					"赫章县"
+				]
+			},
+			"guangxi": {
+				"amount_peer_county": 17,
+				"amount_poor_people": 137,
+				"peer_popup_title":"广西省结对县名单",
+				"peer_county_list":[
+					"罗城仫佬族自治县",
+					"德保县",
+					"隆林各族自治县",
+					"巴马瑶族自治县",
+					"田林县",
+					"环江毛南族自治县",
+					"都安瑶族自治县",
+					"凤山县",
+					"大化瑶族自治县",
+					"东兰县",
+					"西林县",
+					"凌云县",
+					"乐业县",
+					"田阳县",
+					"靖西市",
+					"那坡县",
+					"田东县"
+				]
+			},
+			"sichuan": {
+				"amount_peer_county": 29,
+				"amount_poor_people": 56.08,
+				"peer_popup_title":"四川省结对县名单",
+				"peer_county_list":[
+					"普格县",
+					"昭觉县",
+					"布拖县",
+					"甘洛县",
+					"越西县",
+					"喜德县",
+					"美姑县",
+					"金阳县",
+					"雷波县",
+					"盐源县",
+					"木里县",
+					"色达县",
+					"新龙县",
+					"炉霍县",
+					"甘孜县",
+					"德格县",
+					"石渠县",
+					"理塘县",
+					"稻城县",
+					"乡城县",
+					"得荣县",
+					"九龙县",
+					"雅江县",
+					"白玉县",
+					"巴塘县",
+					"丹巴县",
+					"道孚县",
+					"康定市",
+					"泸定县"
+				]
+			},
+			"yunnan": {
+				"amount_peer_county": 14,
+				"amount_poor_people": 126.79,
+				"peer_popup_title":"云南省结对县名单",
+				"peer_county_list":[
+					"兰坪县",
+					"泸水县",
+					"贡山县",
+					"福贡县",
+					"镇雄县",
+					"彝良县",
+					"昭阳区",
+					"威信县",
+					"鲁甸县",
+					"巧家县",
+					"大关县",
+					"盐津县",
+					"绥江县",
+					"永善县"
+				]
+			}
+		},
+		"invested": {
+			"amount_county": 71,
+			"desc_county": "57个国家级扶贫开发工作贫困县<br>1个石漠化片区县<br>13个甘孜藏族自治州藏区一般县",
+			"amount_money": 7.1,
+			"desc_money": "2016年，每县安排1000万财政支援资金，10月底前已全部到位 "
+		}
+	}
+}

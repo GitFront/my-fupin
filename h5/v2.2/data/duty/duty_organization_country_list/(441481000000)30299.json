@@ -1,0 +1,16 @@
+{
+	"data":{
+		"belong_organization":"兴宁市旅游局",
+		"list":[
+			{
+				"id":"441481133216",
+				"order":1,
+				"contact_phone":"07533539044",
+				"contact_name":"刘英华",
+				"country_name":"罗英村委会"
+			}
+		]
+	},
+	"code":0,
+	"msg":"获取信息成功"
+}

@@ -1,0 +1,381 @@
+package com.aspire.birp.modules.antiPoverty.service;
+
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import net.sf.json.JSONObject;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.aspire.birp.common.utils.CommonUtil;
+import com.aspire.birp.modules.antiPoverty.dao.SearchDao;
+import com.aspire.birp.modules.antiPoverty.utils.Constants;
+import com.aspire.birp.modules.antiPoverty.utils.JsonFormatUtils;
+
+/** 
+ * 搜索服务Service 
+ *
+ * @author 卢桂湖 E-mail: luguihu@aspirecn.com
+ * @version 创建时间：2016年11月24日 下午3:33:23 
+ */
+@Service
+public class SearchService {
+	private static Logger log = LoggerFactory.getLogger(SearchService.class);
+	
+	@Autowired
+	private SearchDao dao;
+	
+	/**
+	 * 获取预搜索人员JSON数据
+	 * @return
+	 */
+	public String getPreSearchData(String key,String type) {
+		JSONObject json = new JSONObject();
+		try{
+			//查询数据
+			List<Map<String,Object>> dataList = new ArrayList<Map<String,Object>>();
+			if("family".equals(type)){
+				dataList = dao.queryPreSearchFamily(key);
+			}else{
+				dataList = dao.queryPreSearchCountry(key);
+			}
+			
+			//组装JSON数据
+			json.put("code", 0);
+			json.put("msg", "获取信息成功");
+			
+			JSONObject data = new JSONObject();
+			if(dataList.size()>0){
+				data.put("keyword", key);
+			}else{
+				data.put("keyword", null);
+			}
+			
+			List<JSONObject> personList = new ArrayList<JSONObject>();
+			for(int i=0;i<dataList.size();i++){
+				JSONObject person = new JSONObject();
+				person.put("id", dataList.get(i).get("S_ID"));
+				person.put("name", dataList.get(i).get("S_NAME"));
+				person.put("place", dataList.get(i).get("S_PLACE"));
+				personList.add(person);
+			}
+			data.put("result", personList);
+			
+			json.put("data", data);
+		}catch(Exception e){
+			e.printStackTrace();
+			log.error("预搜索人员查询失败异常信息："+e.getMessage());
+			json.put("code", 1);
+			json.put("msg", "数据处理异常，获取信息失败!");			
+		}
+		//System.out.println(JsonFormatUtils.JsonFormat(json.toString()));
+		return json.toString();
+	}
+	
+	/**
+	 * 获取搜索结果JSON数据
+	 * @return
+	 */
+	public String getSearchResultData(String id,String type) {
+		java.text.DecimalFormat df=new java.text.DecimalFormat("#.##"); 
+		JSONObject json = new JSONObject();
+		try{
+			json.put("code", 0);
+			json.put("msg", "获取信息成功");
+			Map<String,Object> params = Constants.dateContants;
+			params.put("COUNTRY_ID", id);
+			JSONObject data = new JSONObject();
+			if("family".equals(type)){
+				Map<String,Object> country = dao.queryCountryNameByFamId(id);
+				Map<String,Object> famStatus = dao.queryFamilyStatus(id);
+				famStatus = famStatus==null?new HashMap<String,Object>():famStatus;
+				Map<String,Object> famImpSt = dao.queryFamImplCount(id);
+				famImpSt = famImpSt==null?new HashMap<String,Object>():famImpSt;
+				List<Map<String,Object>> FamImpList = dao.queryFamImplList(id);
+				Map<String,Object> countryStatus = new HashMap<String,Object>();
+				int isPoor = dao.isFurtherPoor(getValue(country,"ID").toString());
+				if(isPoor==1){
+					countryStatus = dao.queryPKCountryStatus(getValue(country,"ID").toString());
+				}else{
+					countryStatus = dao.queryFSCountryStatus(getValue(country,"ID").toString());
+				}
+				countryStatus = countryStatus==null?new HashMap<String,Object>():countryStatus;
+				params.put("COUNTRY_ID", getValue(country,"ID").toString());
+				Map<String,Object> couReasonList = dao.queryCouReasonList(params);
+				Map<String,Object> couImpSt = dao.queryCouImplCount(getValue(country,"ID").toString());
+				couImpSt = couImpSt==null?new HashMap<String,Object>():couImpSt;
+				String sFamName = famStatus.get("S_FAM_NAME") == null ? "" : (String)famStatus.get("S_FAM_NAME");
+				data.put("search_word", sFamName+" - "+getValue(country,"NAME"));
+				data.put("search_type", type);
+				JSONObject result = new JSONObject();
+				//搜索结果标题
+				result.put("title", sFamName+" "+getValue(country,"NAME"));
+				//贫困户概况
+				JSONObject overview_family = new JSONObject();
+				overview_family.put("family_id", id);
+				String zhdf = (famStatus.get("S_INDEX_") == null?"--":famStatus.get("S_INDEX_")).toString();
+				String sfdb = (famStatus.get("S_HAS_ACHIEVED") == null?"--":famStatus.get("S_HAS_ACHIEVED")).toString();
+				String jtrs = (famStatus.get("S_MEM_CNT") == null?"--":famStatus.get("S_MEM_CNT")).toString();
+				String pksx = (famStatus.get("S_POOR_ATTRIBUTE") == null?"--":famStatus.get("S_POOR_ATTRIBUTE")).toString();
+				String pkyy = (famStatus.get("S_POOR_REASON") == null?"--":famStatus.get("S_POOR_REASON")).toString();
+				String rzsr = (famStatus.get("S_BEFORE_INCOME") == null?"--":famStatus.get("S_BEFORE_INCOME")).toString();
+				String mqsr = (famStatus.get("S_CUR_INCOME") == null?"--":famStatus.get("S_CUR_INCOME")).toString();
+				String jhtpsj = (famStatus.get("S_AID_TIME") == null?"--年--月--日":famStatus.get("S_AID_TIME")).toString();
+				StringBuilder overview_family_content = new StringBuilder();
+				overview_family_content.append("综合得分"+zhdf+"分，"+sfdb+"<br>");
+				overview_family_content.append("家庭"+jtrs+"人，"+pksx+"；"+pkyy+"；<br>");
+				overview_family_content.append("期初年家庭人均可支配收入"+rzsr+"元<br>");
+				SimpleDateFormat sdf = new SimpleDateFormat("yyyy");
+				String nowYear = sdf.format(new Date());
+				overview_family_content.append(nowYear+"年家庭人均可支配收入"+mqsr+"元<br>");
+				if(!"29991231".equals(jhtpsj)){
+					overview_family_content.append("计划脱贫时间"+jhtpsj);
+				}else{
+					overview_family_content.append("无脱贫计划");
+				}
+				
+				overview_family.put("content", overview_family_content.toString());
+				result.put("overview_family", overview_family);
+				//帮扶人
+				JSONObject helper = new JSONObject();
+				helper.put("family_id", id);
+				String bfr = (famStatus.get("S_COUNTRY_LEADER_NAME") == null?"--":famStatus.get("S_COUNTRY_LEADER_NAME")).toString();
+				helper.put("helper_name", bfr);
+				String gzdw = (famStatus.get("S_COUNTRY_LEADER_ORG") == null?"--":famStatus.get("S_COUNTRY_LEADER_ORG")).toString();
+				String zdw = (famStatus.get("VISITS_CNT_YR") == null?"--":famStatus.get("VISITS_CNT_YR")).toString();
+				StringBuilder helper_content =  new StringBuilder();
+				helper_content.append("工作单位 "+gzdw+"<br>");
+				helper_content.append("累计走访"+zdw+"次");
+				helper.put("content", helper_content.toString());
+				result.put("helper", helper);
+				//帮扶施策
+				JSONObject implement = new JSONObject();
+				implement.put("family_id", id);
+				String f_bfxm = (famImpSt.get("S_TOTAL") == null?"--":famImpSt.get("S_TOTAL")).toString();
+				String f_ywc = (famImpSt.get("S_COMPLETED") == null?"--":famImpSt.get("S_COMPLETED")).toString();
+				String f_ytr = (famImpSt.get("S_INVESTED") == null?"--":famImpSt.get("S_INVESTED")).toString();
+				implement.put("desc", "帮扶施策_项目"+f_bfxm+"个，已完成"+f_ywc+"个，实际累计资金投入"+f_ytr+"万");
+				StringBuilder implement_content =  new StringBuilder();
+				for(int i=0;i<FamImpList.size();i++){
+					implement_content.append(FamImpList.get(i).get("S_TYPE")+"  "+FamImpList.get(i).get("S_NAME")+"  ");
+					implement_content.append(FamImpList.get(i).get("S_YEAR")+"年"+FamImpList.get(i).get("S_MONTH")+"月"+FamImpList.get(i).get("S_DAY")+"日，");
+					implement_content.append(FamImpList.get(i).get("S_PROJ_STATUS")+"，");
+					double sr = Double.parseDouble(FamImpList.get(i).get("S_INVEST_ACTUAL").toString())/10000;
+					implement_content.append("实际累计投入资金"+df.format(sr)+"万元<br>");
+				}
+				implement.put("content", implement_content.toString());
+				result.put("implement", implement);
+				//村概况
+				JSONObject country_status = new JSONObject();
+				country_status.put("country_name", getValue(country,"SHORT_NAME"));
+				country_status.put("country_id", getValue(country,"ID").toString());
+				country_status.put("is_funsancun", isPoor==1?false:true);
+				country_status.put("attributes", (countryStatus.get("S_COUNTRY_PROPERTY") == null?"--":countryStatus.get("S_COUNTRY_PROPERTY")).toString());
+				if(isPoor==1){
+					String czhdf = (countryStatus.get("S_SCORE") == null?"--":countryStatus.get("S_SCORE")).toString();
+					String csfdb = (countryStatus.get("S_HAS_ACHIEVED") == null?"--":countryStatus.get("S_HAS_ACHIEVED")).toString();
+					String cwfzr = (countryStatus.get("S_RESPONSIBLE_NAME") == null?"--":countryStatus.get("S_RESPONSIBLE_NAME")).toString();
+					String cjj = (countryStatus.get("S_TERRAIN") == null?"--":countryStatus.get("S_TERRAIN")).toString();
+					String pkhs = (countryStatus.get("S_AMOUNT_POOR_FAMILY") == null?"--":countryStatus.get("S_AMOUNT_POOR_FAMILY")).toString();
+					String pkrk = (countryStatus.get("S_AMOUNT_POOR_PEOPLE") == null?"--":countryStatus.get("S_AMOUNT_POOR_PEOPLE")).toString();
+					String pkfsl = (countryStatus.get("S_RATIO_POOR") == null?"--":countryStatus.get("S_RATIO_POOR")).toString();
+					String zcdz = (countryStatus.get("S_TEAM_LEADER") == null?"--":countryStatus.get("S_TEAM_LEADER")).toString();
+					String zcdzgzdw = (countryStatus.get("S_TEAM_LEADER_UNIT") == null?"--":countryStatus.get("S_TEAM_LEADER_UNIT")).toString();
+					String cbfxm = (couImpSt.get("S_TOTAL") == null?"--":couImpSt.get("S_TOTAL")).toString();
+					String cywc = (couImpSt.get("S_COMPLETED") == null?"--":couImpSt.get("S_COMPLETED")).toString();
+					String cytr = (couImpSt.get("S_INVESTED") == null?"--":couImpSt.get("S_INVESTED")).toString();
+					StringBuilder country_status_content =  new StringBuilder();
+					country_status_content.append("综合得分"+czhdf+"分，"+csfdb+"<br>");
+					country_status_content.append("村委负责人 "+cwfzr+"<br>");
+					country_status_content.append(cjj+"<br>");
+					country_status_content.append("全村贫困户"+pkhs+"户，贫困人口"+pkrk+"人，贫困发生率"+pkfsl+"%<br>");
+					//double qt = 0.0;
+					//int size = couReasonList.size()>5?5:couReasonList.size();
+					String pos_name = "";
+					for(int j=0;j<6;j++){
+						pos_name = pos_name == null ? "" : couReasonList.get("POV_CAUSE_FAM_"+(j+1)).toString();
+						if("0".equals(pos_name)){
+							if(j==5){
+								country_status_content.delete(country_status_content.toString().length()-1, country_status_content.toString().length());
+							}
+							continue;
+						}
+						if(j==5){
+							country_status_content.append(couReasonList.get("POV_CAUSE_FAM_"+(j+1))+"%"+couReasonList.get("POV_CAUSE_NAME_"+(j+1)));
+						}else{
+							country_status_content.append(couReasonList.get("POV_CAUSE_FAM_"+(j+1))+"%"+couReasonList.get("POV_CAUSE_NAME_"+(j+1))+"、");
+						}
+						
+					}
+					
+					country_status_content.append("<br>");
+					country_status_content.append("驻村队长-"+zcdz+"-"+zcdzgzdw+"<br>");
+					country_status_content.append("该村帮扶施策项目"+cbfxm+"个，已完成"+cywc+"个，实际累计资金投入"+cytr+"万元"+"<br>");
+					country_status.put("content", country_status_content.toString());
+				}else{
+					String pkhs = (countryStatus.get("S_AMOUNT_POOR_FAMILY") == null?"--":countryStatus.get("S_AMOUNT_POOR_FAMILY")).toString();
+					String pkrk = (countryStatus.get("S_AMOUNT_POOR_PEOPLE") == null?"--":countryStatus.get("S_AMOUNT_POOR_PEOPLE")).toString();
+					StringBuilder country_status_content =  new StringBuilder();
+					country_status_content.append("全村贫困户"+pkhs+"户，贫困人口"+pkrk+"人"+"<br>");
+					//double qt = 0.0;
+					//int size = couReasonList.size()>5?5:couReasonList.size();
+					String pos_name = "";
+					for(int j=0;j<6;j++){
+						pos_name = pos_name == null ? "" : couReasonList.get("POV_CAUSE_FAM_"+(j+1)).toString();
+						if("0".equals(pos_name)){
+							if(j==5){
+								country_status_content.delete(country_status_content.toString().length()-1, country_status_content.toString().length());
+							}
+							continue;
+						}
+						if(j==5){
+							country_status_content.append(couReasonList.get("POV_CAUSE_FAM_"+(j+1))+"%"+couReasonList.get("POV_CAUSE_NAME_"+(j+1)));
+						}else{
+							country_status_content.append(couReasonList.get("POV_CAUSE_FAM_"+(j+1))+"%"+couReasonList.get("POV_CAUSE_NAME_"+(j+1))+"、");
+						}
+						
+					}
+					country_status.put("content", country_status_content.toString());
+				}
+				result.put("country_status", country_status);
+				data.put("result", result);
+			}else{
+				Map<String,Object> country = dao.queryCountryNameById(id);
+				Map<String,Object> countryStatus = dao.queryPKCountryStatus(id);
+				countryStatus = countryStatus==null?new HashMap<String,Object>():countryStatus;
+				params.put("COUNTRY_ID", getValue(country,"ID").toString());
+				Map<String,Object> couReasonList = dao.queryCouReasonList(params);
+				Map<String,Object> couImpSt = dao.queryCouImplCount(id);
+				couImpSt = couImpSt==null?new HashMap<String,Object>():couImpSt;
+				List<Map<String,Object>> couImpList = dao.queryCouImplList(id);
+				Map<String,Object> townStatus = dao.queryTownStatus(id);
+				townStatus = townStatus==null?new HashMap<String,Object>():townStatus;
+				List<Map<String,Object>> townReasonList = dao.queryTownReasonList(townStatus.get("TOWN_ID").toString());
+				
+				data.put("search_word", getValue(country,"SHORT_NAME")+" - "+getValue(country,"NAME"));
+				data.put("search_type", type);
+				JSONObject result = new JSONObject();
+				//搜索结果标题
+				result.put("title", getValue(country,"SHORT_NAME")+" "+getValue(country,"NAME"));
+				//村概况
+				JSONObject country_status = new JSONObject();
+				country_status.put("country_name", getValue(country,"SHORT_NAME"));
+				country_status.put("country_id", getValue(country,"ID").toString());
+				country_status.put("attributes", (countryStatus.get("S_COUNTRY_PROPERTY") == null?"--":countryStatus.get("S_COUNTRY_PROPERTY")).toString());
+				String czhdf = (countryStatus.get("S_SCORE") == null?"--":countryStatus.get("S_SCORE")).toString();
+				String csfdb = (countryStatus.get("S_HAS_ACHIEVED") == null?"--":countryStatus.get("S_HAS_ACHIEVED")).toString();
+				String cwfzr = (countryStatus.get("S_RESPONSIBLE_NAME") == null?"--":countryStatus.get("S_RESPONSIBLE_NAME")).toString();
+				String cjj = (countryStatus.get("S_TERRAIN") == null?"--":countryStatus.get("S_TERRAIN")).toString();
+				String pkhs = (countryStatus.get("S_AMOUNT_POOR_FAMILY") == null?"--":countryStatus.get("S_AMOUNT_POOR_FAMILY")).toString();
+				String pkrk = (countryStatus.get("S_AMOUNT_POOR_PEOPLE") == null?"--":countryStatus.get("S_AMOUNT_POOR_PEOPLE")).toString();
+				String pkfsl = (countryStatus.get("S_RATIO_POOR") == null?"--":countryStatus.get("S_RATIO_POOR")).toString();
+				StringBuilder country_status_content =  new StringBuilder();
+				country_status_content.append("综合得分"+czhdf+"分，"+csfdb+"<br>");
+				country_status_content.append("村委负责人 "+cwfzr+"<br>");
+				country_status_content.append(cjj+"<br>");
+				country_status_content.append("全村贫困户"+pkhs+"户，贫困人口"+pkrk+"人，贫困发生率"+pkfsl+"%<br>");
+				//double qt = 0.0;
+				//int size = couReasonList.size()>5?5:couReasonList.size();
+				String pos_name = "";
+				for(int j=0;j<6;j++){
+					pos_name = pos_name == null ? "" : couReasonList.get("POV_CAUSE_FAM_"+(j+1)).toString();
+					if("0".equals(pos_name)){
+						if(j==5){
+							country_status_content.delete(country_status_content.toString().length()-1, country_status_content.toString().length());
+						}
+						continue;
+					}
+					if(j==5){
+						country_status_content.append(pos_name+"%"+couReasonList.get("POV_CAUSE_NAME_"+(j+1)));
+					}else{
+						country_status_content.append(pos_name+"%"+couReasonList.get("POV_CAUSE_NAME_"+(j+1))+"、");
+					}
+					
+				}
+				country_status.put("content", country_status_content.toString());
+				result.put("country_status", country_status);
+				//驻村队长
+				JSONObject country_leader = new JSONObject();
+				country_leader.put("country_id", id);
+				country_leader.put("leader_name",  (countryStatus.get("S_TEAM_LEADER") == null?"--":countryStatus.get("S_TEAM_LEADER")).toString());
+				String gzdw = (countryStatus.get("S_TEAM_LEADER_UNIT") == null?"--":countryStatus.get("S_TEAM_LEADER_UNIT")).toString();
+				StringBuilder helper_content =  new StringBuilder();
+				helper_content.append("工作单位  "+gzdw+"<br>");
+				helper_content.append("累计走访0次");
+				country_leader.put("content", helper_content.toString());
+				result.put("country_leader", country_leader);
+				//帮扶施策
+				JSONObject implement = new JSONObject();
+				implement.put("family_id", id);
+				String c_bfxm = (couImpSt.get("S_TOTAL") == null?"--":couImpSt.get("S_TOTAL")).toString();
+				String c_ywc = (couImpSt.get("S_COMPLETED") == null?"--":couImpSt.get("S_COMPLETED")).toString();
+				String c_ytr = (couImpSt.get("S_INVESTED") == null?"--":couImpSt.get("S_INVESTED")).toString();
+				implement.put("desc", "帮扶施策_项目"+c_bfxm+"个，已完成"+c_ywc+"个，实际累计资金投入"+c_ytr+"万");
+				StringBuilder implement_content =  new StringBuilder();
+				for(int i=0;i<couImpList.size();i++){
+					implement_content.append(couImpList.get(i).get("S_TYPE")+"  "+couImpList.get(i).get("S_NAME")+"  ");
+					implement_content.append(couImpList.get(i).get("S_YEAR")+"年"+couImpList.get(i).get("S_MONTH")+"月"+couImpList.get(i).get("S_DAY")+"日，");
+					implement_content.append(couImpList.get(i).get("S_PROJ_STATUS")+"，");
+					double sr = Double.parseDouble(couImpList.get(i).get("S_INVEST_ACTUAL").toString())/10000;
+					implement_content.append("实际累计投入资金"+df.format(sr)+"万元<br>");
+				}
+				implement.put("content", implement_content.toString());
+				result.put("implement", implement);
+				//村上级镇概况
+				JSONObject town_status = new JSONObject();
+				town_status.put("town_name", (townStatus.get("TOWN_NAME_S") == null?"--":townStatus.get("TOWN_NAME_S")).toString());
+				String xdpkc = (townStatus.get("FURTER_POOR_COUNTRY_CNT") == null?"--":townStatus.get("FURTER_POOR_COUNTRY_CNT")).toString();
+				String cll = (townStatus.get("C_PERCENT") == null?"--":townStatus.get("C_PERCENT")).toString();
+				String pkh = (townStatus.get("POOR_FAM") == null?"--":townStatus.get("POOR_FAM")).toString();
+				String tpkbl = (townStatus.get("F_PERCENT") == null?"--":townStatus.get("F_PERCENT")).toString();
+				String pkrks = (townStatus.get("POOR_POP") == null?"--":townStatus.get("POOR_POP")).toString();
+				String tprkl = (townStatus.get("P_PERCENT") == null?"--":townStatus.get("P_PERCENT")).toString();
+				StringBuilder town_status_content =  new StringBuilder();
+				town_status_content.append("相对贫困村"+xdpkc+"个，出列率"+cll+"%<br>");
+				town_status_content.append("贫困户"+pkh+"户，");
+				double qt2 = 0.0;
+				int size2 = townReasonList.size()>5?5:townReasonList.size();
+				for(int j=0;j<size2;j++){
+					town_status_content.append(townReasonList.get(j).get("S_PERCENT")+"%"+townReasonList.get(j).get("S_NAME")+"、");
+					qt2 += Double.parseDouble(townReasonList.get(j).get("S_PERCENT").toString());
+				}
+				if(size2>4){
+					town_status_content.append(df.format(100-qt2)+"%其他");
+				}else if(size2>0 && size2<=4){
+					town_status_content.delete(town_status_content.toString().length()-1, town_status_content.toString().length());
+				}
+				town_status_content.append("，脱贫户比例"+tpkbl+"%<br>");
+				town_status_content.append("贫困人口"+pkrks+"人，脱贫人口率"+tprkl+"%<br>");
+				
+				town_status.put("content", town_status_content.toString());
+				
+				result.put("town_status", town_status);
+				data.put("result", result);
+			}
+			json.put("data", data);
+		}catch(Exception e){
+			e.printStackTrace();
+			log.error("搜索结果查询失败异常信息："+e.getMessage());
+			json.put("code", 1);
+			json.put("msg", "数据处理异常，获取信息失败!");			
+		}
+		//System.out.println(JsonFormatUtils.JsonFormat(json.toString()));
+		return json.toString();
+	}
+	
+	 private Object getValue(Map map,String key){
+	    	return CommonUtil.getMapValue(map,key);
+		}
+	 
+	 public static void main(String[] args) {
+		 java.text.MessageFormat df=new java.text.MessageFormat("####-##-##");
+		 System.out.println(df.format("20160304"));
+	}
+}

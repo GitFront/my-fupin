@@ -1,0 +1,80 @@
+/* 基本 */
+*{
+	box-sizing:content-box;
+}
+body{
+	color: #fff;
+	font-size: 14px;
+	font-family: '微软雅黑';
+	background: #151618;
+}
+
+a{
+	text-decoration: none;
+	color:$m-c;
+	&:link{
+		text-decoration: none;
+		//color: $active-c;
+	}
+	&:active{
+		text-decoration: none;
+		//color: $active-c;
+	}
+	
+	&:hover{
+		color:$m-c;
+		text-decoration: none;
+	}
+
+}
+
+.btn-link:hover{
+	text-decoration: underline;
+}
+.btn{
+	outline: none!important;
+}
+
+
+*:focus{
+	outline: none;
+}
+//
+.main-wrap{
+	position: relative;
+	margin: 0 auto;
+	width: $m-w;
+	height:$m-h;
+	overflow: hidden;
+	background:#151618 url(../../images/fupin/main-bg.png) no-repeat;
+}
+
+.disabled-btn{
+	background: #ddd!important;
+	cursor: not-allowed!important;
+}
+.disabled-btn:hover{
+	background: #ddd!important;
+	cursor: not-allowed!important;
+}
+
+.clearfix{ *zoom:1}
+.clearfix:before,
+.clearfix:after{ display:table; line-height:0; content:""}
+.clearfix:after{ clear:both;}
+/* end基本 */
+
+/* 常用 */
+.hide{
+	display: none!important;
+}
+.show{
+	display: block!important;
+}
+
+%BB{box-sizing:border-box;}
+
+/* end 常用 */
+
+
+

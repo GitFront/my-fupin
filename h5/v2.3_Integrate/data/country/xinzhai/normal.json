@@ -1,0 +1,16 @@
+﻿{
+	"data":{
+		"chart_config_top_poor":{
+			
+		},
+		"stat":{
+			"amount_poor_households":"",
+			"amount_poor_people":"100",
+			"amount_poor_families":"36",
+			"rate_poor":"8.3%",
+			"amount_plan":"36"
+		}
+	},
+	"code":0,
+	"msg":"获取信息成功"
+}

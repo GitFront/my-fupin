@@ -1,0 +1,16 @@
+{
+	"data":{
+		"belong_organization":"兴宁市环保局",
+		"list":[
+			{
+				"id":"441481133203",
+				"order":1,
+				"contact_phone":"13826660199",
+				"contact_name":"陈伟光",
+				"country_name":"五联村委会"
+			}
+		]
+	},
+	"code":0,
+	"msg":"获取信息成功"
+}

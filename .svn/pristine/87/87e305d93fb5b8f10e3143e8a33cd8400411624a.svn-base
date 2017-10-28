@@ -1,0 +1,74 @@
+{
+	"code": 0,
+	"msg": "获取信息成功",
+	"data": {
+		//东西扶贫协作攻坚倒计时
+		"time_end": 1476431802040,
+		"top": {
+			//携手奔小康”结对县数
+			"amount_peer_county": 77,
+			//携手奔小康”结对县比例
+			"rate_peer_county": 19.2,
+			//帮扶贫困人口（单位万）
+			"amount_poor_people": 493.61,
+			//帮扶贫困人口比例（单位万）
+			"rate_poor_people": 23.8
+		},
+		"bottom": {
+			//帮扶工作组
+			"amount_help_group": 5,
+			//扶贫工作组成员
+			"amount_group_member": 46
+		},
+		"help_targets": {
+			//贵州
+			"guizhou": {
+				//结对县
+				"amount_peer_county": 17,
+				//帮扶贫困人口
+				"amount_poor_people": 173.74,
+				//结对县名单弹窗标题
+				"peer_popup_title":"云南省结对县名单",
+				//结对县名单
+				"peer_county_list":[
+					"西双县",
+					"从江县",
+					"剑河县",
+					"榕江县"
+				]
+			},
+			//广西
+			"guangxi": {
+				//结对县
+				"amount_peer_county": 17,
+				//帮扶贫困人口
+				"amount_poor_people": 137
+			},
+			//四川
+			"sichuan": {
+				//结对县
+				"amount_peer_county": 29,
+				//帮扶贫困人口
+				"amount_poor_people": 56.08
+			},
+			//云南
+			"yunnan": {
+				//结对县
+				"amount_peer_county": 14,
+				//帮扶贫困人口
+				"amount_poor_people": 126.79
+			}
+		},
+		//资金投入
+		"invested": {
+			//县数，单位个
+			"amount_county": 71,
+			//县描述
+			"desc_county": "57个国家级扶贫开发工作贫困县<br>1个石漠化片区县<br>13个甘孜藏族自治州藏区一般县",
+			//资金数，单位亿
+			"amount_money": 7.1,
+			//资金描述
+			"desc_money": "2016年，每县安排1000万财政支援资金，10月底前已全部到位 "
+		}
+	}
+}

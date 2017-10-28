@@ -1,0 +1,123 @@
+{
+	"code": 0,
+	"msg": "获取信息成功",
+	"data": {
+		"chart_config_poor_attribute":{
+			"convert_method": "genChartPieConfig",
+			"config": [{
+				"name": "工资性收入",
+				"value": 43620.17
+			}, {
+				"name": "生产经营性收入",
+				"value": 14759.71
+			}, {
+				"name": "转移性收入",
+				"value": 79136.06
+			}, {
+				"name": "财产性收入",
+				"value": 538.07
+			}]
+		},
+		"chart_config_poor_reason": {
+			"convert_method": "genChartPieConfig",
+			"config": [{
+				"name": "生产经营性支出",
+				"value": 8248.23
+			}, {
+				"name": "转移性支出",
+				"value": 4455.33
+			}]
+		},
+		"chart_config_income": {
+			"convert_method": "genChartPieConfig",
+			"config": [{
+				"name": "生产经营性支出",
+				"value": 8248.23
+			}, {
+				"name": "转移性支出",
+				"value": 4455.33
+			}]
+		},
+		"chart_config_age": {
+			"convert_method": "genChartPieConfig",
+			"config": [{
+				"name": "生产经营性支出",
+				"value": 8248.23
+			}, {
+				"name": "转移性支出",
+				"value": 4455.33
+			}]
+		},
+		"chart_config_sex": {
+			"convert_method": "genChartPieConfig",
+			"config": [{
+				"name": "生产经营性支出",
+				"value": 8248.23
+			}, {
+				"name": "转移性支出",
+				"value": 4455.33
+			}]
+		},
+		"chart_config_nation": {
+			"convert_method": "genChartPieConfig",
+			"config": [{
+				"name": "生产经营性支出",
+				"value": 8248.23
+			}, {
+				"name": "转移性支出",
+				"value": 4455.33
+			}]
+		},
+		"chart_config_political_affiliation": {
+			"convert_method": "genChartPieConfig",
+			"config": [{
+				"name": "生产经营性支出",
+				"value": 8248.23
+			}, {
+				"name": "转移性支出",
+				"value": 4455.33
+			}]
+		},
+		"chart_config_edu_status": {
+			"convert_method": "genChartPieConfig",
+			"config": [{
+				"name": "生产经营性支出",
+				"value": 8248.23
+			}, {
+				"name": "转移性支出",
+				"value": 4455.33
+			}]
+		},
+		"chart_config_health_status": {
+			"convert_method": "genChartPieConfig",
+			"config": [{
+				"name": "生产经营性支出",
+				"value": 8248.23
+			}, {
+				"name": "转移性支出",
+				"value": 4455.33
+			}]
+		},
+		"chart_config_labor_status": {
+			"convert_method": "genChartPieConfig",
+			"config": [{
+				"name": "生产经营性支出",
+				"value": 8248.23
+			}, {
+				"name": "转移性支出",
+				"value": 4455.33
+			}]
+		},
+		"chart_config_employment_status": {
+			"convert_method": "genChartPieConfig",
+			"config": [{
+				"name": "生产经营性支出",
+				"value": 8248.23
+			}, {
+				"name": "转移性支出",
+				"value": 4455.33
+			}]
+		}
+	}
+}
+

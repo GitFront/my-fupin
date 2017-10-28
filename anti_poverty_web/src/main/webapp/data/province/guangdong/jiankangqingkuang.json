@@ -1,0 +1,108 @@
+{
+  "code": 0,
+  "msg": "获取信息成功",
+  "data": {
+    "chart_config_tab": [{
+    "tooltip": {
+        "trigger": "item",
+        "formatter": "{b}: {c} ({d}%)"
+    },
+      "title": {
+        "text": "贫困人口健康状况分布",
+        "left": "center",
+        "top":20,
+        "textStyle":{
+          "color": "#fff",
+          "fontSize":15
+        }
+      },
+      "series" : [
+        {
+          "name": "健康状况",
+          "type": "pie",
+          "radius": ["37%", "70%"],
+          "center":["50%", "60%"],
+          "label": {
+            "normal": {
+              "show": false
+            }
+          },
+            "data":[
+              {"value":391091,"name":"长期慢性病"},
+              {"value":215138,"name":"残疾人"},
+              {"value":66006,"name":"患有大病"},
+              {"value":8951,"name":"未选择"},
+              {"value":8377,"name":"体弱多病"},
+              {"value":1021630,"name":"健康"}
+            ],
+            "itemStyle": {
+              "emphasis": {
+                "shadowBlur": 40
+              }
+        }
+        }
+    ]
+},
+      {
+        "legend": {
+          "data":["贫困户","贫困人口"],
+          "x" : "center",
+          "y" : "bottom",
+          "textStyle" : {
+            "color" : "#fff"
+          }
+        },
+        "title": {
+          "text": "贫困人口TOP5疾病分布",
+          "left": "center",
+          "textStyle":{
+            "color": "#fff",
+            "fontSize":15
+          }
+        },
+        "grid":{
+          "top":80,
+          "width":280,
+          "right":20
+        },
+        "textStyle" : {
+          "color" : "#fff"
+        },
+        "tooltip": {},
+        "xAxis" : {
+          "type" : "category",
+          "data" : ["贫血","冠心病","肢体残疾","风湿","糖尿病"],
+          "axisLine":{
+            "lineStyle":{
+              "color":"#fff"
+            }
+          }
+        },
+        "yAxis" : {
+          "splitLine":{
+            "show":false
+          },
+          "axisLine":{
+            "lineStyle":{
+              "color":"#fff"
+            }
+          }
+        },
+        "series" : [
+          {
+            "type":"bar",
+            "data":[195545,117327,107569,78218, 64541],
+            "itemStyle": {
+              "normal": {
+                "barBorderRadius": 8
+              },
+              "emphasis": {
+                "barBorderRadius": 8
+              }
+            }
+          }
+
+        ]
+      }]
+}
+}

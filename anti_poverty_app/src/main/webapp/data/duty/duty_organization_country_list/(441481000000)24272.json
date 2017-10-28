@@ -1,0 +1,16 @@
+{
+	"data":{
+		"belong_organization":"梅州市曾宪梓中学",
+		"list":[
+			{
+				"id":"441481135237",
+				"order":1,
+				"contact_phone":"15917945988",
+				"contact_name":"李玉兴",
+				"country_name":"上中村委会"
+			}
+		]
+	},
+	"code":0,
+	"msg":"获取信息成功"
+}

@@ -1,0 +1,308 @@
+{
+	"code": 0,
+	"msg": "获取信息成功",
+	"data": {
+		"chart_config_trend_station": {
+			"convert_method": "genChartLegendBarsConfig",
+			"config": [
+				{
+					"name": "2016",
+					"group": "户数",
+					"value": 1870
+				},
+				{
+					"name": "2017",
+					"group": "人数",
+					"value": 2000
+				},
+				{
+					"name": "2018",
+					"group": "户数",
+					"value": 1480
+				},
+				{
+					"name": "2017",
+					"group": "人数",
+					"value": 2000
+				},
+				{
+					"name": "2018",
+					"group": "户数",
+					"value": 1480
+				}
+			]
+		},
+		"chart_config_trend_doctor": {
+			"convert_method": "genChartLegendBarsConfig",
+			"config": [
+				{
+					"name": "2016",
+					"group": "户数",
+					"value": 1870
+				},
+				{
+					"name": "2017",
+					"group": "人数",
+					"value": 2000
+				},
+				{
+					"name": "2018",
+					"group": "户数",
+					"value": 1480
+				},
+				{
+					"name": "2017",
+					"group": "人数",
+					"value": 2000
+				},
+				{
+					"name": "2018",
+					"group": "户数",
+					"value": 1480
+				}
+			]
+		},
+		"table": {
+			"title": "道路硬底化落实统计表",
+			"export_url": "../../../data/data_monitor/export_table.json",
+			"head": [
+				[
+					{
+						"rowspan": 2,
+						"content": "序号"
+					},
+					{
+						"rowspan": 2,
+						"content": "行政区域"
+					},
+					{
+						"colspan": 2,
+						"content": "年初贫困户<br>总数"
+					},
+					{
+						"colspan": 2,
+						"content": "新曾贫困户<br>总数"
+					},
+					{
+						"colspan": 2,
+						"content": "终止贫困户<br>总数"
+					},
+					{
+						"colspan": 2,
+						"content": "销户贫困户<br>总数"
+					},
+					{
+						"colspan": 2,
+						"content": "宗师贫困户<br>总数"
+					},
+					{
+						"colspan": 2,
+						"content": "查询贫困户<br>总数"
+					},
+					{
+						"rowspan": 2,
+						"content": "自然<br>增加<br>人数"
+					},
+					{
+						"rowspan": 2,
+						"content": "自然<br>减少<br>人数"
+					},
+					{
+						"colspan": 2,
+						"content": "贫困户总数"
+					},
+					{
+						"colspan": 2,
+						"content": "准确率（%）"
+					}
+				],
+				[
+					{
+						"content": "户数"
+					},
+					{
+						"content": "人数"
+					},
+					{
+						"content": "人数"
+					},
+					{
+						"content": "人数"
+					},
+					{
+						"content": "人数"
+					},
+					{
+						"content": "人数"
+					},
+					{
+						"content": "人数"
+					},
+					{
+						"content": "人数"
+					},
+					{
+						"content": "人数"
+					},
+					{
+						"content": "人数"
+					},
+					{
+						"content": "人数"
+					},
+					{
+						"content": "人数"
+					},
+					{
+						"content": "人数"
+					},
+					{
+						"content": "人数"
+					},
+					{
+						"content": "人数"
+					},
+					{
+						"content": "人数"
+					}
+				]
+			],
+			"body": [
+				[
+					{
+						"content": "1"
+					},
+					{
+						"content": "梅州"
+					},
+					{
+						"content": "43434"
+					},
+					{
+						"content": "123"
+					},
+					{
+						"content": "65"
+					},
+					{
+						"content": "698"
+					},
+					{
+						"content": "698"
+					},
+					{
+						"content": "698"
+					},
+					{
+						"content": "698"
+					},
+					{
+						"content": "698"
+					},
+					{
+						"content": "698"
+					},
+					{
+						"content": "698"
+					},
+					{
+						"content": "698"
+					},
+					{
+						"content": "698"
+					},
+					{
+						"content": "698"
+					},
+					{
+						"content": "698"
+					},
+					{
+						"content": "698"
+					},
+					{
+						"content": "村档案",
+						"action_type": "country_file",
+						"action_data": {
+							"area_level": "country",
+							"area_id": 1
+						}
+					},
+					{
+						"content": "户档案",
+						"action_type": "family_file",
+						"action_data": {
+							"family_id": 22
+						}
+					},
+					{
+						"content": "dss"
+					}
+				],
+				[
+					{
+						"content": "2"
+					},
+					{
+						"content": "新州"
+					},
+					{
+						"content": "43434"
+					},
+					{
+						"content": "123"
+					},
+					{
+						"content": "65"
+					},
+					{
+						"content": "698"
+					},
+					{
+						"content": "698"
+					},
+					{
+						"content": "698"
+					},
+					{
+						"content": "698"
+					},
+					{
+						"content": "698"
+					},
+					{
+						"content": "698"
+					},
+					{
+						"content": "698"
+					},
+					{
+						"content": "698"
+					},
+					{
+						"content": "698"
+					},
+					{
+						"content": "698"
+					},
+					{
+						"content": "698"
+					},
+					{
+						"content": "698"
+					},
+					{
+						"content": "698"
+					},
+					{
+						"content": "698"
+					},
+					{
+						"content": "698"
+					}
+				]
+			]
+		}
+	}
+}
+

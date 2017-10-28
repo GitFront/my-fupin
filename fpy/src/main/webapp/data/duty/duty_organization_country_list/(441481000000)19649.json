@@ -1,0 +1,16 @@
+{
+	"data":{
+		"belong_organization":"中国联合网络通信有限公司广东省分公司",
+		"list":[
+			{
+				"id":"441481131218",
+				"order":1,
+				"contact_phone":"15768302522",
+				"contact_name":"古彩虹",
+				"country_name":"光夏村委会"
+			}
+		]
+	},
+	"code":0,
+	"msg":"获取信息成功"
+}

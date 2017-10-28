@@ -1,0 +1,16 @@
+{
+	"data":{
+		"belong_organization":"广州市天河区食品药品监督管理局",
+		"list":[
+			{
+				"id":"441481116215",
+				"order":1,
+				"contact_phone":"13719977283",
+				"contact_name":"黎春光",
+				"country_name":"红旗村委会"
+			}
+		]
+	},
+	"code":0,
+	"msg":"获取信息成功"
+}

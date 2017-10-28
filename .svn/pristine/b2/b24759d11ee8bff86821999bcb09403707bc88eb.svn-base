@@ -1,0 +1,14 @@
+{
+	"code": 0,
+	"msg": "获取信息成功",
+	//同data_monitor_tree.json节点定义
+	"data": [
+		{
+			"id": 25,
+			"pId": 24,
+			"area_level": "country",
+			"area_id": "555",
+			"name": "<span class=\"name\">广东村</span><span class=\"value\">（1560000）</span>"
+		}
+	]
+}

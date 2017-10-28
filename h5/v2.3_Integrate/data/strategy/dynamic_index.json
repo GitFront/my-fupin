@@ -1,0 +1,27 @@
+{
+	"code": 0,
+	"msg": "获取信息成功",
+	"data": {
+		"top_indexes": {
+			"success_country": {
+				"amount": 23520,
+				"rate": 14.7
+			},
+			"success_family": {
+				"amount": 191923,
+				"rate": 29.3
+			},
+			"success_people": {
+				"amount": 489691,
+				"rate": 28.3
+			}
+		},
+		"stat": {
+			"amount_org": 12162,
+			"amount_responsible": 2277,
+			"amount_leader": 41345,
+			"amount_interview": 154378
+		}
+	}
+}
+

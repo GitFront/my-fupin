@@ -1,0 +1,13 @@
+{
+	"code": 0,
+	"msg": "获取信息成功",
+	"data": {
+		//帮扶资金小于<30万的相对贫困村
+		"chart_config_poor_country": {},
+		//地区分布图
+		"chart_config_area_distribution": {},
+		//统计表，同data_monitor_table.json定义
+		"table": {}
+	}
+}
+

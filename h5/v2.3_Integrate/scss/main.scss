@@ -1,0 +1,45 @@
+@charset "UTF-8";
+/* 引入scss文件 */
+@font-face{
+	font-family: dongQingHeiTi;
+	src: url('../../font/Hiragino Sans GB W3.otf');
+}
+
+@font-face{
+	font-family: miNiJian;
+	src: url('../../font/impact.otf'),
+	url('../../font/miNiJian.ttf');
+}
+	/* base基础文件 */
+	@import "base/_reset";//重置浏览器默认属性
+	@import "base/_var";//sass变量
+	@import "base/_function";//函数
+	@import "base/_mixin";//混合
+	@import "base/_base";//基本样式
+	@import "base/_animation";//动画
+	/* end base */
+
+	/* layout 重复布局 */
+	//@import "layout/_header";//头部导航
+	@import "layout/_center";//页面中部布局-现状基本是贫困分析的中部
+	@import "layout/_footer";
+	/* end layout */ 
+
+	/* page 页面样式 */
+    @import "page/_poor_county_detail";//贫困村档案 和 贫困户档案
+    //@import "page/_duty"; //责任监控页面
+	/* end page */
+
+	/* components组件 */
+	@import "components/_components";//按钮组；selector下拉；弹出窗口；加载loading
+	@import "components/_table";
+	/* end components */ 
+	 
+	
+	/* vendor第三方样式 */
+	/* end vendor */
+
+//TODO 暂时拆分导航出来，到时说要用新的导航才将路径改正确，记得改
+@import "base/mixin_strategy";
+@import "layout/_header_strategy";//头部导航
+/* end 引入scss文件 */

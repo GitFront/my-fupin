@@ -1,0 +1,16 @@
+{
+	"data":{
+		"belong_organization":"广州市天河区发展和改革局",
+		"list":[
+			{
+				"id":"441481137209",
+				"order":1,
+				"contact_phone":"13751985018",
+				"contact_name":"刁雪梅",
+				"country_name":"河塘岭村委会"
+			}
+		]
+	},
+	"code":0,
+	"msg":"获取信息成功"
+}

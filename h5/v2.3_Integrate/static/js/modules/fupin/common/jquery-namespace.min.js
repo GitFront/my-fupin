@@ -1,0 +1,1 @@
+$.namespace=function(fullNS){for(var nsArray=fullNS.split("."),sEval="",sNS="",i=0;i<nsArray.length;i++)0!=i&&(sNS+="."),sNS+=nsArray[i],sEval+="if (typeof("+sNS+") == 'undefined') "+sNS+" = new Object();";""!=sEval&&eval(sEval)};

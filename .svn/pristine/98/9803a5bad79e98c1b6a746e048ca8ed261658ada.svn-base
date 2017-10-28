@@ -1,0 +1,31 @@
+{
+	"code": 0,
+	"msg": "获取信息成功",
+	"data": {
+		"summary": {
+			"amount_project": "76/47/123",
+			"capital_invested": "247583",
+			"project_revenue": "23"
+		},
+		"projects_running": [
+			{
+				"name": "高车唐村道路改造工程",
+				"value": "道路建设"
+			},
+			{
+				"name": "高车唐村自来水到户工程",
+				"value": "安全饮水"
+			}
+		],
+		"projects_completed": [
+			{
+				"name": "高车唐村道路改造工程",
+				"value": "道路建设"
+			},
+			{
+				"name": "高车唐村自来水到户工程",
+				"value": "安全饮水"
+			}
+		]
+	}
+}

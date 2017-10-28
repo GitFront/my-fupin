@@ -1,0 +1,232 @@
+@charset "UTF-8";
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed,
+figure, figcaption, footer, header, hgroup,
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font: inherit;
+  font-size: 100%;
+  vertical-align: baseline; }
+
+html {
+  line-height: 1; }
+
+ol, ul {
+  list-style: none; }
+
+table {
+  border-collapse: collapse;
+  border-spacing: 0; }
+
+caption, th, td {
+  text-align: left;
+  font-weight: normal;
+  vertical-align: middle; }
+
+q, blockquote {
+  quotes: none; }
+
+q:before, q:after, blockquote:before, blockquote:after {
+  content: "";
+  content: none; }
+
+a img {
+  border: none; }
+
+elements-of-type(html5-block) {
+  display: block; }
+
+/* 颜色 */
+/* end 颜色 */
+/* 长宽 */
+/*end 长宽 */
+/* 间距 */
+/*end 间距 */
+/* 层叠关系 */
+/* 层叠关系 */
+/* 基本 */
+* {
+  box-sizing: content-box; }
+
+body {
+  color: #fff;
+  font-size: 14px;
+  font-family: '微软雅黑';
+  background: #1e1d2d; }
+
+a {
+  text-decoration: none;
+  color: #6691f9; }
+  a:link {
+    text-decoration: none; }
+  a:active {
+    text-decoration: none; }
+  a:hover {
+    color: #6691f9;
+    text-decoration: none; }
+
+.btn-link:hover {
+  text-decoration: underline; }
+
+.btn {
+  outline: none !important; }
+
+*:focus {
+  outline: none; }
+
+.main-wrap {
+  position: relative;
+  margin: 0 auto;
+  width: 1366px;
+  height: 768px;
+  overflow: hidden;
+  background: #191919; }
+
+.disabled-btn {
+  background: #ddd !important;
+  cursor: not-allowed !important; }
+
+.disabled-btn:hover {
+  background: #ddd !important;
+  cursor: not-allowed !important; }
+
+.clearfix, .main-wrap form .input-group.code, .main-wrap form .footer {
+  *zoom: 1; }
+
+.clearfix:before, .main-wrap form .input-group.code:before, .main-wrap form .footer:before,
+.clearfix:after,
+.main-wrap form .input-group.code:after,
+.main-wrap form .footer:after {
+  display: table;
+  line-height: 0;
+  content: ""; }
+
+.clearfix:after, .main-wrap form .input-group.code:after, .main-wrap form .footer:after {
+  clear: both; }
+
+/* end基本 */
+/* 常用 */
+.hide {
+  display: none !important; }
+
+.show {
+  display: block !important; }
+
+.txt-center {
+  text-align: center; }
+
+/* end 常用 */
+.main-wrap {
+  font-family: dongQingHeiTi;
+  width: 1366px;
+  height: 768px;
+  margin: 0 auto;
+  position: relative;
+  background: url("../../images/fupin_strategy/login_bg.jpg") no-repeat 0 0; }
+  .main-wrap form {
+    position: absolute;
+    right: 253px;
+    top: 145px;
+    width: 331px;
+    height: 375px;
+    background-color: rgba(14, 37, 77, 0.79);
+    box-shadow: 0 8px 8px rgba(29, 33, 45, 0.38), inset 0 1px rgba(220, 236, 251, 0.23), inset 0 0 3px rgba(139, 171, 255, 0.55);
+    box-sizing: border-box;
+    padding: 46px 29px; }
+    .main-wrap form.focused {
+      background-color: rgba(18, 46, 93, 0.79);
+      box-shadow: 0 8px 8px rgba(29, 33, 45, 0.38), inset 0 0 3px rgba(139, 171, 255, 0.55);
+      border: solid 1px #5cd9ff;
+      padding: 46px 28px; }
+      .main-wrap form.focused input[type=text], .main-wrap form.focused input[type=password] {
+        color: #83dff2;
+        border-color: #83dff2; }
+      .main-wrap form.focused .btn-submit {
+        background: #83dff2;
+        color: #202030; }
+      .main-wrap form.focused .footer i {
+        border: 1px solid #83dff2; }
+      .main-wrap form.focused .footer span, .main-wrap form.focused .footer a {
+        color: #83dff2; }
+    .main-wrap form input[type=text], .main-wrap form input[type=password] {
+      border: 1px solid #4973d8;
+      width: 272px;
+      height: 48px;
+      background-color: rgba(255, 255, 255, 0.13);
+      box-shadow: 0 2px 2px rgba(0, 0, 0, 0.55);
+      box-sizing: border-box;
+      font-size: 14px;
+      padding: 14px 10px; }
+      .main-wrap form input[type=text], .main-wrap form input[type=text]::placeholder, .main-wrap form input[type=password], .main-wrap form input[type=password]::placeholder {
+        color: rgba(136, 231, 251, 0.5); }
+    .main-wrap form .input-group {
+      margin-bottom: 14px; }
+      .main-wrap form .input-group.password {
+        margin-bottom: 22px; }
+      .main-wrap form .input-group.code {
+        margin-bottom: 38px; }
+        .main-wrap form .input-group.code input {
+          width: 142px;
+          height: 43px;
+          float: left;
+          margin-right: 8px; }
+        .main-wrap form .input-group.code img {
+          float: left;
+          width: 122px;
+          height: 43px;
+          box-shadow: 0 2px 2px rgba(0, 0, 0, 0.55);
+          cursor: pointer; }
+    .main-wrap form .btn-submit {
+      height: 43px;
+      background-color: rgba(136, 231, 251, 0.5);
+      box-shadow: 0 2px 2px rgba(0, 0, 0, 0.55);
+      width: 100%;
+      line-height: 43px;
+      text-align: center;
+      font-size: 16px;
+      color: rgba(32, 32, 48, 0.5);
+      cursor: pointer;
+      margin-bottom: 14px; }
+      .main-wrap form .btn-submit.disabled {
+        cursor: default; }
+    .main-wrap form .footer {
+      color: rgba(136, 231, 251, 0.5);
+      font-size: 14px;
+      line-height: 18px;
+      margin-bottom: 12px; }
+      .main-wrap form .footer input[type=checkbox] {
+        display: none; }
+        .main-wrap form .footer input[type=checkbox]:checked + i {
+          background: url("../../images/fupin_strategy/login_checked.png") no-repeat center center;
+          background-color: rgba(255, 255, 255, 0.13); }
+      .main-wrap form .footer i {
+        display: inline-block;
+        width: 19px;
+        height: 18px;
+        background-color: rgba(255, 255, 255, 0.13);
+        box-shadow: 0 2px 2px rgba(0, 0, 0, 0.55);
+        margin-right: 8px;
+        border: 1px solid #4973d8; }
+      .main-wrap form .footer label * {
+        vertical-align: middle; }
+      .main-wrap form .footer .link-find-password {
+        text-decoration: underline;
+        float: right;
+        padding-top: 3px; }
+    .main-wrap form .msg-err {
+      color: #ff372d;
+      font-size: 14px;
+      white-space: nowrap;
+      text-align: center;
+      display: none; }

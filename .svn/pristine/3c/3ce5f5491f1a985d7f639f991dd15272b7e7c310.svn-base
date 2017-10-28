@@ -1,0 +1,28 @@
+{
+	"code": 0,
+	"msg": "获取信息成功",
+	"data": {
+		//可选年份
+		"available_years": [
+			{
+				"name": "2016",
+				"value": "2016"
+			},
+			{
+				"name": "2017",
+				"value": "2017"
+			},
+			{
+				"name": "2018",
+				"value": "2018"
+			}
+		],
+		//默认选中时间
+		"default_time": {
+			"year": "2016",
+			"month": "5"
+		},
+		//条形图
+		"chart_config": {}
+	}
+}

@@ -1,0 +1,11 @@
+{
+	"code": 0,
+	"msg": "获取信息成功",
+	"data": {
+		//医疗政策落实趋势(人数)
+		"chart_config_trend": {},
+		//统计表，同data_monitor_table.json定义
+		"table": {}
+	}
+}
+

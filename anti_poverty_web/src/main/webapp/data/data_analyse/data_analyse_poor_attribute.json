@@ -1,0 +1,72 @@
+{
+	"code": 0,
+	"msg": "获取信息成功",
+	"data": {
+		"area_name": "广东省",
+		"total":{
+			"amount": 5851
+		},
+		"disabled": {
+			"amount": 5851,
+			"percent": 29
+		},
+		"migrator": {
+			"amount": 5851,
+			"percent": 29
+		},
+		"chart_config_poor_attributes": [
+			{
+				"name":"一般贫困户",
+				"group":"户数",
+				"value":1870
+			},
+			{
+				"name":"一般贫困户",
+				"group":"人数",
+				"value":2000
+			},
+			{
+				"name":"五保户贫困户",
+				"group":"户数",
+				"value":480
+			},
+			{
+				"name":"五保户贫困户",
+				"group":"人数",
+				"value":580
+			},
+			{
+				"name":"低保贫困户",
+				"group":"户数",
+				"value":540
+			},
+			{
+				"name":"低保贫困户",
+				"group":"人数",
+				"value":640
+			}
+		],
+		"chart_config_labor":[
+			{
+				"name":"有劳动能力",
+				"group":"户数",
+				"value":1870
+			},
+			{
+				"name":"有劳动能力",
+				"group":"人数",
+				"value":5000
+			},
+			{
+				"name":"无劳动能力",
+				"group":"户数",
+				"value":480
+			},
+			{
+				"name":"无劳动能力",
+				"group":"人数",
+				"value":580
+			}
+		]
+	}
+}

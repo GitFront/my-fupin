@@ -1,0 +1,42 @@
+{
+	"code": 0,
+	"msg": "获取信息成功",
+	"data": {
+		//在办项目
+		"list_doing": {
+			"amount_total": 10,
+			"list": [
+				{
+					//链接文字
+					"text": "住房改造 申请危房改造（两不具备）补贴",
+					//链接地址
+					"link": "http://www.wtf.com"
+				}
+			]
+		},
+		//已办项目
+		"list_done": {
+			"amount_total": 10,
+			"list": [
+				{
+					//链接文字
+					"text": "住房改造 申请危房改造（两不具备）补贴",
+					//链接地址
+					"link": "http://www.wtf.com"
+				}
+			]
+		},
+		//待办项目,无数据返回null
+		"list_todo": {
+			"amount_total": 10,
+			"list": [
+				{
+					//链接文字
+					"text": "社会保障 残疾人生活津贴和重度残疾人护理补贴标准",
+					//链接地址
+					"link": "http://www.wtf.com"
+				}
+			]
+		}
+	}
+}

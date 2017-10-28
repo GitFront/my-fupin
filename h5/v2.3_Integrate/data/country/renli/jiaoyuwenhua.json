@@ -1,0 +1,91 @@
+{
+    "code": 0,
+    "msg": "获取信息成功",
+    "data": {
+        "chart_config_tab": [{
+            "tooltip" : {
+                "trigger": "item",
+                "formatter": "{a} <br/>{b} : {c} ({d}%)"
+            },
+            "title": {
+                "text": "贫困人口学历分布",
+                "left": "center",
+                "top":20,
+                "textStyle":{
+                    "color": "#fff",
+                    "fontSize":15
+                }
+            },
+            "series" : [
+                {
+                    "name": "文化程度",
+                    "type": "pie",
+                    "radius": ["37%", "70%"],
+                    "center":["50%", "60%"],
+                    "label": {
+                        "normal": {
+                            "show": false
+                        }
+                    },
+                    "data":[
+                        {"value":64, "name":"小学"},
+                        {"value":38, "name":"初中"},
+                        {"value":3, "name":"文盲或半文盲"},
+                        {"value":16, "name":"未选择"},
+                        {"value":7, "name":"高中"},
+                        {"value":0, "name":"中专"},
+                        {"value":0, "name":"大专以上"},
+                        {"value":0, "name":"学龄儿童"}
+                    ],
+                    "itemStyle": {
+                        "emphasis": {
+                            "shadowBlur": 40
+                        }
+                    }
+                }
+            ]
+        },{
+            "tooltip": {
+                "trigger": "item",
+                "formatter": "{a} <br/>{b} : {c} ({d}%)"
+            },
+            "title": {
+                "text": "贫困人口在校生学历分布",
+                "left": "center",
+                "top":20,
+                "textStyle":{
+                    "color": "#fff",
+                    "fontSize":15
+                }
+            },
+            "series" : [
+                {
+                    "name": "文化程度",
+                    "type": "pie",
+                    "radius": ["37%", "70%"],
+                    "center":["50%", "60%"],
+                    "label": {
+                        "normal": {
+                            "show": false
+                        }
+                    },
+                    "data":[
+                        {"value":3, "name":"小学"},
+                        {"value":2, "name":"初中"},
+                        {"value":13, "name":"未选择"},
+                        {"value":5, "name":"高中"},
+                        {"value":0, "name":"中专"},
+                        {"value":0, "name":"学龄儿童"},
+                        {"value":0, "name":"大专以上"}
+                    ],
+                    "itemStyle": {
+                        "emphasis": {
+                            "shadowBlur": 40
+                        }
+                    }
+                }
+            ]
+        }]
+    }
+}
+

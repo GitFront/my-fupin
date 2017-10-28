@@ -1,0 +1,536 @@
+{
+	"code": 0,
+	"msg": "获取信息成功",
+	"data": {
+		"chart_config_trend_add":{
+			"convert_method":"genChartLevelLegendBarsConfig",
+			"config":[
+				{
+					"name":"2017.03",
+					"group":"新生儿",
+					"value":1500
+				},
+				{
+					"name":"2017.03",
+					"group":"嫁入",
+					"value":670
+				},
+				{
+					"name":"2017.03",
+					"group":"错误",
+					"value":1808
+				},
+				{
+					"name":"2017.03",
+					"group":"其他",
+					"value":9892
+				},
+				{
+					"name":"小计",
+					"group":"小计",
+					"value":13870
+				}
+			]
+		},
+		"chart_config_trend_cut":{
+			"convert_method":"genChartLevelLegendBarsConfig",
+			"config":[
+				{
+					"name":"2017.03",
+					"group":"死亡",
+					"value":7127
+				},
+				{
+					"name":"2017.03",
+					"group":"嫁出",
+					"value":2824
+				},
+				{
+					"name":"2017.03",
+					"group":"错误",
+					"value":2202
+				},
+				{
+					"name":"2017.03",
+					"group":"其他",
+					"value":6586
+				},
+				{
+					"name":"小计",
+					"group":"小计",
+					"value":18739
+				}
+			]
+		},
+		"table": {
+			"title": "变动分析统计表",
+			"export_url": "export.json",
+			"head": [
+				[
+					{
+						"rowspan": "3",
+						"content": "序号"
+					},
+					{
+						"rowspan": "3",
+						"content": "行政区域"
+					},
+					{
+						"colspan": "10",
+						"content": "自然增加"
+					},
+					{
+						"colspan": "10",
+						"content": "自然减少"
+					}
+				],
+				[
+					{
+						"colspan": 2,
+						"content": "合计"
+					},
+					{
+						"colspan": 2,
+						"content": "新生儿"
+					},
+					{
+						"colspan": 2,
+						"content": "嫁入"
+					},
+					{
+						"colspan": 2,
+						"content": "错误"
+					},
+					{
+						"colspan": 2,
+						"content": "其他"
+					},
+					{
+						"colspan": 2,
+						"content": "合计"
+					},
+					{
+						"colspan": 2,
+						"content": "死亡"
+					},
+					{
+						"colspan": 2,
+						"content": "嫁入"
+					},
+					{
+						"colspan": 2,
+						"content": "错误"
+					},
+					{
+						"colspan": 2,
+						"content": "其他"
+					}
+				],
+				[
+					{
+						"content": "户数"
+					},
+					{
+						"content": "人数"
+					},
+					{
+						"content": "户数"
+					},
+					{
+						"content": "人数"
+					},
+					{
+						"content": "户数"
+					},
+					{
+						"content": "人数"
+					},
+					{
+						"content": "户数"
+					},
+					{
+						"content": "人数"
+					},
+					{
+						"content": "户数"
+					},
+					{
+						"content": "人数"
+					},
+					{
+						"content": "户数"
+					},
+					{
+						"content": "人数"
+					},
+					{
+						"content": "户数"
+					},
+					{
+						"content": "人数"
+					},
+					{
+						"content": "户数"
+					},
+					{
+						"content": "人数"
+					},
+					{
+						"content": "户数"
+					},
+					{
+						"content": "人数"
+					},
+					{
+						"content": "户数"
+					},
+					{
+						"content": "人数"
+					}
+				]
+			],
+			"body": [
+				[
+					{
+						"content": "test0"
+					},
+					{
+						"content": "test1"
+					},
+					{
+						"content": "test2"
+					},
+					{
+						"content": "test3"
+					},
+					{
+						"content": "test4"
+					},
+					{
+						"content": "test5"
+					},
+					{
+						"content": "test6"
+					},
+					{
+						"content": "test7"
+					},
+					{
+						"content": "test8"
+					},
+					{
+						"content": "test9"
+					},
+					{
+						"content": "test10"
+					},
+					{
+						"content": "test11"
+					},
+					{
+						"content": "test12"
+					},
+					{
+						"content": "test13"
+					},
+					{
+						"content": "test14"
+					},
+					{
+						"content": "test15"
+					},
+					{
+						"content": "test16"
+					},
+					{
+						"content": "test17"
+					},
+					{
+						"content": "test18"
+					},
+					{
+						"content": "test19"
+					},
+					{
+						"content": "test20"
+					},
+					{
+						"content": "test21"
+					}
+				],
+				[
+					{
+						"content": "test0"
+					},
+					{
+						"content": "test1"
+					},
+					{
+						"content": "test2"
+					},
+					{
+						"content": "test3"
+					},
+					{
+						"content": "test4"
+					},
+					{
+						"content": "test5"
+					},
+					{
+						"content": "test6"
+					},
+					{
+						"content": "test7"
+					},
+					{
+						"content": "test8"
+					},
+					{
+						"content": "test9"
+					},
+					{
+						"content": "test10"
+					},
+					{
+						"content": "test11"
+					},
+					{
+						"content": "test12"
+					},
+					{
+						"content": "test13"
+					},
+					{
+						"content": "test14"
+					},
+					{
+						"content": "test15"
+					},
+					{
+						"content": "test16"
+					},
+					{
+						"content": "test17"
+					},
+					{
+						"content": "test18"
+					},
+					{
+						"content": "test19"
+					},
+					{
+						"content": "test20"
+					},
+					{
+						"content": "test21"
+					}
+				],
+				[
+					{
+						"content": "test0"
+					},
+					{
+						"content": "test1"
+					},
+					{
+						"content": "test2"
+					},
+					{
+						"content": "test3"
+					},
+					{
+						"content": "test4"
+					},
+					{
+						"content": "test5"
+					},
+					{
+						"content": "test6"
+					},
+					{
+						"content": "test7"
+					},
+					{
+						"content": "test8"
+					},
+					{
+						"content": "test9"
+					},
+					{
+						"content": "test10"
+					},
+					{
+						"content": "test11"
+					},
+					{
+						"content": "test12"
+					},
+					{
+						"content": "test13"
+					},
+					{
+						"content": "test14"
+					},
+					{
+						"content": "test15"
+					},
+					{
+						"content": "test16"
+					},
+					{
+						"content": "test17"
+					},
+					{
+						"content": "test18"
+					},
+					{
+						"content": "test19"
+					},
+					{
+						"content": "test20"
+					},
+					{
+						"content": "test21"
+					}
+				],
+				[
+					{
+						"content": "test0"
+					},
+					{
+						"content": "test1"
+					},
+					{
+						"content": "test2"
+					},
+					{
+						"content": "test3"
+					},
+					{
+						"content": "test4"
+					},
+					{
+						"content": "test5"
+					},
+					{
+						"content": "test6"
+					},
+					{
+						"content": "test7"
+					},
+					{
+						"content": "test8"
+					},
+					{
+						"content": "test9"
+					},
+					{
+						"content": "test10"
+					},
+					{
+						"content": "test11"
+					},
+					{
+						"content": "test12"
+					},
+					{
+						"content": "test13"
+					},
+					{
+						"content": "test14"
+					},
+					{
+						"content": "test15"
+					},
+					{
+						"content": "test16"
+					},
+					{
+						"content": "test17"
+					},
+					{
+						"content": "test18"
+					},
+					{
+						"content": "test19"
+					},
+					{
+						"content": "test20"
+					},
+					{
+						"content": "test21"
+					}
+				],
+				[
+					{
+						"content": "test0"
+					},
+					{
+						"content": "test1"
+					},
+					{
+						"content": "test2"
+					},
+					{
+						"content": "test3"
+					},
+					{
+						"content": "test4"
+					},
+					{
+						"content": "test5"
+					},
+					{
+						"content": "test6"
+					},
+					{
+						"content": "test7"
+					},
+					{
+						"content": "test8"
+					},
+					{
+						"content": "test9"
+					},
+					{
+						"content": "test10"
+					},
+					{
+						"content": "test11"
+					},
+					{
+						"content": "test12"
+					},
+					{
+						"content": "test13"
+					},
+					{
+						"content": "test14"
+					},
+					{
+						"content": "test15"
+					},
+					{
+						"content": "test16"
+					},
+					{
+						"content": "test17"
+					},
+					{
+						"content": "test18"
+					},
+					{
+						"content": "test19"
+					},
+					{
+						"content": "test20"
+					},
+					{
+						"content": "test21"
+					}
+				]
+			]
+		}
+	}
+}

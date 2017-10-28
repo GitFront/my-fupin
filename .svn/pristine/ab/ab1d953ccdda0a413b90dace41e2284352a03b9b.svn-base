@@ -1,0 +1,1565 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+        
+<mapper namespace="com.aspire.birp.modules.antiPoverty.dao.PoorChangeDao">
+
+    <sql id="dim_area_sql">
+		INNER JOIN
+		(SELECT 
+		  PAC,
+		  SORT
+		  FROM
+		  DIM_AREA_INFO
+		  WHERE 1=1
+		  <include refid="p_area_sql"/>
+		  ) B ON(A.S_ID=B.PAC)
+		ORDER BY B.SORT 
+	</sql>
+	
+	<sql id="p_area_sql">
+		 <if test=" '' != level and null != level and 'province' == level  ">
+				AND PPAC = #{id}
+			</if>
+			
+			<if test=" '' != level and null != level and 'city' == level  ">
+				AND PPAC = #{id}
+			</if>
+			
+			<if test=" '' != level and null != level and 'county' == level  ">
+				AND PPAC = #{id} 
+			</if>
+			
+			<if test=" '' != level and null != level and 'town' == level  ">
+				AND PPAC = #{id} 
+			</if>
+			
+			<if test=" '' != level and null != level and 'country' == level  ">
+				AND PAC = #{id}
+			</if>
+	</sql>
+    
+	<sql id="count_group_by_sql">
+	
+			<if test=" '' != level and null != level and 'province' == level  ">
+				 1
+			</if>
+			<if test=" '' != level and null != level and 'city' == level  ">
+				CITY_PAC , CITY_NAME  
+			</if>
+			
+			<if test=" '' != level and null != level and 'county' == level  ">
+				 COUNTY_PAC ,COUNTY_NAME  
+			</if>
+			
+			<if test=" '' != level and null != level and 'town' == level  ">
+				   TOWN_PAC ,TOWN_NAME 
+			</if>
+			
+			<if test=" '' != level and null != level and 'country' == level  ">
+				COUNTRY_PAC  ,COUNTRY_NAME 
+			</if>
+	</sql>
+	
+	<sql id="count_sort_area_sql">
+		<if test=" '' != sort_area and null != sort_area and 1 == sort_area  ">
+		 	COUNT(DISTINCT CITY_PAC)  
+		</if>
+		<if test=" '' != sort_area and null != sort_area and 2 == sort_area  ">
+			COUNT(DISTINCT COUNTY_PAC)  
+		</if>
+			
+		<if test=" '' != sort_area and null != sort_area and 3 == sort_area  ">
+			COUNT(DISTINCT TOWN_PAC) 
+		</if>
+		<if test=" '' != sort_area and null != sort_area and 4 == sort_area  ">
+			COUNT(DISTINCT COUNTRY_PAC) 
+		</if>
+		
+	</sql>
+	
+	<!-- 筛选条件sql -->
+   <sql id="query_condition_sql">
+		
+		<if test=" '' != poor_status and null != poor_status">
+			<!-- 全部 -->
+			<if test=" 1 == poor_status"> 
+				 AND STAT_YEAR = #{year} 
+			</if>
+			<!-- 累计 -->
+			<if test=" 2 == poor_status"> 
+				 AND ACC_YEAR = #{year} 
+			</if>
+			<!-- 当前 -->
+			<if test="3 == poor_status">
+				  AND ACC_YEAR = #{year} 
+				  AND IS_CURRENT = 1 
+			</if>
+			<!-- 新增-->
+			<if test="4 == poor_status">
+				  AND STAT_YEAR = #{year} 
+				  AND IS_NEW = 1 
+			</if>
+			<!-- 拆户 -->
+			<if test="5 == poor_status">
+				  AND STAT_YEAR = #{year} 
+				  AND IS_SPLIT = 1
+			</if>	
+			<!-- 终止 -->
+			<if test="6 == poor_status">
+				AND TERMINATION_YEAR = #{year} 
+				AND IS_TERMINATION = 1 
+			</if>
+			<!-- 并户 -->
+			<if test="7 == poor_status">
+				AND MERGE_YEAR = #{year} 
+				AND IS_MERGE = 1
+			</if>			
+			<!-- 销户 -->		
+			<if test="8 == poor_status">
+				AND REVOKED_YEAR = #{year} 
+				AND IS_REVOKED = 1
+			</if>
+			<!-- 自然 -->
+			<if test="9 == poor_status">
+				AND  ACC_YEAR = #{year} 
+				AND  IS_POP_CHANGES = 1 
+			</if>
+		</if>
+	
+		<if test=" '' != scope and null != scope">
+			<if test="2 == scope">AND IS_KEY_POVERTY = 1</if><!-- 贫困村 -->
+			<if test="3 == scope">AND IS_KEY_POVERTY = 0</if><!-- 分散村 -->
+			<if test="4 == scope">AND IS_OLD_REVOLUTIONARY = 1</if><!-- 革命老区 -->
+			<if test="5 == scope">AND IS_CENTRAL_SOVIET = 1 </if><!-- 中央苏区 -->
+		</if>
+				
+		<if test=" '' != poor_attribute and null != poor_attribute">
+			<if test="'all' == poor_attribute"></if><!-- 全部 -->
+			<if test="'normal' == poor_attribute">AND POOR_TYPE = 1</if><!-- 一般贫困户 -->
+			<if test="'low' == poor_attribute">AND POOR_TYPE = 2</if><!-- 低保户 -->
+			<if test="'five' == poor_attribute">AND POOR_TYPE = 3</if><!-- 五保户 -->
+			
+		</if>
+				
+		<if test=" '' != labor_attribute and null != labor_attribute">
+			<if test="'have_labor' == labor_attribute">AND LABOR_TYPE=1</if><!-- 有劳 -->
+			<if test="'no_labor' == labor_attribute">AND LABOR_TYPE=0</if><!-- 无劳 -->
+		</if>
+	</sql>
+	
+	<!-- 统计年份 -->
+	<sql id="year_sql">
+			<if test=" '' != year and null != year ">
+				 AND ACC_YEAR =  #{year}
+			</if>
+	</sql>
+	
+	<sql id="stat_year_sql">
+			<if test=" '' != year and null != year ">
+				 AND STAT_YEAR =  #{year}
+			</if>
+	</sql>
+	
+	<sql id="stat_month_sql">
+			<if test=" '' != year and null != year ">
+				 AND STAT_MONTH BETWEEN to_number(#{year} || '01')  AND to_number(#{year} || '12')
+			</if>
+	</sql>
+	
+	<!-- 累计统计年份 -->
+	<sql id="acc_year_sql">
+			<if test=" '' != year and null != year ">
+				 AND ACC_YEAR BETWEEN 0 AND to_number(#{year})
+			</if>
+	</sql>
+	
+	<sql id="acc_stat_year_sql">
+			<if test=" '' != year and null != year ">
+				 AND  STAT_YEAR =#{year} and acc_year=#{year} 
+			</if>
+	</sql>
+	
+	<!-- 层级sql -->
+	<sql id="level_sql">
+			
+			<if test=" '' != level and null != level and 'province' == level  ">
+				
+			</if>
+			
+			<if test=" '' != level and null != level and 'city' == level  ">
+				AND CITY_PAC = #{id}
+			</if>
+			
+			<if test=" '' != level and null != level and 'county' == level  ">
+				AND COUNTY_PAC = #{id} 
+			</if>
+			
+			<if test=" '' != level and null != level and 'town' == level  ">
+				AND TOWN_PAC = #{id} 
+			</if>
+			
+			<if test=" '' != level and null != level and 'country' == level  ">
+				AND COUNTRY_PAC = #{id}
+			</if>
+	</sql>
+	
+	<!-- 层级sql -->
+	<sql id="level_detail_sql">
+			
+			<if test=" '' != level and null != level and 'province' == level  ">
+				
+			</if>
+			
+			<if test=" '' != level and null != level and 'city' == level  ">
+				AND CITY_PAC = #{id}
+			</if>
+			
+			<if test=" '' != level and null != level and 'county' == level  ">
+				AND COUNTY_PAC = #{id} 
+			</if>
+			
+			<if test=" '' != level and null != level and 'town' == level  ">
+				AND TOWN_PAC = #{id} 
+			</if>
+			
+			<if test=" '' != level and null != level and 'country' == level  ">
+				AND COUNTRY_PAC = #{id}
+			</if>
+	</sql>
+	<!-- 层级分组 -->
+	<sql id="group_by_sql">
+	
+			<if test=" '' != level and null != level and 'province' == level  ">
+				CITY_PAC , CITY_NAME  
+			</if>
+			<if test=" '' != level and null != level and 'city' == level  ">
+				 COUNTY_PAC ,COUNTY_NAME 
+			</if>
+			
+			<if test=" '' != level and null != level and 'county' == level  ">
+				 TOWN_PAC ,TOWN_NAME 
+			</if>
+			
+			<if test=" '' != level and null != level and 'town' == level  ">
+				COUNTRY_PAC  ,COUNTRY_NAME 
+			</if>
+			
+			<if test=" '' != level and null != level and 'country' == level  ">
+				COUNTRY_PAC  ,COUNTRY_NAME 
+			</if>
+			
+	</sql>
+	
+	<!-- 合计用  -->
+	<sql id="count_pop_sql">
+			<if test=" '' != level and null != level and 'province' == level  ">
+				 '广东省' B1,
+			</if>
+			<if test=" '' != level and null != level and 'city' == level  ">
+				CITY_PAC S_ID, CITY_NAME B1,
+			</if>
+			
+			<if test=" '' != level and null != level and 'county' == level  ">
+				COUNTY_PAC S_ID,COUNTY_NAME B1,
+			</if>
+			
+			<if test=" '' != level and null != level and 'town' == level  ">
+				 TOWN_PAC S_ID ,TOWN_NAME B1,
+			</if>
+			
+			<if test=" '' != level and null != level and 'country' == level  ">
+				COUNTRY_PAC S_ID ,COUNTRY_NAME  B1,
+			</if>
+	</sql>
+	
+	<!--  -->
+	<sql id="level_area_sql">
+			
+			<if test=" '' != level and null != level and 'province' == level  ">
+				CITY_PAC S_ID, CITY_NAME A2, 
+			</if>
+			<if test=" '' != level and null != level and 'city' == level  ">
+				COUNTY_PAC S_ID,COUNTY_NAME A2,
+			</if>
+			
+			<if test=" '' != level and null != level and 'county' == level  ">
+				 TOWN_PAC S_ID ,TOWN_NAME A2, 
+			</if>
+			
+			<if test=" '' != level and null != level and 'town' == level  ">
+				COUNTRY_PAC S_ID ,COUNTRY_NAME  A2, 
+			</if>
+			
+			<if test=" '' != level and null != level and 'country' == level  ">
+				COUNTRY_PAC S_ID ,COUNTRY_NAME  A2, 
+			</if>
+	</sql>
+	
+	<!--  -->
+	<sql id="level_return_sql">
+			
+			<if test=" '' != level and null != level and 'province' == level  ">
+				'city' s_level,
+			</if>
+			<if test=" '' != level and null != level and 'city' == level  ">
+				 'county' s_level,
+			</if>
+			
+			<if test=" '' != level and null != level and 'county' == level  ">
+				  'town' s_level,
+			</if>
+			
+			<if test=" '' != level and null != level and 'town' == level  ">
+				 'country' s_level,
+			</if>
+			
+			<if test=" '' != level and null != level and 'country' == level  ">
+				'country' s_level,
+			</if>
+	</sql>
+	
+	
+	<!-- detail_area_sql  -->
+	<sql id="detail_area_sql">
+		
+			<if test=" '' != level and null != level and 'city' == level  ">
+				CITY_PAC S_ID, CITY_NAME A2,
+			</if>
+			
+			<if test=" '' != level and null != level and 'county' == level  ">
+				COUNTY_PAC S_ID,COUNTY_NAME A2,
+			</if>
+			
+			<if test=" '' != level and null != level and 'town' == level  ">
+				 TOWN_PAC S_ID ,TOWN_NAME A2,
+			</if>
+			
+			<if test=" '' != level and null != level and 'country' == level  ">
+				COUNTRY_PAC S_ID ,COUNTRY_NAME  A2,
+			</if>
+	</sql>
+	
+	<!-- count  -->
+	<sql id="count_area_sql">
+			<if test=" '' != level and null != level and 'province' == level  ">
+				'440000000000' S_ID , '合计' A2,
+			</if>
+			<if test=" '' != level and null != level and 'city' == level  ">
+				CITY_PAC S_ID, '合计' A2,
+			</if>
+			
+			<if test=" '' != level and null != level and 'county' == level  ">
+				COUNTY_PAC S_ID,'合计' A2,
+			</if>
+			
+			<if test=" '' != level and null != level and 'town' == level  ">
+				 TOWN_PAC S_ID ,'合计' A2,
+			</if>
+			
+			<if test=" '' != level and null != level and 'country' == level  ">
+				COUNTRY_PAC S_ID ,'合计'  A2,
+			</if>
+	</sql>
+	
+	
+	<!--  -->
+	<sql id="sort_area_sql">
+			
+			<if test=" '' != sort_area and null != sort_area and 1 == sort_area  ">
+				CITY_PAC S_ID, CITY_NAME A2,
+			</if>
+			<if test=" '' != sort_area and null != sort_area and 2 == sort_area  ">
+				COUNTY_PAC S_ID,CITY_NAME||'>'||COUNTY_NAME A2,
+			</if>
+			
+			<if test=" '' != sort_area and null != sort_area and 3 == sort_area  ">
+				 TOWN_PAC S_ID ,CITY_NAME||'>'||COUNTY_NAME||'>'||TOWN_NAME A2,
+			</if>
+			
+			<if test=" '' != sort_area and null != sort_area and 4 == sort_area  ">
+				COUNTRY_PAC S_ID ,CITY_NAME||'>'||COUNTY_NAME||'>'||TOWN_NAME||'>'||COUNTRY_NAME  A2,
+			</if>
+			
+	</sql>
+	<!--  -->
+	<sql id="group_sort_area_sql">
+			
+			<if test=" '' != sort_area and null != sort_area and 1 == sort_area  ">
+				CITY_PAC , CITY_NAME 
+			</if>
+			<if test=" '' != sort_area and null != sort_area and 2 == sort_area  ">
+				COUNTY_PAC ,CITY_NAME||'>'||COUNTY_NAME
+			</if>
+			
+			<if test=" '' != sort_area and null != sort_area and 3 == sort_area  ">
+				 TOWN_PAC  ,CITY_NAME||'>'||COUNTY_NAME||'>'||TOWN_NAME 
+			</if>
+			
+			<if test=" '' != sort_area and null != sort_area and 4 == sort_area  ">
+				COUNTRY_PAC ,CITY_NAME||'>'||COUNTY_NAME||'>'||TOWN_NAME||'>'||COUNTRY_NAME 
+			</if>
+			
+	</sql>
+	
+		
+	<!-- 扶贫对象变动排序详细#    -->
+	<select id="querySortDetail"  parameterType="hashmap" resultType="hashmap">
+				SELECT 
+			R1.*
+			<!-- 准确率 -->
+			,CASE WHEN A3=0 THEN '0.00%' ELSE  TO_CHAR(TRUNC((A3-A7)/A3*100,2),'9999990.00') || '%' END A19
+			,CASE WHEN A4=0 THEN '0.00%' ELSE  TO_CHAR(TRUNC((A4-A8)/A4*100,2),'9999990.00') || '%' END A20
+			FROM
+			(SELECT
+			<include refid="count_area_sql"/>
+			 <!-- 年初贫困户 --> 
+			COUNT( DISTINCT CASE WHEN IS_BEGINNING = 1 THEN FAM_ID END) A3,  
+			SUM(CASE WHEN IS_BEGINNING = 1 THEN NVL(BEGINING_POP,0) ELSE 0 END) A4, 
+			
+			COUNT(CASE WHEN IS_NEW = 1  THEN FAM_ID END)  A5, <!--  新增 -->
+			SUM(CASE WHEN  IS_NEW = 1 THEN NVL(NEW_POP,0) ELSE 0 END) A6,
+			
+			COUNT(CASE WHEN IS_TERMINATION = 1 AND  TERMINATION_YEAR  = to_number(#{year}) THEN FAM_ID END )  A7,  <!-- 终止 -->
+			SUM(CASE WHEN IS_TERMINATION = 1 AND TERMINATION_YEAR  = to_number(#{year}) THEN NVL(TERMINATION_POP,0)ELSE 0 END) A8,
+			
+			COUNT(CASE WHEN IS_REVOKED = 1  AND REVOKED_YEAR = to_number(#{year}) THEN FAM_ID END )  A9, <!-- 销户 -->
+			SUM(CASE WHEN  IS_REVOKED = 1   AND  REVOKED_YEAR = to_number(#{year}) THEN NVL(REVOKED_POP,0)ELSE 0 END) A10,
+			
+			COUNT(CASE WHEN IS_SPLIT = 1  THEN FAM_ID END )  A11,  <!-- 拆户  -->
+			SUM(CASE WHEN  IS_SPLIT = 1   THEN NVL(SPLIT_POP,0)ELSE 0 END) A12,
+			
+			COUNT(CASE WHEN IS_MERGE = 1 AND MERGE_YEAR = to_number(#{year})THEN FAM_ID END )  A13,  <!-- 并户 -->
+			SUM(CASE WHEN IS_MERGE = 1  AND MERGE_YEAR = to_number(#{year}) THEN NVL(MERGE_POP,0)ELSE 0 END) A14,
+			
+			SUM(CASE WHEN ACC_YEAR = to_number(#{year})	THEN NVL(ADD_POP,0)ELSE 0 END) A15, <!-- 自然增 -->
+			SUM(CASE WHEN ACC_YEAR = to_number(#{year})	THEN NVL(CUT_POP,0) ELSE 0 END) A16, <!-- 自然少 -->
+			   
+			<!-- 贫困户总数 -->
+			COUNT(CASE WHEN  IS_CURRENT = 1 AND ACC_YEAR = to_number(#{year})  THEN FAM_ID END)  A17,
+			SUM(CASE WHEN  IS_CURRENT = 1  AND ACC_YEAR = to_number(#{year})  THEN POP_NUMBER ELSE 0   END) A18
+			
+			FROM (SELECT * from R_DW_POOROBJ_FAM_Y
+			
+			<where>
+				<include refid="stat_year_sql"/>
+				<include refid="level_sql"/>
+				<include refid="query_condition_sql"/>
+			</where>) t1
+				INNER JOIN (
+				 select
+				 COUNTRY_ID 
+				 from DIM_HELP_AREA_MAP  
+				 WHERE help_p_pac=#{helppac} 
+				 ) t2 ON (t1.country_pac=t2.COUNTRY_ID)		
+			GROUP BY <include refid="count_group_by_sql"/>) R1
+			
+	
+	</select>
+	
+	
+	<!--排序总记录#  -->
+	
+	<select id="queryPoorChangeSortCount"  parameterType="hashmap" resultType="long">
+		
+			
+			SELECT <include refid="count_sort_area_sql"/>
+			FROM (SELECT * from  R_DW_POOROBJ_FAM_Y	
+			<where>
+					<include refid="stat_year_sql"/>
+					<include refid="level_sql"/>
+					<include refid="query_condition_sql"/>
+			</where>) t1
+				INNER JOIN (
+				 select
+				 COUNTRY_ID 
+				 from DIM_HELP_AREA_MAP  
+				 WHERE help_p_pac=#{helppac} 
+				 ) t2 ON (t1.country_pac=t2.COUNTRY_ID)		
+		
+	</select>
+	
+	
+	<!-- 扶贫对象变动排序列表# -->
+	<select id="queryPoorChangeSort"  parameterType="hashmap" resultType="hashmap">
+			
+			SELECT * FROM (
+			SELECT a1.A2,a1.S_ID,
+			<choose>
+				<when test="1 == taxis_indexes">
+					a1.A3 || '%' A3
+				</when>
+				<otherwise>a1.A3</otherwise>
+			</choose>
+			
+			,ROWNUM RM FROM  (
+			SELECT	 
+			 <include refid="sort_area_sql"/>
+					<!-- 准确率  按人数20170427-->
+					<if test="1 == taxis_indexes">
+						 CASE WHEN SUM( CASE WHEN IS_BEGINNING = 1  AND STAT_YEAR = to_number(#{year}) THEN NVL(BEGINING_POP, 0) ELSE 0 END) = 0 THEN 0  ELSE
+                          TO_NUMBER(TO_CHAR(TRUNC((SUM( CASE WHEN IS_BEGINNING = 1  AND STAT_YEAR = to_number(#{year}) THEN NVL(BEGINING_POP, 0) ELSE 0 END)-SUM(CASE WHEN  TERMINATION_YEAR = to_number(#{year}) AND IS_TERMINATION = 1  THEN NVL(TERMINATION_POP, 0) ELSE 0 END))/SUM( CASE WHEN IS_BEGINNING = 1  AND STAT_YEAR = to_number(#{year})  THEN NVL(BEGINING_POP, 0) ELSE 0 END) * 100, 2), '9999990.00')) END A3
+					</if>				
+					<!-- 当前贫困户  -->
+					<if test="2 == taxis_indexes"> count(case when IS_CURRENT = 1 AND ACC_YEAR = to_number(#{year})  then FAM_ID end)  A3</if>
+					<!-- 当前贫困人口数  -->
+					<if test="3 == taxis_indexes">sum(case when IS_CURRENT=1 AND ACC_YEAR = to_number(#{year})  then POP_NUMBER else 0  end)  A3</if>
+					<!-- 新增贫困户数  -->
+					<if test="4 == taxis_indexes">COUNT(CASE WHEN  IS_NEW = 1 AND STAT_YEAR = to_number(#{year}) THEN FAM_ID  end )A3</if>
+					<!-- 终止贫困户数  -->
+					<if test="5 == taxis_indexes">COUNT(CASE WHEN IS_TERMINATION = 1 AND TERMINATION_YEAR  = to_number(#{year}) THEN FAM_ID END)  A3</if>
+					<!-- 并户贫困户数 -->	
+					<if test="6 == taxis_indexes">COUNT(CASE WHEN IS_MERGE = 1 AND MERGE_YEAR = to_number(#{year}) THEN FAM_ID END)  A3</if>
+					<!-- 销户贫困户数 -->	
+					<if test="7 == taxis_indexes">COUNT(CASE WHEN IS_REVOKED = 1  AND REVOKED_YEAR = to_number(#{year}) THEN FAM_ID END) A3</if>
+					<!-- 拆户贫困户数 -->	
+					<if test="8 == taxis_indexes">COUNT(CASE WHEN  IS_SPLIT = 1  AND STAT_YEAR = to_number(#{year}) THEN  FAM_ID  END) A3</if>
+					<!-- 自然增加人口数 -->	
+					<if test="9 == taxis_indexes">SUM(CASE WHEN ACC_YEAR = to_number(#{year})  THEN NVL(ADD_POP, 0)  ELSE  0 END)  A3</if>
+					<!-- 自然减少人口数 -->	
+					<if test="10 == taxis_indexes">SUM( CASE WHEN ACC_YEAR = to_number(#{year})  THEN NVL(CUT_POP, 0)  ELSE 0 END) A3</if>
+					<!-- 累计贫困户数 -->	
+					<if test="11 == taxis_indexes">count(CASE when  ACC_YEAR = to_number(#{year})   then FAM_ID end) A3</if>
+					<!-- 累计贫困人口数 -->	
+					<if test="12 == taxis_indexes">sum(CASE when  ACC_YEAR = to_number(#{year}) then POP_NUMBER else 0  end) A3</if>	
+			FROM (SELECT * from R_DW_POOROBJ_FAM_Y
+			<where>
+					<include refid="stat_year_sql"/>
+					<include refid="level_sql"/>
+					<include refid="query_condition_sql"/>
+			</where>) t1
+				INNER JOIN (
+				 select
+				 COUNTRY_ID 
+				 from DIM_HELP_AREA_MAP  
+				 WHERE help_p_pac=#{helppac} 
+				 ) t2 ON (t1.country_pac=t2.COUNTRY_ID)		
+			GROUP BY <include refid="group_sort_area_sql"/>
+			order by A3 DESC
+			) a1
+			)
+			<if test="page !=null">
+				WHERE RM BETWEEN #{pageSize}*(#{page}-1)+1 AND #{pageSize} * #{page}
+			</if>
+			
+</select>
+
+	<!-- 当年贫困人口变化（年初数) # -->
+	<select id="queryPoorChangeCount"  parameterType="hashmap" resultType="long">
+			<choose>
+				<when test="'' != IF_YEAR_POOR and 1 == IF_YEAR_POOR ">
+				
+				SELECT 
+					SUM(NVL(POP_NUMBER,0))  S_COUNT
+				FROM (SELECT * from
+				R_DW_POOROBJ_FAM_Y
+				<where>
+						STAT_YEAR = #{year}
+						<include refid="level_sql"/>
+						AND IS_BEGINNING=1 
+				</where>) t1
+				INNER JOIN (
+				 select
+				 COUNTRY_ID 
+				 from DIM_HELP_AREA_MAP  
+				 WHERE help_p_pac=#{helppac} 
+				 ) t2 ON (t1.country_pac=t2.COUNTRY_ID)		
+				 
+				</when>
+				<otherwise>
+				SELECT  COUNT(POP_ID)   S_COUNT
+				FROM (SELECT * from
+				R_DW_POOROBJ_POP_Y
+				<where>
+						<include refid="stat_year_sql"/>
+						<include refid="acc_year_sql"/>
+						<include refid="level_sql"/>
+						AND  IS_BEGINNING =1 
+				</where>) t1
+				INNER JOIN (
+				 select
+				 COUNTRY_ID 
+				 from DIM_HELP_AREA_MAP  
+				 WHERE help_p_pac=#{helppac} 
+				 ) t2 ON (t1.country_pac=t2.COUNTRY_ID)		
+				</otherwise>
+			</choose>
+	</select>
+
+	<!-- 当年贫困人口变化柱状图#  -->
+	<select id="queryPoorChangeChart"  parameterType="hashmap" resultType="hashmap">
+			<choose>
+				<!-- 累计  -->
+				<when test="null != IF_YEAR_POOR and  0 == IF_YEAR_POOR">
+				select 
+				  CASE WHEN U_NAME='A_NEW' THEN '新增'
+				      WHEN U_NAME='B_TERMINATION' THEN '终止'
+				      WHEN U_NAME='C_REVOKED' THEN '销户'
+				      WHEN U_NAME='D_ADD' THEN '自然增加'
+				      WHEN U_NAME='E_CUT' THEN '自然减少'
+				      WHEN U_NAME='F_OUT' THEN '脱贫'
+				   ELSE '其它' END S_NAME,
+				   U_VALUE S_VALUE,
+				   '人数' S_GROUP 
+				from (select 
+				    SUM(CASE WHEN IS_NEW = 1 THEN NEW_POP ELSE 0 END) A_NEW,
+				    SUM(CASE WHEN IS_TERMINATION = 1 THEN TERMINATION_POP ELSE 0 END) B_TERMINATION,
+				    SUM(CASE WHEN IS_REVOKED = 1 THEN REVOKED_POP ELSE 0 END) C_REVOKED,
+				    SUM(ADD_POP) D_ADD,
+				    SUM(CUT_POP) E_CUT,
+				    SUM(CASE WHEN IS_OUT = 1 THEN POP_NUMBER END) F_OUT
+				  FROM (SELECT * from R_DW_POOROBJ_FAM_Y
+				  <where>
+				  	  <include refid="acc_stat_year_sql"/>
+					  <include refid="level_sql"/>
+				  </where>) t1
+				INNER JOIN (
+				 select
+				 COUNTRY_ID 
+				 from DIM_HELP_AREA_MAP  
+				 WHERE help_p_pac=#{helppac} 
+				 ) t2 ON (t1.country_pac=t2.COUNTRY_ID)		) 
+				  unpivot (U_VALUE for U_NAME in (A_NEW, B_TERMINATION, C_REVOKED, D_ADD, E_CUT, F_OUT)) 
+				 ORDER BY U_NAME
+				</when>
+				
+				<!-- 当年 -->
+				<otherwise>
+				select 
+				  CASE WHEN U_NAME='A_NEW' THEN '新增'
+				      WHEN U_NAME='B_TERMINATION' THEN '终止'
+				      WHEN U_NAME='C_REVOKED' THEN '销户'
+				      WHEN U_NAME='D_ADD' THEN '自然增加'
+				      WHEN U_NAME='E_CUT' THEN '自然减少'
+				   ELSE '其它' END S_NAME,
+				   U_VALUE S_VALUE,
+				   '人数' S_GROUP 
+				from (select 
+				    SUM(CASE WHEN IS_NEW = 1 THEN NEW_POP ELSE 0 END) A_NEW,
+				    SUM(CASE WHEN IS_TERMINATION = 1 AND TERMINATION_YEAR = to_number(#{year}) THEN TERMINATION_POP ELSE 0 END) B_TERMINATION,
+				    SUM(CASE WHEN IS_REVOKED = 1 AND REVOKED_YEAR = to_number(#{year}) THEN REVOKED_POP ELSE 0 END) C_REVOKED,
+				    SUM(CASE WHEN ACC_YEAR = to_number(#{year}) THEN ADD_POP ELSE 0 END) D_ADD,
+				    SUM(CASE WHEN ACC_YEAR = to_number(#{year}) THEN CUT_POP ELSE 0 END) E_CUT
+				  FROM (SELECT * from R_DW_POOROBJ_FAM_Y
+				  <where>
+				  		<include refid="stat_year_sql"/>
+					  <include refid="level_sql"/>
+				  </where>) t1
+				INNER JOIN (
+				 select
+				 COUNTRY_ID 
+				 from DIM_HELP_AREA_MAP  
+				 WHERE help_p_pac=#{helppac} 
+				 ) t2 ON (t1.country_pac=t2.COUNTRY_ID)	) 
+				  unpivot (U_VALUE for U_NAME in (A_NEW, B_TERMINATION, C_REVOKED, D_ADD, E_CUT)) 
+				 ORDER BY U_NAME
+				</otherwise>
+			</choose>
+	</select>
+	
+	<!-- 贫困人口趋势全部 # -->
+	<select id="queryThePoorTrendAllChart"  parameterType="hashmap" resultType="hashmap">
+			
+			SELECT 
+		      TO_CHAR(TO_DATE( STAT_MONTH,'YYYYMM'),'YYYY.MM') S_NAME,
+		      <choose>
+				<!-- 累计 -->
+				<when test=" 'all' == status_attribute">
+						SUM(ACC_POP_NUM)  S_VALUE,
+				</when>
+				<!-- 当前 -->
+				<when test=" 'poor_cur' == status_attribute">
+						SUM(CUR_POP_NUM)  S_VALUE,
+				</when>
+			</choose>
+		      '人数'  S_GROUP
+		      FROM R2_DM_POOROBJ_POORTYPE_M
+		      <where>
+				<include refid="stat_month_sql"/>
+				<include refid="level_sql"/>
+				<include refid="query_condition_sql"/>
+				AND HELP_P_PAC = #{helppac}
+			</where>
+		      GROUP BY STAT_MONTH
+		      ORDER BY STAT_MONTH
+	</select>
+	
+	<!-- 贫困人口趋势新增 -->
+	<select id="queryThePoorTrendAddChart"  parameterType="hashmap" resultType="hashmap">
+		SELECT 
+		 TO_CHAR(TO_DATE( STAT_MONTH,'YYYYMM'),'YYYY.MM') S_NAME,
+		 CASE WHEN u_type='SIXIN_1' THEN '"六进"之一'
+		      WHEN u_type='SIXIN_2' THEN '"六进"之二'
+		      WHEN u_type='SIXIN_3' THEN '"六进"之三'
+		      WHEN u_type='SIXIN_4' THEN '"六进"之四'
+		      WHEN u_type='SIXIN_5' THEN '"六进"之五'
+		      WHEN u_type='SIXIN_6' THEN '"六进"之六'
+		   ELSE '其它' END S_GROUP,
+		 u_value as S_VALUE
+		FROM (select 
+		   STAT_MONTH,
+		   SUM(SIXIN_1_POP_NUM) SIXIN_1,
+		   SUM(SIXIN_2_POP_NUM) SIXIN_2,
+		   SUM(SIXIN_3_POP_NUM) SIXIN_3,
+		   SUM(SIXIN_4_POP_NUM) SIXIN_4,
+		   SUM(SIXIN_5_POP_NUM) SIXIN_5,
+		   SUM(SIXIN_6_POP_NUM) SIXIN_6,
+		   SUM(SIXIN_OTHER_POP_NUM) SIXIN_7
+		from R2_DM_POOROBJ_POORTYPE_M
+		<where>
+			<include refid="stat_month_sql"/>
+			<include refid="level_sql"/>
+			<include refid="query_condition_sql"/>
+			AND HELP_P_PAC = #{helppac}
+		</where>
+		GROUP BY STAT_MONTH ) 
+		unpivot (u_value for u_type in (SIXIN_1, SIXIN_2, SIXIN_3,SIXIN_4,SIXIN_5,SIXIN_6,SIXIN_7))
+		ORDER BY STAT_MONTH,U_TYPE
+	</select>
+	
+	<!-- 贫困人口趋势终止户 -->
+	<select id="queryThePoorTrendEndChart"  parameterType="hashmap" resultType="hashmap">
+			SELECT 
+				 TO_CHAR(TO_DATE( STAT_MONTH,'YYYYMM'),'YYYY.MM') S_NAME,
+				 CASE WHEN u_type='SEVENOUT_1' THEN '"七不进"之一'
+				      WHEN u_type='SEVENOUT_2' THEN '"七不进"之二'
+				      WHEN u_type='SEVENOUT_3' THEN '"七不进"之三'
+				      WHEN u_type='SEVENOUT_4' THEN '"七不进"之四'
+				      WHEN u_type='SEVENOUT_5' THEN '"七不进"之五'
+				      WHEN u_type='SEVENOUT_6' THEN '"七不进"之六'
+				      WHEN u_type='SEVENOUT_7' THEN '"七不进"之七'
+				   ELSE '其它' END S_GROUP,
+				 u_value as S_VALUE
+				FROM (select 
+				   STAT_MONTH,
+				   SUM(SEVENOUT_1_POP_NUM) SEVENOUT_1,
+				   SUM(SEVENOUT_2_POP_NUM) SEVENOUT_2,
+				   SUM(SEVENOUT_3_POP_NUM) SEVENOUT_3,
+				   SUM(SEVENOUT_4_POP_NUM) SEVENOUT_4,
+				   SUM(SEVENOUT_5_POP_NUM) SEVENOUT_5,
+				   SUM(SEVENOUT_6_POP_NUM) SEVENOUT_6,
+				   SUM(SEVENOUT_7_POP_NUM) SEVENOUT_7,
+				   SUM(SEVENOUT_OTHER_POP_NUM) SEVENOUT_8
+				from R2_DM_POOROBJ_POORTYPE_M
+				<where>
+					<include refid="stat_month_sql"/>
+					<include refid="level_sql"/>
+					<include refid="query_condition_sql"/>
+					AND HELP_P_PAC = #{helppac}
+				</where>
+				GROUP BY STAT_MONTH ) 
+				unpivot (u_value for u_type in (SEVENOUT_1, SEVENOUT_2, SEVENOUT_3,SEVENOUT_4,SEVENOUT_5,SEVENOUT_6,SEVENOUT_7,SEVENOUT_8))
+				ORDER BY STAT_MONTH,U_TYPE
+	</select>
+	
+	<!-- 贫困人口趋势自然增长# -->
+	<select id="queryThePoorTrendNAddChart"  parameterType="hashmap" resultType="hashmap">
+				SELECT 
+				 TO_CHAR(TO_DATE( STAT_MONTH,'YYYYMM'),'YYYY.MM') S_NAME,
+				 CASE WHEN u_type='NEW_R_1' THEN '新生儿'
+				      WHEN u_type='NEW_R_2' THEN '嫁入'
+				      WHEN u_type='NEW_R_3' THEN '错误'
+				   ELSE '其它' END S_GROUP,
+				 u_value as S_VALUE
+				FROM (select 
+				   STAT_MONTH,
+				   SUM(NEWBORN_NEW_POP_NUM) NEW_R_1,
+				   SUM(MARRY_NEW_POP_NUM) NEW_R_2,
+				   SUM(ERROR_NEW_POP_NUM) NEW_R_3,
+				   SUM(OTHER_NEW_POP_NUM) NEW_R_4
+				from R2_DM_POOROBJ_POORTYPE_M
+				<where>
+					<include refid="stat_month_sql"/>
+					<include refid="level_sql"/>
+					<include refid="query_condition_sql"/>
+					AND HELP_P_PAC = #{helppac}
+				</where>
+				GROUP BY STAT_MONTH ) 
+				unpivot (u_value for u_type in (NEW_R_1, NEW_R_2, NEW_R_3, NEW_R_4))
+				ORDER BY STAT_MONTH,U_TYPE
+	</select>
+	
+	<!-- 贫困人口趋势自然减少# -->
+	<select id="queryThePoorTrendNReduceChart"  parameterType="hashmap" resultType="hashmap">
+		SELECT 
+			 TO_CHAR(TO_DATE( STAT_MONTH,'YYYYMM'),'YYYY.MM') S_NAME,
+			 CASE WHEN u_type='OUT_R_1' THEN '死亡'
+			      WHEN u_type='OUT_R_2' THEN '嫁出'
+			      WHEN u_type='OUT_R_3' THEN '错误'
+			   ELSE '其它' END S_GROUP,
+			 u_value as S_VALUE
+			FROM (select 
+			   STAT_MONTH,
+			   SUM(DEAD_OUT_POP_NUM) OUT_R_1,
+			   SUM(MARRY_OUT_POP_NUM) OUT_R_2,
+			   SUM(ERROR_OUT_POP_NUM) OUT_R_3,
+			   SUM(OTHER_OUT_POP_NUM) OUT_R_4
+			from R2_DM_POOROBJ_POORTYPE_M
+			<where>
+				<include refid="stat_month_sql"/>
+				<include refid="level_sql"/>
+				<include refid="query_condition_sql"/>
+				AND HELP_P_PAC = #{helppac}
+			</where>
+			GROUP BY STAT_MONTH ) 
+			unpivot (u_value for u_type in (OUT_R_1, OUT_R_2, OUT_R_3, OUT_R_4))
+			ORDER BY STAT_MONTH,U_TYPE
+	</select>
+	
+	<!-- 统计表-自然增减 合计-->
+	<select id="queryThePoorTrendNAddTableC" parameterType="hashmap" resultType="hashmap">
+			SELECT 
+			<include refid="count_area_sql"/>
+			<!-- 自然增加合计  -->
+			COUNT(DISTINCT CASE WHEN POP_CHANGES = 1 THEN FAM_ID END) A3,
+			COUNT(CASE WHEN POP_CHANGES = 1 THEN POP_ID END) A4, 
+			<!-- 新生儿 -->
+			COUNT(DISTINCT CASE  WHEN POP_CHANGES = 1 AND CHANGES_TYPE = 1 THEN FAM_ID END) A5,
+			COUNT(CASE WHEN POP_CHANGES = 1 AND CHANGES_TYPE = 1 THEN POP_ID END) A6,
+			<!-- 嫁入 -->
+			COUNT(DISTINCT CASE  WHEN POP_CHANGES = 1 AND CHANGES_TYPE = 2 THEN FAM_ID END) A7,
+			COUNT(CASE WHEN POP_CHANGES = 1 AND CHANGES_TYPE = 2 THEN POP_ID END) A8,
+			<!-- 错误 -->
+			COUNT(DISTINCT CASE  WHEN POP_CHANGES = 1 AND CHANGES_TYPE = 3 THEN FAM_ID END) A9,
+			COUNT(CASE WHEN POP_CHANGES = 1 AND CHANGES_TYPE = 3 THEN POP_ID END) A10,
+			<!-- 其他 -->
+			COUNT(DISTINCT CASE  WHEN POP_CHANGES = 1 AND CHANGES_TYPE = 4 THEN FAM_ID END)  A11,
+			COUNT(CASE WHEN POP_CHANGES = 1 AND CHANGES_TYPE = 4 THEN POP_ID END) A12,
+			
+			<!-- 自然减少合计 -->
+			COUNT(DISTINCT CASE WHEN POP_CHANGES = 2 THEN FAM_ID END) A13,
+			COUNT(CASE WHEN POP_CHANGES = 2 THEN POP_ID END) A14, 
+			
+			<!-- 死亡  -->
+			COUNT(DISTINCT CASE  WHEN POP_CHANGES = 2 AND CHANGES_TYPE = 6 THEN FAM_ID END) A15,
+			COUNT(CASE WHEN POP_CHANGES = 2 AND CHANGES_TYPE = 6 THEN POP_ID END) A16,
+			<!-- 嫁出 -->
+			COUNT(DISTINCT CASE  WHEN POP_CHANGES = 2 AND CHANGES_TYPE = 7 THEN FAM_ID END) A17,
+			COUNT(CASE WHEN POP_CHANGES = 2 AND CHANGES_TYPE = 7 THEN POP_ID END) A18,
+			<!-- 错误  -->
+			COUNT(DISTINCT CASE  WHEN POP_CHANGES = 2 AND CHANGES_TYPE = 8 THEN FAM_ID END) A19,
+			COUNT(CASE WHEN POP_CHANGES = 2 AND CHANGES_TYPE = 8 THEN POP_ID END) A20,
+			<!-- 其他  -->
+			COUNT(DISTINCT CASE  WHEN POP_CHANGES = 2 AND CHANGES_TYPE = 9 THEN FAM_ID END) A21,
+			COUNT(CASE WHEN POP_CHANGES = 2 AND CHANGES_TYPE = 9 THEN POP_ID END) A22
+			
+			FROM (SELECT * from R_DW_POOROBJ_POP_Y
+			<where>
+				<include refid="stat_year_sql"/>
+				<include refid="year_sql"/>
+				<include refid="level_sql"/>
+				<include refid="query_condition_sql"/>
+			</where>) t1
+				INNER JOIN (
+				 select
+				 COUNTRY_ID 
+				 from DIM_HELP_AREA_MAP  
+				 WHERE help_p_pac=#{helppac} 
+				 ) t2 ON (t1.country_pac=t2.COUNTRY_ID)		
+			GROUP BY <include refid="count_group_by_sql"/>
+	</select>
+	
+	<!-- 统计表-自然增减 -->
+	<select id="queryThePoorTrendNAddTable" parameterType="hashmap" resultType="hashmap">
+	
+			SELECT A.*,B.SORT FROM
+			(SELECT 
+			<include refid="level_area_sql"/>
+			<!-- 自然增加合计  -->
+			COUNT(DISTINCT CASE WHEN POP_CHANGES = 1 THEN FAM_ID END) A3,
+			COUNT(CASE WHEN POP_CHANGES = 1 THEN POP_ID END) A4, 
+			<!-- 新生儿 -->
+			COUNT(DISTINCT CASE  WHEN POP_CHANGES = 1 AND CHANGES_TYPE = 1 THEN FAM_ID END) A5,
+			COUNT(CASE WHEN POP_CHANGES = 1 AND CHANGES_TYPE = 1 THEN POP_ID END) A6,
+			<!-- 嫁入 -->
+			COUNT(DISTINCT CASE  WHEN POP_CHANGES = 1 AND CHANGES_TYPE = 2 THEN FAM_ID END) A7,
+			COUNT(CASE WHEN POP_CHANGES = 1 AND CHANGES_TYPE = 2 THEN POP_ID END) A8,
+			<!-- 错误 -->
+			COUNT(DISTINCT CASE  WHEN POP_CHANGES = 1 AND CHANGES_TYPE = 3 THEN FAM_ID END) A9,
+			COUNT(CASE WHEN POP_CHANGES = 1 AND CHANGES_TYPE = 3 THEN POP_ID END) A10,
+			<!-- 其他 -->
+			COUNT(DISTINCT CASE  WHEN POP_CHANGES = 1 AND CHANGES_TYPE = 4 THEN FAM_ID END)  A11,
+			COUNT(CASE WHEN POP_CHANGES = 1 AND CHANGES_TYPE = 4 THEN POP_ID END) A12,
+			
+			<!-- 自然减少合计 -->
+			COUNT(DISTINCT CASE WHEN POP_CHANGES = 2 THEN FAM_ID END) A13,
+			COUNT(CASE WHEN POP_CHANGES = 2 THEN POP_ID END) A14, 
+			
+			<!-- 死亡  -->
+			COUNT(DISTINCT CASE  WHEN POP_CHANGES = 2 AND CHANGES_TYPE = 6 THEN FAM_ID END) A15,
+			COUNT(CASE WHEN POP_CHANGES = 2 AND CHANGES_TYPE = 6 THEN POP_ID END) A16,
+			<!-- 嫁出 -->
+			COUNT(DISTINCT CASE  WHEN POP_CHANGES = 2 AND CHANGES_TYPE = 7 THEN FAM_ID END) A17,
+			COUNT(CASE WHEN POP_CHANGES = 2 AND CHANGES_TYPE = 7 THEN POP_ID END) A18,
+			<!-- 错误  -->
+			COUNT(DISTINCT CASE  WHEN POP_CHANGES = 2 AND CHANGES_TYPE = 8 THEN FAM_ID END) A19,
+			COUNT(CASE WHEN POP_CHANGES = 2 AND CHANGES_TYPE = 8 THEN POP_ID END) A20,
+			<!-- 其他  -->
+			COUNT(DISTINCT CASE  WHEN POP_CHANGES = 2 AND CHANGES_TYPE = 9 THEN FAM_ID END) A21,
+			COUNT(CASE WHEN POP_CHANGES = 2 AND CHANGES_TYPE = 9 THEN POP_ID END) A22
+			
+			FROM (SELECT * from R_DW_POOROBJ_POP_Y
+			<where>
+				<include refid="stat_year_sql"/>
+				<include refid="year_sql"/>
+				<include refid="level_sql"/>
+				<include refid="query_condition_sql"/>
+			</where>) t1
+				INNER JOIN (
+				 select
+				 COUNTRY_ID 
+				 from DIM_HELP_AREA_MAP  
+				 WHERE help_p_pac=#{helppac} 
+				 ) t2 ON (t1.country_pac=t2.COUNTRY_ID)		
+			GROUP BY <include refid="group_by_sql"/>) A
+			 <include refid="dim_area_sql"/>
+	
+	</select>
+	
+	<!-- 统计表-终止-合计 -->
+	<select id="queryThePoorTrendEndTableC" parameterType="hashmap" resultType="hashmap">
+			SELECT 
+			<include refid="count_area_sql"/>
+			<![CDATA[COUNT(CASE WHEN TERMINATION_REASON >=70 AND TERMINATION_REASON <=77 THEN FAM_ID END) A2,]]>
+			<![CDATA[SUM(CASE WHEN TERMINATION_REASON >=70 AND TERMINATION_REASON <=77 THEN TERMINATION_POP ELSE 0 END) A3,]]>
+			
+			COUNT(CASE WHEN TERMINATION_REASON =71 THEN FAM_ID END) A4,
+			SUM(CASE WHEN TERMINATION_REASON =71 THEN  TERMINATION_POP END) A5,
+			
+			COUNT(CASE WHEN TERMINATION_REASON =72 THEN FAM_ID END) A6,
+			SUM(CASE WHEN TERMINATION_REASON =72 THEN  TERMINATION_POP END) A7,
+			
+			COUNT(CASE WHEN TERMINATION_REASON =73 THEN FAM_ID END) A8,
+			SUM(CASE WHEN TERMINATION_REASON =73 THEN  TERMINATION_POP END) A9,
+			
+			COUNT(CASE WHEN TERMINATION_REASON =74 THEN FAM_ID END) A10,
+			SUM(CASE WHEN TERMINATION_REASON =74 THEN  TERMINATION_POP END) A11,
+			
+			COUNT(CASE WHEN TERMINATION_REASON =75 THEN FAM_ID END) A12,
+			SUM(CASE WHEN TERMINATION_REASON =75 THEN  TERMINATION_POP END) A13,
+			
+			COUNT(CASE WHEN TERMINATION_REASON =76 THEN FAM_ID END) A14,
+			SUM(CASE WHEN TERMINATION_REASON =76 THEN  TERMINATION_POP END) A15,
+					
+			COUNT(CASE WHEN TERMINATION_REASON =77 THEN FAM_ID END) A16,
+			SUM(CASE WHEN TERMINATION_REASON =77 THEN  TERMINATION_POP END) A17,
+			
+			COUNT(CASE WHEN TERMINATION_REASON =70 THEN FAM_ID END) A18,
+			SUM(CASE WHEN TERMINATION_REASON =70 THEN  TERMINATION_POP END) A19
+			FROM (SELECT * from R_DW_POOROBJ_FAM_Y
+			<where>
+				<include refid="stat_year_sql"/>
+				<include refid="level_sql"/>
+				<include refid="query_condition_sql"/>
+				AND TERMINATION_YEAR = #{year}
+				<![CDATA[	AND TERMINATION_REASON >=70 AND TERMINATION_REASON<=77]]>
+			</where>) t1
+				INNER JOIN (
+				 select
+				 COUNTRY_ID 
+				 from DIM_HELP_AREA_MAP  
+				 WHERE help_p_pac=#{helppac} 
+				 ) t2 ON (t1.country_pac=t2.COUNTRY_ID)		
+			GROUP BY <include refid="count_group_by_sql"/>
+	</select>
+	
+	<!-- 统计表-终止 -->
+	<select id="queryThePoorTrendEndTable" parameterType="hashmap" resultType="hashmap">
+	
+			
+			SELECT A.*,B.SORT FROM
+			(SELECT 
+			<include refid="level_area_sql"/>
+			<![CDATA[COUNT(CASE WHEN TERMINATION_REASON >=70 AND TERMINATION_REASON <=77 THEN FAM_ID END) A3,]]>
+			<![CDATA[SUM(CASE WHEN TERMINATION_REASON >=70 AND TERMINATION_REASON <=77 THEN TERMINATION_POP ELSE 0 END) A4,]]>
+			
+			COUNT(CASE WHEN TERMINATION_REASON =71 THEN FAM_ID END) A5,
+			SUM(CASE WHEN TERMINATION_REASON =71 THEN  TERMINATION_POP END) A6,
+			
+			COUNT(CASE WHEN TERMINATION_REASON =72 THEN FAM_ID END) A7,
+			SUM(CASE WHEN TERMINATION_REASON =72 THEN  TERMINATION_POP END) A8,
+			
+			COUNT(CASE WHEN TERMINATION_REASON =73 THEN FAM_ID END) A9,
+			SUM(CASE WHEN TERMINATION_REASON =73 THEN  TERMINATION_POP END) A10,
+			
+			COUNT(CASE WHEN TERMINATION_REASON =74 THEN FAM_ID END) A11,
+			SUM(CASE WHEN TERMINATION_REASON =74 THEN  TERMINATION_POP END) A12,
+			
+			COUNT(CASE WHEN TERMINATION_REASON =75 THEN FAM_ID END) A13,
+			SUM(CASE WHEN TERMINATION_REASON =75 THEN  TERMINATION_POP END) A14,
+			
+			COUNT(CASE WHEN TERMINATION_REASON =76 THEN FAM_ID END) A15,
+			SUM(CASE WHEN TERMINATION_REASON =76 THEN  TERMINATION_POP END) A16,
+					
+			COUNT(CASE WHEN TERMINATION_REASON =77 THEN FAM_ID END) A17,
+			SUM(CASE WHEN TERMINATION_REASON =77 THEN  TERMINATION_POP END) A18,
+			
+			COUNT(CASE WHEN TERMINATION_REASON =70 THEN FAM_ID END) A19,
+			SUM(CASE WHEN TERMINATION_REASON =70 THEN  TERMINATION_POP END) A20
+			FROM (SELECT * from R_DW_POOROBJ_FAM_Y
+			<where>
+				<include refid="stat_year_sql"/>
+				<include refid="level_sql"/>
+				<include refid="query_condition_sql"/>
+				<![CDATA[	AND TERMINATION_REASON >=70 AND TERMINATION_REASON<=77]]>
+				AND TERMINATION_YEAR = #{year}
+			</where>) t1
+				INNER JOIN (
+				 select
+				 COUNTRY_ID 
+				 from DIM_HELP_AREA_MAP  
+				 WHERE help_p_pac=#{helppac} 
+				 ) t2 ON (t1.country_pac=t2.COUNTRY_ID)	
+			GROUP BY <include refid="group_by_sql"/>) A
+			 <include refid="dim_area_sql"/>
+		
+	</select>
+	
+
+	
+	<!-- 统计表-新增 合计-->
+	<select id="queryThePoorTrendAddTableC"  parameterType="hashmap" resultType="hashmap">
+	
+		SELECT 
+			<include refid="count_area_sql"/>
+		    <![CDATA[COUNT(CASE WHEN NEW_REASON >=60 AND NEW_REASON <=66 THEN FAM_ID END) A2,]]>
+			<![CDATA[SUM(CASE WHEN NEW_REASON >=60 AND NEW_REASON <=66 THEN NEW_POP ELSE 0 END) A3,]]>
+			
+			COUNT(CASE WHEN NEW_REASON =61 THEN FAM_ID END) A4,
+			SUM(CASE WHEN NEW_REASON =61 THEN  NEW_POP ELSE 0 END) A5,
+			
+			COUNT(CASE WHEN NEW_REASON =62 THEN FAM_ID END) A6,
+			SUM(CASE WHEN NEW_REASON =62 THEN  NEW_POP ELSE 0 END) A7,
+			
+			COUNT(CASE WHEN NEW_REASON =63 THEN FAM_ID END) A8,
+			SUM(CASE WHEN NEW_REASON =63 THEN  NEW_POP ELSE 0 END) A9,
+			
+			COUNT(CASE WHEN NEW_REASON =64 THEN FAM_ID END) A10,
+			SUM(CASE WHEN NEW_REASON =64 THEN  NEW_POP ELSE 0 END) A11,
+			
+			COUNT(CASE WHEN NEW_REASON =65 THEN FAM_ID END) A12,
+			SUM(CASE WHEN NEW_REASON =65 THEN  NEW_POP ELSE 0 END) A13,
+			
+			COUNT(CASE WHEN NEW_REASON =66 THEN FAM_ID END) A14,
+			SUM(CASE WHEN NEW_REASON =66 THEN  NEW_POP ELSE 0 END) A15,
+					
+			COUNT(CASE WHEN NEW_REASON =60 THEN FAM_ID END) A16,
+			SUM(CASE WHEN NEW_REASON =60 THEN  NEW_POP ELSE 0 END) A17
+			
+			FROM (SELECT * from R_DW_POOROBJ_FAM_Y
+			<where>
+				<include refid="stat_year_sql"/>
+				<include refid="level_sql"/>
+				<include refid="query_condition_sql"/>
+				<![CDATA[	AND NEW_REASON >=60 AND NEW_REASON<=66]]>
+			</where>) t1
+				INNER JOIN (
+				 select
+				 COUNTRY_ID 
+				 from DIM_HELP_AREA_MAP  
+				 WHERE help_p_pac=#{helppac} 
+				 ) t2 ON (t1.country_pac=t2.COUNTRY_ID)	
+			GROUP BY <include refid="count_group_by_sql"/>
+	
+	</select>
+	
+	<!-- 统计表-新增 -->
+	<select id="queryThePoorTrendAddTable"  parameterType="hashmap" resultType="hashmap">
+	
+			SELECT A.*,B.SORT FROM
+			(SELECT 
+			<include refid="level_area_sql"/>
+			<![CDATA[COUNT(CASE WHEN NEW_REASON >=60 AND NEW_REASON <=66 THEN FAM_ID END) A3,]]>
+			<![CDATA[SUM(CASE WHEN NEW_REASON >=60 AND NEW_REASON <=66 THEN NEW_POP ELSE 0 END) A4,]]>
+			
+			COUNT(CASE WHEN NEW_REASON =61 THEN FAM_ID END) A5,
+			SUM(CASE WHEN NEW_REASON =61 THEN  NEW_POP ELSE 0 END) A6,
+			
+			COUNT(CASE WHEN NEW_REASON =62 THEN FAM_ID END) A7,
+			SUM(CASE WHEN NEW_REASON =62 THEN  NEW_POP ELSE 0 END) A8,
+			
+			COUNT(CASE WHEN NEW_REASON =63 THEN FAM_ID END) A9,
+			SUM(CASE WHEN NEW_REASON =63 THEN  NEW_POP ELSE 0 END) A10,
+			
+			COUNT(CASE WHEN NEW_REASON =64 THEN FAM_ID END) A11,
+			SUM(CASE WHEN NEW_REASON =64 THEN  NEW_POP ELSE 0 END) A12,
+			
+			COUNT(CASE WHEN NEW_REASON =65 THEN FAM_ID END) A13,
+			SUM(CASE WHEN NEW_REASON =65 THEN  NEW_POP ELSE 0 END) A14,
+			
+			COUNT(CASE WHEN NEW_REASON =66 THEN FAM_ID END) A15,
+			SUM(CASE WHEN NEW_REASON =66 THEN  NEW_POP ELSE 0 END) A16,
+					
+			COUNT(CASE WHEN NEW_REASON =60 THEN FAM_ID END) A17,
+			SUM(CASE WHEN NEW_REASON =60 THEN  NEW_POP ELSE 0 END) A18
+			
+			FROM (SELECT * from R_DW_POOROBJ_FAM_Y
+			<where>
+				<include refid="stat_year_sql"/>
+				<include refid="level_sql"/>
+				<include refid="query_condition_sql"/>
+				<![CDATA[	AND NEW_REASON >=60 AND NEW_REASON<=66]]>
+			</where>) t1
+				INNER JOIN (
+				 select
+				 COUNTRY_ID 
+				 from DIM_HELP_AREA_MAP  
+				 WHERE help_p_pac=#{helppac} 
+				 ) t2 ON (t1.country_pac=t2.COUNTRY_ID)	
+			GROUP BY <include refid="group_by_sql"/>) A
+			 <include refid="dim_area_sql"/>
+			
+	</select>
+	
+	<!--变动分析/管理 统计表-合计 # -->
+	<select id="queryThePoorTrendAllTableC"  parameterType="hashmap" resultType="hashmap">
+			SELECT 
+			R1.*
+				<!-- 准确率 -->
+			,CASE WHEN A3=0 THEN '0.00%' ELSE  TO_CHAR(TRUNC((A3-A7)/A3*100,2),'9999990.00') || '%' END A19
+			,CASE WHEN A4=0 THEN '0.00%' ELSE  TO_CHAR(TRUNC((A4-A8)/A4*100,2),'9999990.00') || '%' END A20
+			FROM
+			(SELECT
+			<include refid="count_area_sql"/>
+			 <!-- 年初贫困户 --> 
+			COUNT( DISTINCT CASE WHEN IS_BEGINNING = 1 THEN FAM_ID END) A3,  
+			SUM(CASE WHEN IS_BEGINNING = 1 THEN NVL(BEGINING_POP,0) ELSE 0 END) A4, 
+			
+			COUNT(CASE WHEN IS_NEW = 1 THEN FAM_ID END)  A5, <!--  新增 -->
+			SUM(CASE WHEN  IS_NEW = 1  THEN NVL(NEW_POP,0) ELSE 0 END) A6,
+			
+			COUNT(CASE WHEN IS_TERMINATION = 1 AND  TERMINATION_YEAR  = to_number(#{year}) THEN FAM_ID END )  A7,  <!-- 终止 -->
+			SUM(CASE WHEN IS_TERMINATION = 1 AND TERMINATION_YEAR  = to_number(#{year}) THEN NVL(TERMINATION_POP,0)ELSE 0 END) A8,
+			
+			COUNT(CASE WHEN IS_REVOKED = 1  AND REVOKED_YEAR = to_number(#{year}) THEN FAM_ID END )  A9, <!-- 销户 -->
+			SUM(CASE WHEN  IS_REVOKED = 1   AND  REVOKED_YEAR = to_number(#{year}) THEN NVL(REVOKED_POP,0)ELSE 0 END) A10,
+			
+			COUNT(CASE WHEN IS_SPLIT = 1  THEN FAM_ID END )  A11,  <!-- 拆户  -->
+			SUM(CASE WHEN  IS_SPLIT = 1  THEN NVL(SPLIT_POP,0)ELSE 0 END) A12,
+			
+			COUNT(CASE WHEN IS_MERGE = 1 AND MERGE_YEAR = to_number(#{year})THEN FAM_ID END )  A13,  <!-- 并户 -->
+			SUM(CASE WHEN IS_MERGE = 1  AND MERGE_YEAR = to_number(#{year}) THEN NVL(MERGE_POP,0)ELSE 0 END) A14,
+			
+			SUM(CASE WHEN ACC_YEAR = to_number(#{year})	THEN NVL(ADD_POP,0)ELSE 0 END) A15, <!-- 自然增 -->
+			SUM(CASE WHEN ACC_YEAR = to_number(#{year})	THEN NVL(CUT_POP,0) ELSE 0 END) A16, <!-- 自然少 -->
+			   
+			<!-- 贫困户总数 -->
+			COUNT(CASE WHEN  IS_CURRENT = 1 AND ACC_YEAR = to_number(#{year})  THEN FAM_ID END)  A17,
+			SUM(CASE WHEN  IS_CURRENT = 1  AND ACC_YEAR = to_number(#{year})  THEN POP_NUMBER ELSE 0   END) A18
+			
+			FROM (SELECT * from R_DW_POOROBJ_FAM_Y
+				
+			<where>
+				<include refid="stat_year_sql"/>
+				<include refid="level_sql"/>
+				<include refid="query_condition_sql"/>
+				<choose>
+					<!-- 累计 -->
+					<when test=" 'all' == status_attribute">
+							AND ACC_YEAR = #{year} 
+					</when>
+					<!-- 当前 -->
+					<when test=" 'poor_cur' == status_attribute">
+							AND IS_CURRENT = 1 
+					</when>
+				</choose>
+			</where>) t1
+				INNER JOIN (
+				 select
+				 COUNTRY_ID 
+				 from DIM_HELP_AREA_MAP  
+				 WHERE help_p_pac=#{helppac} 
+				 ) t2 ON (t1.country_pac=t2.COUNTRY_ID)		
+			 GROUP BY <include refid="count_group_by_sql"/>
+			)  R1
+	</select>
+	<!--变动分析/管理 统计表-全部 # -->
+	<select id="queryThePoorTrendAllTable"  parameterType="hashmap" resultType="hashmap">
+		
+			SELECT 
+			A.*
+			<!-- 准确率 -->
+			,CASE WHEN A3=0 THEN '0.00%' ELSE  TO_CHAR(TRUNC((A3-A7)/A3*100,2),'9999990.00') || '%' END A19
+			,CASE WHEN A4=0 THEN '0.00%' ELSE  TO_CHAR(TRUNC((A4-A8)/A4*100,2),'9999990.00') || '%' END A20
+			FROM
+			(SELECT
+			<include refid="level_area_sql"/>
+			 <!-- 年初贫困户 --> 
+			COUNT( DISTINCT CASE WHEN IS_BEGINNING = 1 THEN FAM_ID END) A3,  
+			SUM(CASE WHEN IS_BEGINNING = 1 THEN NVL(BEGINING_POP,0) ELSE 0 END) A4, 
+			
+			COUNT(CASE WHEN IS_NEW = 1   THEN FAM_ID END)  A5, <!--  新增 -->
+			SUM(CASE WHEN  IS_NEW = 1 THEN NVL(NEW_POP,0) ELSE 0 END) A6,
+			
+			COUNT(CASE WHEN IS_TERMINATION = 1 AND  TERMINATION_YEAR  = to_number(#{year}) THEN FAM_ID END )  A7,  <!-- 终止 -->
+			SUM(CASE WHEN IS_TERMINATION = 1 AND TERMINATION_YEAR  = to_number(#{year}) THEN NVL(TERMINATION_POP,0)ELSE 0 END) A8,
+			
+			COUNT(CASE WHEN IS_REVOKED = 1  AND REVOKED_YEAR = to_number(#{year}) THEN FAM_ID END )  A9, <!-- 销户 -->
+			SUM(CASE WHEN  IS_REVOKED = 1   AND  REVOKED_YEAR = to_number(#{year}) THEN NVL(REVOKED_POP,0)ELSE 0 END) A10,
+			
+			COUNT(CASE WHEN IS_SPLIT = 1  THEN FAM_ID END )  A11,  <!-- 拆户  -->
+			SUM(CASE WHEN  IS_SPLIT = 1   THEN NVL(SPLIT_POP,0)ELSE 0 END) A12,
+			
+			COUNT(CASE WHEN IS_MERGE = 1 AND MERGE_YEAR = to_number(#{year})THEN FAM_ID END )  A13,  <!-- 并户 -->
+			SUM(CASE WHEN IS_MERGE = 1  AND MERGE_YEAR = to_number(#{year}) THEN NVL(MERGE_POP,0)ELSE 0 END) A14,
+			
+			SUM(CASE WHEN ACC_YEAR = to_number(#{year})	THEN NVL(ADD_POP,0)ELSE 0 END) A15, <!-- 自然增 -->
+			SUM(CASE WHEN ACC_YEAR = to_number(#{year})	THEN NVL(CUT_POP,0) ELSE 0 END) A16, <!-- 自然少 -->
+			   
+			<!-- 贫困户总数 -->
+			COUNT(CASE WHEN  IS_CURRENT = 1 AND ACC_YEAR = to_number(#{year})  THEN FAM_ID END)  A17,
+			SUM(CASE WHEN  IS_CURRENT = 1  AND ACC_YEAR = to_number(#{year})  THEN POP_NUMBER ELSE 0   END) A18
+				
+			FROM (SELECT * from R_DW_POOROBJ_FAM_Y  
+			<where>
+				<include refid="stat_year_sql"/>
+				<include refid="level_sql"/>
+				<include refid="query_condition_sql"/>
+				<choose>
+					<!-- 累计 -->
+					<when test=" 'all' == status_attribute">
+							AND ACC_YEAR = #{year} 
+					</when>
+					<!-- 当前 -->
+					<when test=" 'poor_cur' == status_attribute">
+							AND IS_CURRENT = 1 
+					</when>
+				</choose>
+			</where>) t1
+				INNER JOIN (
+				 select
+				 COUNTRY_ID 
+				 from DIM_HELP_AREA_MAP  
+				 WHERE help_p_pac=#{helppac} 
+				 ) t2 ON (t1.country_pac=t2.COUNTRY_ID)		
+			GROUP BY <include refid="group_by_sql"/>) A
+			 <include refid="dim_area_sql"/>
+	</select>
+	
+	<!--扶贫对象明细  -->
+	<select id="queryObjectDetail"  parameterType="hashmap" resultType="hashmap">
+			select * from(
+			SELECT 
+			t1.*,t2.*,ROWNUM RM
+			FROM(
+			SELECT 
+			FAM_ID as S_ID,
+			country_pac,
+			FAM_ID A6,
+			FAM_NAME A7,
+			STATUS_DESC A8,
+			ADD_POP_NAMES  A9,
+			CUT_POP_NAMES  A10 
+			FROM R_DW_POOROBJ_FAM_Y
+			<where>
+				<include refid="stat_year_sql"/>
+				<include refid="level_sql"/>
+				<include refid="query_condition_sql"/>
+			</where>
+			
+			) t1
+				INNER JOIN (
+				 select CITY_NAME_S A2 
+				 ,COUNTY_NAME_S A3 
+				 ,TOWN_NAME_S A4 
+				 ,COUNTRY_NAME_S A5
+				 ,COUNTRY_ID 
+				 from DIM_HELP_AREA_MAP  
+				 WHERE help_p_pac=#{helppac} 
+				 ) t2 ON (t1.country_pac=t2.COUNTRY_ID)
+			) 
+			<if test="page !=null">
+					WHERE RM BETWEEN #{pageSize}*(#{page}-1)+1 AND #{pageSize}  * #{page}
+			</if>				
+	</select>
+	
+	<select id="queryObjectDetailCount"  parameterType="hashmap" resultType="long">
+			SELECT count(1) 
+			FROM (SELECT * from  R_DW_POOROBJ_FAM_Y
+			<where>
+				<include refid="stat_year_sql"/>
+				<include refid="query_condition_sql"/>
+				<include refid="level_sql"/>
+			</where>) t1
+				INNER JOIN (
+				 select
+				 COUNTRY_ID 
+				 from DIM_HELP_AREA_MAP  
+				 WHERE help_p_pac=#{helppac} 
+				 ) t2 ON (t1.country_pac=t2.COUNTRY_ID)		
+	</select>	
+	
+	<!--贫困人口类型表 -->
+	<select id="queryPopType"  parameterType="hashmap" resultType="hashmap">
+			select
+			<include refid="level_area_sql"/>
+			COUNT(CASE WHEN  IS_CURRENT = 1  THEN FAM_ID END) A3
+			,SUM(CASE WHEN  IS_CURRENT = 1  THEN POP_NUMBER ELSE 0  END) A4
+			,COUNT(CASE WHEN  IS_CURRENT = 1 AND POOR_TYPE=1  THEN FAM_ID END) A5 --一般贫困户
+			,SUM(CASE WHEN  IS_CURRENT = 1  AND POOR_TYPE=1 THEN POP_NUMBER ELSE 0  END) A6
+			,COUNT(CASE WHEN  IS_CURRENT = 1 AND POOR_TYPE=2  THEN FAM_ID END) A7  --低保
+			,SUM(CASE WHEN  IS_CURRENT = 1  AND POOR_TYPE=2 THEN POP_NUMBER ELSE 0  END) A8
+			,COUNT(CASE WHEN  IS_CURRENT = 1 AND POOR_TYPE=3  THEN FAM_ID END) A9 -- 五保7
+			,SUM(CASE WHEN  IS_CURRENT = 1  AND POOR_TYPE=3 THEN POP_NUMBER ELSE 0  END) A10
+			,COUNT(CASE WHEN  IS_CURRENT = 1 AND POOR_TYPE=1  THEN FAM_ID END) A11 --未选择
+			,SUM(CASE WHEN  IS_CURRENT = 1  AND POOR_TYPE=1 THEN POP_NUMBER ELSE 0  END) A12
+			,COUNT(CASE WHEN  IS_CURRENT = 1 AND LABOR_TYPE=1  THEN FAM_ID END) A13 --有劳动能力
+			,SUM(CASE WHEN  IS_CURRENT = 1  AND LABOR_TYPE=1 THEN POP_NUMBER ELSE 0  END) A14
+			,COUNT(CASE WHEN  IS_CURRENT = 1 AND LABOR_TYPE=0  THEN FAM_ID END) A15 --无有劳动能力
+			,SUM(CASE WHEN  IS_CURRENT = 1  AND LABOR_TYPE=0 THEN POP_NUMBER ELSE 0  END) A16
+			
+			,COUNT(CASE WHEN  IS_CURRENT = 1 AND IS_DISABLED=1  THEN FAM_ID END) A17--残疾户
+			,SUM(CASE WHEN  IS_CURRENT = 1  AND IS_DISABLED=1 THEN POP_NUMBER ELSE 0  END) A18
+			,COUNT(CASE WHEN  IS_CURRENT = 1 AND IS_RESERVOIR_IMMIGRANTS=1  THEN FAM_ID END) A19--水库移民户
+			,SUM(CASE WHEN  IS_CURRENT = 1  AND IS_RESERVOIR_IMMIGRANTS=1 THEN POP_NUMBER ELSE 0  END) A20
+			
+			,COUNT(CASE WHEN  IS_CURRENT = 1 AND IS_OUT=1 THEN FAM_ID END) A21--脱贫户
+			,SUM(CASE WHEN  IS_CURRENT = 1  AND IS_OUT=1 THEN POP_NUMBER ELSE 0  END) A22
+			FROM (SELECT * from R_DW_POOROBJ_FAM_Y
+			<where>
+				<include refid="year_sql"/>
+				<include refid="level_sql"/>
+				<include refid="is_key_poverty"/>
+			</where>) t1
+				INNER JOIN (
+				 select
+				 COUNTRY_ID 
+				 from DIM_HELP_AREA_MAP  
+				 WHERE help_p_pac=#{helppac} 
+				 ) t2 ON (t1.country_pac=t2.COUNTRY_ID)	
+			GROUP BY <include refid="group_by_sql"/>
+	</select>
+	
+	<!--queryPopType总记录#  -->
+	<select id="queryPopTypeCount"  parameterType="hashmap" resultType="hashmap">
+		
+			
+			SELECT <include refid="count_pop_sql"/>
+			
+			COUNT(CASE WHEN  IS_CURRENT = 1  THEN FAM_ID END) B2
+			,SUM(CASE WHEN  IS_CURRENT = 1  THEN POP_NUMBER ELSE 0  END) B3
+			,COUNT(CASE WHEN  IS_CURRENT = 1 AND POOR_TYPE=1  THEN FAM_ID END) B4 --一般贫困户
+			,SUM(CASE WHEN  IS_CURRENT = 1  AND POOR_TYPE=1 THEN POP_NUMBER ELSE 0  END) B5
+			,COUNT(CASE WHEN  IS_CURRENT = 1 AND POOR_TYPE=2  THEN FAM_ID END) B6  --低保
+			,SUM(CASE WHEN  IS_CURRENT = 1  AND POOR_TYPE=2 THEN POP_NUMBER ELSE 0  END) B7
+			,COUNT(CASE WHEN  IS_CURRENT = 1 AND POOR_TYPE=3  THEN FAM_ID END) B8 -- 五保
+			,SUM(CASE WHEN  IS_CURRENT = 1  AND POOR_TYPE=3 THEN POP_NUMBER ELSE 0  END) B9
+			,COUNT(CASE WHEN  IS_CURRENT = 1 AND POOR_TYPE=1  THEN FAM_ID END) B10 --未选择
+			,SUM(CASE WHEN  IS_CURRENT = 1  AND POOR_TYPE=1 THEN POP_NUMBER ELSE 0  END) B11
+			,COUNT(CASE WHEN  IS_CURRENT = 1 AND LABOR_TYPE=1  THEN FAM_ID END) B12 --有劳动能力
+			,SUM(CASE WHEN  IS_CURRENT = 1  AND LABOR_TYPE=1 THEN POP_NUMBER ELSE 0  END) B13
+			,COUNT(CASE WHEN  IS_CURRENT = 1 AND LABOR_TYPE=0  THEN FAM_ID END) B14 --无有劳动能力
+			,SUM(CASE WHEN  IS_CURRENT = 1  AND LABOR_TYPE=0 THEN POP_NUMBER ELSE 0  END) B15
+			
+			,COUNT(CASE WHEN  IS_CURRENT = 1 AND IS_DISABLED=1  THEN FAM_ID END) B16 --残疾户
+			,SUM(CASE WHEN  IS_CURRENT = 1  AND IS_DISABLED=1 THEN POP_NUMBER ELSE 0  END) B17
+			,COUNT(CASE WHEN  IS_CURRENT = 1 AND IS_RESERVOIR_IMMIGRANTS=1  THEN FAM_ID END) B18 --水库移民户
+			,SUM(CASE WHEN  IS_CURRENT = 1  AND IS_RESERVOIR_IMMIGRANTS=1 THEN POP_NUMBER ELSE 0  END) B19
+			
+			,COUNT(CASE WHEN  IS_CURRENT = 1 AND IS_OUT=1 THEN FAM_ID END) B20 --脱贫户
+			,SUM(CASE WHEN  IS_CURRENT = 1  AND IS_OUT=1 THEN POP_NUMBER ELSE 0  END) B21
+			FROM (SELECT * from R_DW_POOROBJ_FAM_Y	
+			<where>
+					<include refid="year_sql"/>
+					<include refid="level_sql"/>
+					<include refid="is_key_poverty"/>
+			</where>) t1
+				INNER JOIN (
+				 select
+				 COUNTRY_ID 
+				 from DIM_HELP_AREA_MAP  
+				 WHERE help_p_pac=#{helppac} 
+				 ) t2 ON (t1.country_pac=t2.COUNTRY_ID)		
+		GROUP BY <include refid="count_group_by_sql"/>
+	</select>	
+	
+	<!--贫困人口汇总表 -->
+	<select id="queryPopDataCount"  parameterType="hashmap" resultType="hashmap">
+	select A1,A2,A3,A4,A5,A6,A7,A8,A9,
+	      NVL(A10,0) A10
+	      ,NVL(A11,0) A11
+	      ,NVL(A12,0) A12
+	      ,NVL(A13,0) A13
+	      ,NVL(A14,0) A14
+	      ,NVL(A15,0) A15
+	      ,NVL(A16,0) A16
+	      ,NVL(A17,0) A17
+	      ,NVL(A18,0) A18
+	      ,NVL(A19,0) A19
+	      ,NVL(A20,0) A20
+	      ,NVL(A21,0) A21
+	      ,NVL(A22,0) A22
+	      ,NVL(A23,0) A23
+	      ,NVL(A24,0) A24
+	      ,NVL(A25,0) A25
+	      ,NVL(A26,0) A26
+	      ,NVL(A27,0) A27
+	      ,NVL(A28,0) A28
+	      ,NVL(A29,0) A29
+	      ,NVL(A30,0) A30
+	      ,NVL(A31,0) A31
+	      ,NVL(A32,0) A32
+	      ,NVL(A33,0) A33
+	      ,NVL(A34,0) A34
+	      ,NVL(A35,0) A35
+	from 
+			(SELECT
+			ROWNUM A1 
+			,nvl(MAIN_HELP_UNITS,'-') A2
+			,CITY_NAME A3
+			,COUNTY_NAME A4
+			,TOWN_NAME A5
+			,COUNTRY_NAME A6
+			,nvl(FAMILY_COUNT,0) A7
+			,nvl(POP_COUNT,0) A8
+			,nvl(IN_YEAR_AVG_INCOME,0) A9
+			,b.*
+			FROM
+			R_DW_POOROBJ_COUNTRY_Y a
+			left join
+			(select
+			COUNTRY_PAC PAC
+			,COUNT(CASE WHEN  IS_CURRENT = 1  THEN FAM_ID END) A10
+			,SUM(CASE WHEN  IS_CURRENT = 1  THEN POP_NUMBER ELSE 0  END) A11
+			,COUNT(CASE WHEN  IS_CURRENT = 1 AND LABOR_TYPE=1  THEN FAM_ID END) A12 --有劳动能力
+			,SUM(CASE WHEN  IS_CURRENT = 1  AND LABOR_TYPE=1 THEN POP_NUMBER ELSE 0  END) A13
+			,COUNT(CASE WHEN  IS_CURRENT = 1 AND LABOR_TYPE=0  THEN FAM_ID END) A14 --无有劳动能力
+			,SUM(CASE WHEN  IS_CURRENT = 1  AND LABOR_TYPE=0 THEN POP_NUMBER ELSE 0  END) A15
+			
+			,COUNT(CASE WHEN  IS_CURRENT = 1 AND POOR_TYPE in (1,2,3)  THEN FAM_ID END) A16 --小计
+			,SUM(CASE WHEN  IS_CURRENT = 1  AND POOR_TYPE in (1,2,3) THEN POP_NUMBER ELSE 0  END) A17
+			,COUNT(CASE WHEN  IS_CURRENT = 1 AND POOR_TYPE=1  THEN FAM_ID END) A18 --一般贫困户
+			,SUM(CASE WHEN  IS_CURRENT = 1  AND POOR_TYPE=1 THEN POP_NUMBER ELSE 0  END) A19
+			,COUNT(CASE WHEN  IS_CURRENT = 1 AND POOR_TYPE=2  THEN FAM_ID END) A20  --低保
+			,SUM(CASE WHEN  IS_CURRENT = 1  AND POOR_TYPE=2 THEN POP_NUMBER ELSE 0  END) A21
+			,COUNT(CASE WHEN  IS_CURRENT = 1 AND POOR_TYPE=3  THEN FAM_ID END) A22 -- 五保
+			,SUM(CASE WHEN  IS_CURRENT = 1  AND POOR_TYPE=3 THEN POP_NUMBER ELSE 0  END) A23
+			,COUNT(CASE WHEN  IS_CURRENT = 1 AND POOR_TYPE=1  THEN FAM_ID END) A24 --未选择
+			,SUM(CASE WHEN  IS_CURRENT = 1  AND POOR_TYPE=1 THEN POP_NUMBER ELSE 0  END) A25
+			
+			,COUNT(CASE WHEN  LABOR_TYPE=0  THEN FAM_ID END) A26 --无有劳动能力
+			,SUM(CASE WHEN  LABOR_TYPE=0 THEN POP_NUMBER ELSE 0  END) A27
+			
+			,COUNT(CASE WHEN  IS_CURRENT = 1 AND IS_DISABLED=1  THEN FAM_ID END) A28 --残疾户
+			,SUM(CASE WHEN  IS_CURRENT = 1  AND IS_DISABLED=1 THEN POP_NUMBER ELSE 0  END) A29
+			,SUM(CASE WHEN  IS_CURRENT = 1  AND IS_DISABLED=1 THEN POP_NUMBER ELSE 0  END) A30 --为残疾的人口数
+			,COUNT(CASE WHEN  IS_CURRENT = 1 AND IS_RESERVOIR_IMMIGRANTS=1  THEN FAM_ID END) A31 --水库移民户
+			,SUM(CASE WHEN  IS_CURRENT = 1  AND POOR_MAIN_REASON='Y02' THEN POP_NUMBER ELSE 0  END) A32
+			,COUNT(CASE WHEN  IS_CURRENT = 1  AND IS_IMP_HOUSE=1 THEN FAM_ID ELSE null  END) A33 --住房改造
+			
+			,COUNT(CASE WHEN  IS_CURRENT = 1 AND IS_OUT=1 THEN FAM_ID END) A34 --脱贫户
+			,SUM(CASE WHEN  IS_CURRENT = 1  AND IS_OUT=1 THEN POP_NUMBER ELSE 0  END) A35
+			
+			from R_DW_POOROBJ_FAM_Y 
+			group by COUNTRY_PAC) b on(a.COUNTRY_PAC=b.PAC)
+			
+			<where>
+					<include refid="year_sql"/>
+					<include refid="level_sql"/>
+					<include refid="is_key_poverty"/>
+			</where>)
+	</select>	
+	
+	<!--贫困人口明细表 -->
+	<select id="queryPopDetail"  parameterType="hashmap" resultType="hashmap">
+			select
+			RF.TOWN_NAME A2
+			,RF.COUNTRY_NAME A3 --行政村
+			,RF.NATURAL_COUNTRY_NAME A4  --自然村
+			,DECODE(RF.IS_KEY_POVERTY,1,'是',0,'否','否')  A5
+			,REGISTER_YEAR  A6
+			,RF.FAM_NAME  A7
+			,RF.FAM_IDENTITY_NO  A8
+			,RF.TELEPHONE  A9
+			,RF.FAM_CODE A10
+			,RF.BANK_NAME A11
+			,RF.BANK_ACCOUNT A12
+			,RF.POP_NUMBER A13
+			,DECODE(RF.IS_NEW,1,'是',0,'否','否') A14
+			,DECODE(RF.IS_RESERVOIR_IMMIGRANTS,1,'是',0,'否','否') A15
+			,RF.POP_NUMBER-RF.DISABLED_POP A16 -- 有劳动能力人数
+			,RF.DISABLED_POP A17
+			,RF.IDENTITY_STANDARDS A18 --识别标准
+			,RF.POOR_TYPE A19 --贫困类型
+			,DECODE(RF.IS_MILITARY,1,'是',0,'否','否') A20
+			,DECODE(RF.IS_ONLY_CHILD,1,'是',0,'否','否') A21
+			,DECODE(RF.IS_DOUBLE_DAUGHTER,1,'是',0,'否','否') A22
+			,RF.POOR_MAIN_REASON A23 --致贫原因
+			,RF.POOR_OTHER_REASON A24
+			,DECODE(RF.IS_IMP_ELECTRICITY,1,'是',0,'否','否') A25
+			,DECODE(RF.IS_DRINK_DIFFCULTY,1,'是',0,'否','否') A26
+			,DECODE(RF.IS_DRINK_SAFETY,1,'是',0,'否','否') A27
+			,DECODE(RF.IS_JOIN_FARMER_COP,1,'是',0,'否','否') A28
+			,RF.WAGE_INCOME A29
+			,RF.PRODUCE_INCOME A30
+			,RF.PROPERTY_INCOME A31
+			,RF.TRANSFER_INCOME A32
+			,RF.FAMILY_PLAN_INCOME A33
+			,RF.LOW_INSURANCE A34
+			,RF.FIVE_INSURANCE A35
+			,RF.OLD_AGE_INSURANCE A36
+			,RF.ECOLOGY_INCOME A37
+			,RF.OTHER_TRAN_INCOME A38
+			,RF.MEDICAL_INSURANCE A39
+			,RF.MEDICAL_HELP A40
+			,RF.PRODUCE_EXPENSE A41
+			,RF.TRANSFER_EXPENSE A42
+			,RF.PER_INCOME_TAX A43
+			,RF.SOCIAL_SECURITY A44
+			,RF.SUPPORT A45
+			,RF.OTHER_TRAN_EXPENSE A46
+			,RF.UNPAID_BORROW A47
+			,RF.FAM_INCOME-RF.FAM_EXPENSE A48 --可支配收入
+			,RF.PER_INCOME A49
+			,DECODE(RF.IS_DANGEROUS_HOUSE,1,'是',0,'否','否') A50
+			
+			,RP.POP_NAME A51
+			,DECODE(RP.POP_SEX,1,'女',0,'男','-') A52
+			,POP_IDENTITY_TYPE A53
+			,POP_IDENTITY_NO A54
+			,DISABILITY_NO A55
+			,POP_OFFICER_NO A56
+			,POP_BIRTHDAY A57
+			,POP_WORK_TIME A58
+			,POP_AGE A59
+			,POP_RELATIVE A60
+			,POP_NATIONALITY A61
+			,POP_PROTICAL A62
+			,POP_EDUCATION A63
+			,POP_SCHOOL_STATUS A64
+			,POP_SCHOOL_STATUS_DETAIL A65
+			,POP_SKILL_SCHOOL_WILL A66
+			,POP_HEALTH_STATUS A67
+			,POP_WORK_STATUS A68
+			
+			,DECODE(RP.IS_IN_ARMY,1,'是',0,'否','否') A69
+			,POP_SKILL_INFO A70
+			,POP_TRAINING_REQ A71
+			,POP_WORK_WILL A72
+			,POP_WORK_EXPECT A73
+			,POP_PENSION_LEVEL A74
+			,DECODE(RP.IS_IMP_ILLNESS_INS,1,'参加',0,'未参加','未参加') A75
+			,DECODE(RP.IS_IMP_EMPLOYEE_INS,1,'参加',0,'未参加','未参加') A76
+			,DECODE(RP.IS_IMP_COUNTRY_MED_INS,1,'参加',0,'未参加','未参加') A77
+			,DECODE(RP.IS_IMP_RESIDENT_INS,1,'参加',0,'未参加','未参加') A78
+			,POP_WORK_SPACE A79
+			,DECODE(RP.IS_ALL_IMP_LOW,1,'是',0,'否','否') A80
+			,RP.OUT_DATE A81
+			
+			from (SELECT * FROM  R_DW_POOROBJ_POP_Y WHERE IS_KEY_POVERTY = 1
+				 AND Is_Current=1
+				 <include refid="level_detail_sql"/>
+				  AND ACC_YEAR = #{year}) RP,
+				  (SELECT * FROM  R_DW_POOROBJ_FAM_Y WHERE IS_KEY_POVERTY = 1
+				 AND Is_Current=1
+				 <include refid="level_detail_sql"/>
+				  AND ACC_YEAR = #{year}) RF
+			   WHERE RP.fam_id = RF.fam_id 
+				
+	</select>	
+	
+	<sql id="is_key_poverty">
+			<if test="1 == poverty">AND IS_KEY_POVERTY = 1</if><!-- 贫困村 -->
+			<if test="0 == poverty">AND IS_KEY_POVERTY = 0</if><!-- 分散村 -->
+	</sql>
+</mapper>

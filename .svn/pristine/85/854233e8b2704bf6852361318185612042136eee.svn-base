@@ -1,0 +1,238 @@
+@import "base/reset";
+@import "base/var";
+//@import "base/mixin_strategy";
+@import "base/base_strategy";
+//@import "components/copyright";
+
+@mixin bgPng($URI,$x:center,$y:center) {
+    background: url('../../images/fupin_entrance/#{$URI}.png') no-repeat $x $y;
+}
+
+@mixin bgJpg($URI,$x:center,$y:center,$repeat:no-repeat) {
+    background: url('../../images/fupin_entrance/#{$URI}.jpg') $repeat $x $y;
+}
+
+html, body {
+    @include bgJpg(entrance_bg_extend, left, top, repeat-x);
+    background-color: #81b33a;
+}
+
+.btns-row {
+    .btns-wrap {
+        .btn-entrance {
+            &:last-child {
+                margin: 0;
+            }
+            float: left;
+            margin-right: 14px;
+        }
+        margin-bottom: 22px;
+    }
+    float: right;
+}
+
+.btn-entrance {
+    &, &:hover {
+        color: #fff;
+    }
+    $h: 50px;
+    width: 271px;
+    height: $h;
+    line-height: $h;
+    text-align: center;
+    box-shadow: 0 2px 2px rgba(0, 85, 179, .3);
+    border: solid 1px #fff;
+    background-image: linear-gradient(to top, #52b11e, #6fcf3f);
+    font-size: 18px;
+    text-shadow: 0 2px 2px rgba(64, 151, 18, .6);
+}
+
+.btns-download {
+    .btn-download {
+        $icoSize: 28px;
+        &.android-app {
+            $bg: #5398f0;
+            .hint {
+                &:after {
+                    border-top-color: $bg;
+                }
+                background-color: $bg;
+            }
+        }
+        &.wechat {
+            .hint {
+                $bg: #32c156;
+                //.qrcode {
+                //    @include bgJpg(entrance_qr_wechat);
+                //}
+                &:after {
+                    border-top-color: $bg;
+                }
+                background-color: $bg;
+            }
+        }
+        .ico-label {
+            font-size: 14px;
+        }
+        .ico-download-wrap {
+            &:hover {
+                .hint {
+                    display: block;
+                }
+                cursor: pointer;
+            }
+        }
+        .ico-download {
+            &.android-app {
+                @include bgPng(entrance_ico_android_app);
+            }
+            &.wechat {
+                @include bgPng(entrance_ico_wechat);
+            }
+            vertical-align: middle;
+            width: $icoSize;
+            height: $icoSize;
+            display: inline-block;
+            margin-right: 9px;
+        }
+        .hint {
+            .hint-name {
+                font-size: 12px;
+                text-align: center;
+            }
+            .qrcode {
+                > img {
+                    width: 100%;
+                    height: 100%;
+                }
+                $h: 93px;
+                width: $h;
+                height: $h;
+                margin: 0 auto 10px;
+            }
+            &:after {
+                content: " ";
+                display: block;
+                position: absolute;
+                top: 100%;
+                width: 0;
+                height: 0;
+                left: 50%;
+                margin-left: -9px;
+                border: 9px solid transparent;
+            }
+            display: none;
+            padding-top: 15px;
+            $w: 153px;
+            position: absolute;
+            width: $w;
+            height: 149px;
+            border-radius: 5px;
+            left: 15px;
+            top: -158px;
+            margin-left: -$w/2;
+            box-sizing: border-box;
+            cursor: default;
+        }
+        position: relative;
+        color: #FFF;
+        line-height: $icoSize;
+        float: left;
+    }
+    position: absolute;
+    right: 22px;
+    bottom: 8px;
+}
+
+.main-wrap {
+    font-family: dongQingHeiTi;
+    width: 1366px;
+    height: 768px;
+    margin: 0 auto;
+    position: relative;
+    box-sizing: border-box;
+    padding: 40px 35px 0;
+    background: transparent;
+}
+
+.main-bg {
+    @include bgJpg(entrance_bg, center, top);
+    height: 100%;
+}
+
+.sections {
+    section {
+        &:last-child {
+            margin: 0;
+        }
+        &.map {
+            .chart {
+                height: 478px;
+                width: 100%;
+            }
+        }
+        float: left;
+        margin-right: 14px;
+        width: 641px;
+        height: 558px;
+        border-radius: 8px;
+        background-color: #e9f3fd;
+        box-shadow: 0 4px 7px rgba(40, 126, 222, .52);
+        box-sizing: border-box;
+        padding-top: 14px;
+    }
+    .section-title {
+        $h: 25px;
+        &:before {
+            content: " ";
+            $w: 6px;
+            display: block;
+            height: $h;
+            width: $w;
+            left: 0;
+            top: 0;
+            position: absolute;
+            @include bgPng(entrance_section_title_ico);
+        }
+        margin-bottom: 15px;
+        padding-left: 17px;
+        line-height: $h;
+        height: $h;
+        white-space: nowrap;
+        position: relative;
+        font-size: 18px;
+        color: #1ebb1a;
+    }
+    .section-content {
+        p {
+            text-indent: 2em;
+            font-size: 14px;
+            line-height: 22px;
+            color: #2d2d2d;
+        }
+        padding: 0 34px;
+    }
+}
+
+.main-title {
+    $w: 483px;
+    $h: 31px;
+    left: 50%;
+    width: $w;
+    height: $h;
+    margin: 0 auto 21px;
+    @include bgPng(entrance_title);
+}
+
+.copyright-wrap {
+    .copyright {
+        color: #FFF;
+        font-size: 12px;
+        text-align: center;
+        width: 100%;
+    }
+    width: 100%;
+    position: absolute;
+    left: 0;
+    bottom: 13px;
+}

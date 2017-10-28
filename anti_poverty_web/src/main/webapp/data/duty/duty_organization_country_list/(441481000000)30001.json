@@ -1,0 +1,37 @@
+{
+	"data":{
+		"belong_organization":"兴宁市编办",
+		"list":[
+			{
+				"id":"441481132206",
+				"order":1,
+				"contact_phone":"13549166930",
+				"contact_name":"叶宇华",
+				"country_name":"中心村委会"
+			},
+			{
+				"id":"441481132225",
+				"order":2,
+				"contact_phone":"13826698423",
+				"contact_name":"钟伟胜",
+				"country_name":"虎留村委会"
+			},
+			{
+				"id":"441481132209",
+				"order":3,
+				"contact_phone":"13723663083",
+				"contact_name":"石徐文",
+				"country_name":"后山村委会"
+			},
+			{
+				"id":"441481132214",
+				"order":4,
+				"contact_phone":"0753-3438923",
+				"contact_name":"练万年",
+				"country_name":"甘专村委会"
+			}
+		]
+	},
+	"code":0,
+	"msg":"获取信息成功"
+}

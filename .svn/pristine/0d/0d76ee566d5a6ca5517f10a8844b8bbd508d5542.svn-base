@@ -1,0 +1,19 @@
+.c-score-chart {
+	svg {
+		.color0 {
+			fill: #0a82f5;
+		}
+		.color1 {
+			fill: #eff6fc;
+		}
+		text {
+			fill: #0a82f5;
+			dominant-baseline: central;
+			font-size: inRem(60);
+		}
+		height: 100%;
+		width: 100%;
+	}
+	height: 100%;
+	width: 100%;
+}

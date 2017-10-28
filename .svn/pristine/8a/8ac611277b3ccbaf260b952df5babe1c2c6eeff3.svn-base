@@ -1,0 +1,110 @@
+/*
+	说明：
+	数据监控、责任监控、项目监控弹窗中的表格，除特别注明，均使用此格式
+	默认所有表格内容均不换行，需要换行的话需在数据中手动换行（<br>标签）
+	所有表头、表内容单元格的内容（content属性）都是html直接插到页面中
+	且单元格的样式表现受action_type影响
+*/
+{
+	"code": 0,
+	"msg": "获取信息成功",
+	"data": {
+		//表格标题，如有才有此属性
+		"title": "明细表",
+		//导出表的接口地址，如有导出才有
+		"export_url": "export.json",
+		//表头
+		//行
+		"head": [
+			//列
+			[
+				//单元格
+				{
+					//列合并数，同HTML定义，有列合并的单元格才有
+					"colspan": 1,
+					//行合并数，同HTML定义，有行合并的单元格才有
+					"rowspan": 1,
+					//跳过渲染当前格，需要跳过时为true，使用场景如被合并了的单元格等
+					"skip": true,
+					//单元格的内容，HTML，如有才有
+					"content": "表头<br>户数"
+				}
+			]
+		],
+		//表内容
+		//行
+		"body": [
+			//列
+			[
+				//单元格
+				{
+					//列合并数，同HTML定义，有列合并的单元格才有
+					"colspan": 1,
+					//行合并数，同HTML定义，有行合并的单元格才有
+					"rowspan": 1,
+					//跳过渲染当前格，需要跳过时为true，使用场景如被合并了的单元格等
+					"skip": true,
+					//单元格的内容，HTML，如有才有
+					"content": "表头<br>户数",
+					/*
+						操作类型：
+						default: 默认类型，只填数据，点击没操作
+						country_file: 跳到村档案
+						family_file: 跳到户档案
+						area_data: 跳到区域数据表
+						file_detail: 跳到文件号详情
+					*/
+					"action_type":"default",
+					/*
+						操作附加数据：
+						根据不同操作类型返回不同数据：
+						为null一律当没数据不跳转处理
+
+						default:
+						null
+
+						country_file:
+						{
+							//区域级别
+							area_level: "country",
+							//区域ID
+							area_id: 1,
+						}
+
+						family_file:
+						{
+							//户ID
+							family_id: 1
+						}
+
+						area_data:
+						{
+							//区域级别
+							area_level: "country",
+							//区域ID
+							area_id: 1,
+						}
+
+						file_detail:
+						{
+							//文件号ID
+							file_id: 1
+						}
+					*/
+					"action_data": {}
+				}
+			]
+		],
+		//备注，如有才有此属性
+		"notes": "备注，建档立卡数据日期2017年2月28日。",
+		//翻页，如有才有此属性
+		"pagination": {
+			//总页数
+			"page_total": 1,
+			//当前页数
+			"page_cur": 1,
+			//总条数
+			"amount_total": 10
+		}
+	}
+}

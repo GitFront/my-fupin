@@ -1,0 +1,37 @@
+{
+	"data":{
+		"belong_organization":"兴宁市物资总公司",
+		"list":[
+			{
+				"id":"441481128200",
+				"order":1,
+				"contact_phone":"3367162",
+				"contact_name":"陈远清",
+				"country_name":"竹一村委会"
+			},
+			{
+				"id":"441481128220",
+				"order":2,
+				"contact_phone":"13411203723",
+				"contact_name":"朱志华",
+				"country_name":"凉新村委会"
+			},
+			{
+				"id":"441481128204",
+				"order":3,
+				"contact_phone":"13549153097",
+				"contact_name":"朱君怀",
+				"country_name":"丝光村委会"
+			},
+			{
+				"id":"441481128203",
+				"order":4,
+				"contact_phone":"3359219",
+				"contact_name":"钟秋月",
+				"country_name":"丝新村委会"
+			}
+		]
+	},
+	"code":0,
+	"msg":"获取信息成功"
+}

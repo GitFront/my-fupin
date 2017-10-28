@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+        
+<mapper namespace="aspire.bi.common.povertygeometry">
+
+ 		<!-- select all the Source List -->
+	<select id="queryDataMapByPPAC"  parameterType="string"
+       resultType="hashmap">
+ 		SELECT 
+ 		PAC,PPAC,NAME,GEOMETRY
+ 		FROM DIM_POVERTY_GEOMETRY
+ 		WHERE PPAC=#{PPAC}
+	</select> 
+	<select id="queryDataMapByPAC"  parameterType="string"
+       resultType="hashmap">
+ 		SELECT 
+ 		PAC,PPAC,NAME,GEOMETRY
+ 		FROM DIM_POVERTY_GEOMETRY
+ 		WHERE PAC=#{PPAC}
+	</select> 
+	<!-- 坐标 -->
+	<select id="queryDataLocalByPKH_Z"  parameterType="hashmap"
+	       resultType="hashmap">
+	 		SELECT 
+	 		COUNTRY_PAC PAC,FAM_ID,FAM_NAME NAME,LONGITUDE LONGITUDE,LATITUDE LATITUDE
+	 		FROM F_FAMILYFILE_BASIC_INFO_D 
+	 		WHERE TOWN_PAC=#{PAC} AND LONGITUDE IS NOT NULL AND LATITUDE IS NOT NULL
+	 	<![CDATA[ AND LONGITUDE >109 AND LONGITUDE < 118 AND LATITUDE >20 AND LATITUDE < 26 ]]>
+	</select> 
+	<select id="queryDataLocalByPKH_C"  parameterType="hashmap"
+	       resultType="hashmap">
+	 		SELECT 
+	 		COUNTRY_PAC PAC,FAM_ID,FAM_NAME NAME,LONGITUDE LONGITUDE,LATITUDE LATITUDE
+	 		FROM F_FAMILYFILE_BASIC_INFO_D 
+	 		WHERE COUNTRY_PAC=#{PAC} AND LONGITUDE IS NOT NULL AND LATITUDE IS NOT NULL
+	 	<![CDATA[ AND LONGITUDE >109 AND LONGITUDE < 118 AND LATITUDE >20 AND LATITUDE < 26 ]]>
+	</select> 
+	<select id="queryDataLocalByPKC_X"  parameterType="hashmap"
+       resultType="hashmap">
+ 		SELECT 
+ 		COUNTRY_PAC PAC,COUNTRY_NAME NAME,LONGITUDE LONGITUDE,LATITUDE LATITUDE
+ 		FROM F_COUNTRYFILE_BASIC_INFO_D
+ 		WHERE COUNTY_PAC=#{PAC} AND LONGITUDE IS NOT NULL AND LATITUDE IS NOT NULL
+ 		<![CDATA[ AND LONGITUDE >109 AND LONGITUDE < 118 AND LATITUDE >20 AND LATITUDE < 26 ]]>
+	</select> 
+ 	<select id="queryDataLocalByPKC_S"  parameterType="hashmap"
+       resultType="hashmap">
+ 		SELECT 
+ 		COUNTRY_PAC PAC,COUNTRY_NAME NAME,LONGITUDE LONGITUDE,LATITUDE LATITUDE
+ 		FROM F_COUNTRYFILE_BASIC_INFO_D
+ 		WHERE CITY_PAC=#{PAC} AND LONGITUDE IS NOT NULL AND LATITUDE IS NOT NULL
+ 		<![CDATA[ AND LONGITUDE >109 AND LONGITUDE < 118 AND LATITUDE >20 AND LATITUDE < 26 ]]>
+	</select>  
+	<select id="queryDataLocalByPKC_P"  parameterType="list"
+       resultType="hashmap">
+       
+ 		<foreach item="p" index="index"  collection="list">
+ 			<if test=" index >0 ">
+				union all
+			</if>
+	 		SELECT 
+	 		COUNTRY_PAC PAC,COUNTRY_NAME NAME,LONGITUDE LONGITUDE,LATITUDE LATITUDE
+	 		FROM F_COUNTRYFILE_BASIC_INFO_D
+	 		WHERE LONGITUDE IS NOT NULL AND LATITUDE IS NOT NULL
+	 		<![CDATA[ AND LONGITUDE >109 AND LONGITUDE < 118 AND LATITUDE >20 AND LATITUDE < 26 ]]>
+	 			<if test="p.level == 1">
+	 				and CITY_PAC in (
+	 					select distinct CITY_PAC dd from F_COUNTRYFILE_BASIC_INFO_D where  city_pac=#{p.pac} 
+	 				)
+	 			</if>
+	 			<if test="p.level == 2">
+	 				and county_pac in (
+	 					select distinct county_pac dd from F_COUNTRYFILE_BASIC_INFO_D where  county_pac=#{p.pac}
+	 				)
+	 			</if>
+	 			<if test="p.level == 3">
+	 				and town_pac in (
+	 					select distinct town_pac dd from F_COUNTRYFILE_BASIC_INFO_D where town_pac=#{p.pac}
+	 				)
+	 			</if>
+	 			<if test="p.level == 4">
+	 				and COUNTRY_PAC in (
+	 					select distinct COUNTRY_PAC dd from F_COUNTRYFILE_BASIC_INFO_D where country_pac=#{p.pac}
+	 				)
+	 			</if>
+	 		</foreach>
+	</select>  
+	
+	<!-- PAC转换 -->
+	<select id="lsbPacToPac"  parameterType="string"
+       resultType="string">
+ 		SELECT 
+ 		PAC
+ 		FROM DIM_LRB_PAC_MAP
+ 		WHERE LSB_PAC=#{PAC}
+	</select> 
+	<!-- 是否相对贫困村 -->
+	<select id="ifFurthurPoor"  parameterType="string"
+       resultType="string">
+ 		SELECT 
+ 		IF_FURTHER_POOR
+ 		FROM DIM_AREA_5LVL
+ 		WHERE COUNTRY_ID=#{PAC}
+	</select> 
+</mapper>

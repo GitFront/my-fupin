@@ -1,0 +1,65 @@
+{
+	"code": 0,
+	"msg": "获取信息成功",
+	"data": {
+		//注：表中如数据带单位需带上
+		"table": [
+			{
+				//表头标题
+				"title": "2017年累计",
+				//家庭人均可支配收入
+				"average_disposable_income": 0,
+				//家庭可支配收入
+				"family_disposable_income": 0,
+				//收入
+				"income": {
+					//总收入
+					"total_income": 0,
+					//工资性收入
+					"salary_income": 0,
+					//生产经营性收入
+					"production_income": 0,
+					//财产性收入
+					"property_income": 0,
+					//转移性收入
+					"transferred_income": 0,
+					//计划生育金
+					"birth_subsidy": 0,
+					//低保金
+					"low_subsidy": 0,
+					//五保金
+					"five_subsidy": 0,
+					//养老保险金
+					"pension": 0,
+					//生态补偿金
+					"env_subsidy": 0,
+					//基本医疗保险报销医疗费
+					"medical_insurance": 0,
+					//医疗求助金
+					"medical_subsidy": 0,
+					//其他转移性收入
+					"other_transferred_income": 0
+				},
+				//支出
+				"expense": {
+					//总支出
+					"total_payment": 0,
+					//生产经营性支出
+					"production_payment": 0,
+					//转移性支出
+					"transferred_income": 0,
+					//个人所得税
+					"individual_income_tax": 0,
+					//社会保障支出
+					"social_security_payment": 0,
+					//赡养支出
+					"alimony": 0,
+					//其他转移性支出
+					"other_transferred_payment": 0,
+					//未偿还借贷款
+					"unpaid_loan": 0
+				}
+			}
+		]
+	}
+}

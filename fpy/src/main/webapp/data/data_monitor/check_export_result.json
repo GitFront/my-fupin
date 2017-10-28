@@ -1,0 +1,9 @@
+{
+	"code": 0,
+	"msg": "获取信息成功",
+	"data": {
+		"stat": 1,
+		"progress": 11,
+		"url": "http://www.baidu.com"
+	}
+}

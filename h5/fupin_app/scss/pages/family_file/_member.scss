@@ -1,0 +1,68 @@
+.p-family-file-member{
+  padding:inRem(30);
+  .member-album{
+    position:relative;
+    .member-box{
+      margin:0 auto;
+      text-align: center;
+      .member-album-box{
+        width:inRem(250);
+        height:inRem(250);
+        padding:inRem(10);
+        border:1px solid #CFE5F9;
+        border-radius:50%;
+        display: inline-block;
+        .member-pic{
+          width:inRem(230);
+          height:inRem(230);
+          border-radius:50%;
+        }
+      }
+      .member-name{
+        font-size:inRem(32);
+        color:$black;
+        margin-top:inRem(18);
+      }
+    }
+
+    .icon-left,
+    .icon-right{
+      width:inRem(50);
+      height:inRem(50);
+      border:solid #C8C8C8;
+      border-width:2px 2px 0 0;
+      position:absolute;
+      top:inRem(100);
+      cursor:pointer;
+    }
+    .icon-left{
+      transform:rotate(-135deg);
+      left:inRem(10);
+    }
+    .icon-right{
+      transform:rotate(45deg);
+      right:inRem(10);
+    }
+    .active{
+      border:solid $sky-blue;
+      border-width:2px 2px 0 0;
+    }
+  }
+  .member-info{
+    border-bottom:1px solid #C8C8C8;
+    margin-top:inRem(60);
+    li{
+      border-top:1px solid #C8C8C8;
+      overflow:hidden;
+      font-size:inRem(30);
+      color:#323232;
+      padding:inRem(32) 0;
+      .member-info-title{
+        float:left;
+      }
+      .member-info-content{
+        float:right;
+      }
+    }
+  }
+}

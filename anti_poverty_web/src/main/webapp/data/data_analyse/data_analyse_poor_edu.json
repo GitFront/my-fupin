@@ -1,0 +1,75 @@
+{
+	"code": 0,
+	"msg": "获取信息成功",
+	"data": {
+		"area_name": "广东省",
+		"total": {
+			"amount": 5851
+		},
+		"at_school": {
+			"amount": 5851,
+			"percent": 41
+		},
+		"chart_config_edu_qualification": [
+			{
+				"name":"大专以上",
+				"value":1870
+			},
+			{
+				"name":"中专",
+				"value":4890
+			},
+			{
+				"name":"高中",
+				"value":2390
+			},
+			{
+				"name":"初中",
+				"value":1200
+			},
+			{
+				"name":"小学",
+				"value":780
+			},
+			{
+				"name":"学龄儿童",
+				"value":100
+			},
+			{
+				"name":"文盲或半文盲",
+				"value":120
+			},
+			{
+				"name":"未选择",
+				"value":340
+			}
+		],
+		"chart_config_school_age":[
+			{
+				"name":"小学",
+				"value":500
+			},
+			{
+				"name":"初中",
+				"value":370
+			},
+			{
+				"name":"高中(含职业高中、技校)",
+				"value":560
+			},
+			{
+				"name":"中专(含中等职业学校)",
+				"value":320
+			},
+			{
+				"name":"大专以上(含高职或高等学校)",
+				"value":340
+			},
+			{
+				"name":"学龄儿童",
+				"value":130
+			}
+		]
+	}
+}
+

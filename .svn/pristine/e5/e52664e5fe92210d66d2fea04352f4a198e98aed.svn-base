@@ -1,0 +1,1964 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+        
+<mapper namespace="com.aspire.birp.modules.antiPoverty.dao.CountryDao">
+
+	<sql id="dim_area_sql">
+		INNER JOIN
+		(SELECT 
+		  PAC,
+		  SORT
+		  FROM
+		  DIM_AREA_INFO
+		  WHERE 1=1
+		  <include refid="p_area_sql"/>
+		  ) B ON(A.S_ID=B.PAC)
+		ORDER BY B.SORT 
+	</sql>
+	
+	<sql id="p_area_sql">
+		 <if test=" '' != level and null != level and 'province' == level  ">
+				AND PPAC = #{id}
+			</if>
+			
+			<if test=" '' != level and null != level and 'city' == level  ">
+				AND PPAC = #{id}
+			</if>
+			
+			<if test=" '' != level and null != level and 'county' == level  ">
+				AND PPAC = #{id} 
+			</if>
+			
+			<if test=" '' != level and null != level and 'town' == level  ">
+				AND PPAC = #{id} 
+			</if>
+			
+			<if test=" '' != level and null != level and 'country' == level  ">
+				AND PAC = #{id}
+			</if>
+	</sql>
+
+<!--村道硬底化 落实 柱形-->
+	<select id="queryRoadImplementManagement"  parameterType="hashmap" resultType="hashmap">
+		SELECT
+  			* from (SELECT
+	    	S_NAME 
+	    	,CASE WHEN u_type='A_PLAN' THEN '公里数(公里)'
+	        	  WHEN u_type='B_IMP' THEN '投入资金(万元)'
+	      	END S_GROUP
+	     	,u_value as S_VALUE
+	  		FROM (select 
+		      to_char(to_date(STAT_MONTH,'yyyymm'),'yyyy.mm')  S_NAME ,
+		       SUM(ROAD_MILEAGE) A_PLAN,
+		      trunc(SUM(REAL_CAPITAL)/10000, 2) B_IMP
+		  from R2_DM_PROJFUNDS_PROJTYPE_M t
+	  <where>
+			<include refid="year_sql"/>
+			<include refid="level_sql"/>
+			<include refid="query_condition"/>
+	     	 	 
+				AND PROJ_TYPE=1
+				AND PROJ_CLASS = '村道硬底化'
+	   </where>
+	  GROUP BY STAT_MONTH  ) 
+	  unpivot (u_value for u_type in (A_PLAN, B_IMP))
+	  ORDER BY S_NAME desc)
+       WHERE  ROWNUM&lt;11
+       ORDER BY S_NAME 
+	</select>
+<!--村道硬底化 落实 柱形2-->
+	<select id="queryRoadImplementManagement2"  parameterType="hashmap" resultType="hashmap">
+		SELECT
+	    	S_NAME 
+	    	,CASE WHEN u_type='A_PLAN' THEN '公里数(公里)'
+	        	  WHEN u_type='B_IMP' THEN '投入资金(万元)'
+	      	END S_GROUP
+	     	,u_value as S_VALUE
+	  		FROM (select 
+		      CITY_NAME  S_NAME ,
+		      SUM(ROAD_MILEAGE) A_PLAN,
+		      trunc(SUM(REAL_CAPITAL)/10000, 2) B_IMP
+		  from R2_DM_HELP_PROJECT_CTY_Y t
+	  <where>
+			<include refid="year_sql"/>
+			<include refid="query_condition"/>
+			<include refid="level_sql"/>
+	     	 	 
+				AND PROJ_CLASS = '村道硬底化'
+	      		
+	   </where>
+	  GROUP BY CITY_NAME  
+	  ORDER BY B_IMP desc) 
+	  unpivot (u_value for u_type in (A_PLAN, B_IMP))
+	   WHERE rownum&lt;11
+	</select>
+	<!-- 村道硬底化  落实合计 -->
+	<select id="queryRoadImplementManagementTableC"  parameterType="hashmap" resultType="hashmap">
+			SELECT 
+			R1.*
+			FROM
+			(SELECT
+		    	<include refid="count_area_sql"/>
+		    	SUM(PROJECT_NUM)  A3--项目数(个)
+		      ,SUM(ROAD_MILEAGE) A4--里程(公里)
+		      ,trunc(SUM(REAL_CAPITAL)/10000, 2) A5 --投入资金(万元)
+		      from
+		      
+		      R2_DM_HELP_PROJECT_CTY_Y
+
+			<where>
+				<include refid="level_sql"/>
+				<include refid="year_sql"/>
+				<include refid="query_condition"/>
+				 
+				AND PROJ_CLASS = '村道硬底化'
+	      		
+			</where>
+			GROUP BY <include refid="count_group_by_sql"/>) R1
+     		 ORDER BY A3 desc
+		
+	</select>
+	<!-- 村道硬底化  落实分析 -->
+	<select id="queryRoadImplementManagementTable"  parameterType="hashmap" resultType="hashmap">
+	SELECT 
+			A.*
+			FROM
+			(SELECT
+         	 <include refid="level_area_sql"/>
+		    	SUM(PROJECT_NUM)  A3--项目数(个)
+		      ,SUM(ROAD_MILEAGE) A4--里程(公里)
+		      ,trunc(SUM(REAL_CAPITAL)/10000, 2) A5 --投入资金(万元)
+		      from
+		      
+		      R2_DM_HELP_PROJECT_CTY_Y
+			
+			<where>
+				<include refid="level_sql"/>
+				<include refid="year_sql"/>
+				<include refid="query_condition"/>
+				 
+				AND PROJ_CLASS = '村道硬底化'
+	      		
+			</where>
+			GROUP BY <include refid="group_by_sql"/>) A
+			<include refid="dim_area_sql"/>
+     		 
+		
+	
+	</select>
+	
+<!-- 村道硬底化 落实分析明细细 -->
+	<select id="queryRoadImplementAnalysisDetail"  parameterType="hashmap" resultType="hashmap">
+		select 
+
+				*
+				
+				from
+				(
+				select t1.*,ROWNUM RM
+				from
+				(
+				 SELECT
+				COUNTRY_PAC B1
+				,t1.CITY_NAME A2
+				,t1.COUNTY_NAME A3
+				,t1.TOWN_NAME A4
+				,t1.COUNTRY_NAME A5
+				,PROJ_NAME  as A6 
+				,PROJ_CLASS2 a7 
+				,to_char(to_date(BEGIN_TIME,'yyyymmdd'),'yyyy.mm') a8 
+				,ROAD_MILEAGE a9 
+				,trunc(REAL_CAPITAL/10000, 2) a10 
+				,PROJ_STATUS a11
+				from R_DW_HELP_PROJECT_COUNTRY_Y t1 
+				   
+				 <where>
+					<include refid="level_sql"/>
+					<include refid="query_condition"/>
+					<include refid="acc_year_sql"/>
+					AND PROJ_CLASS = '村道硬底化'
+	      			
+				</where>	
+				) t1
+				
+				)
+				
+				<if test="page !=null">
+						WHERE RM BETWEEN #{pageSize}*(#{page}-1)+1 AND #{pageSize}  * #{page}
+				</if>
+				</select>		
+<!-- 村道硬底化 明细总数  -->
+	<select id="queryRoadImplementAnalysisDetailCount"  parameterType="hashmap" resultType="long">
+	
+			select 
+
+				count(*)
+				
+				from
+				(
+				select t1.*,ROWNUM RM
+				from
+				(
+				 SELECT
+				
+				COUNTRY_PAC B1
+				,t1.CITY_NAME A2
+				,t1.COUNTY_NAME A3
+				,t1.TOWN_NAME A4
+				,t1.COUNTRY_NAME A5
+				,PROJ_NAME  as A6 
+				,PROJ_CLASS2 a7 
+				,to_char(to_date(BEGIN_TIME,'yyyymmdd'),'yyyy.mm') a8 
+				,ROAD_MILEAGE a9 
+				,trunc(REAL_CAPITAL/10000, 2) a10 
+				,PROJ_STATUS a11
+				
+				from R_DW_HELP_PROJECT_COUNTRY_Y t1
+				   
+				 <where>
+					<include refid="level_sql"/>
+					<include refid="query_condition"/>
+					<include refid="acc_year_sql"/>
+					AND PROJ_CLASS = '村道硬底化'
+	      			
+				</where>
+				) t1
+				
+				)
+				
+	</select>
+<!--  饮水工程 落实 柱形-->
+	<select id="queryWaterImplementManagement"  parameterType="hashmap" resultType="hashmap">
+		SELECT
+        * from (SELECT
+	    	S_NAME 
+	    	,CASE WHEN u_type='A_PLAN' THEN '受益户数'
+	        	  WHEN u_type='B_IMP' THEN '投入资金(万元)'
+	      	END S_GROUP
+	     	,u_value as S_VALUE
+	  		FROM (select 
+		      to_char(to_date(STAT_MONTH,'yyyymm'),'yyyy.mm')  S_NAME ,
+		      SUM(PROJ_FAM_NUM) A_PLAN,
+		      trunc(SUM(REAL_CAPITAL)/10000, 2) B_IMP
+		  from R2_DM_PROJFUNDS_PROJTYPE_M t
+	  <where>
+			<include refid="year_sql"/>
+			<include refid="query_condition"/>
+			<include refid="level_sql"/>
+	     	 	 
+				AND PROJ_TYPE=1
+				AND PROJ_CLASS = '饮水工程'
+	      		
+	   </where>
+	  GROUP BY STAT_MONTH  ) 
+	  unpivot (u_value for u_type in (A_PLAN, B_IMP))
+	  ORDER BY S_NAME desc)
+       WHERE  ROWNUM&lt;11
+       ORDER BY S_NAME 
+	</select>
+<!--饮水工程 落实 柱形2-->
+	<select id="queryWaterImplementManagement2"  parameterType="hashmap" resultType="hashmap">
+		SELECT
+	    	S_NAME 
+	    	,CASE WHEN u_type='A_PLAN' THEN '受益户数'
+	        	  WHEN u_type='B_IMP' THEN '投入资金(万元)'
+	      	END S_GROUP
+	     	,u_value as S_VALUE
+	  		FROM (select 
+		      CITY_NAME  S_NAME ,
+		      SUM(DRINK_BENEFIT_FAM_NUM) A_PLAN,
+		      trunc(SUM(REAL_CAPITAL)/10000, 2) B_IMP
+		  from R2_DM_HELP_PROJECT_CTY_Y t
+	  <where>
+			<include refid="year_sql"/>
+			<include refid="query_condition"/>
+			<include refid="level_sql"/>
+	     	 	 
+				AND PROJ_CLASS = '饮水工程'
+	      		
+	   </where>
+	  GROUP BY CITY_NAME  
+	  ORDER BY B_IMP desc) 
+	  unpivot (u_value for u_type in (A_PLAN, B_IMP))
+	   WHERE rownum&lt;11
+	  
+	</select>	      
+	<!-- 饮水工程  落实合计 -->
+	<select id="queryWaterImplementManagementTableC"  parameterType="hashmap" resultType="hashmap">
+			SELECT 
+			R1.*
+			FROM
+			(SELECT
+		    	<include refid="count_area_sql"/>
+		       SUM(PROJECT_NUM)  A3--项目数(个)
+		      ,SUM(DRINK_BENEFIT_FAM_NUM) A4--受益户数
+		      ,SUM(DRINK_BENEFIT_POP_NUM) A5 --受益人数
+		      , trunc(SUM(REAL_CAPITAL)/10000, 2) A6 --投入资金(万元)
+		      from
+		      
+		      R2_DM_HELP_PROJECT_CTY_Y
+			
+			<where>
+				<include refid="level_sql"/>
+				<include refid="year_sql"/>
+				<include refid="query_condition"/>
+				 
+				AND PROJ_CLASS = '饮水工程'
+	      		
+			</where>
+			GROUP BY <include refid="count_group_by_sql"/>) R1
+			 ORDER BY A3 desc
+		
+		
+	</select>
+	<!-- 饮水工程  落实分析 -->
+	<select id="queryWaterImplementManagementTable"  parameterType="hashmap" resultType="hashmap">
+	SELECT 
+			A.*
+			FROM
+			(SELECT
+         	 <include refid="level_area_sql"/>
+          	   SUM(PROJECT_NUM)  A3--项目数(个)
+		      ,SUM(DRINK_BENEFIT_FAM_NUM) A4--受益户数
+		      ,SUM(DRINK_BENEFIT_POP_NUM) A5 --受益人数
+		      , trunc(SUM(REAL_CAPITAL)/10000, 2) A6 --投入资金(万元)
+		      from
+		      
+		      R2_DM_HELP_PROJECT_CTY_Y
+			
+			<where>
+				<include refid="level_sql"/>
+				<include refid="year_sql"/>
+				<include refid="query_condition"/>
+				 
+				AND PROJ_CLASS = '饮水工程'
+	      		
+			</where>
+			GROUP BY <include refid="group_by_sql"/>) A
+			<include refid="dim_area_sql"/>
+	
+	</select>
+	
+<!-- 饮水工程 落实分析明细细 -->
+	<select id="queryWaterImplementAnalysisDetail"  parameterType="hashmap" resultType="hashmap">
+		select 
+
+				*
+				
+				from
+				(
+				select t1.*,ROWNUM RM
+				from
+				(
+				 SELECT
+				COUNTRY_PAC B1
+				,t1.CITY_NAME A2
+				,t1.COUNTY_NAME A3
+				,t1.TOWN_NAME A4
+				,t1.COUNTRY_NAME A5
+				,PROJ_NAME  as A6 
+				,to_char(to_date(BEGIN_TIME,'yyyymmdd'),'yyyy.mm') a7 
+				,DRINK_BENEFIT_FAM_NUM a8 
+				,DRINK_BENEFIT_POP_NUM a9
+				,trunc(REAL_CAPITAL/10000, 2)  a10
+				,PROJ_STATUS a11
+				
+				from R_DW_HELP_PROJECT_COUNTRY_Y t1 
+				   
+				 <where>
+					<include refid="level_sql"/>
+					<include refid="query_condition"/>
+					<include refid="acc_year_sql"/>
+					AND PROJ_CLASS = '饮水工程'
+	      			
+				</where>	
+				) t1
+				
+				)
+				
+				<if test="page !=null">
+						WHERE RM BETWEEN #{pageSize}*(#{page}-1)+1 AND #{pageSize}  * #{page}
+				</if>
+				</select>		
+<!-- 饮水工程明细总数  -->
+	<select id="queryWaterImplementAnalysisDetailCount"  parameterType="hashmap" resultType="long">
+	
+			select 
+
+				count(*)
+				
+				from
+				(
+				select t1.*,ROWNUM RM
+				from
+				(
+				 SELECT
+				
+				COUNTRY_PAC B1
+				,t1.CITY_NAME A2
+				,t1.COUNTY_NAME A3
+				,t1.TOWN_NAME A4
+				,t1.COUNTRY_NAME A5
+				,PROJ_NAME  as A6 
+				,to_char(to_date(BEGIN_TIME,'yyyymmdd'),'yyyy.mm') a7 
+				,DRINK_BENEFIT_FAM_NUM a8 
+				,DRINK_BENEFIT_POP_NUM a9
+				,trunc(REAL_CAPITAL/10000, 2)  a10
+				,PROJ_STATUS a11
+				
+				from R_DW_HELP_PROJECT_COUNTRY_Y t1 
+				   
+				 <where>
+					
+					<include refid="level_sql"/>
+					<include refid="query_condition"/>
+					<include refid="acc_year_sql"/>
+					AND PROJ_CLASS = '饮水工程'
+	      			
+				</where>
+				) t1
+				
+				)
+				
+	</select>
+<!-- 文体设施 落实 柱形-->
+	<select id="querySportImplementManagement"  parameterType="hashmap" resultType="hashmap">
+		SELECT
+        * from (SELECT
+	    	S_NAME 
+	    	,CASE WHEN u_type='A_PLAN' THEN '项目数'
+	        	  WHEN u_type='B_IMP' THEN '投入资金(万元)'
+	      	END S_GROUP
+	     	,u_value as S_VALUE
+	  		FROM (select 
+		      to_char(to_date(STAT_MONTH,'yyyymm'),'yyyy.mm')  S_NAME ,
+		     SUM(PROJECT_NUM) A_PLAN,
+		      trunc(SUM(REAL_CAPITAL)/10000, 2) B_IMP
+		  from R2_DM_PROJFUNDS_PROJTYPE_M t
+	  <where>
+			<include refid="year_sql"/>
+			<include refid="query_condition"/>
+			<include refid="level_sql"/>
+	     	 	 
+				AND PROJ_TYPE=1
+				AND PROJ_CLASS = '文体设施'
+	      		
+	   </where>
+	  GROUP BY STAT_MONTH  ) 
+	  unpivot (u_value for u_type in (A_PLAN, B_IMP))
+	   ORDER BY S_NAME desc)
+       WHERE  ROWNUM&lt;11
+       ORDER BY S_NAME 
+	</select>
+<!--文体设施落实 柱形2-->
+	<select id="querySportImplementManagement2"  parameterType="hashmap" resultType="hashmap">
+		SELECT
+	    	S_NAME 
+	    	,CASE WHEN u_type='A_PLAN' THEN '项目数'
+	        	  WHEN u_type='B_IMP' THEN '投入资金(万元)'
+	      	END S_GROUP
+	     	,u_value as S_VALUE
+	  		FROM (select 
+		      CITY_NAME  S_NAME ,
+		      SUM(PROJECT_NUM) A_PLAN,
+		      trunc(SUM(REAL_CAPITAL)/10000, 2) B_IMP
+		  from R2_DM_HELP_PROJECT_CTY_Y t
+	  <where>
+			<include refid="year_sql"/>
+			<include refid="query_condition"/>
+			<include refid="level_sql"/>
+	     	 	 
+				AND PROJ_CLASS = '文体设施'
+	      		
+	   </where>
+	  GROUP BY CITY_NAME  
+	  ORDER BY B_IMP desc) 
+	  unpivot (u_value for u_type in (A_PLAN, B_IMP))
+	   WHERE rownum&lt;11
+	</select>
+	<!-- 文体设施  落实合计 -->
+	<select id="querySportImplementManagementTableC"  parameterType="hashmap" resultType="hashmap">
+			SELECT 
+			R1.*
+			FROM
+			(SELECT
+		    	<include refid="count_area_sql"/>
+		 	   SUM(PROJECT_NUM) A3
+         	  ,SUM(WHS_STYLE_PROJ_NUM) A4
+         	  ,SUM(LQC_STYLE_PROJ_NUM) A5
+         	  ,SUM(XXYD_STYLE_PROJ_NUM) A6
+         	  ,SUM(OTHER_STYLE_PROJ_NUM) A7
+         	  ,trunc(SUM(REAL_CAPITAL)/10000, 2) A8
+         	 	         
+		          from
+		          
+		          R2_DM_HELP_PROJECT_CTY_Y
+			
+			<where>
+				<include refid="level_sql"/>
+				<include refid="year_sql"/>
+				<include refid="query_condition"/>
+				 
+				AND PROJ_CLASS = '文体设施'
+	      		
+			</where>
+			GROUP BY <include refid="count_group_by_sql"/>) R1
+			ORDER BY A3 DESC
+		
+		
+	</select>
+	<!-- 文体设施 落实分析 -->
+	<select id="querySportImplementManagementTable"  parameterType="hashmap" resultType="hashmap">
+	SELECT 
+			A.*
+			FROM
+			(SELECT
+         	 <include refid="level_area_sql"/>
+         	   SUM(PROJECT_NUM) A3
+         	  ,SUM(WHS_STYLE_PROJ_NUM) A4
+         	  ,SUM(LQC_STYLE_PROJ_NUM) A5
+         	  ,SUM(XXYD_STYLE_PROJ_NUM) A6
+         	  ,SUM(OTHER_STYLE_PROJ_NUM) A7
+         	  ,trunc(SUM(REAL_CAPITAL)/10000, 2) A8
+         	 	         
+		          from
+		          
+		          R2_DM_HELP_PROJECT_CTY_Y
+			
+			<where>
+				<include refid="level_sql"/>
+				<include refid="year_sql"/>
+				<include refid="query_condition"/>
+				 
+				AND PROJ_CLASS = '文体设施'
+	      		
+			</where>
+			GROUP BY <include refid="group_by_sql"/>) A
+			<include refid="dim_area_sql"/>
+	
+	</select>
+	
+<!-- 文体设施 落实分析明细细 -->
+	<select id="querySportImplementAnalysisDetail"  parameterType="hashmap" resultType="hashmap">
+		select 
+
+				*
+				
+				from
+				(
+				select t1.*,ROWNUM RM
+				from
+				(
+				 SELECT
+				COUNTRY_PAC B1
+				,t1.CITY_NAME A2
+				,t1.COUNTY_NAME A3
+				,t1.TOWN_NAME A4
+				,t1.COUNTRY_NAME A5
+				,PROJ_NAME  as A6 
+				,PROJ_CLASS2 a7 
+				,to_char(to_date(BEGIN_TIME,'yyyymmdd'),'yyyy.mm') a8 
+				,trunc(REAL_CAPITAL/10000, 2) a9
+				,PROJ_STATUS a10
+				
+				from R_DW_HELP_PROJECT_COUNTRY_Y t1 
+				   
+				 <where>
+					<include refid="level_sql"/>
+					<include refid="query_condition"/>
+					<include refid="acc_year_sql"/>
+					AND PROJ_CLASS = '文体设施'
+	      		
+				</where>	
+				) t1
+				
+				)
+				
+				<if test="page !=null">
+						WHERE RM BETWEEN #{pageSize}*(#{page}-1)+1 AND #{pageSize}  * #{page}
+				</if>
+				</select>		
+<!-- 文体设施   明细总数  -->
+	<select id="querySportImplementAnalysisDetailCount"  parameterType="hashmap" resultType="long">
+	
+			select 
+
+				count(*)
+				
+				from
+				(
+				select t1.*,ROWNUM RM
+				from
+				(
+				 SELECT
+				
+				COUNTRY_PAC B1
+				,t1.CITY_NAME A2
+				,t1.COUNTY_NAME A3
+				,t1.TOWN_NAME A4
+				,t1.COUNTRY_NAME A5
+				,PROJ_NAME  as A6 
+				,PROJ_CLASS2 a7 
+				,to_char(to_date(BEGIN_TIME,'yyyymmdd'),'yyyy.mm') a8 
+				,trunc(REAL_CAPITAL/10000, 2) a9
+				,PROJ_STATUS a10
+				
+				from R_DW_HELP_PROJECT_COUNTRY_Y t1 
+				   
+				 <where>
+					
+					<include refid="level_sql"/>
+					<include refid="query_condition"/>
+					<include refid="acc_year_sql"/>
+					AND PROJ_CLASS = '文体设施'
+	      			
+				</where>
+				) t1
+				
+				)
+				
+	</select>
+<!-- 卫生设施 落实 柱形-->
+	<select id="queryHygieneImplementManagement"  parameterType="hashmap" resultType="hashmap">
+		SELECT
+        * from (SELECT
+	    	S_NAME 
+	    	,CASE WHEN u_type='A_PLAN' THEN '项目数'
+	        	  WHEN u_type='B_IMP' THEN '投入资金(万元)'
+	      	END S_GROUP
+	     	,u_value as S_VALUE
+	  		FROM (select 
+		      to_char(to_date(STAT_MONTH,'yyyymm'),'yyyy.mm')  S_NAME ,
+		      SUM(PROJECT_NUM) A_PLAN,
+		      trunc(SUM(REAL_CAPITAL)/10000, 2) B_IMP
+		  from R2_DM_PROJFUNDS_PROJTYPE_M t
+	  <where>
+			<include refid="year_sql"/>
+			<include refid="query_condition"/>
+			<include refid="level_sql"/>
+	     	 	 
+				AND PROJ_TYPE=1
+				AND PROJ_CLASS = '卫生设施'
+	      		
+	   </where>
+	  GROUP BY STAT_MONTH  ) 
+	  unpivot (u_value for u_type in (A_PLAN, B_IMP))
+	  ORDER BY S_NAME desc)
+       WHERE  ROWNUM&lt;11
+       ORDER BY S_NAME 
+	</select>
+<!--卫生设施 落实 柱形2-->
+	<select id="queryHygieneImplementManagement2"  parameterType="hashmap" resultType="hashmap">
+		SELECT
+	    	S_NAME 
+	    	,CASE WHEN u_type='A_PLAN' THEN '项目数'
+	        	  WHEN u_type='B_IMP' THEN '投入资金(万元)'
+	      	END S_GROUP
+	     	,u_value as S_VALUE
+	  		FROM (select 
+		      CITY_NAME  S_NAME ,
+		      SUM(PROJECT_NUM) A_PLAN,
+		      trunc(SUM(REAL_CAPITAL)/10000, 2) B_IMP
+		  from R2_DM_HELP_PROJECT_CTY_Y t
+	  <where>
+			<include refid="year_sql"/>
+			<include refid="query_condition"/>
+			<include refid="level_sql"/>
+	     	 	 
+				AND PROJ_CLASS = '卫生设施'
+	      		
+	   </where>
+	  GROUP BY CITY_NAME  
+	  ORDER BY B_IMP desc) 
+	  unpivot (u_value for u_type in (A_PLAN, B_IMP))
+	   WHERE rownum&lt;11
+	</select>
+	<!-- 卫生设施  落实合计 -->
+	<select id="queryHygieneImplementManagementTableC"  parameterType="hashmap" resultType="hashmap">
+			SELECT 
+			R1.*
+			FROM
+			(SELECT
+		    	<include refid="count_area_sql"/>
+		      SUM(PROJECT_NUM) A3
+         	  ,SUM(WSZ_HEALTH_PROJ_NUM) A4
+         	  ,SUM(GC_HEALTH_PROJ_NUM) A5
+         	  ,SUM(LJC_HEALTH_PROJ_NUM) A6
+         	  ,SUM(OTHER_HEALTH_PROJ_NUM) A7
+         	  ,trunc(SUM(REAL_CAPITAL)/10000, 2) A8
+          from
+          
+          R2_DM_HELP_PROJECT_CTY_Y
+			
+			<where>
+				<include refid="level_sql"/>
+				<include refid="year_sql"/>
+				<include refid="query_condition"/>
+				 
+				AND PROJ_CLASS = '卫生设施'
+	      		
+			</where>
+			GROUP BY <include refid="count_group_by_sql"/>) R1
+			ORDER BY A3 DESC
+		
+		
+	</select>
+	<!-- 卫生设施 落实分析 -->
+	<select id="queryHygieneImplementManagementTable"  parameterType="hashmap" resultType="hashmap">
+	SELECT 
+			A.*
+			FROM
+			(SELECT
+         	 <include refid="level_area_sql"/>
+          	   SUM(PROJECT_NUM) A3
+         	  ,SUM(WSZ_HEALTH_PROJ_NUM) A4
+         	  ,SUM(GC_HEALTH_PROJ_NUM) A5
+         	  ,SUM(LJC_HEALTH_PROJ_NUM) A6
+         	  ,SUM(OTHER_HEALTH_PROJ_NUM) A7
+         	  ,trunc(SUM(REAL_CAPITAL)/10000, 2) A8
+          from
+          
+          R2_DM_HELP_PROJECT_CTY_Y
+			
+			<where>
+				<include refid="level_sql"/>
+				<include refid="year_sql"/>
+				<include refid="query_condition"/>
+				AND PROJ_CLASS = '卫生设施'
+			</where>
+			GROUP BY <include refid="group_by_sql"/>) A
+			<include refid="dim_area_sql"/>
+		
+	
+	</select>
+	
+<!--卫生设施 落实分析明细细 -->
+	<select id="queryHygieneImplementAnalysisDetail"  parameterType="hashmap" resultType="hashmap">
+		select 
+
+				*
+				
+				from
+				(
+				select t1.*,ROWNUM RM
+				from
+				(
+				 SELECT
+				COUNTRY_PAC B1
+				,t1.CITY_NAME A2
+				,t1.COUNTY_NAME A3
+				,t1.TOWN_NAME A4
+				,t1.COUNTRY_NAME A5
+				,PROJ_NAME  as A6 
+				,PROJ_CLASS2 a7 
+				,to_char(to_date(BEGIN_TIME,'yyyymmdd'),'yyyy.mm') a8 
+				,trunc(REAL_CAPITAL/10000, 2) a9
+				,PROJ_STATUS a10
+				
+				from R_DW_HELP_PROJECT_COUNTRY_Y t1 
+				   
+				 <where>
+					<include refid="level_sql"/>
+					<include refid="query_condition"/>
+					<include refid="acc_year_sql"/>
+					AND PROJ_CLASS = '卫生设施'
+	      			
+				</where>	
+				) t1
+				
+				)
+				
+				<if test="page !=null">
+						WHERE RM BETWEEN #{pageSize}*(#{page}-1)+1 AND #{pageSize}  * #{page}
+				</if>
+				</select>		
+<!-- 卫生设施   明细总数  -->
+	<select id="queryHygieneImplementAnalysisDetailCount"  parameterType="hashmap" resultType="long">
+	
+			select 
+
+				count(*)
+				
+				from
+				(
+				select t1.*,ROWNUM RM
+				from
+				(
+				 SELECT
+				
+				COUNTRY_PAC B1
+				,t1.CITY_NAME A2
+				,t1.COUNTY_NAME A3
+				,t1.TOWN_NAME A4
+				,t1.COUNTRY_NAME A5
+				,PROJ_NAME  as A6 
+				,PROJ_CLASS2 a7 
+				,to_char(to_date(BEGIN_TIME,'yyyymmdd'),'yyyy.mm') a8 
+				,trunc(REAL_CAPITAL/10000, 2) a9
+				,PROJ_STATUS a10
+				
+				from R_DW_HELP_PROJECT_COUNTRY_Y t1 
+				   
+				 <where>
+					
+					<include refid="level_sql"/>
+					<include refid="query_condition"/>
+					<include refid="acc_year_sql"/>
+					AND PROJ_CLASS = '卫生设施'
+	      			
+				</where>
+				) t1
+				
+				)
+				
+	</select>
+<!-- 路灯 落实 柱形-->
+	<select id="queryLampImplementManagement"  parameterType="hashmap" resultType="hashmap">
+		SELECT
+        * from (SELECT
+	    	S_NAME 
+	    	,CASE WHEN u_type='A_PLAN' THEN '项目数'
+	        	  WHEN u_type='B_IMP' THEN '投入资金(万元)'
+	      	END S_GROUP
+	     	,u_value as S_VALUE
+	  		FROM (select 
+		      to_char(to_date(STAT_MONTH,'yyyymm'),'yyyy.mm')  S_NAME ,
+		     SUM(PROJECT_NUM) A_PLAN,
+		      trunc(SUM(REAL_CAPITAL)/10000, 2) B_IMP
+		  from R2_DM_PROJFUNDS_PROJTYPE_M t
+	  <where>
+			<include refid="year_sql"/>
+			<include refid="query_condition"/>
+			<include refid="level_sql"/>
+	     	 	 
+				AND PROJ_TYPE=1
+				AND PROJ_CLASS = '路灯'
+	      		
+	   </where>
+	  GROUP BY STAT_MONTH  ) 
+	  unpivot (u_value for u_type in (A_PLAN, B_IMP))
+	 ORDER BY S_NAME desc)
+       WHERE  ROWNUM&lt;11
+       ORDER BY S_NAME 
+	</select>
+<!--路灯 柱形2-->
+	<select id="queryLampImplementManagement2"  parameterType="hashmap" resultType="hashmap">
+		SELECT
+	    	S_NAME 
+	    	,CASE WHEN u_type='A_PLAN' THEN '路灯数'
+	        	  WHEN u_type='B_IMP' THEN '投入资金(万元)'
+	      	END S_GROUP
+	     	,u_value as S_VALUE
+	  		FROM (select 
+		      CITY_NAME  S_NAME ,
+		      SUM(STREET_LIGHTS_NUM) A_PLAN,
+		       trunc(SUM(REAL_CAPITAL)/10000, 2) B_IMP
+		  from R2_DM_HELP_PROJECT_CTY_Y t
+	  <where>
+			<include refid="year_sql"/>
+			<include refid="query_condition"/>
+			<include refid="level_sql"/>
+	     	 	 
+				AND PROJ_CLASS = '路灯'
+	      		
+	   </where>
+	 GROUP BY CITY_NAME  
+	  ORDER BY B_IMP desc) 
+	  unpivot (u_value for u_type in (A_PLAN, B_IMP))
+	   WHERE rownum&lt;11
+	</select>
+	<!-- 路灯 落实合计 -->
+	<select id="queryLampImplementManagementTableC"  parameterType="hashmap" resultType="hashmap">
+			SELECT 
+			R1.*
+			FROM
+			(SELECT
+		    	<include refid="count_area_sql"/>
+		       SUM(PROJECT_NUM)  A3
+		      ,SUM(STREET_LIGHTS_NUM) A4 
+		      ,trunc(SUM(REAL_CAPITAL)/10000, 2) A5 --投入资金(万元)
+		      from
+		      
+		      R2_DM_HELP_PROJECT_CTY_Y
+			
+			<where>
+				<include refid="level_sql"/>
+				<include refid="year_sql"/>
+				<include refid="query_condition"/>
+				 
+				AND PROJ_CLASS = '路灯'
+	      		
+			</where>
+			GROUP BY <include refid="count_group_by_sql"/>) R1
+			ORDER BY A3 DESC
+		
+		
+	</select>
+	<!-- 路灯 落实分析 -->
+	<select id="queryLampImplementManagementTable"  parameterType="hashmap" resultType="hashmap">
+	SELECT 
+			A.*
+			FROM
+			(SELECT
+         	 <include refid="level_area_sql"/>
+          	  SUM(PROJECT_NUM)  A3
+		      ,SUM(STREET_LIGHTS_NUM) A4 
+		      ,trunc(SUM(REAL_CAPITAL)/10000, 2) A5 --投入资金(万元)
+		      from
+		      
+		      R2_DM_HELP_PROJECT_CTY_Y
+			
+			<where>
+				<include refid="level_sql"/>
+				<include refid="year_sql"/>
+				<include refid="query_condition"/>
+				 
+				AND PROJ_CLASS = '路灯'
+	      		
+			</where>
+			GROUP BY <include refid="group_by_sql"/>) A
+			<include refid="dim_area_sql"/>
+	
+	</select>
+	
+<!-- 路灯落实分析明细细 -->
+	<select id="queryLampImplementAnalysisDetail"  parameterType="hashmap" resultType="hashmap">
+		select 
+
+				*
+				
+				from
+				(
+				select t1.*,ROWNUM RM
+				from
+				(
+				 SELECT
+				COUNTRY_PAC B1
+				,t1.CITY_NAME A2
+				,t1.COUNTY_NAME A3
+				,t1.TOWN_NAME A4
+				,t1.COUNTRY_NAME A5
+				,PROJ_NAME  as A6--项目名称
+				,to_char(to_date(BEGIN_TIME,'yyyymmdd'),'yyyy.mm') a7 
+				,STREET_LIGHTS_NUM a8 
+				,trunc(REAL_CAPITAL/10000, 2) a9 
+				,PROJ_STATUS a10
+				
+				from R_DW_HELP_PROJECT_COUNTRY_Y t1 
+				   
+				 <where>
+					<include refid="level_sql"/>
+					<include refid="query_condition"/>
+					<include refid="acc_year_sql"/>
+					AND PROJ_CLASS = '路灯'
+	      			
+				</where>	
+				) t1
+				
+				)
+				
+				<if test="page !=null">
+						WHERE RM BETWEEN #{pageSize}*(#{page}-1)+1 AND #{pageSize}  * #{page}
+				</if>
+				</select>		
+<!-- 路灯   明细总数  -->
+	<select id="queryLampImplementAnalysisDetailCount"  parameterType="hashmap" resultType="long">
+	
+			select 
+
+				count(*)
+				
+				from
+				(
+				select t1.*,ROWNUM RM
+				from
+				(
+				 SELECT
+				
+				COUNTRY_PAC B1
+				,t1.CITY_NAME A2
+				,t1.COUNTY_NAME A3
+				,t1.TOWN_NAME A4
+				,t1.COUNTRY_NAME A5
+				,PROJ_NAME  as A6--项目名称
+				,to_char(to_date(BEGIN_TIME,'yyyymmdd'),'yyyy.mm') a7 
+				,STREET_LIGHTS_NUM a8 
+				,trunc(REAL_CAPITAL/10000, 2) a9 
+				,PROJ_STATUS a10
+				
+				from R_DW_HELP_PROJECT_COUNTRY_Y t1 
+				   
+				 <where>
+					
+					<include refid="level_sql"/>
+					<include refid="query_condition"/>
+					<include refid="acc_year_sql"/>
+					AND PROJ_CLASS = '路灯'
+	      			
+				</where>
+				) t1
+				
+				)
+				
+	</select>
+<!-- 农田水利 落实 柱形-->
+	<select id="queryFarmImplementManagement"  parameterType="hashmap" resultType="hashmap">
+		SELECT
+        * from (SELECT
+	    	S_NAME 
+	    	,CASE WHEN u_type='A_PLAN' THEN '项目数'
+	        	  WHEN u_type='B_IMP' THEN '投入资金(万元)'
+	      	END S_GROUP
+	     	,u_value as S_VALUE
+	  		FROM (select 
+		      to_char(to_date(STAT_MONTH,'yyyymm'),'yyyy.mm')  S_NAME ,
+		     SUM(PROJECT_NUM) A_PLAN,
+		      trunc(SUM(REAL_CAPITAL)/10000, 2) B_IMP
+		  from R2_DM_PROJFUNDS_PROJTYPE_M t
+	  <where>
+			<include refid="year_sql"/>
+			<include refid="query_condition"/>
+			<include refid="level_sql"/>
+	     	 	 
+				AND PROJ_TYPE=1
+				AND PROJ_CLASS = '农田水利'
+	      		
+	   </where>
+	  GROUP BY STAT_MONTH  ) 
+	  unpivot (u_value for u_type in (A_PLAN, B_IMP))
+	  ORDER BY S_NAME desc)
+       WHERE  ROWNUM&lt;11
+       ORDER BY S_NAME 
+	</select>
+<!--农田水利  柱形2-->
+	<select id="queryFarmImplementManagement2"  parameterType="hashmap" resultType="hashmap">
+		SELECT
+	    	S_NAME 
+	    	,CASE WHEN u_type='A_PLAN' THEN '项目数'
+	        	  WHEN u_type='B_IMP' THEN '投入资金(万元)'
+	      	END S_GROUP
+	     	,u_value as S_VALUE
+	  		FROM (select 
+		      CITY_NAME  S_NAME ,
+		      SUM(PROJECT_NUM) A_PLAN,
+		      trunc(SUM(REAL_CAPITAL)/10000, 2) B_IMP
+		  from R2_DM_HELP_PROJECT_CTY_Y t
+	  <where>
+			<include refid="year_sql"/>
+			<include refid="query_condition"/>
+			<include refid="level_sql"/>
+	     	 	 
+				AND PROJ_CLASS = '农田水利'
+	      		
+	   </where>
+	  GROUP BY CITY_NAME  
+	  ORDER BY B_IMP desc) 
+	  unpivot (u_value for u_type in (A_PLAN, B_IMP))
+	   WHERE rownum&lt;11
+	</select>
+	<!-- 农田水利  落实合计 -->
+	<select id="queryFarmImplementManagementTableC"  parameterType="hashmap" resultType="hashmap">
+			SELECT 
+			R1.*
+			FROM
+			(SELECT
+		    	<include refid="count_area_sql"/>
+		    	SUM(PROJECT_NUM)  A3
+            ,SUM(SMGSQ_WATER_PROJ_NUM) A4
+            ,SUM(JGL_WATER_PROJ_NUM) A5
+            ,SUM(JGQ_WATER_PROJ_NUM) A6
+            ,SUM(HT_WATER_PROJ_NUM) A7
+            ,SUM(PGZ_WATER_PROJ_NUM) A8
+            ,SUM(OTHER_WATER_PROJ_NUM) A9
+            ,trunc(SUM(REAL_CAPITAL)/10000, 2) A10
+              
+          from
+          
+          R2_DM_HELP_PROJECT_CTY_Y	
+			<where>
+				<include refid="level_sql"/>
+				<include refid="year_sql"/>
+				<include refid="query_condition"/>
+				 
+				AND PROJ_CLASS = '农田水利'
+	      		
+			</where>
+			GROUP BY <include refid="count_group_by_sql"/>) R1
+			ORDER BY A3 DESC
+		
+		
+	</select>
+	<!-- 农田水利  落实分析 -->
+	<select id="queryFarmImplementManagementTable"  parameterType="hashmap" resultType="hashmap">
+	SELECT 
+			A.*
+			FROM
+			(SELECT
+         	 <include refid="level_area_sql"/>
+			SUM(PROJECT_NUM)  A3
+            ,SUM(SMGSQ_WATER_PROJ_NUM) A4
+            ,SUM(JGL_WATER_PROJ_NUM) A5
+            ,SUM(JGQ_WATER_PROJ_NUM) A6
+            ,SUM(HT_WATER_PROJ_NUM) A7
+            ,SUM(PGZ_WATER_PROJ_NUM) A8
+            ,SUM(OTHER_WATER_PROJ_NUM) A9
+            ,trunc(SUM(REAL_CAPITAL)/10000, 2) A10
+              
+          from
+          
+          R2_DM_HELP_PROJECT_CTY_Y
+			
+			<where>
+				<include refid="level_sql"/>
+				<include refid="year_sql"/>
+				<include refid="query_condition"/>
+				 
+				AND PROJ_CLASS = '农田水利'
+	      		
+			</where>
+			GROUP BY <include refid="group_by_sql"/>) A
+			<include refid="dim_area_sql"/>
+	
+	</select>
+	
+<!-- 农田水利 落实分析明细细 -->
+	<select id="queryFarmImplementAnalysisDetail"  parameterType="hashmap" resultType="hashmap">
+		select 
+
+				*
+				
+				from
+				(
+				select t1.*,ROWNUM RM
+				from
+				(
+				 SELECT
+				COUNTRY_PAC B1
+				,t1.CITY_NAME A2
+				,t1.COUNTY_NAME A3
+				,t1.TOWN_NAME A4
+				,t1.COUNTRY_NAME A5
+				,PROJ_NAME  as A6--项目名称
+				,PROJ_CLASS2 A7
+				,to_char(to_date(BEGIN_TIME,'yyyymmdd'),'yyyy.mm') a8 
+				,trunc(REAL_CAPITAL/10000, 2)  a9 
+				,PROJ_STATUS a10
+				
+				from R_DW_HELP_PROJECT_COUNTRY_Y t1 
+				   
+				 <where>
+					<include refid="level_sql"/>
+					<include refid="query_condition"/>
+					<include refid="acc_year_sql"/>
+					AND PROJ_CLASS = '农田水利'
+	      		
+				</where>	
+				) t1
+				
+				)
+				
+				<if test="page !=null">
+						WHERE RM BETWEEN #{pageSize}*(#{page}-1)+1 AND #{pageSize}  * #{page}
+				</if>
+				</select>		
+<!-- 农田水利   明细总数  -->
+	<select id="queryFarmImplementAnalysisDetailCount"  parameterType="hashmap" resultType="long">
+	
+			select 
+
+				count(*)
+				
+				from
+				(
+				select t1.*,ROWNUM RM
+				from
+				(
+				 SELECT
+				
+				COUNTRY_PAC B1
+				,t1.CITY_NAME A2
+				,t1.COUNTY_NAME A3
+				,t1.TOWN_NAME A4
+				,t1.COUNTRY_NAME A5
+				,PROJ_NAME  as A6--项目名称
+				,to_char(to_date(BEGIN_TIME,'yyyymmdd'),'yyyy.mm') a7 
+				,STREET_LIGHTS_NUM a8 
+				,trunc(REAL_CAPITAL/10000, 2)  a9 
+				,PROJ_STATUS a10
+				
+				from R_DW_HELP_PROJECT_COUNTRY_Y t1 
+				   
+				 <where>
+					
+					<include refid="level_sql"/>
+					<include refid="query_condition"/>
+					<include refid="acc_year_sql"/>
+					AND PROJ_CLASS = '农田水利'
+	      		
+				</where>
+				) t1
+				
+				)
+				
+	</select>
+<!-- 公共设施服务 落实 柱形-->
+	<select id="queryFacilityImplementManagement"  parameterType="hashmap" resultType="hashmap">
+		SELECT
+        * from (SELECT
+	    	S_NAME 
+	    	,CASE WHEN u_type='A_PLAN' THEN '项目数'
+	        	  WHEN u_type='B_IMP' THEN '投入资金(万元)'
+	      	END S_GROUP
+	     	,u_value as S_VALUE
+	  		FROM (select 
+		      to_char(to_date(STAT_MONTH,'yyyymm'),'yyyy.mm')  S_NAME ,
+		      SUM(PROJECT_NUM)  A_PLAN,
+		      trunc(SUM(REAL_CAPITAL)/10000, 2) B_IMP
+		  from R2_DM_PROJFUNDS_PROJTYPE_M t
+	  <where>
+			<include refid="year_sql"/>
+			<include refid="query_condition"/>
+			<include refid="level_sql"/>
+	     	 	 
+				AND PROJ_TYPE=1
+				AND PROJ_CLASS = '公共设施服务'
+	      		
+	   </where>
+	  GROUP BY STAT_MONTH  ) 
+	  unpivot (u_value for u_type in (A_PLAN, B_IMP))
+	  ORDER BY S_NAME desc)
+       WHERE  ROWNUM&lt;11
+       ORDER BY S_NAME 
+	</select>
+<!--公共设施服务 柱形2-->
+	<select id="queryFacilityImplementManagement2"  parameterType="hashmap" resultType="hashmap">
+		SELECT
+	    	S_NAME 
+	    	,CASE WHEN u_type='A_PLAN' THEN '项目数'
+	        	  WHEN u_type='B_IMP' THEN '投入资金(万元)'
+	      	END S_GROUP
+	     	,u_value as S_VALUE
+	  		FROM (select 
+		      CITY_NAME  S_NAME ,
+		      SUM(PROJECT_NUM)  A_PLAN,
+		      trunc(SUM(REAL_CAPITAL)/10000, 2) B_IMP
+		  from R2_DM_HELP_PROJECT_CTY_Y t
+	  <where>
+			<include refid="year_sql"/>
+			<include refid="query_condition"/>
+			<include refid="level_sql"/>
+	     	 	 
+				AND PROJ_CLASS = '公共设施服务'
+	      		
+	   </where>
+	   GROUP BY CITY_NAME  
+	  ORDER BY B_IMP desc) 
+	  unpivot (u_value for u_type in (A_PLAN, B_IMP))
+	   WHERE rownum&lt;11
+	</select>
+	<!-- 公共设施服务 落实合计 -->
+	<select id="queryFacilityImplementManagementTableC"  parameterType="hashmap" resultType="hashmap">
+			SELECT 
+			R1.*
+			FROM
+			(SELECT
+		    	<include refid="count_area_sql"/>
+		       SUM(PROJECT_NUM)   A3
+		      ,trunc(SUM(REAL_CAPITAL)/10000, 2) A4
+             from
+          
+          R2_DM_HELP_PROJECT_CTY_Y
+			
+			<where>
+				<include refid="level_sql"/>
+				<include refid="year_sql"/>
+				<include refid="query_condition"/>
+				 
+				AND PROJ_CLASS = '公共设施服务'
+	      		
+			</where>
+			GROUP BY <include refid="count_group_by_sql"/>) R1
+			ORDER BY A3 DESC
+		
+		
+	</select>
+	<!-- 公共设施服务 落实分析 -->
+	<select id="queryFacilityImplementManagementTable"  parameterType="hashmap" resultType="hashmap">
+	SELECT 
+			A.*
+			FROM
+			(SELECT
+         	 <include refid="level_area_sql"/>
+          	   SUM(PROJECT_NUM)   A3
+		      ,trunc(SUM(REAL_CAPITAL)/10000, 2) A4
+	          from
+	          
+	          R2_DM_HELP_PROJECT_CTY_Y
+			
+			<where>
+				<include refid="level_sql"/>
+				<include refid="year_sql"/>
+				<include refid="query_condition"/>
+				 
+				AND PROJ_CLASS = '公共设施服务'
+	      		
+			</where>
+			GROUP BY <include refid="group_by_sql"/>) A
+			<include refid="dim_area_sql"/>
+	
+	</select>
+	
+<!-- 公共设施服务 落实分析明细细 -->
+	<select id="queryFacilityImplementAnalysisDetail"  parameterType="hashmap" resultType="hashmap">
+		select 
+
+				*
+				
+				from
+				(
+				select t1.*,ROWNUM RM
+				from
+				(
+				 SELECT
+				COUNTRY_PAC B1
+				,t1.CITY_NAME A2
+				,t1.COUNTY_NAME A3
+				,t1.TOWN_NAME A4
+				,t1.COUNTRY_NAME A5
+				,PROJ_NAME  as A6--项目名称
+				,to_char(to_date(BEGIN_TIME,'yyyymmdd'),'yyyy.mm') a7 
+				,trunc(REAL_CAPITAL/10000, 2) a8 
+				,PROJ_STATUS a9
+				
+				from R_DW_HELP_PROJECT_COUNTRY_Y t1 
+				   
+				 <where>
+					<include refid="level_sql"/>
+					<include refid="query_condition"/>
+					<include refid="acc_year_sql"/>
+					AND PROJ_CLASS = '公共设施服务'
+	      			
+				</where>	
+				) t1
+				
+				)
+				
+				<if test="page !=null">
+						WHERE RM BETWEEN #{pageSize}*(#{page}-1)+1 AND #{pageSize}  * #{page}
+				</if>
+				</select>		
+<!-- 公共设施服务   明细总数  -->
+	<select id="queryFacilityImplementAnalysisDetailCount"  parameterType="hashmap" resultType="long">
+	
+			select 
+
+				count(*)
+				
+				from
+				(
+				select t1.*,ROWNUM RM
+				from
+				(
+				 SELECT
+				
+				COUNTRY_PAC B1
+				,t1.CITY_NAME A2
+				,t1.COUNTY_NAME A3
+				,t1.TOWN_NAME A4
+				,t1.COUNTRY_NAME A5
+				,PROJ_NAME  as A6--项目名称
+				,to_char(to_date(BEGIN_TIME,'yyyymmdd'),'yyyy.mm') a7 
+				,trunc(REAL_CAPITAL/10000, 2) a8 
+				,PROJ_STATUS a9
+				
+				from R_DW_HELP_PROJECT_COUNTRY_Y t1 
+				   
+				 <where>
+					
+					<include refid="level_sql"/>
+					<include refid="query_condition"/>
+					<include refid="acc_year_sql"/>
+					AND PROJ_CLASS = '公共设施服务'
+	      			
+				</where>
+				) t1
+				
+				)
+				
+	</select>
+<!-- 村集体经济类别 落实 柱形-->
+	<select id="queryEconomyImplementManagement"  parameterType="hashmap" resultType="hashmap">
+		SELECT
+        * from (SELECT
+	    	S_NAME 
+	    	,CASE WHEN u_type='A_PLAN' THEN '项目数'
+	        	  WHEN u_type='B_IMP' THEN '投入资金(万元)'
+	      	END S_GROUP
+	     	,u_value as S_VALUE
+	  		FROM (select 
+		      to_char(to_date(STAT_MONTH,'yyyymm'),'yyyy.mm')  S_NAME ,
+		      SUM(PROJECT_NUM)  A_PLAN,
+		      trunc(SUM(REAL_CAPITAL)/10000, 2) B_IMP
+		  from R2_DM_PROJFUNDS_PROJTYPE_M t
+	  <where>
+			<include refid="year_sql"/>
+			<include refid="query_condition"/>
+			<include refid="level_sql"/>
+	     	 	 
+				AND PROJ_TYPE=1
+				AND PROJ_CLASS = '村集体经济类别'
+	      		
+	   </where>
+	  GROUP BY STAT_MONTH  ) 
+	  unpivot (u_value for u_type in (A_PLAN, B_IMP))
+	  ORDER BY S_NAME desc)
+       WHERE  ROWNUM&lt;11
+       ORDER BY S_NAME 
+	</select>
+<!--村集体经济类别 柱形2-->
+	<select id="queryEconomyImplementManagement2"  parameterType="hashmap" resultType="hashmap">
+		SELECT
+	    	S_NAME 
+	    	,CASE WHEN u_type='A_PLAN' THEN '项目数'
+	        	  WHEN u_type='B_IMP' THEN '投入资金(万元)'
+	      	END S_GROUP
+	     	,u_value as S_VALUE
+	  		FROM (select 
+		      CITY_NAME  S_NAME ,
+		      SUM(PROJECT_NUM)  A_PLAN,
+		      trunc(SUM(REAL_CAPITAL)/10000, 2) B_IMP
+		  from R2_DM_HELP_PROJECT_CTY_Y t
+	  <where>
+			<include refid="year_sql"/>
+			<include refid="query_condition"/>
+			<include refid="level_sql"/>
+	     	 	 
+				AND PROJ_CLASS = '村集体经济类别'
+	      		
+	   </where>
+	   GROUP BY CITY_NAME  
+	  ORDER BY B_IMP desc) 
+	  unpivot (u_value for u_type in (A_PLAN, B_IMP))
+	   WHERE rownum&lt;11
+	</select>
+	<!-- 村集体经济类别 落实合计 -->
+	<select id="queryEconomyImplementManagementTableC"  parameterType="hashmap" resultType="hashmap">
+			SELECT 
+			R1.*
+			FROM
+			(SELECT
+		    	<include refid="count_area_sql"/>
+		   		 SUM(PROJECT_NUM)  A3
+		      ,trunc(SUM(REAL_CAPITAL)/10000, 2) A4
+		      ,trunc(SUM(PROJ_PROFIT)/10000, 2)A5
+		      from
+		      
+		      R2_DM_HELP_PROJECT_CTY_Y
+			
+			<where>
+				<include refid="level_sql"/>
+				<include refid="year_sql"/>
+				<include refid="query_condition"/>
+				 
+				AND PROJ_CLASS = '村集体经济类别'
+	      		
+			</where>
+			GROUP BY <include refid="count_group_by_sql"/>) R1
+			ORDER BY A3 DESC
+		
+		
+	</select>
+	<!-- 村集体经济类别 落实分析 -->
+	<select id="queryEconomyImplementManagementTable"  parameterType="hashmap" resultType="hashmap">
+	SELECT 
+			A.*
+			FROM
+			(SELECT
+         	 <include refid="level_area_sql"/>
+          	  	 SUM(PROJECT_NUM)  A3
+		      ,trunc(SUM(REAL_CAPITAL)/10000, 2) A4
+		      ,trunc(SUM(PROJ_PROFIT)/10000, 2)A5
+		      from
+		      
+		      R2_DM_HELP_PROJECT_CTY_Y
+			<where>
+				<include refid="level_sql"/>
+				<include refid="year_sql"/>
+				<include refid="query_condition"/>
+				 
+				AND PROJ_CLASS = '村集体经济类别'
+	      		
+			</where>
+			GROUP BY <include refid="group_by_sql"/>) A
+			<include refid="dim_area_sql"/>
+	
+	</select>
+	
+<!-- 村集体经济类别 落实分析明细细 -->
+	<select id="queryEconomyImplementAnalysisDetail"  parameterType="hashmap" resultType="hashmap">
+		select 
+
+				*
+				
+				from
+				(
+				select t1.*,ROWNUM RM
+				from
+				(
+				 SELECT
+				COUNTRY_PAC B1
+				,t1.CITY_NAME A2
+				,t1.COUNTY_NAME A3
+				,t1.TOWN_NAME A4
+				,t1.COUNTRY_NAME A5
+				,PROJ_NAME  as A6--项目名称
+				,to_char(to_date(BEGIN_TIME,'yyyymmdd'),'yyyy.mm') a7 
+				,trunc(REAL_CAPITAL/10000, 2) a8 
+				,trunc(PROJ_PROFIT/10000, 2) a9--项目收益
+				,PROJ_STATUS a10
+				
+				from R_DW_HELP_PROJECT_COUNTRY_Y t1 
+				   
+				 <where>
+					<include refid="level_sql"/>
+					<include refid="query_condition"/>
+					<include refid="acc_year_sql"/>
+					AND PROJ_CLASS = '村集体经济类别'
+	      		
+				</where>	
+				) t1
+				
+				)
+				
+				<if test="page !=null">
+						WHERE RM BETWEEN #{pageSize}*(#{page}-1)+1 AND #{pageSize}  * #{page}
+				</if>
+				</select>		
+<!-- 村集体经济类别  明细总数  -->
+	<select id="queryEconomyImplementAnalysisDetailCount"  parameterType="hashmap" resultType="long">
+	
+			select 
+
+				count(*)
+				
+				from
+				(
+				select t1.*,ROWNUM RM
+				from
+				(
+				 SELECT
+				
+				COUNTRY_PAC B1
+				,t1.CITY_NAME A2
+				,t1.COUNTY_NAME A3
+				,t1.TOWN_NAME A4
+				,t1.COUNTRY_NAME A5
+				,PROJ_NAME  as A6--项目名称
+				,to_char(to_date(BEGIN_TIME,'yyyymmdd'),'yyyy.mm') a7 
+				,trunc(REAL_CAPITAL/10000, 2) a8 
+				,trunc(PROJ_PROFIT/10000, 2) a9--项目收益
+				,PROJ_STATUS a10
+				
+				from R_DW_HELP_PROJECT_COUNTRY_Y t1 
+				   
+				 <where>
+					
+					<include refid="level_sql"/>
+					<include refid="query_condition"/>
+					<include refid="acc_year_sql"/>
+					AND PROJ_CLASS = '村集体经济类别'
+	      		
+				</where>
+				) t1
+				
+				)
+				
+	</select>
+<!--教育教学 落实 柱形-->
+	<select id="queryEduImplementManagement"  parameterType="hashmap" resultType="hashmap">
+		SELECT
+        * from (SELECT
+	    	S_NAME 
+	    	,CASE WHEN u_type='A_PLAN' THEN '项目数'
+	        	  WHEN u_type='B_IMP' THEN '投入资金(万元)'
+	      	END S_GROUP
+	     	,u_value as S_VALUE
+	  		FROM (select 
+		      to_char(to_date(STAT_MONTH,'yyyymm'),'yyyy.mm')  S_NAME ,
+		     SUM(PROJECT_NUM)  A_PLAN,
+		      trunc(SUM(REAL_CAPITAL)/10000, 2) B_IMP
+		  from R2_DM_PROJFUNDS_PROJTYPE_M t
+	  <where>
+			<include refid="year_sql"/>
+			<include refid="query_condition"/>
+			<include refid="level_sql"/>
+	     	 	 
+				AND PROJ_TYPE=1
+				AND PROJ_CLASS = '教育教学'
+	      		
+	   </where>
+	  GROUP BY STAT_MONTH  ) 
+	  unpivot (u_value for u_type in (A_PLAN, B_IMP))
+	  ORDER BY S_NAME desc)
+       WHERE  ROWNUM&lt;11
+       ORDER BY S_NAME 
+	</select>
+<!--教育教学  柱形2-->
+	<select id="queryEduImplementManagement2"  parameterType="hashmap" resultType="hashmap">
+		SELECT
+	    	S_NAME 
+	    	,CASE WHEN u_type='A_PLAN' THEN '项目数'
+	        	  WHEN u_type='B_IMP' THEN '投入资金(万元)'
+	      	END S_GROUP
+	     	,u_value as S_VALUE
+	  		FROM (select 
+		      CITY_NAME  S_NAME ,
+		      SUM(PROJECT_NUM)  A_PLAN,
+		      trunc(SUM(REAL_CAPITAL)/10000, 2) B_IMP
+		  from R2_DM_HELP_PROJECT_CTY_Y t
+	  <where>
+			<include refid="year_sql"/>
+			<include refid="query_condition"/>
+			<include refid="level_sql"/>
+	     	 	 
+				AND PROJ_CLASS = '教育教学'
+	      		
+	   </where>
+	 GROUP BY CITY_NAME  
+	  ORDER BY B_IMP desc) 
+	  unpivot (u_value for u_type in (A_PLAN, B_IMP))
+	   WHERE rownum&lt;11
+	</select>
+	<!-- 教育教学  落实合计 -->
+	<select id="queryEduImplementManagementTableC"  parameterType="hashmap" resultType="hashmap">
+			SELECT 
+			R1.*
+			FROM
+			(SELECT
+		    	<include refid="count_area_sql"/>
+		    	SUM(PROJECT_NUM)  A3
+		      ,trunc(SUM(REAL_CAPITAL)/10000, 2) A4
+		      
+		      from
+		      
+		      R2_DM_HELP_PROJECT_CTY_Y
+			
+			<where>
+				<include refid="level_sql"/>
+				<include refid="year_sql"/>
+				<include refid="query_condition"/>
+				 
+				AND PROJ_CLASS = '教育教学'
+	      		
+			</where>
+			GROUP BY <include refid="count_group_by_sql"/>) R1
+			ORDER BY A3 DESC
+		
+		
+	</select>
+	<!-- 教育教学 落实分析 -->
+	<select id="queryEduImplementManagementTable"  parameterType="hashmap" resultType="hashmap">
+	SELECT 
+			A.*
+			FROM
+			(SELECT
+         	 <include refid="level_area_sql"/>
+          	  SUM(PROJECT_NUM)  A3
+		      ,trunc(SUM(REAL_CAPITAL)/10000, 2) A4
+		      
+		      from
+		      
+		      R2_DM_HELP_PROJECT_CTY_Y
+			
+			<where>
+				<include refid="level_sql"/>
+				<include refid="year_sql"/>
+				<include refid="query_condition"/>
+				 
+				AND PROJ_CLASS = '教育教学'
+	      		
+			</where>
+			GROUP BY <include refid="group_by_sql"/>) A
+			<include refid="dim_area_sql"/>
+	
+	</select>
+	
+<!--教育教学 落实分析明细细 -->
+	<select id="queryEduImplementAnalysisDetail"  parameterType="hashmap" resultType="hashmap">
+		select 
+
+				*
+				
+				from
+				(
+				select t1.*,ROWNUM RM
+				from
+				(
+				 SELECT
+				COUNTRY_PAC B1
+				,t1.CITY_NAME A2
+				,t1.COUNTY_NAME A3
+				,t1.TOWN_NAME A4
+				,t1.COUNTRY_NAME A5
+				,PROJ_NAME  as A6--项目名称
+				,to_char(to_date(BEGIN_TIME,'yyyymmdd'),'yyyy.mm') a7 
+				,trunc(REAL_CAPITAL/10000, 2) a8 
+				,PROJ_STATUS a9
+				
+				
+				from R_DW_HELP_PROJECT_COUNTRY_Y t1 
+				   
+				 <where>
+					<include refid="level_sql"/>
+					<include refid="query_condition"/>
+					<include refid="acc_year_sql"/>
+					AND PROJ_CLASS = '教育教学'
+	      			
+				</where>	
+				) t1
+				
+				)
+				
+				<if test="page !=null">
+						WHERE RM BETWEEN #{pageSize}*(#{page}-1)+1 AND #{pageSize}  * #{page}
+				</if>
+				</select>		
+<!-- 教育教学   明细总数  -->
+	<select id="queryEduImplementAnalysisDetailCount"  parameterType="hashmap" resultType="long">
+	
+			select 
+
+				count(*)
+				
+				from
+				(
+				select t1.*,ROWNUM RM
+				from
+				(
+				 SELECT
+				
+				COUNTRY_PAC B1
+				,t1.CITY_NAME A2
+				,t1.COUNTY_NAME A3
+				,t1.TOWN_NAME A4
+				,t1.COUNTRY_NAME A5
+				,PROJ_NAME  as A6--项目名称
+				,to_char(to_date(BEGIN_TIME,'yyyymmdd'),'yyyy.mm') a7 
+				,trunc(REAL_CAPITAL/10000, 2) a8 
+				,PROJ_STATUS a9
+				
+				
+				from R_DW_HELP_PROJECT_COUNTRY_Y t1 
+				   
+				 <where>
+					
+					<include refid="level_sql"/>
+					<include refid="query_condition"/>
+					<include refid="acc_year_sql"/>
+					AND PROJ_CLASS = '教育教学'
+	      			
+				</where>
+				) t1
+				
+				)
+				
+	</select>
+
+	<sql id="count_group_by_sql">
+			<if test=" '' != level and null != level and 'province' == level  ">
+				 1
+			</if>
+			<if test=" '' != level and null != level and 'city' == level  ">
+				 CITY_PAC , CITY_NAME
+			</if>
+			
+			<if test=" '' != level and null != level and 'county' == level  ">
+				 COUNTY_PAC ,COUNTY_NAME  
+			</if>
+			
+			<if test=" '' != level and null != level and 'town' == level  ">
+				   TOWN_PAC ,TOWN_NAME 
+			</if>
+			
+			<if test=" '' != level and null != level and 'country' == level  ">
+				COUNTRY_PAC  ,COUNTRY_NAME
+			</if>
+	</sql>
+		<!-- 层级分组 -->
+	<sql id="group_by_sql">
+	
+			<if test=" '' != level and null != level and 'province' == level  ">
+				 CITY_PAC , CITY_NAME
+			</if>
+			<if test=" '' != level and null != level and 'city' == level  ">
+				 COUNTY_PAC ,COUNTY_NAME
+			</if>
+			
+			<if test=" '' != level and null != level and 'county' == level  ">
+				   TOWN_PAC ,TOWN_NAME 
+			</if>
+			
+			<if test=" '' != level and null != level and 'town' == level  ">
+				 COUNTRY_PAC  ,COUNTRY_NAME 
+			</if>
+			
+			<if test=" '' != level and null != level and 'country' == level  ">
+				COUNTRY_PAC  ,COUNTRY_NAME 
+			</if>
+			
+		
+	</sql>
+	<!--  -->
+	<sql id="level_area_sql">
+			
+			<if test=" '' != level and null != level and 'province' == level  ">
+				CITY_PAC S_ID, CITY_NAME A2, 
+			</if>
+			<if test=" '' != level and null != level and 'city' == level  ">
+				COUNTY_PAC S_ID,COUNTY_NAME A2,
+			</if>
+			
+			<if test=" '' != level and null != level and 'county' == level  ">
+				 TOWN_PAC S_ID ,TOWN_NAME A2, 
+			</if>
+			
+			<if test=" '' != level and null != level and 'town' == level  ">
+				COUNTRY_PAC S_ID ,COUNTRY_NAME  A2, 
+			</if>
+			
+			<if test=" '' != level and null != level and 'country' == level  ">
+				COUNTRY_PAC S_ID ,COUNTRY_NAME  A2, 
+			</if>
+	</sql>
+
+	<!-- count  -->
+	<sql id="count_area_sql">
+			<if test=" '' != level and null != level and 'province' == level  ">
+				'440000000000' S_ID , '合计' A2,
+			</if>
+			<if test=" '' != level and null != level and 'city' == level  ">
+				CITY_PAC S_ID, '合计' A2,
+			</if>
+			
+			<if test=" '' != level and null != level and 'county' == level  ">
+				COUNTY_PAC S_ID,'合计' A2,
+			</if>
+			
+			<if test=" '' != level and null != level and 'town' == level  ">
+				 TOWN_PAC S_ID ,'合计' A2,
+			</if>
+			
+			<if test=" '' != level and null != level and 'country' == level  ">
+				COUNTRY_PAC S_ID ,'合计'  A2,
+			</if>			
+	</sql>
+	<sql id="year_sql">
+	
+		<if test=" '' != year and null != year">
+			AND STAT_YEAR = 	#{year}		
+		</if>
+	
+	</sql>
+	<sql id="acc_year_sql">
+	<if test=" '' != year and null != year">
+			AND ACC_YEAR = 	#{year}		
+		</if>
+	</sql>
+
+	
+	<sql id="query_condition">
+		<if test=" '' != scope and null != scope">
+			<if test="2 == scope">AND IS_KEY_POVERTY=1</if><!-- 贫困村 -->
+			<if test="3 == scope">AND IS_KEY_POVERTY=0</if><!-- 分散村 -->
+			<if test="4 == scope">AND IS_OLD_REVOLUTIONARY=1</if><!-- 革命老区 -->
+			<if test="5 == scope">AND IS_CENTRAL_SOVIET=1</if><!-- 中央苏区 -->
+		</if>
+		<if test="list!=null and list.size()>0">
+			AND PROJ_STATUS in  
+			<foreach item="item" index="index" collection="list" open="(" separator="," close=")">  
+			 #{item}  
+			</foreach>  
+		</if>
+
+	</sql>	
+	<!-- 层级sql -->
+	<sql id="level_sql">
+			
+			<if test=" '' != level and null != level and 'province' == level  ">
+				
+			</if>
+			
+			<if test=" '' != level and null != level and 'city' == level  ">
+				AND CITY_PAC = #{id}
+			</if>
+			
+			<if test=" '' != level and null != level and 'county' == level  ">
+				AND COUNTY_PAC = #{id} 
+			</if>
+			
+			<if test=" '' != level and null != level and 'town' == level  ">
+				AND TOWN_PAC = #{id} 
+			</if>
+			
+			<if test=" '' != level and null != level and 'country' == level  ">
+				AND COUNTRY_PAC = #{id}
+			</if>
+	</sql>
+	<!-- 层级sql -->
+	<sql id="sort_area_sql">
+			
+			<if test=" '' != sort_area and null != sort_area and 1 == sort_area  ">
+				CITY_PAC S_ID, CITY_NAME A2,
+			</if>
+			<if test=" '' != sort_area and null != sort_area and 2 == sort_area  ">
+				COUNTY_PAC S_ID,CITY_NAME||'>'||COUNTY_NAME A2,
+			</if>
+			
+			<if test=" '' != sort_area and null != sort_area and 3 == sort_area  ">
+				 TOWN_PAC S_ID ,CITY_NAME||'>'||COUNTY_NAME||'>'||TOWN_NAME A2,
+			</if>
+			
+			<if test=" '' != sort_area and null != sort_area and 4 == sort_area  ">
+				COUNTRY_PAC S_ID ,CITY_NAME||'>'||COUNTY_NAME||'>'||TOWN_NAME||'>'||COUNTRY_NAME  A2,
+			</if>
+			
+	</sql>				
+	<sql id="group_sort_area_sql">
+			
+			<if test=" '' != sort_area and null != sort_area and 1 == sort_area  ">
+				CITY_PAC , CITY_NAME 
+			</if>
+			<if test=" '' != sort_area and null != sort_area and 2 == sort_area  ">
+				COUNTY_PAC ,CITY_NAME||'>'||COUNTY_NAME 
+			</if>
+			
+			<if test=" '' != sort_area and null != sort_area and 3 == sort_area  ">
+				 TOWN_PAC  ,CITY_NAME||'>'||COUNTY_NAME||'>'||TOWN_NAME
+			</if>
+			
+			<if test=" '' != sort_area and null != sort_area and 4 == sort_area  ">
+				COUNTRY_PAC  ,CITY_NAME||'>'||COUNTY_NAME||'>'||TOWN_NAME||'>'||COUNTRY_NAME 
+			</if>
+			
+	</sql>
+		<sql id="detail_area_sql">
+		
+			<if test=" '' != level and null != level and 'city' == level  ">
+				CITY_PAC S_ID, CITY_NAME A2,
+			</if>
+			
+			<if test=" '' != level and null != level and 'county' == level  ">
+				COUNTY_PAC S_ID,COUNTY_NAME A2,
+			</if>
+			
+			<if test=" '' != level and null != level and 'town' == level  ">
+				 TOWN_PAC S_ID ,TOWN_NAME A2,
+			</if>
+			
+			<if test=" '' != level and null != level and 'country' == level  ">
+				COUNTRY_PAC S_ID ,COUNTRY_NAME  A2,
+			</if>
+	</sql>
+
+</mapper>

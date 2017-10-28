@@ -1,0 +1,58 @@
+{
+  "code": 0,
+  "msg": "获取信息成功",
+  "data": {
+    "time_end": 1544878921399,
+    "average": {
+      "amount": {
+        "target": 7365,
+        "current": 3576,
+        "basic": 3121
+      },
+      "chart_config": {
+      }
+    },
+    "chart_config_guarantee": {},
+    "bars": [
+      {
+        "name": "道路硬化",
+        "percent": 100
+      },
+      {
+        "name": "安全饮水",
+        "percent": 92
+      },
+      {
+        "name": "电网改造",
+        "percent": 84
+      },
+      {
+        "name": "卫生站",
+        "percent": 55
+      },
+      {
+        "name": "广播电视",
+        "percent": 78
+      },
+      {
+        "name": "宽带网络",
+        "percent": 38
+      }
+    ],
+    "alarm": {
+      "family": 0,
+      "project": 0,
+      "country": 0,
+      "responsible": 0
+    },
+    "capital": {
+      "stat": {
+        "invested": "105亿",
+        "projects": "22380个",
+        "rate_completed": "62.5%"
+      },
+      "chart_config_pie": {},
+      "chart_config_bubble": {}
+    }
+  }
+}

@@ -1,0 +1,16 @@
+{
+	"data":{
+		"belong_organization":"兴宁市纪委",
+		"list":[
+			{
+				"id":"441481107210",
+				"order":1,
+				"contact_phone":"13539183719",
+				"contact_name":"陈选尧",
+				"country_name":"华岭村委会"
+			}
+		]
+	},
+	"code":0,
+	"msg":"获取信息成功"
+}

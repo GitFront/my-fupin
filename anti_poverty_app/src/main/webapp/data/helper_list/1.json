@@ -1,0 +1,254 @@
+{
+    "code": 0,
+    "msg": "获取贫困户列表成功",
+    "data":{
+        "district":"梅州市",
+        "list":[
+            {
+                "order_id":"1",
+                "house_holder":"丘运才",
+                "helper_name":"胡丽玲",
+                "helper_tel":"156 0223 0650",
+                "helper_unit":"广州市天河区商务和金融工作局"
+            },
+              {
+                "order_id":"2",
+                "house_holder":"丘凤招",
+                "helper_name":"吕伟民",
+                "helper_tel":"135 0304 1734",
+                "helper_unit":"广州市天河区商务和金融工作局"
+            },
+              {
+                "order_id":"3",
+                "house_holder":"何要娣",
+                "helper_name":"夏亦华",
+                "helper_tel":"138 0297 8912",
+                "helper_unit":"广州市天河区商务和金融工作局"
+            },
+              {
+                "order_id":"4",
+                "house_holder":"丘锡宏",
+                "helper_name":"李光锦",
+                "helper_tel":"189 9869 3880",
+                "helper_unit":"梅州市人民检察院"
+            },
+              {
+                "order_id":"5",
+                "house_holder":"何其昌",
+                "helper_name":"黎 翔",
+                "helper_tel":"159 1596 2008",
+                "helper_unit":"广州市天河区商务和金融工作局"
+            },
+              {
+                "order_id":"6",
+                "house_holder":"潘伟",
+                "helper_name":"聂 文",
+                "helper_tel":"139 2400 2928",
+                "helper_unit":"广州市天河区商务和金融工作局"
+            },
+              {
+                "order_id":"7",
+                "house_holder":"潘宇旋",
+                "helper_name":"郑子奇",
+                "helper_tel":"139 2606 3981",
+                "helper_unit":"广州市天河区商务和金融工作局"
+            },
+              {
+                "order_id":"8",
+                "house_holder":"潘汉涛",
+                "helper_name":"罗琼芳",
+                "helper_tel":"135 6048 2016",
+                "helper_unit":"广州市天河区商务和金融工作局"
+            },
+              {
+                "order_id":"9",
+                "house_holder":"张华香",
+                "helper_name":"彭运力",
+                "helper_tel":"15920169996",
+                "helper_unit":"广州市天河区商务和金融工作局"
+            },
+              {
+                "order_id":"10",
+                "house_holder":"潘焕龙",
+                "helper_name":"王皓喆",
+                "helper_tel":"159 7548 5507",
+                "helper_unit":"广州市天河区商务和金融工作局"
+            },
+              {
+                "order_id":"11",
+                "house_holder":"林利娥",
+                "helper_name":"张海波",
+                "helper_tel":"139 2223 3011",
+                "helper_unit":"广州市天河区商务和金融工作局"
+            },
+              {
+                "order_id":"12",
+                "house_holder":"潘则中",
+                "helper_name":"何旭权",
+                "helper_tel":"139 2408 2628",
+                "helper_unit":"广州市天河区商务和金融工作局"
+            },
+              {
+                "order_id":"13",
+                "house_holder":"丘相元",
+                "helper_name":"张 勇",
+                "helper_tel":"137 1122 2063",
+                "helper_unit":"广州市天河区商务和金融工作局"
+            },
+              {
+                "order_id":"14",
+                "house_holder":"肖谷云",
+                "helper_name":"袁晓文",
+                "helper_tel":"139 2508 8345",
+                "helper_unit":"广州市天河区商务和金融工作局"
+            },
+              {
+                "order_id":"15",
+                "house_holder":"范元香",
+                "helper_name":"于卫宁",
+                "helper_tel":"138 2628 2560",
+                "helper_unit":"广州市天河区商务和金融工作局"
+            },
+              {
+                "order_id":"16",
+                "house_holder":"何明达",
+                "helper_name":"王颖娟",
+                "helper_tel":"135 0309 1653",
+                "helper_unit":"广州市天河区商务和金融工作局"
+            },
+              {
+                "order_id":"17",
+                "house_holder":"潘涛",
+                "helper_name":"贾佶瑛",
+                "helper_tel":"186 6568 1681",
+                "helper_unit":"广州市天河区商务和金融工作局"
+            },
+              {
+                "order_id":"18",
+                "house_holder":"曾新红",
+                "helper_name":"卜海燕",
+                "helper_tel":"138 2502 8896",
+                "helper_unit":"广州市天河区商务和金融工作局"
+            },
+              {
+                "order_id":"19",
+                "house_holder":"黄佑招",
+                "helper_name":"温玉华",
+                "helper_tel":"186 6563 0088",
+                "helper_unit":"广州市天河区商务和金融工作局"
+            },
+              {
+                "order_id":"20",
+                "house_holder":"何雨华",
+                "helper_name":"邹子殷",
+                "helper_tel":"138 0296 2080",
+                "helper_unit":"广州市天河区商务和金融工作局"
+            },
+              {
+                "order_id":"21",
+                "house_holder":"罗华娣",
+                "helper_name":"袁 艳",
+                "helper_tel":"137 9806 5906",
+                "helper_unit":"广州市天河区商务和金融工作局"
+            },
+              {
+                "order_id":"22",
+                "house_holder":"丘佛金",
+                "helper_name":"邹 胜",
+                "helper_tel":"133 1881 0557",
+                "helper_unit":"广州市天河区商务和金融工作局"
+            },
+              {
+                "order_id":"23",
+                "house_holder":"刘丹",
+                "helper_name":"唐国华",
+                "helper_tel":"139 2406 9485",
+                "helper_unit":"广州市天河区商务和金融工作局"
+            },
+              {
+                "order_id":"24",
+                "house_holder":"丘梅中",
+                "helper_name":"郭亦鸥",
+                "helper_tel":"136 0009 6089",
+                "helper_unit":"广州市天河区商务和金融工作局"
+            },
+              {
+                "order_id":"25",
+                "house_holder":"潘汉祥",
+                "helper_name":"崔淇玮",
+                "helper_tel":"135 3888 3415",
+                "helper_unit":"广州市天河区商务和金融工作局"
+            },
+              {
+                "order_id":"26",
+                "house_holder":"丘伟荣",
+                "helper_name":"陈愉舒",
+                "helper_tel":"132 6835 7373",
+                "helper_unit":"广州市天河区商务和金融工作局"
+            },
+              {
+                "order_id":"27",
+                "house_holder":"潘裕军",
+                "helper_name":"蓝雄",
+                "helper_tel":"137 2808 3680",
+                "helper_unit":"广州市天河区商务和金融工作局"
+            },
+              {
+                "order_id":"28",
+                "house_holder":"张娴",
+                "helper_name":"陈考明",
+                "helper_tel":"186 6567 3578",
+                "helper_unit":"广州市天河区商务和金融工作局"
+            },
+              {
+                "order_id":"29",
+                "house_holder":"丘三妹",
+                "helper_name":"陈 晔",
+                "helper_tel":"139 2400 1816",
+                "helper_unit":"广州市天河区商务和金融工作局"
+            },
+              {
+                "order_id":"30",
+                "house_holder":"潘伟中",
+                "helper_name":"钟永昌",
+                "helper_tel":"138 0250 3022",
+                "helper_unit":"广州市天河区商务和金融工作局"
+            },
+              {
+                "order_id":"31",
+                "house_holder":"丘红",
+                "helper_name":"雷灿霞",
+                "helper_tel":"130 7687 0329",
+                "helper_unit":"广州市天河区商务和金融工作局"
+            },
+              {
+                "order_id":"32",
+                "house_holder":"潘玩青",
+                "helper_name":"胡嘉华",
+                "helper_tel":"136 8889 4670",
+                "helper_unit":"广州市天河区商务和金融工作局"
+            },
+              {
+                "order_id":"33",
+                "house_holder":"何兴华",
+                "helper_name":"陈武达",
+                "helper_tel":"159 2054 7146",
+                "helper_unit":"广州市天河区商务和金融工作局"
+            },
+              {
+                "order_id":"34",
+                "house_holder":"潘日标",
+                "helper_name":"邱诚桐",
+                "helper_tel":"139 2609 5707",
+                "helper_unit":"广州市天河区商务和金融工作局"
+            },
+              {
+                "order_id":"35",
+                "house_holder":"何洪元",
+                "helper_name":"詹益才",
+                "helper_tel":"139 2606 3981",
+                "helper_unit":"广州市天河区商务和金融工作局"
+            }
+        ]
+    }
+}

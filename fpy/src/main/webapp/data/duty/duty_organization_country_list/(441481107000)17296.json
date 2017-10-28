@@ -1,0 +1,16 @@
+{
+	"data":{
+		"belong_organization":"广州市天河区城市管理局",
+		"list":[
+			{
+				"id":"441481107233",
+				"order":1,
+				"contact_phone":"13560986288",
+				"contact_name":"何霭云",
+				"country_name":"石陂村委会"
+			}
+		]
+	},
+	"code":0,
+	"msg":"获取信息成功"
+}

@@ -1,0 +1,23 @@
+{
+	"data":{
+		"belong_organization":"兴宁团市委",
+		"list":[
+			{
+				"id":"441481123202",
+				"order":1,
+				"contact_phone":"0753-3581405",
+				"contact_name":"廖淦辉",
+				"country_name":"金星村委会"
+			},
+			{
+				"id":"441481123204",
+				"order":2,
+				"contact_phone":"13502527163",
+				"contact_name":"黄泉辉",
+				"country_name":"龙盘村委会"
+			}
+		]
+	},
+	"code":0,
+	"msg":"获取信息成功"
+}

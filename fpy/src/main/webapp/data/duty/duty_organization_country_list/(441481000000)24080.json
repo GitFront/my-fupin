@@ -1,0 +1,16 @@
+{
+	"data":{
+		"belong_organization":"广州市天河区人民政府五山街道办事处",
+		"list":[
+			{
+				"id":"441481117200",
+				"order":1,
+				"contact_phone":"13751970355",
+				"contact_name":"曾繁荣",
+				"country_name":"槐东村委会"
+			}
+		]
+	},
+	"code":0,
+	"msg":"获取信息成功"
+}

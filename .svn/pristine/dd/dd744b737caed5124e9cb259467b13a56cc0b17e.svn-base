@@ -1,0 +1,764 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+        
+<mapper namespace="com.aspire.birp.modules.antiPoverty.dao.FiveLowDao">
+	<!-- 低保五保政策落实(户数) 统计图 -->
+	<select id="flveLowGovernHu"  parameterType="hashmap" resultType="hashmap">
+	
+		SELECT 
+		 STAT_YEAR as S_NAME,
+		 CASE WHEN u_type='A_SHOULD' THEN '应该'
+		        WHEN u_type='B_IMP' THEN '落实'
+		        WHEN u_type='C_COINCIDE' THEN '重合'
+		   ELSE '其它' END S_GROUP,
+		 u_value as S_VALUE
+		FROM (select 
+		   STAT_YEAR,
+		   COUNT(FAM_ID) A_SHOULD,
+		   SUM(CASE WHEN IS_IMP_LOW_FIVE=1 THEN 1 ELSE 0 END) B_IMP,
+   		   SUM(CASE WHEN IS_IMP_LOW_FIVE_COINCIDE=1 THEN 1 ELSE 0 END) C_COINCIDE
+		from R_DW_POOROBJ_FAM_Y
+		where 1=1
+		<include refid="acc_year_sql"/>
+		<include refid="level_sql"/>		
+		AND IS_CURRENT=1
+		AND POOR_TYPE2 IN (1,2,3)
+		GROUP BY STAT_YEAR ) 
+		unpivot (u_value for u_type in (A_SHOULD, B_IMP, C_COINCIDE))
+		ORDER BY S_NAME,u_type
+		
+	</select>
+	<!-- 低保五保政策落实(人数) 统计图 -->
+	<select id="flveLowGovernRen"  parameterType="hashmap" resultType="hashmap">
+		
+		SELECT 
+		 STAT_YEAR as S_NAME,
+		 CASE WHEN u_type='A_SHOULD' THEN '应该'
+		        WHEN u_type='B_IMP' THEN '落实'
+		        WHEN u_type='C_COINCIDE' THEN '重合'
+		   ELSE '其它' END S_GROUP,
+		 u_value as S_VALUE
+		FROM (select 
+		   STAT_YEAR,
+		   COUNT(POP_ID) A_SHOULD,
+		   SUM(CASE WHEN (IS_IMP_LOW=1 OR IS_IMP_FIVE=1) THEN 1 ELSE 0 END) B_IMP,
+		   SUM(CASE WHEN (IS_IMP_LOW_COINCIDE=1 OR IS_IMP_FIVE_COINCIDE=1) THEN 1 ELSE 0 END) C_COINCIDE
+		from R_DW_POOROBJ_POP_Y
+		where 1=1
+		<include refid="acc_year_sql"/>
+		<include refid="level_sql"/>
+		AND IS_CURRENT=1
+		AND POP_CHANGES IN (0,1)
+		AND POOR_TYPE2 IN (1,2,3)
+		GROUP BY STAT_YEAR ) 
+		unpivot (u_value for u_type in (A_SHOULD, B_IMP, C_COINCIDE))
+		ORDER BY S_NAME,u_type
+		
+	</select>
+	
+	<!-- 低保五保政策落实趋势(人数） 统计图 -->
+	<select id="flveLowGovernQu" parameterType="hashmap" resultType="hashmap">
+		SELECT t1.* FROM (
+		SELECT 
+		 TO_CHAR(TO_DATE( STAT_MONTH,'YYYYMM'),'YYYY.MM') S_NAME,
+		 CASE WHEN u_type='POP_1' THEN '应该'
+		           WHEN u_type='POP_2' THEN '落实'
+		           WHEN u_type='POP_3' THEN '重合' END S_GROUP,
+		 u_value as S_VALUE
+		FROM (select 
+		   STAT_MONTH,
+		   SUM(ENJOY_LOWFIVE_POP_NUM) POP_1,
+		   SUM(IMP_LOWFIVE_POP_NUM) POP_2,
+		   SUM(COINCIDE_LOWFIVE_POP_NUM) POP_3
+		from R2_DM_POOROBJ_POORTYPE_M
+		where 1=1
+		<include refid="stat_month_sql"/>
+		<include refid="level_sql"/>
+		<include refid="query_condition_sql"/> 
+		GROUP BY STAT_MONTH ) 
+		unpivot (u_value for u_type in (POP_1, POP_2, POP_3))
+		ORDER BY STAT_MONTH,U_TYPE ) t1 
+		WHERE ROWNUM &lt;= 6
+		ORDER BY t1.S_NAME
+	</select>
+	
+	<!-- 当前低保五保政策落实(人数) 统计图 -->
+	<select id="flveLowGovernCurr" parameterType="hashmap" resultType="hashmap">
+		
+		SELECT 
+		 CASE WHEN POOR_TYPE2='1' THEN '无劳动能力的一般贫困户'
+		        WHEN POOR_TYPE2='2' THEN '低保户'
+		        WHEN POOR_TYPE2='3' THEN '五保户'
+		   ELSE '其它' END as S_NAME,
+		 CASE WHEN u_type='A_SHOULD' THEN '应该'
+		        WHEN u_type='B_IMP' THEN '落实'
+		        WHEN u_type='C_COINCIDE' THEN '重合'
+		   ELSE '其它' END S_GROUP,
+		 u_value as S_VALUE
+		FROM (select 
+		   POOR_TYPE2,
+		   COUNT(POP_ID) A_SHOULD,
+		   SUM(CASE WHEN (IS_IMP_LOW=1 OR IS_IMP_FIVE=1) THEN 1 ELSE 0 END) B_IMP,
+		   SUM(CASE WHEN (IS_IMP_LOW_COINCIDE=1 OR IS_IMP_FIVE_COINCIDE=1) THEN 1 ELSE 0 END) C_COINCIDE
+		from R_DW_POOROBJ_POP_Y
+		where 1=1
+		<include refid="stat_year_sql"/>
+		<include refid="year_sql"/>
+		<include refid="level_sql"/>
+		<include refid="query_condition_sql"/> 
+		AND IS_CURRENT=1
+		AND POP_CHANGES IN (0,1)
+		GROUP BY POOR_TYPE2 ) 
+		unpivot (u_value for u_type in (A_SHOULD, B_IMP, C_COINCIDE))
+		ORDER BY POOR_TYPE2,u_type
+	</select>
+	
+	<!-- 五保低保政策落实管理 -->
+	<select id="flveLowGovern"  parameterType="hashmap" resultType="hashmap">
+		
+		select  
+		 S_ID,A2,A3,A4,A5,A6,A7,A8,
+		 to_char(trunc(case when nvl(A5, 0) = 0 then 0 else (A7/A5) * 100 end,2),'9999990.00') || '%' A9,
+		 to_char(trunc(case when nvl(A6, 0) = 0 then 0 else (A8/A6) * 100 end,2),'9999990.00') || '%' A10,
+		 A11,A12,A13,A14,
+		 to_char(trunc(case when nvl(A7, 0) = 0 then 0 else (A13/A7) * 100 end,2),'9999990.00') || '%' A15,
+		 to_char(trunc(case when nvl(A8, 0) = 0 then 0 else (A14/A8) * 100 end,2),'9999990.00') || '%' A16
+		from (select 
+		  <include refid="level_area_sql"/>
+		  COUNT(DISTINCT FAM_ID) A3,
+		  COUNT(POP_ID) A4,
+		  COUNT(DISTINCT CASE WHEN POOR_TYPE2 IN (1,2,3) THEN FAM_ID END) A5,
+		  SUM(CASE WHEN POOR_TYPE2 IN (1,2,3) THEN 1 ELSE 0 END) A6,
+		  COUNT(DISTINCT CASE WHEN POOR_TYPE2 IN (1,2,3) AND IS_ALL_IMP_LOW_FIVE=1 THEN FAM_ID END) A7,
+		  SUM(CASE WHEN POOR_TYPE2 IN (1,2,3) AND (IS_IMP_LOW=1 OR IS_IMP_FIVE=1) THEN 1 ELSE 0 END)A8,
+		  COUNT(DISTINCT CASE WHEN POOR_TYPE2 IN (1,2,3) AND IS_ALL_IMP_LOW_FIVE_INDUSTRY=1 THEN FAM_ID END) A11,
+		  SUM(CASE WHEN POOR_TYPE2 IN (1,2,3) AND (IS_IMP_LOW_INDUSTRY=1 OR IS_IMP_FIVE_INDUSTRY=1) THEN 1 ELSE 0 END) A12,
+		  COUNT(DISTINCT CASE WHEN POOR_TYPE2 IN (1,2,3) AND IS_ALL_IMP_LOW_FIVE_COINCIDE=1 THEN FAM_ID END) A13,
+		  SUM(CASE WHEN POOR_TYPE2 IN (1,2,3) AND (IS_IMP_LOW_COINCIDE=1 OR IS_IMP_FIVE_COINCIDE=1) THEN 1 ELSE 0 END) A14
+		from  R_DW_POOROBJ_POP_Y 
+		where 1=1
+		 <include refid="stat_year_sql"/>
+		  <include refid="year_sql"/> 
+		  <include refid="level_sql"/>
+		  AND IS_CURRENT=1
+		  AND POP_CHANGES IN (0,1)
+		  group by <include refid="group_by_sql"/>)
+		  ORDER BY S_ID
+		  
+		
+	</select>
+	<!-- 五保低保政策落实管理 合计-->
+	<select id="flveLowGovernCount"  parameterType="hashmap" resultType="hashmap">
+	
+		select  
+		 S_ID,A2,A3,A4,A5,A6,A7,A8,
+		 to_char(trunc(case when nvl(A5, 0) = 0 then 0 else (A7/A5) * 100 end,2),'9999990.00') || '%' A9,
+		 to_char(trunc(case when nvl(A6, 0) = 0 then 0 else (A8/A6) * 100 end,2),'9999990.00') || '%' A10,
+		 A11,A12,A13,A14,
+		 to_char(trunc(case when nvl(A7, 0) = 0 then 0 else (A13/A7) * 100 end,2),'9999990.00') || '%' A15,
+		 to_char(trunc(case when nvl(A8, 0) = 0 then 0 else (A14/A8) * 100 end,2),'9999990.00') || '%' A16
+		from (select 
+		  <include refid="count_area_sql"/>
+		  COUNT(DISTINCT FAM_ID) A3,
+		  COUNT(POP_ID) A4,
+		  COUNT(DISTINCT CASE WHEN POOR_TYPE2 IN (1,2,3) THEN FAM_ID END) A5,
+		  SUM(CASE WHEN POOR_TYPE2 IN (1,2,3) THEN 1 ELSE 0 END) A6,
+		  COUNT(DISTINCT CASE WHEN POOR_TYPE2 IN (1,2,3) AND IS_ALL_IMP_LOW_FIVE=1 THEN FAM_ID END) A7,
+		  SUM(CASE WHEN POOR_TYPE2 IN (1,2,3) AND (IS_IMP_LOW=1 OR IS_IMP_FIVE=1) THEN 1 ELSE 0 END)A8,
+		  COUNT(DISTINCT CASE WHEN POOR_TYPE2 IN (1,2,3) AND IS_ALL_IMP_LOW_FIVE_INDUSTRY=1 THEN FAM_ID END) A11,
+		  SUM(CASE WHEN POOR_TYPE2 IN (1,2,3) AND (IS_IMP_LOW_INDUSTRY=1 OR IS_IMP_FIVE_INDUSTRY=1) THEN 1 ELSE 0 END) A12,
+		  COUNT(DISTINCT CASE WHEN POOR_TYPE2 IN (1,2,3) AND IS_ALL_IMP_LOW_FIVE_COINCIDE=1 THEN FAM_ID END) A13,
+		  SUM(CASE WHEN POOR_TYPE2 IN (1,2,3) AND (IS_IMP_LOW_COINCIDE=1 OR IS_IMP_FIVE_COINCIDE=1) THEN 1 ELSE 0 END) A14
+		from  R_DW_POOROBJ_POP_Y 
+		where 1=1
+		 <include refid="stat_year_sql"/>
+		  <include refid="year_sql"/> 
+		  <include refid="level_sql"/>
+		  AND IS_CURRENT=1
+		  AND POP_CHANGES IN (0,1)
+		group by <include refid="count_group_by_sql"/>)
+		
+	</select>
+
+
+
+	<!-- 落实分析>低保五保明细 -->
+	<select id="flveLowDetail"  parameterType="hashmap" resultType="hashmap">
+		
+		SELECT * FROM
+			(
+			SELECT AA.*,ROWNUM RM
+			FROM
+			(
+				select  FAM_ID as S_ID,
+				  CITY_NAME as A2 --城市 
+				 ,COUNTY_NAME as A3 --县 
+				 ,TOWN_NAME as A4 --镇 
+				 ,COUNTRY_NAME as A5 --村 
+				 ,FAM_CODE as A6 --户码 
+				 ,FAM_NAME as A7 --户主姓名 
+				 ,case when POOR_TYPE2 = 1 then '无劳动能力的一般贫困户'
+				       when POOR_TYPE2 = 2 then '低保户'
+				       when POOR_TYPE2 = 3 then '五保户'
+				       when POOR_TYPE2 = 4 then '其它' end as a8
+				 ,POP_NUMBER as a9 --家庭人口 
+				 ,IMP_LOW_FIVE_POP as a10
+				 ,IMP_LOW_FIVE_COINCIDE_POP as a11 --行业重合人口 
+			    from R_DW_POOROBJ_FAM_Y
+				where 1=1
+				 AND IS_CURRENT = 1
+				 <include refid="stat_year_sql"/>
+				<include refid="level_sql"/>
+				<include refid="year_sql"/>
+				<include refid="query_condition_sql"/>) AA
+				)
+				<if test="page !=null">
+					WHERE RM BETWEEN #{pageSize}*(#{page}-1)+1 AND #{pageSize} * #{page}
+				</if>
+	</select>
+	<!-- 落实分析>低保五保明细  总数-->
+	<select id="flveLowDetailCount"  parameterType="hashmap" resultType="Long" >
+		select count(FAM_ID) totalCount 
+			from R_DW_POOROBJ_FAM_Y
+			where 1=1
+			 AND IS_CURRENT = 1
+			 	<include refid="stat_year_sql"/>
+				<include refid="level_sql"/>
+				<include refid="year_sql"/>
+				<include refid="query_condition_sql"/>
+	</select>
+	
+	
+	
+		<!-- 五保低保政策落实分析-->
+	<select id="flveLowAnalyze"  parameterType="hashmap" resultType="hashmap">
+		
+		select  
+		 S_ID,A2,A3,A4,A5,A6,A7,A8,
+		 to_char(trunc(case when nvl(A5, 0) = 0 then 0 else (A7/A5) * 100 end,2),'9999990.00') || '%' A9,
+		 to_char(trunc(case when nvl(A6, 0) = 0 then 0 else (A8/A6) * 100 end,2),'9999990.00') || '%' A10,
+		 A11,A12,A13,A14,
+		 to_char(trunc(case when nvl(A7, 0) = 0 then 0 else (A13/A7) * 100 end,2),'9999990.00') || '%' A15,
+		 to_char(trunc(case when nvl(A8, 0) = 0 then 0 else (A14/A8) * 100 end,2),'9999990.00') || '%' A16
+		from (select 
+		  <include refid="level_area_sql"/>
+		  COUNT(DISTINCT FAM_ID) A3,
+		  COUNT(POP_ID) A4,
+		  COUNT(DISTINCT CASE WHEN POOR_TYPE2 IN (1,2,3) THEN FAM_ID END) A5,
+		  SUM(CASE WHEN POOR_TYPE2 IN (1,2,3) THEN 1 ELSE 0 END) A6,
+		  COUNT(DISTINCT CASE WHEN POOR_TYPE2 IN (1,2,3) AND IS_ALL_IMP_LOW_FIVE=1 THEN FAM_ID END) A7,
+		  SUM(CASE WHEN POOR_TYPE2 IN (1,2,3) AND (IS_IMP_LOW=1 OR IS_IMP_FIVE=1) THEN 1 ELSE 0 END)A8,
+		  COUNT(DISTINCT CASE WHEN POOR_TYPE2 IN (1,2,3) AND IS_ALL_IMP_LOW_FIVE_INDUSTRY=1 THEN FAM_ID END) A11,
+		  SUM(CASE WHEN POOR_TYPE2 IN (1,2,3) AND (IS_IMP_LOW_INDUSTRY=1 OR IS_IMP_FIVE_INDUSTRY=1) THEN 1 ELSE 0 END) A12,
+		  COUNT(DISTINCT CASE WHEN POOR_TYPE2 IN (1,2,3) AND IS_ALL_IMP_LOW_FIVE_COINCIDE=1 THEN FAM_ID END) A13,
+		  SUM(CASE WHEN POOR_TYPE2 IN (1,2,3) AND (IS_IMP_LOW_COINCIDE=1 OR IS_IMP_FIVE_COINCIDE=1) THEN 1 ELSE 0 END) A14
+		from  R_DW_POOROBJ_POP_Y 
+		where 1=1
+		  <include refid="stat_year_sql"/>
+		  <include refid="year_sql"/>
+		  <include refid="level_sql"/>
+		  <include refid="query_condition_sql"/> 
+		  AND IS_CURRENT=1
+		  AND POP_CHANGES IN (0,1)
+		  group by <include refid="group_by_sql"/>)
+		  ORDER BY S_ID
+		
+	</select>
+	<!-- 五保低保政策落实分析 合计-->
+	<select id="flveLowAnalyzeCount"  parameterType="hashmap" resultType="hashmap">
+		
+		select  
+		 S_ID,A2,A3,A4,A5,A6,A7,A8,
+		 to_char(trunc(case when nvl(A5, 0) = 0 then 0 else (A7/A5) * 100 end,2),'9999990.00') || '%' A9,
+		 to_char(trunc(case when nvl(A6, 0) = 0 then 0 else (A8/A6) * 100 end,2),'9999990.00') || '%' A10,
+		 A11,A12,A13,A14,
+		 to_char(trunc(case when nvl(A7, 0) = 0 then 0 else (A13/A7) * 100 end,2),'9999990.00') || '%' A15,
+		 to_char(trunc(case when nvl(A8, 0) = 0 then 0 else (A14/A8) * 100 end,2),'9999990.00') || '%' A16
+		from (select 
+		  <include refid="count_area_sql"/>
+		  COUNT(DISTINCT FAM_ID) A3,
+		  COUNT(POP_ID) A4,
+		  COUNT(DISTINCT CASE WHEN POOR_TYPE2 IN (1,2,3) THEN FAM_ID END) A5,
+		  SUM(CASE WHEN POOR_TYPE2 IN (1,2,3) THEN 1 ELSE 0 END) A6,
+		  COUNT(DISTINCT CASE WHEN POOR_TYPE2 IN (1,2,3) AND IS_ALL_IMP_LOW_FIVE=1 THEN FAM_ID END) A7,
+		  SUM(CASE WHEN POOR_TYPE2 IN (1,2,3) AND (IS_IMP_LOW=1 OR IS_IMP_FIVE=1) THEN 1 ELSE 0 END)A8,
+		  COUNT(DISTINCT CASE WHEN POOR_TYPE2 IN (1,2,3) AND IS_ALL_IMP_LOW_FIVE_INDUSTRY=1 THEN FAM_ID END) A11,
+		  SUM(CASE WHEN POOR_TYPE2 IN (1,2,3) AND (IS_IMP_LOW_INDUSTRY=1 OR IS_IMP_FIVE_INDUSTRY=1) THEN 1 ELSE 0 END) A12,
+		  COUNT(DISTINCT CASE WHEN POOR_TYPE2 IN (1,2,3) AND IS_ALL_IMP_LOW_FIVE_COINCIDE=1 THEN FAM_ID END) A13,
+		  SUM(CASE WHEN POOR_TYPE2 IN (1,2,3) AND (IS_IMP_LOW_COINCIDE=1 OR IS_IMP_FIVE_COINCIDE=1) THEN 1 ELSE 0 END) A14
+		from  R_DW_POOROBJ_POP_Y 
+		where 1=1
+		  <include refid="stat_year_sql"/>
+		  <include refid="year_sql"/>
+		  <include refid="level_sql"/>
+		  <include refid="query_condition_sql"/> 
+		  AND IS_CURRENT=1
+		  AND POP_CHANGES IN (0,1)
+		group by <include refid="count_group_by_sql"/>)
+		
+	</select>
+	
+	
+	<!-- 落实排序>区域数据 -->
+	<select id="flveLowArea"  parameterType="hashmap" resultType="hashmap">
+		
+		SELECT 
+		   S_ID,A2,A3,A4,A5,A6,A7,A8,A9,A10,A11,A12,A13,A14,A15,A16,
+		   case when A5 &gt; 0 then to_char(trunc(A11 / A5 * 100,2),'9999990.00') || '%' else '-' end A17,
+		   case when A6 &gt; 0 then to_char(trunc(A12 / A6 * 100,2),'9999990.00') || '%' else '-' end A18,  
+		   case when A7 &gt; 0 then to_char(trunc(A13 / A7 * 100,2),'9999990.00') || '%' else '-' end A19,
+		   case when A8 &gt; 0 then to_char(trunc(A14 / A8 * 100,2),'9999990.00') || '%' else '-' end A20,
+		   case when A9 &gt; 0 then to_char(trunc(A15 / A9 * 100,2),'9999990.00') || '%' else '-' end A21,
+		   case when A10 &gt; 0 then to_char(trunc(A16 / A10 * 100,2),'9999990.00') || '%' else '-' end A22,
+		   A23,A24,A25,A26,A27,A28,A29,A30,A31,A32,A33,A34,
+		   case when A11 &gt; 0 then to_char(trunc(A29 / A11 * 100,2),'9999990.00') || '%' else '-' end A35,
+		   case when A12 &gt; 0 then to_char(trunc(A30 / A12 * 100,2),'9999990.00') || '%' else '-' end A36,
+		   case when A13 &gt; 0 then to_char(trunc(A31 / A13 * 100,2),'9999990.00') || '%' else '-' end A37,
+		   case when A14 &gt; 0 then to_char(trunc(A32 / A14 * 100,2),'9999990.00') || '%' else '-' end A38,
+		   case when A15 &gt; 0 then to_char(trunc(A33 / A15 * 100,2),'9999990.00') || '%' else '-' end A39,
+		   case when A16 &gt; 0 then to_char(trunc(A34 / A16 * 100,2),'9999990.00') || '%' else '-' end A40       
+		FROM (select 
+		 <include refid="level_area_sql_d"/>
+		 COUNT(DISTINCT FAM_ID) A3,
+		 COUNT(POP_ID) A4,
+		 COUNT(DISTINCT CASE WHEN POOR_TYPE2 = 1 THEN FAM_ID END ) A5,
+		 SUM(CASE WHEN POOR_TYPE2 = 1 THEN 1 ELSE 0 END) A6,
+		 COUNT(DISTINCT CASE WHEN POOR_TYPE2 = 2 THEN FAM_ID END ) A7,
+		 SUM(CASE WHEN POOR_TYPE2 = 2 THEN 1 ELSE 0 END) A8,
+		 COUNT(DISTINCT CASE WHEN POOR_TYPE2 = 3 THEN FAM_ID END ) A9,
+		 SUM(CASE WHEN POOR_TYPE2 = 3 THEN 1 ELSE 0 END) A10,
+		 
+		 COUNT(DISTINCT CASE WHEN POOR_TYPE2 = 1 AND (IS_ALL_IMP_LOW=1 OR IS_ALL_IMP_FIVE=1) THEN FAM_ID END ) A11,
+		 SUM(CASE WHEN POOR_TYPE2 = 1 AND (IS_IMP_LOW=1 OR IS_IMP_FIVE=1) THEN 1 ELSE 0 END) A12,
+		 COUNT(DISTINCT CASE WHEN POOR_TYPE2 = 2 AND (IS_ALL_IMP_LOW=1 OR IS_ALL_IMP_FIVE=1) THEN FAM_ID END ) A13,
+		 SUM(CASE WHEN POOR_TYPE2 = 2 AND (IS_IMP_LOW=1 OR IS_IMP_FIVE=1) THEN 1 ELSE 0 END) A14,
+		 COUNT(DISTINCT CASE WHEN POOR_TYPE2 = 3 AND (IS_ALL_IMP_LOW=1 OR IS_ALL_IMP_FIVE=1) THEN FAM_ID END ) A15,
+		 SUM(CASE WHEN POOR_TYPE2 = 3 AND (IS_IMP_LOW=1 OR IS_IMP_FIVE=1) THEN 1 ELSE 0 END) A16,
+		 COUNT(DISTINCT CASE WHEN POOR_TYPE2 = 1 AND (IS_ALL_IMP_LOW_INDUSTRY=1 OR IS_ALL_IMP_FIVE_INDUSTRY=1) THEN FAM_ID END ) A23,
+		 SUM(CASE WHEN POOR_TYPE2 = 1 AND (IS_IMP_LOW_INDUSTRY=1 OR IS_IMP_FIVE_INDUSTRY=1) THEN 1 ELSE 0 END) A24,
+		 COUNT(DISTINCT CASE WHEN POOR_TYPE2 = 2 AND (IS_ALL_IMP_LOW_INDUSTRY=1 OR IS_ALL_IMP_FIVE_INDUSTRY=1) THEN FAM_ID END ) A25,
+		 SUM(CASE WHEN POOR_TYPE2 = 2 AND (IS_IMP_LOW_INDUSTRY=1 OR IS_IMP_FIVE_INDUSTRY=1) THEN 1 ELSE 0 END) A26,
+		 COUNT(DISTINCT CASE WHEN POOR_TYPE2 = 3 AND (IS_ALL_IMP_LOW_INDUSTRY=1 OR IS_ALL_IMP_FIVE_INDUSTRY=1) THEN FAM_ID END ) A27,
+		 SUM(CASE WHEN POOR_TYPE2 = 3 AND (IS_IMP_LOW_INDUSTRY=1 OR IS_IMP_FIVE_INDUSTRY=1) THEN 1 ELSE 0 END) A28,
+		 COUNT(DISTINCT CASE WHEN POOR_TYPE2 = 1 AND (IS_ALL_IMP_LOW_COINCIDE=1 OR IS_ALL_IMP_LOW_COINCIDE=1) THEN FAM_ID END ) A29,
+		 SUM(CASE WHEN POOR_TYPE2 = 1 AND (IS_IMP_LOW_COINCIDE=1 OR IS_IMP_FIVE_COINCIDE=1) THEN 1 ELSE 0 END) A30,
+		 COUNT(DISTINCT CASE WHEN POOR_TYPE2 = 2 AND (IS_ALL_IMP_LOW_COINCIDE=1 OR IS_ALL_IMP_LOW_COINCIDE=1) THEN FAM_ID END ) A31,
+		 SUM(CASE WHEN POOR_TYPE2 = 2 AND (IS_IMP_LOW_COINCIDE=1 OR IS_IMP_FIVE_COINCIDE=1) THEN 1 ELSE 0 END) A32,
+		 COUNT(DISTINCT CASE WHEN POOR_TYPE2 = 3 AND (IS_ALL_IMP_LOW_COINCIDE=1 OR IS_ALL_IMP_LOW_COINCIDE=1) THEN FAM_ID END ) A33,
+		 SUM(CASE WHEN POOR_TYPE2 = 3 AND (IS_IMP_LOW_COINCIDE=1 OR IS_IMP_FIVE_COINCIDE=1) THEN 1 ELSE 0 END) A34
+		from R_DW_POOROBJ_POP_Y
+		where 1 = 1 
+		<include refid="stat_year_sql"/>
+		<include refid="year_sql"/>
+		<include refid="level_sql"/>
+		<include refid="query_condition_sql"/> 
+		AND IS_CURRENT = 1
+		AND POOR_TYPE2 in (1,2,3)
+		AND POP_CHANGES IN (0,1)
+		GROUP BY <include refid="group_by_sql_D"/>)
+		
+	</select>
+	<!-- 落实排序 -->
+	<select id="flveLowSort"  parameterType="hashmap" resultType="hashmap">
+	
+	SELECT * FROM
+			
+			(
+			
+			SELECT AA.*,ROWNUM RM
+			FROM
+			(
+				select <include refid="sort_area_sql"/> 
+					<include refid="sort_taxis_indexes_sql"/> a3
+					 from R_DW_POOROBJ_POP_Y
+					where 1=1
+						 <include refid="level_sql"/>
+						 <include refid="stat_year_sql"/>
+						<include refid="year_sql"/>
+						<include refid="query_condition_sql"/>
+						AND IS_CURRENT = 1
+                   		AND POOR_TYPE2 in (1,2,3)
+						AND POP_CHANGES IN (0,1)
+					group by <include refid="group_sort_area_sql"/> 
+					having <include refid="sort_taxis_having_sql"/>
+					order by <include refid="sort_taxis_indexes_sql"/> desc
+			 ) AA
+				)
+				<if test="page !=null">
+						WHERE RM BETWEEN #{pageSize}*(#{page}-1)+1 AND #{pageSize}  * #{page}
+				</if>
+	</select>
+	<!-- 落实排序 总数-->
+	<select id="flveLowSortCount"  parameterType="hashmap" resultType="Long">
+					SELECT count(1) totalCount
+					FROM
+					(
+					select <include refid="sort_area_sql"/> 
+					<include refid="sort_taxis_indexes_sql"/> a3
+					 from R_DW_POOROBJ_POP_Y
+					where 1=1
+						 <include refid="level_sql"/>
+						 <include refid="stat_year_sql"/>
+						<include refid="year_sql"/>
+						<include refid="query_condition_sql"/>
+						AND IS_CURRENT = 1
+                   		AND POOR_TYPE2 in (1,2,3)
+						AND POP_CHANGES IN (0,1)
+					group by <include refid="group_sort_area_sql"/> 
+					having <include refid="sort_taxis_having_sql"/>
+			 ) AA
+	</select>
+
+	<!-- join id -->
+	<sql id="join_id_sql">
+			
+			<if test=" '' != level and null != level and 'province' == level  ">
+				CITY_PAC 
+			</if>
+			<if test=" '' != level and null != level and 'city' == level  ">
+				COUNTY_PAC 
+			</if>
+			
+			<if test=" '' != level and null != level and 'county' == level  ">
+				 TOWN_PAC  
+			</if>
+			
+			<if test=" '' != level and null != level and 'town' == level  ">
+				COUNTRY_PAC 
+			</if>
+			
+			<if test=" '' != level and null != level and 'country' == level  ">
+				COUNTRY_PAC  
+			</if>
+	</sql>
+<!-- join name -->
+	<sql id="join_name_sql">
+			
+			<if test=" '' != level and null != level and 'province' == level  ">
+				CITY_NAME A2,
+			</if>
+			<if test=" '' != level and null != level and 'city' == level  ">
+				COUNTY_NAME A2,
+			</if>
+			
+			<if test=" '' != level and null != level and 'county' == level  ">
+				TOWN_NAME A2 ,
+			</if>
+			
+			<if test=" '' != level and null != level and 'town' == level  ">
+				COUNTRY_NAME  A2,
+			</if>
+			
+			<if test=" '' != level and null != level and 'country' == level  ">
+				COUNTRY_NAME  A2,
+			</if>
+	</sql>
+	<sql id="group_by_sql">
+	
+			<if test=" '' != level and null != level and 'province' == level  ">
+				 CITY_PAC , CITY_NAME
+			</if>
+			<if test=" '' != level and null != level and 'city' == level  ">
+				 COUNTY_PAC ,COUNTY_NAME 
+			</if>
+			
+			<if test=" '' != level and null != level and 'county' == level  ">
+				   TOWN_PAC ,TOWN_NAME 
+			</if>
+			
+			<if test=" '' != level and null != level and 'town' == level  ">
+				 COUNTRY_PAC  ,COUNTRY_NAME 
+			</if>
+			
+			<if test=" '' != level and null != level and 'country' == level  ">
+				COUNTRY_PAC  ,COUNTRY_NAME
+			</if>
+			
+		
+	</sql>
+	<!-- 查下一级 -->
+	<sql id="level_area_sql">
+			
+			<if test=" '' != level and null != level and 'province' == level  ">
+				CITY_PAC S_ID, CITY_NAME A2,
+			</if>
+			<if test=" '' != level and null != level and 'city' == level  ">
+				COUNTY_PAC S_ID,COUNTY_NAME A2,
+			</if>
+			
+			<if test=" '' != level and null != level and 'county' == level  ">
+				 TOWN_PAC S_ID ,TOWN_NAME A2 ,
+			</if>
+			
+			<if test=" '' != level and null != level and 'town' == level  ">
+				COUNTRY_PAC S_ID ,COUNTRY_NAME  A2,
+			</if>
+			
+			<if test=" '' != level and null != level and 'country' == level  ">
+				COUNTRY_PAC S_ID ,COUNTRY_NAME  A2,
+			</if>
+	</sql>
+	<!-- 查当级 -->
+	<sql id="level_area_sql_d">
+		
+				<if test=" '' != level and null != level and 'province' == level  ">
+					 
+				</if>
+				<if test=" '' != level and null != level and 'city' == level  ">
+					 CITY_PAC S_ID, CITY_NAME A2,
+				</if>
+				
+				<if test=" '' != level and null != level and 'county' == level  ">
+					 COUNTY_PAC S_ID,COUNTY_NAME A2,
+				</if>
+				
+				<if test=" '' != level and null != level and 'town' == level  ">
+					   TOWN_PAC S_ID,TOWN_NAME A2,
+				</if>
+				
+				<if test=" '' != level and null != level and 'country' == level  ">
+					COUNTRY_PAC S_ID ,COUNTRY_NAME A2,
+				</if>
+		</sql>
+	<!-- 层级sql -->
+	<sql id="level_sql">
+			
+			<if test=" '' != level and null != level and 'province' == level  ">
+				
+			</if>
+			
+			<if test=" '' != level and null != level and 'city' == level  ">
+				AND CITY_PAC = #{id}
+			</if>
+			
+			<if test=" '' != level and null != level and 'county' == level  ">
+				AND COUNTY_PAC = #{id} 
+			</if>
+			
+			<if test=" '' != level and null != level and 'town' == level  ">
+				AND TOWN_PAC = #{id} 
+			</if>
+			
+			<if test=" '' != level and null != level and 'country' == level  ">
+				AND COUNTRY_PAC = #{id}
+			</if>
+	</sql>
+
+	<sql id="query_condition_sql">
+	
+		<if test=" '' != scope and null != scope">
+			<if test=" 2 == scope">AND IS_KEY_POVERTY=1</if><!-- 贫困村 -->
+			<if test=" 3 == scope">AND IS_KEY_POVERTY=0</if><!-- 分散村 -->
+			<if test=" 4 == scope">AND IS_OLD_REVOLUTIONARY=1</if><!-- 革命老区 -->
+			<if test=" 5 == scope">AND IS_CENTRAL_SOVIET=1</if><!-- 中央苏区 -->
+		</if>
+				
+		<if test=" '' != poor_attribute and null != poor_attribute">
+		 <if test=" 'all' == poor_attribute "> AND POOR_TYPE2 in(1,2,3)  </if> 
+			<if test="'no_labor' == poor_attribute">AND POOR_TYPE2=1</if><!--无劳动能力 一般贫困户 -->
+			<if test="'low' == poor_attribute">AND POOR_TYPE2=2</if><!-- 低保户 -->
+			<if test="'five' == poor_attribute">AND POOR_TYPE2=3</if><!-- 五保户 -->
+		</if>
+				
+		<if test=" '' != labor_attribute and null != labor_attribute">
+			<if test="'have_labor' == poor_attribute">AND LABOR_TYPE=1</if><!-- 有劳 -->
+			<if test="'no_labor' == poor_attribute">AND LABOR_TYPE=0</if><!-- 无劳 -->
+		</if>
+		
+		<if test=" '' != policy_implement and null != policy_implement">
+			<if test="2 == policy_implement">AND IS_IMP_LOW_FIVE=1</if><!-- 全部落实户 -->
+			<if test="3 == policy_implement">AND IS_IMP_LOW_FIVE=0</if><!-- 未全部落实户 -->
+		</if>
+		
+		<if test=" '' != industry and null != industry">
+			<if test="2 == industry">AND IS_IMP_LOW_FIVE_COINCIDE=1</if><!-- 完全重合户 -->
+			<if test="3 == industry">AND (IS_IMP_LOW_FIVE_COINCIDE=0 AND IS_IMP_LOW_FIVE_NO_COINCIDE=0)</if><!-- 部分重合户 -->
+			<if test="4 == industry">AND IS_IMP_LOW_FIVE_NO_COINCIDE=1</if><!-- 没有重合户 -->
+		</if>
+		
+	</sql>
+	
+	<!-- 统计年份 -->
+	<sql id="year_sql">
+		<if test=" '' != year and null != year">
+			AND ACC_YEAR = #{year}
+		</if>
+	</sql>
+	
+	<sql id="stat_year_sql">
+		<if test=" '' != year and null != year">
+			AND STAT_YEAR = #{year}
+		</if>
+	</sql>
+	
+	<sql id="stat_month_sql">
+			<if test=" '' != year and null != year ">
+				 AND STAT_MONTH BETWEEN to_number(#{year} || '01')  AND to_number(#{year} || '12')
+			</if>
+	</sql>
+	
+	<!-- 累计年时间 -->
+	<sql id="acc_year_sql">
+		<if test=" '' != year and null != year">
+				AND ACC_YEAR BETWEEN 0 AND to_number(#{year}) 
+				AND STAT_YEAR BETWEEN 0 AND to_number(#{year})
+		</if>
+	</sql>
+	
+	<!-- 排序类型 -->
+	<sql id="sort_area_sql">
+			
+			<if test=" '' != sort_area and null != sort_area and 1 == sort_area  ">
+				CITY_PAC S_ID, CITY_NAME A2,
+			</if>
+			<if test=" '' != sort_area and null != sort_area and 2 == sort_area  ">
+				COUNTY_PAC S_ID,CITY_NAME||'>'||COUNTY_NAME A2,
+			</if>
+			
+			<if test=" '' != sort_area and null != sort_area and 3 == sort_area  ">
+				 TOWN_PAC S_ID ,CITY_NAME||'>'||COUNTY_NAME||'>'||TOWN_NAME A2,
+			</if>
+			
+			<if test=" '' != sort_area and null != sort_area and 4 == sort_area  ">
+				COUNTRY_PAC S_ID ,CITY_NAME||'>'||COUNTY_NAME||'>'||TOWN_NAME||'>'||COUNTRY_NAME  A2,
+			</if>
+			
+	</sql>
+	<sql id="group_sort_area_sql">
+			<if test=" '' != sort_area and null != sort_area and 1 == sort_area  ">
+				CITY_PAC , CITY_NAME
+			</if>
+			<if test=" '' != sort_area and null != sort_area and 2 == sort_area  ">
+				COUNTY_PAC ,CITY_NAME||'>'||COUNTY_NAME 
+			</if>
+			
+			<if test=" '' != sort_area and null != sort_area and 3 == sort_area  ">
+				 TOWN_PAC  ,CITY_NAME||'>'||COUNTY_NAME||'>'||TOWN_NAME 
+			</if>
+			
+			<if test=" '' != sort_area and null != sort_area and 4 == sort_area  ">
+				COUNTRY_PAC  ,CITY_NAME||'>'||COUNTY_NAME||'>'||TOWN_NAME||'>'||COUNTRY_NAME 
+			</if>
+			
+	</sql>
+	
+	
+	<!-- 排序指标 taxis_indexes -->
+	<sql id="sort_taxis_indexes_sql">
+			
+			<if test=" '' != taxis_indexes and null != taxis_indexes and 1 == taxis_indexes  ">
+				to_char(trunc(sum(case when IS_IMP_LOW=1 or IS_IMP_FIVE=1 then 1 else 0 end) / COUNT(POP_ID) * 100, 2), '9999990.00') || '%' 
+			</if>
+			<if test=" '' != taxis_indexes and null != taxis_indexes and 2 == taxis_indexes  ">
+				to_char(trunc(SUM(case when POOR_TYPE = 2 AND IS_IMP_LOW=1 then 1 else 0 end) / SUM(CASE WHEN POOR_TYPE = 2 THEN 1 ELSE 0 END ) * 100, 2), '9999990.00') || '%'
+			</if>
+			
+			<if test=" '' != taxis_indexes and null != taxis_indexes and 3 == taxis_indexes  ">
+				 to_char(trunc(SUM(case when POOR_TYPE = 3 AND IS_IMP_FIVE=1 then 1 else 0 end) / SUM(CASE WHEN POOR_TYPE = 3 THEN 1 ELSE 0 END ) * 100, 2), '9999990.00') || '%' 
+			</if>
+			
+			<if test=" '' != taxis_indexes and null != taxis_indexes and 4 == taxis_indexes  ">
+				to_char(trunc(SUM(case when IS_IMP_LOW_COINCIDE=1 OR IS_IMP_FIVE_COINCIDE=1 then 1 else 0 end) / SUM(CASE WHEN IS_IMP_LOW = 1 OR IS_IMP_FIVE = 1 THEN 1 ELSE 0 END ) * 100, 2), '9999990.00') || '%'  
+			</if>
+			<if test=" '' != taxis_indexes and null != taxis_indexes and 5 == taxis_indexes  ">
+				to_char(trunc(SUM(case when IS_IMP_LOW_COINCIDE=1 then 1 else 0 end) / SUM(CASE WHEN IS_IMP_LOW = 1 THEN 1 ELSE 0 END ) * 100, 2), '9999990.00') || '%'
+			</if>
+			
+			<if test=" '' != taxis_indexes and null != taxis_indexes and 6 == taxis_indexes  ">
+				to_char(trunc(SUM(case when IS_IMP_FIVE_COINCIDE=1 then 1 else 0 end) / SUM(CASE WHEN IS_IMP_FIVE = 1 THEN 1 ELSE 0 END ) * 100, 2), '9999990.00') || '%' 
+			</if>
+			
+	</sql>
+		<!-- 排序指标 taxis_indexes -->
+	<sql id="sort_taxis_having_sql">
+			
+			<if test=" '' != taxis_indexes and null != taxis_indexes and 1 == taxis_indexes  ">
+				 COUNT(POP_ID)>0
+			</if>
+			<if test=" '' != taxis_indexes and null != taxis_indexes and 2 == taxis_indexes  ">
+				 SUM(CASE WHEN POOR_TYPE = 2 THEN 1 ELSE 0 END )>0
+			</if>
+			
+			<if test=" '' != taxis_indexes and null != taxis_indexes and 3 == taxis_indexes  ">
+				 SUM(CASE WHEN POOR_TYPE = 3 THEN 1 ELSE 0 END )>0
+			</if>
+			
+			<if test=" '' != taxis_indexes and null != taxis_indexes and 4 == taxis_indexes  ">
+				SUM(CASE WHEN IS_IMP_LOW = 1 OR IS_IMP_FIVE = 1 THEN 1 ELSE 0 END )>0 
+			</if>
+			<if test=" '' != taxis_indexes and null != taxis_indexes and 5 == taxis_indexes  ">
+				SUM(CASE WHEN IS_IMP_LOW = 1 THEN 1 ELSE 0 END )>0 
+			</if>
+			
+			<if test=" '' != taxis_indexes and null != taxis_indexes and 6 == taxis_indexes  ">
+				SUM(CASE WHEN IS_IMP_FIVE = 1 THEN 1 ELSE 0 END )>0 
+			</if>
+			
+	</sql>
+	<!-- count  -->
+	<sql id="count_area_sql">
+			<if test=" '' != level and null != level and 'province' == level  ">
+				'440000000000' S_ID , '合计' A2,
+			</if>
+			<if test=" '' != level and null != level and 'city' == level  ">
+				CITY_PAC S_ID, '合计' A2,
+			</if>
+			
+			<if test=" '' != level and null != level and 'county' == level  ">
+				COUNTY_PAC S_ID,'合计' A2,
+			</if>
+			
+			<if test=" '' != level and null != level and 'town' == level  ">
+				 TOWN_PAC S_ID ,'合计' A2,
+			</if>
+			
+			<if test=" '' != level and null != level and 'country' == level  ">
+				COUNTRY_PAC S_ID ,'合计'  A2,
+			</if>
+	</sql>
+	
+	<sql id="count_group_by_sql">
+	
+			<if test=" '' != level and null != level and 'province' == level  ">
+				 1
+			</if>
+			<if test=" '' != level and null != level and 'city' == level  ">
+				 CITY_PAC , CITY_NAME
+			</if>
+			
+			<if test=" '' != level and null != level and 'county' == level  ">
+				 COUNTY_PAC ,COUNTY_NAME  
+			</if>
+			
+			<if test=" '' != level and null != level and 'town' == level  ">
+				   TOWN_PAC ,TOWN_NAME 
+			</if>
+			
+			<if test=" '' != level and null != level and 'country' == level  ">
+				COUNTRY_PAC  ,COUNTRY_NAME 
+			</if>
+	</sql>
+	<!-- group by 当级 -->
+	<sql id="group_by_sql_D">
+	
+			<if test=" '' != level and null != level and 'province' == level  ">
+				 
+			</if>
+			<if test=" '' != level and null != level and 'city' == level  ">
+				 CITY_PAC , CITY_NAME
+			</if>
+			
+			<if test=" '' != level and null != level and 'county' == level  ">
+				 COUNTY_PAC ,COUNTY_NAME  
+			</if>
+			
+			<if test=" '' != level and null != level and 'town' == level  ">
+				   TOWN_PAC ,TOWN_NAME 
+			</if>
+			
+			<if test=" '' != level and null != level and 'country' == level  ">
+				COUNTRY_PAC ,COUNTRY_NAME 
+			</if>
+	</sql>
+</mapper>

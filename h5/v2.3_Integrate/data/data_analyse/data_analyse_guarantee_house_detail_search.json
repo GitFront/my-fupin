@@ -1,0 +1,28 @@
+{
+	"code": 0,
+	"msg": "获取信息成功",
+	"data": {
+		"next_id": 1,
+		"count_total": 100,
+		"tips": {
+		},
+		"table": {
+			"list": [
+				{
+					"order": "1",
+					"city_name": "梅州市",
+					"county_name": "东海县",
+					"town_name": "北兴镇",
+					"country_id": 1,
+					"country_name": "三岔村",
+					"family_id": 1,
+					"house_holder_name": "陈志环",
+					"member_name": "陈志环",
+					"doc_info": "",
+					"house_department_info": ""
+				}
+			]
+		}
+	}
+}
+

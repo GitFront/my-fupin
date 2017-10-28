@@ -1,0 +1,308 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+        
+<mapper namespace="com.aspire.birp.modules.antiPoverty.dao.SearchDao">
+
+<!-- level_sql  -->
+	<sql id="level_sql">
+		
+			<if test=" '' != level and null != level and 'city' == level  ">
+				AND F.CITY_PAC = #{PAC}
+			</if>
+			
+			<if test=" '' != level and null != level and 'county' == level  ">
+				AND F.COUNTY_PAC = #{PAC}
+			</if>
+			
+			<if test=" '' != level and null != level and 'town' == level  ">
+				 AND F.TOWN_PAC = #{PAC}
+			</if>
+			
+			<if test=" '' != level and null != level and 'country' == level  ">
+				AND F.COUNTRY_PAC = #{PAC}
+			</if>
+	</sql>
+	
+	<!-- level_area_sql  -->
+	<sql id="level_area_sql">
+		
+			<if test=" '' != level and null != level and 'city' == level  ">
+				AND CITY_ID = #{PAC}
+			</if>
+			
+			<if test=" '' != level and null != level and 'county' == level  ">
+				AND COUNTY_ID = #{PAC}
+			</if>
+			
+			<if test=" '' != level and null != level and 'town' == level  ">
+				 AND TOWN_ID = #{PAC}
+			</if>
+			
+			<if test=" '' != level and null != level and 'country' == level  ">
+				AND COUNTRY_ID = #{PAC}
+			</if>
+	</sql>
+
+	<!--预搜索户-->
+	<select id="queryPreSearchFamily"  parameterType="hashmap" resultType="hashmap">
+		SELECT 	t1.*  FROM 
+		(<if test=" 0 == isnumber  ">
+		SELECT DISTINCT
+			ROWNUM RM,
+			COUNTRY_PAC,
+			F.FAM_ID AS S_ID,
+			F.FAM_NAME AS S_NAME,
+			A .COUNTRY_NAME AS S_PLACE
+		FROM
+			DIM_AREA_5LVL A,
+			F_FAMILYFILE_BASIC_INFO_D F
+		WHERE
+			1 = 1
+		AND A .COUNTRY_ID = F.COUNTRY_PAC
+		<include refid="level_sql"/>
+		 AND INSTR(F.FAM_NAME,#{KEY}) > 0
+		</if>
+		<if test=" 1 == isnumber  ">
+			 SELECT DISTINCT
+			 ROWNUM RM,
+			 COUNTRY_PAC,
+			F.FAM_ID AS S_ID,
+			F.FAM_NAME AS S_NAME,
+			'广东省'||CITY_NAME||COUNTY_NAME||TOWN_NAME||F.COUNTRY_NAME AS S_PLACE
+		FROM
+			R_DW_POOROBJ_POP_Y F
+		WHERE
+         STAT_YEAR = #{R_DW_POOROBJ_POP_YY}
+		<include refid="level_sql"/>
+		 AND POP_IDENTITY_NO LIKE  #{KEY} || '%'
+		</if>) t1 
+		INNER JOIN (
+				 select
+				 COUNTRY_ID 
+				 from DIM_HELP_AREA_MAP  
+				 WHERE help_p_pac=#{helppac} 
+				 ) t2 ON (t1.country_pac=t2.COUNTRY_ID)
+		WHERE RM &gt;=0 AND RM &lt; = 10     
+	</select>
+	
+	<!--预搜索村-->
+	<select id="queryPreSearchCountry"  parameterType="hashmap" resultType="hashmap">
+		SELECT
+			A.COUNTRY_ID AS S_ID,
+			A.COUNTRY_NAME_S AS S_NAME,
+			'广东省'||CITY_NAME_S||COUNTY_NAME_S||TOWN_NAME_S||COUNTRY_NAME_S AS S_PLACE
+		FROM
+			DIM_HELP_AREA_MAP A
+		WHERE
+			A.IF_FURTHER_POOR=1
+			AND HELP_P_PAC = #{helppac}
+			<include refid="level_area_sql"/>
+		AND A.COUNTRY_NAME_S LIKE '%' || #{KEY} || '%'
+		AND ROWNUM &gt;=0 AND ROWNUM &lt; = 10 
+	</select>
+	
+	<!-- 根据户ID查找村 -->
+	<select id="queryCountryNameByFamId"  parameterType="string" resultType="hashmap">
+		SELECT 
+			PD.COUNTRY_ID AS ID,
+			PD.COUNTRY_NAME AS NAME,
+			PD.COUNTRY_NAME_S AS SHORT_NAME,
+			PD.TOWN_ID AS S_PARENT_ID
+		FROM
+			DIM_AREA_5LVL PD,
+			F_FAMILYFILE_BASIC_INFO_D FBI
+		WHERE PD.COUNTRY_ID = FBI.COUNTRY_PAC
+		AND FBI.FAM_ID = #{FAM_ID}
+	</select>
+	
+	<!-- 根据村ID查找村 -->
+	<select id="queryCountryNameById"  parameterType="string" resultType="hashmap">
+		SELECT 
+			COUNTRY_ID AS ID,
+			COUNTRY_NAME AS NAME,
+			COUNTRY_NAME_S AS SHORT_NAME,
+			TOWN_ID AS S_PARENT_ID
+		FROM
+			DIM_AREA_5LVL
+		WHERE COUNTRY_ID = #{COUNTRY_ID}
+	</select>
+	
+	<!-- 贫困户概况 -->
+	<select id="queryFamilyStatus"  parameterType="string" resultType="hashmap">
+	SELECT FBI.FAM_ID AS S_FAM_ID,
+       FBI.FAM_NAME AS S_FAM_NAME, /*户主名称**/
+       NVL(AID_POOR_IDX, 0) AS S_INDEX_, /*综合得分**/
+       CASE
+         WHEN AID_POOR_IDX >= 100 THEN
+          '达标'
+         ELSE
+          '未达标'
+       END AS S_HAS_ACHIEVED, /*是否达标**/
+       FAM_MEMBER_CNT AS S_MEM_CNT, /*家庭人数**/
+       FBI.POOR_PROPERTY_DESC AS S_POOR_ATTRIBUTE, /*贫困属性**/
+       FBI.MAIN_POOR_REASON AS S_POOR_REASON, /*贫困原因**/
+       FBI.INCOME AS S_BEFORE_INCOME, /*认证时家庭人均可支配收入**/
+       FBI.DPI AS S_CUR_INCOME, /*2016年家庭人均可支配收入**/
+       FBI.AID_TIME AS S_AID_TIME, /*计划脱贫时间**/
+       FBI.COUNTRY_PAC AS S_COUNTRY_ID,
+       FBI.TEAM_LEADER AS S_COUNTRY_LEADER_NAME, /*帮扶责任人**/
+       FBI.HELP_UNIT_NAME AS S_COUNTRY_LEADER_ORG, /*工作单位**/
+       VISITS_CNT_YR 
+  FROM F_FAMILYFILE_BASIC_INFO_D FBI 
+  
+		WHERE FBI.FAM_ID = #{FAM_ID}
+	</select>
+	
+	<!-- 贫困户帮扶施策总概况 -->
+	<select id="queryFamImplCount"  parameterType="string" resultType="hashmap">
+		SELECT
+			COUNT(PROJ_ID) AS S_TOTAL, /*帮扶施策_项目个数**/
+			(SELECT COUNT(1) FROM F_FAMILYFILE_HELP_METHOD_D WHERE PROJ_STATUS ='完成' AND FAM_ID=A.FAM_ID) S_COMPLETED, /*已完成个数**/
+			ROUND(SUM(REAL_CAPITAL)/10000,2) AS S_INVESTED /*实际累计资金投入**/
+		FROM
+			F_FAMILYFILE_HELP_METHOD_D A
+		WHERE FAM_ID = #{FAM_ID}
+		GROUP BY FAM_ID
+	</select>
+	
+	<!-- 贫困户帮扶施策具体项目（取前三条） -->
+	<select id="queryFamImplList"  parameterType="string" resultType="hashmap">
+		SELECT * FROM
+		(SELECT
+			FHM.HELP_CLASS AS S_TYPE, /*帮扶类别**/
+			FHM.PROJ_NAME AS S_NAME, /*项目名称**/
+			TO_CHAR(TO_DATE(FHM.BEGIN_TIME,'yyyy-MM-dd'),'YYYY') AS S_YEAR, /*开始时间-年**/
+			TO_CHAR(TO_DATE(FHM.BEGIN_TIME,'yyyy-MM-dd'),'MM') AS S_MONTH, /*开始时间-月**/
+			TO_CHAR(TO_DATE(FHM.BEGIN_TIME,'yyyy-MM-dd'),'DD') AS S_DAY, /*开始时间-日**/
+			FHM.PROJ_STATUS AS S_PROJ_STATUS, /*完成状态**/
+			FHM.REAL_CAPITAL AS S_INVEST_ACTUAL /*实际累计投入资金**/
+		FROM
+			F_FAMILYFILE_HELP_METHOD_D FHM
+		WHERE FAM_ID = #{FAM_ID}
+		ORDER BY TO_DATE(FHM.BEGIN_TIME,'yyyy-MM-dd') DESC)
+		WHERE ROWNUM &lt; 4
+	</select>
+	
+	<!--判断这个村是否重点贫困村 1是 0不是  -->
+	<select id="isFurtherPoor"  parameterType="string" resultType="int">
+		SELECT IF_FURTHER_POOR FROM DIM_AREA_5LVL
+		WHERE COUNTRY_ID=#{COUNTRY_ID}
+	</select>
+	
+	<!-- 相对贫困村概况 -->
+	<select id="queryPKCountryStatus"  parameterType="string" resultType="hashmap">
+		SELECT
+			CBI.COUNTRY_PAC AS S_COUNTRY_ID,
+			CBI.COUNTRY_NAME AS S_COUNTRY_NAME, /*村名称**/
+			CBI.COUNTRY_PROPERTY_DESC AS S_COUNTRY_PROPERTY, /*村属性**/
+			ROUND(CBI.SCORE,2)AS S_SCORE, /*综合得分**/
+			CASE WHEN CBI.SCORE >= 100 THEN '达标' ELSE '未达标' END AS S_HAS_ACHIEVED, /*是否达标**/
+			CBI.PERSON_IN_CHARGE AS S_RESPONSIBLE_NAME, /*村委负责人**/
+			CBI.TERRAIN AS S_TERRAIN, /*村简介描述**/
+			CBI.POOR_FAM AS S_AMOUNT_POOR_FAMILY, /*村贫困户数**/
+			CBI.POOR_POP AS S_AMOUNT_POOR_PEOPLE, /*村贫困人口数**/
+			TRUNC(CBI.POOR_POP/CBI.POP*100,1) AS S_RATIO_POOR, /*村贫发生率**/
+			CBI.TEAM_LEADER AS S_TEAM_LEADER, /*驻村队长**/
+			CBI.TEAM_LEADER_UNIT AS S_TEAM_LEADER_UNIT /*驻村队长工作单位**/			
+		FROM
+			F_COUNTRYFILE_BASIC_INFO_D CBI
+		WHERE CBI.COUNTRY_PAC = #{COUNTRY_ID}
+	</select>
+	
+	<!-- 分散村概况 -->
+	<select id="queryFSCountryStatus"  parameterType="string" resultType="hashmap">
+		SELECT
+			CBI.COUNTRY_PAC AS S_COUNTRY_ID,
+			CBI.COUNTRY_NAME AS S_COUNTRY_NAME, /*村名称**/
+			CBI.COUNTRY_PROPERTY_DESC AS S_COUNTRY_PROPERTY, /*村属性**/
+			CBI.POOR_FAM AS S_AMOUNT_POOR_FAMILY, /*村贫困户数**/
+			CBI.POOR_POP AS S_AMOUNT_POOR_PEOPLE /*村贫困人口数**/
+		FROM
+			F_COUNTRYFILE_BASIC_INFO_D CBI
+		WHERE CBI.COUNTRY_PAC = #{COUNTRY_ID}
+	</select>
+	
+	<!-- 村致贫原因户数 -->
+	<select id="queryCouReasonList"  parameterType="hashmap" resultType="hashmap">
+		select 
+		POV_CAUSE_NAME_1,100*round(POV_CAUSE_FAM_1/DECODE(POOR_FAM,0,1,POOR_FAM),4) POV_CAUSE_FAM_1,
+		POV_CAUSE_NAME_2,100*round(POV_CAUSE_FAM_2/DECODE(POOR_FAM,0,1,POOR_FAM),4) POV_CAUSE_FAM_2,
+		POV_CAUSE_NAME_3,100*round(POV_CAUSE_FAM_3/DECODE(POOR_FAM,0,1,POOR_FAM),4) POV_CAUSE_FAM_3,
+		POV_CAUSE_NAME_4,100*round(POV_CAUSE_FAM_4/DECODE(POOR_FAM,0,1,POOR_FAM),4) POV_CAUSE_FAM_4,
+		POV_CAUSE_NAME_5,100*round(POV_CAUSE_FAM_5/DECODE(POOR_FAM,0,1,POOR_FAM),4) POV_CAUSE_FAM_5,
+		'其他' POV_CAUSE_NAME_6,100*round(POV_CAUSE_FAM_OTHER/DECODE(POOR_FAM,0,1,POOR_FAM),4) POV_CAUSE_FAM_6
+		from R_MONITOR_HOME_PAGE_D 
+		WHERE
+		PAC = #{COUNTRY_ID}
+		AND AREA_TYPE = 2
+		AND STAT_TIME=#{R_MONITOR_HOME_PAGE_D}
+	</select>
+	
+	<!-- 村帮扶施策概况 -->
+	<select id="queryCouImplCount"  parameterType="string" resultType="hashmap">
+		SELECT
+			COUNT(PROJ_ID) AS S_TOTAL, /*帮扶施策_项目个数**/
+			(SELECT COUNT(1) FROM F_COUNTRYFILE_HELP_METHOD_D WHERE PROJ_STATUS ='完成' AND COUNTRY_PAC=A.COUNTRY_PAC) S_COMPLETED, /*已完成个数**/
+			ROUND(SUM(REAL_CAPITAL)/10000,2) AS S_INVESTED /*实际累计资金投入**/
+		FROM
+			F_COUNTRYFILE_HELP_METHOD_D A
+		WHERE COUNTRY_PAC = #{COUNTRY_ID}
+		GROUP BY COUNTRY_PAC
+	</select>
+	
+	<!-- 村帮扶施策详细（取前三条） -->
+	<select id="queryCouImplList"  parameterType="string" resultType="hashmap">
+		SELECT * FROM
+		(SELECT
+			HELP_CLASS AS S_TYPE, /*帮扶类别**/
+			PROJ_NAME AS S_NAME, /*项目名称**/
+			TO_CHAR(TO_DATE(BEGIN_TIME,'yyyy-MM-dd'),'YYYY') AS S_YEAR, /*开始时间-年**/
+			TO_CHAR(TO_DATE(BEGIN_TIME,'yyyy-MM-dd'),'MM') AS S_MONTH, /*开始时间-月**/
+			TO_CHAR(TO_DATE(BEGIN_TIME,'yyyy-MM-dd'),'DD') AS S_DAY, /*开始时间-日**/
+			PROJ_STATUS AS S_PROJ_STATUS, /*完成状态**/
+			REAL_CAPITAL AS S_INVEST_ACTUAL /*实际累计投入资金**/
+		FROM
+			F_COUNTRYFILE_HELP_METHOD_D
+		WHERE COUNTRY_PAC=#{COUNTRY_ID}
+		ORDER BY TO_DATE(BEGIN_TIME,'yyyy-MM-dd') DESC)
+		WHERE ROWNUM &lt; 4
+	</select>
+	
+	<!-- 村的上一级镇的概况 -->
+	<select id="queryTownStatus"  parameterType="string" resultType="hashmap">
+		SELECT DA5.TOWN_ID, /*镇ID**/
+			DA5.TOWN_NAME_S, /*镇名称**/
+			/*APMR.AREA_DESC,  镇描述**/
+		    APMR.FURTER_POOR_COUNTRY_CNT, /*相对贫困村个数**/
+			TRUNC(APMR.OUTLIST_COUNTRY_CNT/APMR.FURTER_POOR_COUNTRY_CNT*100,2) AS C_PERCENT, /*出列率**/
+		    APMR.POOR_FAM,  /*贫困户数**/
+		    TRUNC(APMR.AID_POOR_FAM/APMR.POOR_FAM*100,2) AS F_PERCENT,  /*脱贫户比例**/
+		    APMR.POOR_POP,  /*贫困人口**/
+		    TRUNC(APMR.AID_POOR_POP/APMR.POOR_POP*100,2) AS P_PERCENT /*脱贫人口率**/
+		FROM 
+			R_MONITOR_HOME_PAGE_D APMR,
+		  	DIM_AREA_5LVL DA5 
+		WHERE APMR.PAC=DA5.TOWN_ID
+		AND APMR.AREA_TYPE = 1
+		AND DA5.COUNTRY_ID = #{COUNTRY_ID}
+		AND APMR.STAT_TIME = (SELECT MAX(STAT_TIME) FROM R_MONITOR_HOME_PAGE_D)
+	</select>
+	
+	<!-- 村的上一级镇的贫困原因户数 -->
+	<select id="queryTownReasonList"  parameterType="string" resultType="hashmap">
+		SELECT
+		  b.POOR_MAIN_REASON_NAME AS S_NAME,
+		  100*round(COUNT(RESIDENCE_ID)/SUM(COUNT(RESIDENCE_ID)) OVER(),4) S_PERCENT
+		FROM
+		  TW_FAMILY_PROPERTY_CALC_D A,
+		  DIM_POOR_MAIN_REASON b
+		WHERE A.POOR_STATUS NOT IN (3, 4, 5)
+		AND A.aid_date > A.stat_dt
+		AND A.POOR_MAIN_REASON = b.POOR_MAIN_REASON
+		AND TOWN_ID = #{TOWN_ID}
+		GROUP BY b.POOR_MAIN_REASON_NAME
+		ORDER BY COUNT (RESIDENCE_ID) DESC
+	</select>
+
+</mapper>

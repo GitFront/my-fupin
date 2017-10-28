@@ -1,0 +1,46 @@
+{
+	"code": 0,
+	"msg": "获取信息成功",
+	"data": {
+		"tips": {
+			"amount_poor_family": {
+				"source": "建档立卡、省民政厅",
+				"stat_method": "建档立卡是一般贫困的无劳动能力户/五保户/低保户应该享受兜底政策贫困人口、民政是低保户和五保户的人口,两者人口信息不能完全匹配时的贫困户数。"
+			},
+			"amount_poor_people": {
+				"source": "建档立卡、省民政厅",
+				"stat_method": "建档立卡是一般贫困的无劳动能力户/五保户/低保户应该享受兜底政策贫困人口、民政是低保户和五保户的人口,两者人口信息不能完全匹配时的贫困户数。"
+			},
+			"amount_diff_family": {
+				"source": "建档立卡、省民政厅",
+				"stat_method": "建档立卡是一般贫困的无劳动能力户/五保户/低保户应该享受兜底政策贫困人口、民政是低保户和五保户的人口,两者人口信息不能完全匹配时的贫困户数。"
+			},
+			"amount_diff_people": {
+				"source": "建档立卡、省民政厅",
+				"stat_method": "建档立卡是一般贫困的无劳动能力户/五保户/低保户应该享受兜底政策贫困人口、民政是低保户和五保户的人口,两者人口信息不能完全匹配时的贫困户数。"
+			}
+		},
+		"table": {
+			"list": [
+				{
+					"area_id": 1,
+					"area_level": "town",
+					"area_name": "东海县",
+					"order": 1,
+					"amount_poor_family": 356,
+					"amount_poor_people": 1243,
+					"amount_diff_family": 153,
+					"amount_diff_people": 1023,
+					"ratio_diff_people": "18%"
+				}
+			],
+			"total": {
+				"amount_poor_family": 356,
+				"amount_poor_people": 1243,
+				"amount_diff_family": 153,
+				"amount_diff_people": 1023,
+				"ratio_diff_people": "18%"
+			}
+		}
+	}
+}

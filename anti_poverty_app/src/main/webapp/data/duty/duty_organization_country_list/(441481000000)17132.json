@@ -1,0 +1,30 @@
+{
+	"data":{
+		"belong_organization":"广州珠江实业集团有限公司",
+		"list":[
+			{
+				"id":"441481123209",
+				"order":1,
+				"contact_phone":"13509097599",
+				"contact_name":"陈龙",
+				"country_name":"碧园村委会"
+			},
+			{
+				"id":"441481123201",
+				"order":2,
+				"contact_phone":"0753-3589406",
+				"contact_name":"刘远新",
+				"country_name":"曲塘村委会"
+			},
+			{
+				"id":"441481123210",
+				"order":3,
+				"contact_phone":"15916511013",
+				"contact_name":"邬苑",
+				"country_name":"羊岭村委会"
+			}
+		]
+	},
+	"code":0,
+	"msg":"获取信息成功"
+}

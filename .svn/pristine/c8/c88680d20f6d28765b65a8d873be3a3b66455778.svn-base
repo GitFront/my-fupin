@@ -1,0 +1,68 @@
+{
+	"code": 0,
+	"msg": "获取信息成功",
+	"data": {
+		"summary": {
+			//户主姓名
+			"house_holder_name": "陈志环",
+			//户主照片
+			"house_holder_avatar": "xxx.jpg",
+			//户主电话
+			"house_holder_phone": "13000000000",
+			//贫困户属性
+			"poor_attribute": "低保贫困户，有部分劳动能力",
+			//致贫原因
+			"poor_reason": "因残、缺技术、缺资金",
+			//期初年人均收入
+			"start_income": "3295元",
+			//驻村队长姓名
+			"country_leader_name": "王硕平",
+			//驻村队长照片
+			"country_leader_avatar": "xxx.jpg",
+			//驻村队长单位
+			"country_leader_org": "广东省农村信用合作社联合社",
+			//驻村队长电话
+			"country_leader_phone": "15000000000",
+			//开始帮扶时间
+			"country_leader_start_time": "2016年4月23日"
+		},
+		"stat": {
+			//人均收入
+			"income": "3295",
+			//义务教育应享受人数
+			"edu_total": 3,
+			//义务教育实际享受人数
+			"edu_achieved": 2,
+			//医疗保障应享受人数
+			"medical_security_total": 70,
+			//医疗保障实际享受人数
+			"medical_security_achieved": 50,
+			//是否危房
+			"is_danger_house": false,
+			//是否改造完成
+			"has_house_become_safe": false,
+			//住房状况级别
+			"house_danger_level": "D",
+			//脱贫指数
+			"index": 43.33,
+			//是否已达标
+			"has_achieved": false
+		},
+		//户状态
+		"status": {
+			//状态时间
+			"date": "2017年3月4日",
+			/*
+				状态码：
+				0: 无特殊状态
+				1: 已脱贫
+				10: 终止户
+				11: 已销户
+				12: 并销户
+			*/
+			"code": 1,
+			//状态名称
+			"name": "已脱贫"
+		}
+	}
+}

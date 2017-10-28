@@ -1,0 +1,16 @@
+{
+	"data":{
+		"belong_organization":"兴宁市公路局",
+		"list":[
+			{
+				"id":"441481136205",
+				"order":1,
+				"contact_phone":"07533887255",
+				"contact_name":"董育平",
+				"country_name":"新金村委会"
+			}
+		]
+	},
+	"code":0,
+	"msg":"获取信息成功"
+}

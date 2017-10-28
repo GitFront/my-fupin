@@ -1,0 +1,59 @@
+.p-family-file-implement{
+  $bd-color:#C8C8C8;
+  $bd-blue:#0A82F5;
+  background-color:#F6F6F6;
+  .implement-item{
+    padding:inRem(30) inRem(30) 0;
+    border-bottom:1px solid $bd-color;
+    background-color:#fff;
+    margin-bottom:inRem(20);
+    .p-title{
+      border-left:inRem(7) solid $sky-blue;
+      height:inRem(32);
+      line-height:inRem(32);
+      font-size:inRem(32);
+      padding-left:inRem(11);
+      color:$black;
+    }
+    ul{
+      li{
+        padding:inRem(35) 0;
+        overflow:hidden;
+
+      }
+      .implement-sum-item{
+        width:47%;
+        box-sizing:border-box;
+        border:1px solid $bd-blue;
+        border-radius:inRem(10);
+        padding:inRem(25);
+        text-align: center;
+        h3{
+          font-size:inRem(30);
+        }
+        p{
+          margin-top:inRem(15);
+          font-size:inRem(36);
+          color:$sky-blue;
+        }
+      }
+      .implement-other-item{
+        border-top:1px solid #C8C8C8;
+        overflow:hidden;
+        font-size:inRem(30);
+        .implement-other-title{
+          float:left;
+        }
+        .implement-other-content{
+          float:right;
+          color:#777777;
+        }
+      }
+    }
+    .implement-item-list{
+      margin-top:inRem(40);
+    }
+
+  }
+
+}

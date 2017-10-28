@@ -1,0 +1,214 @@
+{
+  "code": 0,
+  "msg": "获取信息成功",
+  "data": {
+    "time_end": 1544878921399,
+    "average": {
+      "chart_config_labor": {
+        "percent": 60
+      },
+      "chart_config_society": {
+        "percent": 100
+      }
+    },
+    "guarantee": {
+      "chart_config_edu": [
+        {
+          "name": "义务教育",
+          "value": 60
+        }
+      ],
+      "chart_config_medical": [
+        {
+          "name": "基本医疗",
+          "value": 80
+        }
+      ],
+      "chart_config_house": [
+        {
+          "name": "住房安全",
+          "value": 80
+        }
+      ]
+    },
+    "bars": [
+      {
+        "name": "道路硬化",
+        "percent": 100
+      },
+      {
+        "name": "安全饮水",
+        "percent": 92
+      },
+      {
+        "name": "电网改造",
+        "percent": 84
+      },
+      {
+        "name": "卫生站",
+        "percent": 55
+      },
+      {
+        "name": "广播电视",
+        "percent": 78
+      },
+      {
+        "name": "宽带网络",
+        "percent": 38
+      }
+    ],
+    "alarm": {
+      "family": 1,
+      "records": 1,
+      "country": 1,
+      "family_not_visited": {
+        "label": "一年内走访<2次的",
+        "value": 0
+      }
+    },
+    "capital": {
+      "stat": {
+        "invested": "105亿",
+        "projects": "22380个",
+        "rate_completed": "62.5%"
+      },
+      "chart_config_pie": [
+        {
+          "name":"教育扶贫",
+          "value":802770
+        },
+        {
+          "name":"就业扶贫",
+          "value":275060
+        },
+        {
+          "name":"医疗救助",
+          "value":694030
+        },
+        {
+          "name":"技术培训",
+          "value":107580
+        },
+        {
+          "name":"低保五保",
+          "value":765930
+        },
+        {
+          "name":"产业扶贫",
+          "value":183040
+        },
+        {
+          "name":"危房改造",
+          "value":278360
+        },
+        {
+          "name":"金融扶贫",
+          "value":374805
+        },
+        {
+          "name":"生态补偿",
+          "value":176580
+        },
+        {
+          "name":"慰问扶贫",
+          "value":395730
+        }
+      ],
+      "chart_config_bubble": {
+        "count":802770,
+        "listData":[
+          {
+            "name":"教育扶贫",
+            "value":[
+              37,
+              67,
+              802770
+            ],
+            "group":"教育扶贫"
+          },
+          {
+            "name":"就业扶贫",
+            "value":[
+              6,
+              54,
+              275060
+            ],
+            "group":"就业扶贫"
+          },
+          {
+            "name":"医疗救助",
+            "value":[
+              15,
+              70,
+              694030
+            ],
+            "group":"医疗救助"
+          },
+          {
+            "name":"技术培训",
+            "value":[
+              32,
+              75,
+              107580
+            ],
+            "group":"技术培训"
+          },
+          {
+            "name":"低保五保",
+            "value":[
+              168,
+              64,
+              765930
+            ],
+            "group":"低保五保"
+          },
+          {
+            "name":"产业扶贫",
+            "value":[
+              5,
+              80,
+              183040
+            ],
+            "group":"产业扶贫"
+          },
+          {
+            "name":"危房改造",
+            "value":[
+              39,
+              50,
+              278360
+            ],
+            "group":"危房改造"
+          },
+          {
+            "name":"金融扶贫",
+            "value":[
+              7,
+              53,
+              374805
+            ],
+            "group":"金融扶贫"
+          },
+          {
+            "name":"生态补偿",
+            "value":[
+              2,
+              50,
+              176580
+            ],
+            "group":"生态补偿"
+          },
+          {
+            "name":"慰问扶贫",
+            "value":[
+              168,
+              82,
+              395730
+            ],
+            "group":"慰问扶贫"
+          }
+        ]
+      }
+    }
+  }
+}

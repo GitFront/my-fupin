@@ -1,0 +1,370 @@
+<%@ page contentType="text/html;charset=UTF-8"  pageEncoding="UTF-8"%>
+<%@ include file="/WEB-INF/views/include/fupin-taglib.jsp"%>
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>扶贫服务-广东省扶贫办大数据平台</title>
+	<link rel="stylesheet" href="${ctxStatic}/themes/css/fupin/main_strategy.css">
+	<script type="text/javascript">
+		var parentId = "${param.parentId}";
+	</script>
+</head>
+
+<body>
+	<div class="main-wrap data-wrap">
+		<div id="poorServiceWrap">
+			<header>
+				<div class="logo"></div>
+				<ul class="nav-ul nav-country">
+				<c:forEach items="${fns:getMenuList()}" var="menu" varStatus="idxStatus">
+				<c:if test="${menu.parent.name eq '顶级菜单' && menu.isShow eq '1'}">
+					<c:choose>
+						<c:when test="${menu.name =='搜索'}">
+						<%-- <li id="li_${menu.id}" class="search">
+							<a class="nav1-a" href="#" onclick="loadPage('${menu.id}','${menu.pageType}','${menu.href}');"></a>
+						</li> --%>
+						<li id="navSearch" class="ico-btn search">
+							<div class="presearch-wrapper" id="presearchWrapper">
+								<div class="presearch-form">
+									<div class="select-wrapper">
+										<select id="selectPresearchTypes">
+											<option value="family" selected>贫困户</option>
+											<option value="country">相对贫困村</option>
+										</select>
+									</div>
+									<div class="input-wrapper">
+										<input type="text" id="inputPresearchField" class="input-presearch-field" placeholder="请输入搜索关键词">
+										<div id="btnClearPresearch" class="btn-clear-presearch"></div>
+									</div>
+								</div>
+								<div class="presearch-suggest" id="searchsSuggest"><ul></ul></div>
+							</div>
+						</li>
+						</c:when>
+						<c:otherwise>
+							<c:choose>
+							<c:when test="${menu.pageType eq '0'}">
+							<li class="on second-nav" >
+							<a>${menu.name}<i class="icon-arrow-down"></i></a>
+								<ul class="select-list">
+								
+								<c:forEach items="${fns:getMenuList2(menu.id,1)}" var="menu2" varStatus="idxStatus2">
+									<li id="li_${menu2.id}">
+										<a class="nav1-a" href="#" onclick="loadPage('${menu2.id}','${menu2.pageType}','${menu2.href}');">${menu2.name}</a>
+									</li>
+								</c:forEach>
+									
+								</ul>
+							</li>
+				
+							</c:when>
+							<c:otherwise>
+							
+							<li id="li_${menu.id}">
+								<a class="nav1-a" href="#" onclick="loadPage('${menu.id}','${menu.pageType}','${menu.href}');">${menu.name}</a>
+							</li>
+							</c:otherwise>
+							</c:choose>
+						</c:otherwise>
+					</c:choose>
+				</c:if>
+			</c:forEach>
+			<li class="ico-btn logout"><a class="not-text" href="${ctx}/a/logout.do"></a></li>
+			</ul>
+			</header>
+			<div  class="data-blocks-wrap">
+				<section id="poorServiceIndexWrap">
+					
+				</section>
+			</div>
+			<!-- 弹窗 -->
+			<section id="popupPoorServiceDetail" class="pop-poor-monitor-wrap">
+				
+			</section>
+		</div>
+	</div>
+
+	<script id="tplPoorServiceIndex" type="text/html">
+		<div class="header clearfix">
+			<div class="select-row area-barrio">
+				<label>行政区域：</label>
+				<span id="areaBarrio">
+					广东省
+				</span>
+			</div>
+		</div>
+
+		<div class="poor-server-top opacity-shadow-wrap">
+			
+			<p class="transparent-overflow-title">电商扶贫</p>
+
+			<article class="chart-wrap-100p">
+
+				<section id="indexLingnan">
+					<!-- <div class="title">
+					<strong>岭南优品 | 2017年累计成交额<span class="yellow-c">100万</span></strong>
+					</div>
+
+					<div id="indexLingnanChart" class="chart-item">
+
+					</div> -->
+					
+				</section>
+				
+			</article>
+		
+		</div>
+
+		<div class="poor-server-bttm opacity-shadow-wrap">
+			
+			<p class="transparent-overflow-title">扶贫业务办理</p>
+
+			<article id="personalMatter" class="chart-wrap-50p" data-matter="personal">
+				<div class="title">
+					<strong>个人事项</strong>
+					<ul class="blue-tab">
+						<li  data-target="personalDoingChart" data-status="doing">在办</li>
+						<li class="active" data-target="personalDoneChart" data-status="done">已办</li>
+					</ul>
+					<a  class="btn yellow-link-btn  js-detail-btn hide">详情 ></a>
+				</div>
+				<aside  class="chart-item" style="height:200px;">
+					<div id="personalDoingChart" class="chart hide"></div>
+					<div id="personalDoneChart" class="chart "></div>
+				</aside>
+			</article>
+
+			<article id="legalPersonMatter" class="chart-wrap-50p" data-matter="legal_person">
+				<div class="title">
+					<strong>法人事项</strong>
+					<ul class="blue-tab">
+						<li  data-target="legalPersonDoingChart" data-status="doing">在办</li>
+						<li class="active" data-target="legalPersonDoneChart" data-status="done">已办</li>
+					</ul>
+					<a  class="btn yellow-link-btn  js-detail-btn hide">详情 ></a>
+				</div>
+				<aside  class="chart-item" style="height:200px;">
+					<div id="legalPersonDoingChart" class="chart hide"></div>
+					<div id="legalPersonDoneChart" class="chart "></div>
+				</aside>
+			</article>
+		
+		</div>
+	</script>
+	
+
+	<!-- 详情弹窗 -->
+	<script id="tplPopupPoorServiceDetail" type="text/html">
+		<section  class="monitor-header">
+			<h2 id="popupTitle" class="header-title"><#=popupTitle#></h2>
+			<div class="select-row area-barrio">
+				<label>行政区域：</label>
+				<span id="areaBarrioPopup">
+					<#for(var i = 0, len = area_path.length; i < len; i++) {#>
+					<div class="select-box js-select-box" level="<#=area_path[i].level#>" selected_id="<#=area_path[i].selected_id#>">
+						<span><#=area_path[i].selected_name#></span>
+						<i class="arrow"></i>
+						<div class="select-list js-select-list">
+							<div>
+								<ul>
+									<#for(var j = 0, len2 = area_path[i].list.length; j<len2; j++) {#>
+									<li title="<#=area_path[i].list[j].name#>" class="<#= (area_path[i].list[j].id==area_path[i].selected_id) ? 'active':''#>" data-id="<#=area_path[i].list[j].id#>">
+										<#=area_path[i].list[j].name#>
+									</li>
+									<#}#>
+								</ul>
+							</div>
+						</div>
+					</div>
+					<#}#>
+				</span>
+			</div>
+			<i class="yellow-btn back-btn js-popup-close">返回</i>
+		</section>
+
+		<section  class="popup-content">
+			<article class="content-header">
+				<p class="title"><#=title#> | <span id="searchResultCount">-</span>项</p>
+				<div class="select-row">
+					<label>分类导航：</label>
+					<div id="typeSelect" class="select-box js-select-box"  selected_value=<#=types.selected_value#>>
+						<span ><#=types.selected_name#></span>
+						<i class="arrow"></i>
+						<div class="select-list js-select-list">
+							<div>
+								<ul>
+									<#for(var i = 0; i < types.list.length; i++) {#>
+									<li title="<#=types.list.name#>" class="<#= (types.selected_value == types.list[i].value) ? 'active':''#>" data-value="<#=types.list[i].value#>">
+										<#=types.list[i].name#>
+									</li>
+									<#}#>
+								</ul>
+							</div>
+						</div>
+					</div>
+				</div>
+			</article>
+
+			<article class="data-search-box opacity-shadow-wrap">
+				<div class="data-search-header">
+					<input id="keywordInput" class="keyword" type="text" value="">
+					<button id="popupSearchBtn" class="btn-search">搜索</button>
+				</div>
+				<div class="data-search-content">
+					<div id="popupSearchTable" class="detail-search-content"></div>
+					<div class="none-search">未找到相关内容，请重试</div>
+				</div>
+			</article>
+		</section>
+	</script>
+	
+	<!-- 搜索结果表格 -->
+	<script id="tplPopupSearchTable" type="text/html">
+		<div class="table-title clearfix">
+			<p class="btn-area">
+				<a class="yellow-btn export-btn" data-export-url="<#=table.export_url#>">导出</a>
+			</p>
+		</div>
+		<div class="content clearfix">
+			<div >
+				<div class="monitor-tb-wrap">
+					<table class="monitor-tb">
+						<thead>
+							<#for(var i=0;i < table.head.length;i++){#>
+							<tr>
+								<#for(var j=0;j < table.head[i].length;j++){#>
+								<#var item=table.head[i][j]#>
+								<td 
+								<#=item.colspan?"colspan="+item.colspan:""#>
+								<#=item.rowspan?"rowspan="+item.rowspan:""#>
+								><#=# item.content#></td>
+								<#}#>
+							</tr>
+							<#}#>
+						</thead>
+						<tbody>
+							<#for(var i=0;i < table.body.length;i++){#>
+							<tr>
+								<#for(var j=0;j < table.body[i].length;j++){#>
+								<#var item=table.body[i][j]#>
+								<td  
+								<#=item.colspan?"colspan="+item.colspan:""#>
+								<#=item.rowspan?"rowspan="+item.rowspan:""#>
+								<#=item.action_type?"data-action-type="+item.action_type:""#>
+								<#if(item.action_type=="family_file"){#>
+								<#=item.action_data?"data-action-family-id="+item.action_data.family_id:""#>
+								<#}else{#>
+								<#=item.action_data?"data-action-area-level="+item.action_data.area_level:""#>
+								<#=item.action_data?"data-action-area-id="+item.action_data.area_id:""#>
+								<#}#>
+								><#=# item.content#></td>
+								<#}#>
+							</tr>    
+							<#}#>
+						</tbody>
+					</table>
+				</div>
+				<#if(table.notes){#>
+				<p class="table-notes">
+					<#=table.notes#>
+				</p>
+				<#}#>
+				<#if(table.pagination){#>
+				<div class="table-pagination">
+					<a class="icon arrow-first"></a>
+					<a class="icon arrow-left"></a>
+					<strong class="cur-page">第 <#=table.pagination.page_cur#> 页</strong>
+					<a class="icon arrow-right"></a>
+					<a class="icon arrow-end"></a>
+					<em>共<#=table.pagination.page_total#>页 总计<#=table.pagination.amount_total#>行记录</em>
+				</div>
+				<#}#>
+			</div>
+		</div>
+	</script>
+
+	<div id="exportWrap" class="export-wrap">
+		<section id="exportContent" class="export-content">
+
+		</section>
+	</div>
+
+	<script id="tplIndexLingnan" type="text/html">
+		<div class="title">
+			<strong>岭南优品 | 2017年累计成交额<span class="yellow-c"> 938.7万</span></strong>
+		</div>
+		<div id="indexLingnanChart" class="chart-item">
+			
+		</div>
+	</script>
+	<!--导出模板-->
+	<script id="tplExportContent" type="text/html">
+		<p class="tips">数据导出中......</p>
+		<div class="export-bar-wrap">
+			<div class="export-bar">
+				<p style="width:<#=progress#>%;" class="export-bar-process"></p>
+			</div>
+			<em class="rate-num"><#=progress#>%</em>
+		</div>
+	</script>
+	<%@ include file="/WEB-INF/views/include/fupin-taglib-body.jsp"%>
+	<!-- end -->
+		<script src="${ctxStatic}/js/modules/fupin/common/common-menu.min.js"></script>
+	<script src="${ctxStatic}/js/modules/fupin/libs/jquery.min.js"></script>
+	<script src="${ctxStatic}/js/modules/fupin/libs/echarts.min.js"></script>
+	<script src="${ctxStatic}/js/modules/fupin/libs/d3.v3.min.js"></script>
+	<script src="${ctxStatic}/js/modules/fupin/libs/template-native.min.js"></script>
+	<script src="${ctxStatic}/js/modules/script/common/liquidFillGauge.min.js"></script>
+	<script src="${ctxStatic}/js/modules/fupin/libs/jquery.selectbox-0.2.min.js"></script>
+	<script src="${ctxStatic}/js/modules/fupin/libs/jquery.mousewheel.min.js"></script>
+	<script src="${ctxStatic}/js/modules/fupin/libs/jquery.jscrollpane.min.js"></script>
+	<script src="${ctxStatic}/js/modules/fupin/libs/tipso.min.js"></script>
+	<script src="${ctxStatic}/js/modules/fupin/libs/owl.carousel.min.js"></script>
+	<script src="${ctxStatic}/js/modules/fupin_strategy/common/urls_mock.min.js"></script>
+	<script src="${ctxStatic}/js/modules/fupin_strategy/common/common.min.js"></script>
+	<script src="${ctxStatic}/js/modules/fupin_strategy/common/votelist.min.js"></script>
+	<script src="${ctxStatic}/js/modules/fupin_strategy/countActive-int.min.js"></script>
+	<script src="${ctxStatic}/js/modules/fupin_strategy/common/monitor.min.js"></script>
+	
+	<script src="${ctxStatic}/js/modules/fupin/controllers/poor_country_detail_ctrl.min.js"></script>
+	<script src="${ctxStatic}/js/modules/fupin_strategy/search_common.min.js"></script>
+	<script src="${ctxStatic}/js/modules/fupin_strategy/poor_service.min.js"></script>
+	<script src="${ctxStatic}/js/modules/fupin/map/echars-map.min.js"></script>
+	
+	
+	<script src="${ctxStatic}/js/common/jquery-namespace.min.js"></script>
+	<script src="${ctxStatic}/js/common/charts/common-echarts.min.js"></script>
+	<script src="${ctxStatic}/js/common/charts/common-utils.min.js"></script>
+	<script src="${ctxStatic}/js/common/charts/common-echarts-config.min.js"></script>
+
+
+
+	<script>
+		$(function() {
+			var ajax = Helpers.ajax;
+
+			ajax({
+				url: URLS.URL_DATA_POOR_SERVICE_INDEX_DATA_LINGNAN,
+				data: {
+				},
+				success: function(data) {
+					var code = data.code,
+						d = data.data;
+					if (code == 0 && d) {
+						$('#indexLingnan').html(template('tplIndexLingnan', d));
+						//图形
+						echarts.init(document.getElementById('indexLingnanChart')).setOption(commonEchartConfig[d.chart_config.convert_method](d.chart_config.config));
+
+					
+					}
+				},
+				error: function() {
+					// self.renderPoorEastWestIndex();
+				}
+			})
+		
+		})
+	</script>
+</body>
+</html>

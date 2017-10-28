@@ -1,0 +1,334 @@
+{
+  "code": 0,
+  "msg": "获取省/市/县/镇信息成功",
+  "data":{
+    "district_id":"guangdong",
+    "district_name":"广东省贫困现状分析",
+    "intro":"全省共有21个市，156个县(区)，1773个乡(镇)，2.6万个村，农村户籍人口3716.9万。<br/>有贫困人口申报的市14个，县97个，乡(镇)1110个。<br/>相对贫困村<em>2277个</em>，贫困户(省定标准)<em>65.5万</em> ，贫困人口<em>170.6万</em>，贫困发生率<em>4.6%</em>。",
+    "chart_config":[
+      {
+        "chart": {
+          "type": "solidgauge"
+        },
+        "title": "",
+        "pane": {
+          "center": [
+            "50%",
+            "80%"
+          ],
+          "size": "140%",
+          "startAngle": -90,
+          "endAngle": 90,
+          "background": {
+            "backgroundColor": "#EEE",
+            "innerRadius": "60%",
+            "outerRadius": "100%",
+            "shape": "arc"
+          }
+        },
+        "tooltip": {
+          "enabled": true
+        },
+        "exporting": {
+          "enabled": false
+        },
+        "yAxis": {
+          "enabled": false,
+          "stops": [
+            [
+              0.1,
+              "#007AE1"
+            ]
+          ],
+          "lineWidth": 0,
+          "minorTickInterval": null,
+          "tickPixelInterval": 400,
+          "tickWidth": 0,
+          "title": {
+            "text": "相对贫困村",
+            "y": 25,
+            "style": {
+              "color": "#007AE1"
+            }
+          },
+          "labels": {
+            "enabled": false
+          },
+          "min": 0,
+          "max": 10000
+        },
+        "plotOptions": {
+          "solidgauge": {
+            "dataLabels": {
+              "y": 16,
+              "borderWidth": 0,
+              "useHTML": true
+            }
+          }
+        },
+        "series": [
+          {
+            "name": "相对贫困村",
+            "data": [
+              2277
+            ],
+            "dataLabels": {
+              "style": {
+                "color": "#007AE1"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "chart": {
+          "type": "solidgauge"
+        },
+        "title": "",
+        "pane": {
+          "center": [
+            "50%",
+            "80%"
+          ],
+          "size": "140%",
+          "startAngle": -90,
+          "endAngle": 90,
+          "background": {
+            "backgroundColor": "#EEE",
+            "innerRadius": "60%",
+            "outerRadius": "100%",
+            "shape": "arc"
+          }
+        },
+        "tooltip": {
+          "enabled": true
+        },
+        "exporting": {
+          "enabled": false
+        },
+        "yAxis": {
+          "enabled": false,
+          "stops": [
+            [
+              0.1,
+              "#007AE1"
+            ]
+          ],
+          "lineWidth": 0,
+          "minorTickInterval": null,
+          "tickPixelInterval": 400,
+          "tickWidth": 0,
+          "title": {
+            "text": "贫困户",
+            "y": 25,
+            "style": {
+              "color": "#007AE1"
+            }
+          },
+          "labels": {
+            "enabled": false
+          },
+          "min": 0,
+          "max": 2000000
+        },
+        "plotOptions": {
+          "solidgauge": {
+            "dataLabels": {
+              "y": 16,
+              "borderWidth": 0,
+              "useHTML": true
+            }
+          }
+        },
+        "series": [
+          {
+            "name": "贫困户",
+            "data": [
+              655030
+            ],
+            "dataLabels": {
+              "style": {
+                "color": "#007AE1"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "chart": {
+          "type": "solidgauge"
+        },
+        "title": "",
+        "pane": {
+          "center": [
+            "50%",
+            "80%"
+          ],
+          "size": "140%",
+          "startAngle": -90,
+          "endAngle": 90,
+          "background": {
+            "backgroundColor": "#EEE",
+            "innerRadius": "60%",
+            "outerRadius": "100%",
+            "shape": "arc"
+          }
+        },
+        "tooltip": {
+          "enabled": true
+        },
+        "exporting": {
+          "enabled": false
+        },
+        "yAxis": {
+          "enabled": false,
+          "stops": [
+            [
+              0.1,
+              "#007AE1"
+            ]
+          ],
+          "lineWidth": 0,
+          "minorTickInterval": null,
+          "tickPixelInterval": 400,
+          "tickWidth": 0,
+          "title": {
+            "text": "贫困人口",
+            "y": 25,
+            "style": {
+              "color": "#007AE1"
+            }
+          },
+          "labels": {
+            "enabled": false
+          },
+          "min": 0,
+          "max": 5000000
+        },
+        "plotOptions": {
+          "solidgauge": {
+            "dataLabels": {
+              "y": 16,
+              "borderWidth": 0,
+              "useHTML": true
+            }
+          }
+        },
+        "series": [
+          {
+            "name": "贫苦人口",
+            "data": [
+              1706240
+            ],
+            "dataLabels": {
+              "style": {
+                "color": "#007AE1"
+              }
+            }
+          }
+        ]
+      }
+    ]
+  ,
+    "list":[
+      {
+        "district_id":1,
+        "district_name":"梅州市",
+        "poor_family":64128,
+        "poor_count":180494,
+        "poor_index":60
+      },
+      {
+        "district_id":2,
+        "district_name":"河源市",
+        "poor_family":43971,
+        "poor_count":121283,
+        "poor_index":23
+      },
+      {
+        "district_id":2,
+        "district_name":"汕头市",
+        "poor_family":30613,
+        "poor_count":100356,
+        "poor_index":20
+      },
+      {
+        "district_id":2,
+        "district_name":"韶关市",
+        "poor_family":36195,
+        "poor_count":93047,
+        "poor_index":22
+      },
+      {
+        "district_id":2,
+        "district_name":"惠州市",
+        "poor_family":17999,
+        "poor_count":41007,
+        "poor_index":16
+      },
+      {
+        "district_id":2,
+        "district_name":"汕尾市",
+        "poor_family":42255,
+        "poor_count":140689,
+        "poor_index":46
+      },
+      {
+        "district_id":2,
+        "district_name":"阳江市",
+        "poor_family":40420,
+        "poor_count":84231,
+        "poor_index":25
+      },
+      {
+        "district_id":2,
+        "district_name":"湛江市",
+        "poor_family":83991,
+        "poor_count":231652,
+        "poor_index":88
+      },
+      {
+        "district_id":2,
+        "district_name":"茂名市",
+        "poor_family":75733,
+        "poor_count":178087,
+        "poor_index":78
+      },
+      {
+        "district_id":2,
+        "district_name":"肇庆市",
+        "poor_family":42930,
+        "poor_count":97778,
+        "poor_index":24
+      },
+      {
+        "district_id":2,
+        "district_name":"清远市",
+        "poor_family":62182,
+        "poor_count":141137,
+        "poor_index":52
+      },
+      {
+        "district_id":2,
+        "district_name":"潮州市",
+        "poor_family":16491,
+        "poor_count":37395,
+        "poor_index":18
+      },
+      {
+        "district_id":2,
+        "district_name":"揭阳市",
+        "poor_family":47537,
+        "poor_count":135206,
+        "poor_index":36
+      },
+      {
+        "district_id":2,
+        "district_name":"云浮市",
+        "poor_family":50585,
+        "poor_count":123878,
+        "poor_index":30
+      }
+    ]
+  }
+}

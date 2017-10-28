@@ -1,0 +1,296 @@
+/*弹窗*/
+.pop-win-wrap{
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 999999;
+  background: rgba(0, 0, 0, 0.5);
+  .pop-win-box{
+    margin-left: -636px;
+    margin-top:-355px;
+    width:1272px;
+    height:709px;
+    position:absolute;
+    top:50%;
+    left:50%;
+    .pop-win-close{
+      width:55px;
+      height:58px;
+      @include bgPng(close-btn);
+      position:absolute;
+      right:-6px;
+      top:-6px;
+      cursor: pointer;
+    }
+  }
+
+}
+.file-detail{
+  width:1272px;
+  height:709px;
+  @include bgPng(county-bg);
+  .poor-file-info{
+    width:415px;
+    float:left;
+    .file-title{
+      line-height:46px;
+      background-color:#494950;
+      font-size:24px;
+      color:#fff;
+      display:inline-block;
+      margin:55px 0 0 11px;
+      padding:0 35px 0 30px;
+      border-radius:0 30px 30px 0;
+      border:solid #606066;
+      border-width:1px 1px 1px 0;
+    }
+    .file-album{
+      width:195px;
+      height:244px;
+      @include bgPng(album-bg);
+
+      margin:45px 0;
+      margin-bottom: 15px;
+      margin-left: 114px;
+      padding:10px;
+      img{
+        width:175px;
+        height:224px;
+        border-radius:10px;
+      }
+    }
+    .file-info-tb{
+      font-size: 16px;
+       margin-left: 75px;
+      td{
+        padding:10px 0;
+        vertical-align: top;
+        &.title{
+          text-align: right;
+        }
+        &.p2{
+//          padding-top: 30px;
+          line-height: 20px;
+          vertical-align: -10px;
+        }
+        .phone{
+          position: relative;
+          top: -10px;
+        }
+        .phone-icon{
+          display: inline-block;
+          position: relative;
+          top: -3px;
+          left: 10px;
+        }
+      }
+      tr>td:first-child{
+        padding-left:15px;
+      }
+      tr>td:nth-child(2){
+        width:150px;
+      }
+    }
+  }
+  .poor-more-info{
+    width:840px;
+    float:left;
+    .poor-tab{
+      width:490px;
+      border-radius:30px;
+      border:1px solid #2E2E36;
+      margin:60px auto 35px;
+      display:block;
+      overflow:hidden;
+      li{
+        font-size:16px;
+        color:#252525;
+        text-align: center;
+        width:33.14%;
+        line-height:36px;
+        float:left;
+        cursor:pointer;
+        &:nth-child(2){
+          border:solid #2E2E36;
+          border-width:0 1px;
+        }
+        &:nth-child(3){
+          width:33.318%;
+        }
+      }
+      .active{
+        background-color:#2E2E36;
+        color:#fff;
+      }
+    }
+    .poor-container{
+      .country-analyze{
+        width:650px;
+        margin:0 auto;
+        color:#252525;
+        dl{
+          margin-top:50px;
+          overflow: hidden;
+          dt{
+            font-size:24px;
+          }
+          dd.top-data{
+            padding:40px 0 0 40px;
+            a{
+              cursor: pointer;
+            }
+            div{
+              float:left;
+              width: 29%;
+              padding: 0 2%;
+              h3{
+                font-size:36px;
+                color:#5F5F5F;
+              }
+              p{
+                font-size:16px;
+                color:#8A8B8E;
+                margin-top:12px;
+              }
+            }
+          }
+          dd.fx-content{
+            font-size:16px;
+            color:#5F5F5F;
+            line-height:50px;
+            padding: 40px 0 0 40px;
+            padding-top: 25px;
+          }
+        }
+      }
+      .family-file{
+        width:650px;
+        margin:0 auto;
+        color:#252525;
+        dl{
+          margin-top:20px;
+          overflow: hidden;
+          dd.top-data{
+            padding: 30px 0 0 110px;
+            overflow:hidden;
+            a{
+              cursor: pointer;
+            }
+            div{
+              float:left;
+              margin-right:70px;
+              h3{
+                font-size:24px;
+                color:#5F5F5F;
+              }
+              p{
+                font-size:16px;
+                color:#8A8B8E;
+                margin-top:6px;
+                margin-bottom: 6px;
+              }
+              a{
+                font-size:16px;
+              }
+            }
+          }
+        }
+      }
+      .help-info{
+        color:#404041;
+        padding:0 12px 0 18px;
+        margin:0 auto;
+        margin-top: -35px;
+        overflow: hidden;
+        background: #fff;
+        width: 804px;
+        height: 550px;
+        ul{
+          li{
+            margin-top:40px;
+            h3{
+              font-size:16px;
+              font-weight: bold;
+            }
+            table{
+              font-size:16px;
+              width:100%;
+              margin-top:20px;
+              border:1px solid #E9E9EB;
+              thead{
+                background-color:#F3F3F6;
+                td{
+                  white-space: nowrap;
+                }
+              }
+              tbody{
+                tr{
+                  &:hover{
+                    background-color:#F5F5F8;
+                  }
+                }
+              }
+
+              td{
+                padding:12px 14px;
+                border:1px solid #E9E9EB;
+                text-align: center;
+              }
+            }
+          }
+        }
+      }
+      .album-box{
+        .album-tab{
+          margin:30px auto 35px;
+          display:block;
+          overflow:hidden;
+          text-align: center;
+          li{
+            font-size:16px;
+            color:#252525;
+            text-align: center;
+            min-width: 80px;
+            line-height: 32px;
+            display: inline-block;
+            margin: 0 20px;
+            cursor:pointer;
+          }
+          .active{
+            color:#6691F9;
+            border-bottom:3px solid #6691F9;
+          }
+        }
+        .album-list-wrap{
+          overflow: hidden;
+          background: #fff;
+          width: 837px;
+          height: 487px;
+          .all-album{
+            background: #F3F3F6;
+            border:1px solid #ECECED;
+            padding:96px 0;
+            padding-bottom: 96px;
+            width:96%;
+            margin:0 auto;
+            overflow-x:scroll;
+            .album-list{
+              width: 2000px;
+              margin: 0 auto;
+              height: 256px;
+              overflow:hidden;
+              .album-item{
+                display:inline-block;
+                width:368px;
+                height:256px;
+                margin-left:20px;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

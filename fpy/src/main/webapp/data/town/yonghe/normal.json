@@ -1,0 +1,68 @@
+﻿{
+	"data": {
+		"chart_config_top_poor": {
+			"count": 10,
+			"list": [
+				{
+					"percent": "100.00%",
+					"name": "大成村委会(84户)",
+					"district_name": "大成村委会"
+				},
+				{
+					"percent": "83.33%",
+					"name": "石陂村委会(70户)",
+					"district_name": "石陂村委会"
+				},
+				{
+					"percent": "64.29%",
+					"name": "仁里村委会(54户)",
+					"district_name": "仁里村委会"
+				},
+				{
+					"percent": "59.52%",
+					"name": "永星村委会(50户)",
+					"district_name": "永星村委会"
+				},
+				{
+					"percent": "52.38%",
+					"name": "成鹊村委会(44户)",
+					"district_name": "成鹊村委会"
+				},
+				{
+					"percent": "51.19%",
+					"name": "永生村委会(43户)",
+					"district_name": "永生村委会"
+				},
+				{
+					"percent": "46.43%",
+					"name": "廉峰村委会(39户)",
+					"district_name": "廉峰村委会"
+				},
+				{
+					"percent": "45.24%",
+					"name": "蓝排村委会(38户)",
+					"district_name": "蓝排村委会"
+				},
+				{
+					"percent": "42.86%",
+					"name": "新寨村委会(36户)",
+					"district_name": "新寨村委会"
+				},
+				{
+					"percent": "41.67%",
+					"name": "沙坪村委会(35户)",
+					"district_name": "沙坪村委会"
+				}
+			]
+		},
+		"stat": {
+			"amount_poor_households": "7",
+			"amount_poor_people": "1630",
+			"amount_poor_families": "802",
+			"rate_poor": "5.5%",
+			"amount_plan": "802"
+		}
+	},
+	"code": 0,
+	"msg": "获取信息成功"
+}

@@ -1,0 +1,37 @@
+{
+	"data":{
+		"belong_organization":"兴宁市第三人民医院",
+		"list":[
+			{
+				"id":"441481128221",
+				"order":1,
+				"contact_phone":"3243985",
+				"contact_name":"邢盛辉",
+				"country_name":"坪塘村委会"
+			},
+			{
+				"id":"441481128222",
+				"order":2,
+				"contact_phone":"3244345",
+				"contact_name":"赖群建",
+				"country_name":"陂丰村委会"
+			},
+			{
+				"id":"441481128207",
+				"order":3,
+				"contact_phone":"15916540862",
+				"contact_name":"张惠玲",
+				"country_name":"鹅一村委会"
+			},
+			{
+				"id":"441481128206",
+				"order":4,
+				"contact_phone":"13723653189",
+				"contact_name":"江强",
+				"country_name":"古塘村委会"
+			}
+		]
+	},
+	"code":0,
+	"msg":"获取信息成功"
+}

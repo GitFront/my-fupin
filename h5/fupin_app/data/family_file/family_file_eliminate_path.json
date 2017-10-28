@@ -1,0 +1,25 @@
+{
+	"code": 0,
+	"msg": "获取信息成功",
+	"data": {
+		"total_score": 60,
+		"scores": [
+			{
+				"index_name": "家庭人均收入",
+				"weight": 30,
+				"value_name": "实际人均收入",
+				"value_actual": "4500",
+				"value_target": "<2%",
+				"has_achieved": false
+			},
+			{
+				"index_name": "家庭人均收入",
+				"weight": 30,
+				"value_name": "实际人均收入",
+				"value_actual": "未达标",
+				"value_target": "达标",
+				"has_achieved": true
+			}
+		]
+	}
+}

@@ -1,0 +1,16 @@
+{
+	"data":{
+		"belong_organization":"广东省档案局（馆）",
+		"list":[
+			{
+				"id":"441481134229",
+				"order":1,
+				"contact_phone":"13727635298",
+				"contact_name":"余建成",
+				"country_name":"兰亭村委会"
+			}
+		]
+	},
+	"code":0,
+	"msg":"获取信息成功"
+}

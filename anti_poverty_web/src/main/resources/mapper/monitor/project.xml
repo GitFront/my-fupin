@@ -1,0 +1,942 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+        
+<mapper namespace="com.aspire.birp.modules.antiPoverty.dao.ProjectManagementDao">
+	
+	<!-- 合计用  -->
+	<sql id="count_group_by_sql">
+	
+			<if test=" '' != level and null != level and 'province' == level  ">
+				 1
+			</if>
+			<if test=" '' != level and null != level and 'city' == level  ">
+				 CITY_PAC , CITY_NAME
+			</if>
+			
+			<if test=" '' != level and null != level and 'county' == level  ">
+				 COUNTY_PAC ,COUNTY_NAME  
+			</if>
+			
+			<if test=" '' != level and null != level and 'town' == level  ">
+				   TOWN_PAC ,TOWN_NAME 
+			</if>
+			
+			<if test=" '' != level and null != level and 'country' == level  ">
+				COUNTRY_PAC  ,COUNTRY_NAME 
+			</if>
+	</sql>
+
+
+	<!-- 区域 -->
+	<sql id="level_area_sql">
+			
+			<if test=" '' != level and null != level and 'province' == level  ">
+				CITY_PAC S_ID, CITY_NAME A2,
+			</if>
+			<if test=" '' != level and null != level and 'city' == level  ">
+				COUNTY_PAC S_ID,COUNTY_NAME A2,
+			</if>
+			
+			<if test=" '' != level and null != level and 'county' == level  ">
+				 TOWN_PAC S_ID ,TOWN_NAME A2,
+			</if>
+			
+			<if test=" '' != level and null != level and 'town' == level  ">
+				COUNTRY_PAC S_ID ,COUNTRY_NAME  A2,
+			</if>
+			
+			<if test=" '' != level and null != level and 'country' == level  ">
+				COUNTRY_PAC S_ID ,COUNTRY_NAME  A2,
+			</if>
+	</sql>
+
+	<!-- 层级sql -->
+	<sql id="level_sql">
+			
+			<if test=" '' != level and null != level and 'province' == level  ">
+				
+			</if>
+			
+			<if test=" '' != level and null != level and 'city' == level  ">
+				AND CITY_PAC = #{id}
+			</if>
+			
+			<if test=" '' != level and null != level and 'county' == level  ">
+				AND COUNTY_PAC = #{id} 
+			</if>
+			
+			<if test=" '' != level and null != level and 'town' == level  ">
+				AND TOWN_PAC = #{id} 
+			</if>
+			
+			<if test=" '' != level and null != level and 'country' == level  ">
+				AND COUNTRY_PAC = #{id}
+			</if>
+	</sql>
+	<!-- 层级分组 -->
+	<sql id="group_by_sql">
+	
+			<if test=" '' != level and null != level and 'province' == level  ">
+				 CITY_PAC , CITY_NAME 
+			</if>
+			<if test=" '' != level and null != level and 'city' == level  ">
+				 COUNTY_PAC ,COUNTY_NAME 
+			</if>
+			
+			<if test=" '' != level and null != level and 'county' == level  ">
+				   TOWN_PAC ,TOWN_NAME 
+			</if>
+			
+			<if test=" '' != level and null != level and 'town' == level  ">
+				 COUNTRY_PAC  ,COUNTRY_NAME 
+			</if>
+			
+			<if test=" '' != level and null != level and 'country' == level  ">
+				COUNTRY_PAC  ,COUNTRY_NAME 
+			</if>
+			
+		
+	</sql>
+	<!-- STAT_TIME  -->
+	<sql id="f_month_sql">
+				<if test="'' != year and null != year">
+				and ACC_MONTH  between #{smonth} and #{emonth}
+			</if>
+	</sql>
+	<sql id="year_sql">
+				<if test="'' != year and null != year">
+				and ACC_YEAR = #{year} 
+			</if>
+	</sql>
+	
+	<sql id="year_sql1">
+				<if test="'' != year and null != year">
+				and (ACC_YEAR &lt;= #{year})
+			</if>
+	</sql>
+	
+	<!-- R2表年份 -->
+	<sql id="r_year_sql">
+				<if test="'' != year and null != year">
+				and STAT_YEAR = #{year} 
+			</if>
+	</sql>
+	
+	<sql id="r_year_sql1">
+				<if test="'' != year and null != year">
+				and (STAT_YEAR &lt;= #{year})
+			</if>
+	</sql>
+	
+		<sql id="proj_status">
+		  and PROJ_STATUS not in ('终止')
+	   </sql>
+	
+	
+	<sql id="query_condition_sql1">
+		
+		<if test=" '' != scope and null != scope and 2 == scope  ">
+				  and IS_KEY_POVERTY = 1 
+		</if>
+		
+		<if test=" '' != scope and null != scope and 3 == scope  ">
+				  and IS_KEY_POVERTY = 0 
+		</if>
+		<if test=" '' != scope and null != scope and 4 == scope  ">
+				  and IS_OLD_REVOLUTIONARY = 1 
+		</if>
+		<if test=" '' != scope and null != scope and 5 == scope  ">
+				  and IS_CENTRAL_SOVIET = 1 
+		</if>
+		
+	</sql>
+	
+	<sql id="query_condition_sql">
+		
+		<if test=" '' != project_attribute and null != project_attribute and 'country' == project_attribute  ">
+				  and PROJ_TYPE = 1 
+		</if>
+		
+		<if test=" '' != project_attribute and null != project_attribute and 'family' == project_attribute  ">
+				   and PROJ_TYPE = 2 
+		</if>
+		
+	</sql>
+	
+	<sql id="query_projclass_sql">
+				
+		<if test="projClass!=null and projClass.size()>0">
+			AND PROJ_CLASS in  
+			<foreach item="item" index="index" collection="projClass" open="(" separator="," close=")">  
+			 #{item}  
+			</foreach>  
+		</if>
+		
+	</sql>
+	
+	<!-- 合计用  -->
+	<sql id="count_area_sql">
+			<if test=" '' != level and null != level and 'province' == level  ">
+				'440000000000' S_ID , '合计' A2,
+			</if>
+			<if test=" '' != level and null != level and 'city' == level  ">
+				CITY_PAC S_ID, '合计' A2,
+			</if>
+			
+			<if test=" '' != level and null != level and 'county' == level  ">
+				COUNTY_PAC S_ID,'合计' A2,
+			</if>
+			
+			<if test=" '' != level and null != level and 'town' == level  ">
+				 TOWN_PAC S_ID ,'合计' A2,
+			</if>
+			
+			<if test=" '' != level and null != level and 'country' == level  ">
+				COUNTRY_PAC S_ID ,'合计'  A2,
+			</if>
+	</sql>
+	
+	<!-- 排序类型 -->
+	<sql id="sort_area_sql">
+			
+			<if test=" '' != sort_area and null != sort_area and 1 == sort_area  ">
+				CITY_ID S_ID, CITY_NAME_S A2,
+			</if>
+			<if test=" '' != sort_area and null != sort_area and 2 == sort_area  ">
+				COUNTY_ID S_ID,CITY_NAME_S||'>'||COUNTY_NAME_S A2,
+			</if>
+			
+			<if test=" '' != sort_area and null != sort_area and 3 == sort_area  ">
+				 TOWN_ID S_ID ,CITY_NAME_S||'>'||COUNTY_NAME_S||'>'||TOWN_NAME_S A2,
+			</if>
+			
+			<if test=" '' != sort_area and null != sort_area and 4 == sort_area  ">
+				COUNTRY_ID S_ID ,CITY_NAME_S||'>'||COUNTY_NAME_S||'>'||TOWN_NAME_S||'>'||COUNTRY_NAME_S  A2,
+			</if>
+			
+	</sql>
+	<sql id="group_sort_area_sql">
+			<if test=" '' != sort_area and null != sort_area and 1 == sort_area  ">
+				CITY_ID , CITY_NAME_S 
+			</if>
+			<if test=" '' != sort_area and null != sort_area and 2 == sort_area  ">
+				COUNTY_ID ,CITY_NAME_S||'>'||COUNTY_NAME_S 
+			</if>
+			
+			<if test=" '' != sort_area and null != sort_area and 3 == sort_area  ">
+				 TOWN_ID  ,CITY_NAME_S||'>'||COUNTY_NAME_S||'>'||TOWN_NAME_S 
+			</if>
+			
+			<if test=" '' != sort_area and null != sort_area and 4 == sort_area  ">
+				COUNTRY_ID  ,CITY_NAME_S||'>'||COUNTY_NAME_S||'>'||TOWN_NAME_S||'>'||COUNTRY_NAME_S  
+			</if>
+			
+	</sql>
+	
+	<sql id="area_sql">
+		 <if test=" '' != level and null != level and 'province' == level  ">
+				
+			</if>
+			
+			<if test=" '' != level and null != level and 'city' == level  ">
+				AND CITY_PAC = #{id}
+			</if>
+			
+			<if test=" '' != level and null != level and 'county' == level  ">
+				AND COUNTY_PAC = #{id} 
+			</if>
+			
+			<if test=" '' != level and null != level and 'town' == level  ">
+				AND TOWN_PAC = #{id} 
+			</if>
+			
+			<if test=" '' != level and null != level and 'country' == level  ">
+				AND COUNTRY_PAC = #{id}
+			</if>
+	</sql>
+	<!-- 项目管理 -->
+		<!-- 项目监控管理项目数比例 -->
+		<select id="projectScale"  parameterType="hashmap" resultType="hashmap">
+				
+		select STAT_YEAR S_NAME,
+               SUM(CASE
+                     WHEN PROJ_TYPE = 2 THEN
+                      t.PROJECT_NUM
+                     ELSE 0
+                   END) S_VALUE,
+               SUM(CASE
+                     WHEN PROJ_TYPE = 1 THEN
+                      t.PROJECT_NUM
+                     ELSE
+                      0
+                   END) S_VALUE1,
+                 SUM(CASE
+                     WHEN PROJ_TYPE = 2 THEN
+                      t.ACC_PROJECT_NUM
+                     ELSE
+                      0
+                   END) S_VALUE2,
+               SUM(CASE
+                     WHEN PROJ_TYPE = 1 THEN
+                      t.ACC_PROJECT_NUM
+                     ELSE
+                      0
+                   END) S_VALUE3,
+                   
+                   SUM(CASE
+                     WHEN PROJ_TYPE = 2 THEN
+                      t.REAL_CAPITAL
+                     ELSE
+                      0
+                   END) M_VALUE,
+               SUM(CASE
+                     WHEN PROJ_TYPE = 1 THEN
+                      t.REAL_CAPITAL
+                     ELSE
+                      0
+                   END) M_VALUE1,
+                   
+                 SUM(CASE
+                     WHEN PROJ_TYPE = 2 THEN
+                      t.ACC_REAL_CAPITAL
+                     ELSE
+                      0
+                   END) M_VALUE2,
+               SUM(CASE
+                     WHEN PROJ_TYPE = 1 THEN
+                      t.ACC_REAL_CAPITAL
+                     ELSE
+                      0
+                   END) M_VALUE3
+                   
+		  from R2_DM_HELP_PROJECT_CTY_Y t
+		 <where>
+			<include refid="r_year_sql1"/>
+			<include refid="area_sql"/>
+			<include refid="query_condition_sql"/>
+		</where>
+		  GROUP BY STAT_YEAR
+		  ORDER BY STAT_YEAR
+	
+	</select>
+	
+	<!-- 项目资金比例  -->
+		<select id="projectFunds"  parameterType="hashmap" resultType="hashmap">
+
+	    select 
+		     ACC_YEAR S_NAME,
+		     TO_CHAR(trunc(SUM(CASE WHEN PROJ_TYPE=2 THEN REAL_CAPITAL ELSE 0 END)/10000,2),'9999990.00') S_VALUE,
+		     TO_CHAR(trunc(SUM(CASE WHEN PROJ_TYPE=1  THEN REAL_CAPITAL ELSE 0 END)/10000,2),'9999990.00') S_VALUE1
+		  from R_DW_HELP_PROJECT_Y t
+		 <where>
+			<include refid="year_sql1"/>
+			<include refid="area_sql"/>
+			<include refid="query_condition_sql"/>
+		</where>
+		  GROUP BY ACC_YEAR
+		ORDER BY ACC_YEAR
+	   </select>
+	  
+	<!-- 项目监控管理 统计 -->
+	<select id="projectManagementCount"  parameterType="hashmap" resultType="hashmap">
+		select S_ID,A2,(A6+A9+A12) A3,(A7+A10+A13) A4, (A8+A11) A5,A6,A7,A8,A9,A10,A11,A12,A13 from (select 
+		  <include refid="level_area_sql"/>
+		  sum(case when PROJ_STATUS='完成' then PROJECT_NUM else 0 end) A6
+		  ,trunc(sum(case when PROJ_STATUS='完成' then PLAN_CAPITAL else 0 end)/10000,2) A7
+		  ,trunc(sum(case when PROJ_STATUS='完成' then REAL_CAPITAL else 0 end)/10000,2) A8
+		  ,sum(case when PROJ_STATUS='进行中' then PROJECT_NUM else 0 end) A9
+		  ,trunc(sum(case when PROJ_STATUS='进行中' then PLAN_CAPITAL else 0 end)/10000,2) A10
+		  ,trunc(sum(case when PROJ_STATUS='进行中' then REAL_CAPITAL else 0 end)/10000,2) A11
+		  ,sum(case when PROJ_STATUS='未开始' then PROJECT_NUM else 0 end) A12
+		  ,trunc(sum(case when PROJ_STATUS='未开始' then PLAN_CAPITAL else 0 end)/10000,2) A13
+		  from R2_DM_HELP_PROJECT_CTY_Y t
+		where 1=1
+		  <include refid="r_year_sql"/> 
+		  <include refid="level_sql"/>
+		  <include refid="query_condition_sql"/>
+		group by <include refid="group_by_sql"/>)
+		order by S_ID
+		
+	</select>
+	
+	<!-- 项目监控管理-合计  -->
+	<select id="projectManagementTotal"  parameterType="hashmap" resultType="hashmap">
+		select S_ID,A2,(A6+A9+A12) A3,(A7+A10+A13) A4, (A8+A11) A5,A6,A7,A8,A9,A10,A11,A12,A13 from (select 
+		  <include refid="count_area_sql"/>
+		  sum(case when PROJ_STATUS='完成' then PROJECT_NUM else 0 end) A6
+		  ,trunc(sum(case when PROJ_STATUS='完成' then PLAN_CAPITAL else 0 end)/10000,2) A7
+		  ,trunc(sum(case when PROJ_STATUS='完成' then REAL_CAPITAL else 0 end)/10000,2) A8
+		  ,sum(case when PROJ_STATUS='进行中' then PROJECT_NUM else 0 end) A9
+		  ,trunc(sum(case when PROJ_STATUS='进行中' then PLAN_CAPITAL else 0 end)/10000,2) A10
+		  ,trunc(sum(case when PROJ_STATUS='进行中' then REAL_CAPITAL else 0 end)/10000,2) A11
+		  ,sum(case when PROJ_STATUS='未开始' then PROJECT_NUM else 0 end) A12
+		  ,trunc(sum(case when PROJ_STATUS='未开始' then PLAN_CAPITAL else 0 end)/10000,2) A13
+		  from R2_DM_HELP_PROJECT_CTY_Y t
+		where 1=1
+		  <include refid="r_year_sql"/> 
+		  <include refid="level_sql"/>
+		  <include refid="query_condition_sql"/>
+		group by <include refid="count_group_by_sql"/>)
+				
+	</select>
+	
+		<!-- 项目分析  -->
+		<!-- 项目分析项目资金趋势 -->
+		<select id="projectAnalysisFundsTrends"  parameterType="hashmap" resultType="hashmap">
+				
+		select t.STAT_MONTH S_NAME,
+		sum(REAL_CAPITAL) S_VALUE,
+		sum(PROJECT_NUM) S_VALUE1
+		from R2_DM_PROJFUNDS_PROJTYPE_M t
+		 <where>
+			<include refid="r_year_sql"/>
+			<include refid="area_sql"/>
+			<include refid="query_condition_sql1"/>
+			<include refid="query_condition_sql"/>
+		</where>
+		  group by t.STAT_MONTH
+		  ORDER BY STAT_MONTH
+	
+	</select>
+	
+	<!-- 村户项目分布 -->
+		<select id="projectAnalysisCountry"  parameterType="hashmap" resultType="hashmap">
+
+			select decode(proj_type,1,'村项目',2,'户项目') S_NAME,
+			sum(PROJECT_NUM) S_VALUE,
+			sum(REAL_CAPITAL) S_VALUE1
+			from R2_DM_HELP_PROJECT_CTY_Y
+		 <where>
+			<include refid="r_year_sql"/>
+			<include refid="area_sql"/>
+			<include refid="query_condition_sql1"/>
+		</where>
+		  	group by proj_type
+			order by proj_type desc
+	
+	   </select>
+	   
+	   <!-- 村户项目资金分布-到村 -->
+		<select id="projectAnalysisMoneyToCountry"  parameterType="hashmap" resultType="hashmap">
+
+		 select PROJ_CLASS S_NAME,
+         sum(t.PROJECT_NUM) S_VALUE --项目数
+         ,sum(t.real_capital) S_VALUE1  --项目资金
+         from R2_DM_HELP_PROJECT_CTY_Y t
+		 <where>
+			<include refid="r_year_sql"/>
+			<include refid="area_sql"/>
+			<include refid="query_condition_sql1"/>
+			<include refid="query_condition_sql"/>
+		</where>
+		  	group by PROJ_CLASS
+	        order by  S_VALUE1 desc
+	   </select>
+	   
+	   <!-- 村户项目资金分布-到户 -->
+		<select id="projectAnalysisMoneyToFamily"  parameterType="hashmap" resultType="hashmap">
+
+			select decode(proj_type,1,'村项目',2,'户项目') S_NAME,
+			sum(PROJECT_NUM) S_VALUE,
+			sum(REAL_CAPITAL) S_VALUE1
+			from R2_DM_HELP_PROJECT_CTY_Y
+		 <where>
+			<include refid="r_year_sql"/>
+			<include refid="area_sql"/>
+			<include refid="query_condition_sql1"/>
+		</where>
+		  	group by proj_type
+			 order by  S_VALUE1 desc
+	
+	   </select>
+	  
+	<!-- 项目分析 统计 -->
+	<select id="projectAnalysisCount"  parameterType="hashmap" resultType="hashmap">
+			
+		select 
+		  <include refid="level_area_sql"/>
+		   sum(PROJECT_NUM) A3
+		  ,trunc(sum(REAL_CAPITAL)/10000,2) A4
+		  ,sum(case when proj_type = 2 then PROJECT_NUM else 0 end) A5
+		  ,trunc(sum(case when proj_type = 2 then REAL_CAPITAL else 0  end)/10000,2) A6
+		  ,sum(case when proj_type = 1 then PROJECT_NUM else 0 end) A7
+		  ,trunc(sum(case when proj_type = 1 then REAL_CAPITAL else 0 end)/10000,2)  A8
+		  from R2_DM_HELP_PROJECT_CTY_Y t
+		where 1=1
+		  <include refid="r_year_sql"/> 
+		  <include refid="level_sql"/>
+		  <include refid="query_condition_sql"/>
+		  <include refid="query_condition_sql1"/>
+		group by <include refid="group_by_sql"/>
+		order by S_ID
+		
+	</select>
+	
+	<!-- 项目分析-合计  -->
+	<select id="projectAnalysisTotal"  parameterType="hashmap" resultType="hashmap">
+	
+			select 
+		  <include refid="count_area_sql"/>
+		    sum(PROJECT_NUM) A3
+		  ,trunc(sum(REAL_CAPITAL)/10000,2) A4
+		  ,sum(case when proj_type = 2 then PROJECT_NUM else 0 end) A5
+		  ,trunc(sum(case when proj_type = 2 then REAL_CAPITAL else 0  end)/10000,2) A6
+		  ,sum(case when proj_type = 1 then PROJECT_NUM else 0 end) A7
+		  ,trunc(sum(case when proj_type = 1 then REAL_CAPITAL else 0 end)/10000,2)  A8
+		  from R2_DM_HELP_PROJECT_CTY_Y t
+		where 1=1
+		  <include refid="r_year_sql"/> 
+		  <include refid="level_sql"/>
+		  <include refid="query_condition_sql"/>
+		  <include refid="query_condition_sql1"/>
+		group by <include refid="count_group_by_sql"/>
+				
+	</select>
+	
+	<!-- 项目分析-到村 统计 -->
+	<select id="projectAnalysisToCountryCount"  parameterType="hashmap" resultType="hashmap">
+			
+		select 
+		  <include refid="level_area_sql"/>
+		   sum(PROJECT_NUM) A3
+         ,trunc(sum(t.real_capital)/10000,2) A4
+          ,sum(case when t.PROJ_CLASS='村道硬底化' then PROJECT_NUM else 0 end) A5
+         ,trunc(sum(case when t.PROJ_CLASS='村道硬底化' then t.real_capital else 0 end)/10000,2) A6
+          ,sum(case when t.PROJ_CLASS='饮水工程' then PROJECT_NUM else 0 end) A7
+         ,trunc(sum(case when t.PROJ_CLASS='饮水工程' then t.real_capital else 0 end)/10000,2) A8
+          ,sum(case when t.PROJ_CLASS='文体设施' then PROJECT_NUM else 0 end) A9
+         ,trunc(sum(case when t.PROJ_CLASS='文体设施' then t.real_capital else 0 end)/10000,2) A10
+          ,sum(case when t.PROJ_CLASS='卫生设施' then PROJECT_NUM else 0 end) A11
+         ,trunc(sum(case when t.PROJ_CLASS='卫生设施' then t.real_capital else 0 end)/10000,2) A12
+          ,sum(case when t.PROJ_CLASS='路灯' then PROJECT_NUM else 0 end) A13
+         ,trunc(sum(case when t.PROJ_CLASS='路灯' then t.real_capital else 0 end)/10000,2) A14
+          ,sum(case when t.PROJ_CLASS='农田水利' then PROJECT_NUM else 0 end) A15
+         ,trunc(sum(case when t.PROJ_CLASS='农田水利' then t.real_capital else 0 end)/10000,2) A16
+          ,sum(case when t.PROJ_CLASS='公共设施服务' then PROJECT_NUM else 0 end) A17
+         ,trunc(sum(case when t.PROJ_CLASS='公共设施服务' then t.real_capital else 0 end)/10000,2) A18
+          ,sum(case when t.PROJ_CLASS='村集体经济类别' then PROJECT_NUM else 0 end) A19
+         ,trunc(sum(case when t.PROJ_CLASS='村集体经济类别' then t.real_capital else 0 end)/10000,2) A20
+          ,sum(case when t.PROJ_CLASS='教育教学' then PROJECT_NUM else 0 end) A21
+         ,trunc(sum(case when t.PROJ_CLASS='教育教学' then t.real_capital else 0 end)/10000,2) A22
+         from R2_DM_HELP_PROJECT_CTY_Y t
+		where 1=1
+		  <include refid="r_year_sql"/> 
+		  <include refid="level_sql"/>
+		  <include refid="query_condition_sql"/>
+		  <include refid="query_condition_sql1"/>
+		group by <include refid="group_by_sql"/>
+		order by S_ID
+		
+	</select>
+	
+	<!-- 项目分析-到村-合计  -->
+	<select id="projectAnalysisToCountryTotal"  parameterType="hashmap" resultType="hashmap">
+	
+			select 
+		  <include refid="count_area_sql"/>
+		    sum(PROJECT_NUM) A3
+         ,trunc(sum(t.real_capital)/10000,2) A4
+          ,sum(case when t.PROJ_CLASS='村道硬底化' then PROJECT_NUM else 0 end) A5
+         ,trunc(sum(case when t.PROJ_CLASS='村道硬底化' then t.real_capital else 0 end)/10000,2) A6
+          ,sum(case when t.PROJ_CLASS='饮水工程' then PROJECT_NUM else 0 end) A7
+         ,trunc(sum(case when t.PROJ_CLASS='饮水工程' then t.real_capital else 0 end)/10000,2) A8
+          ,sum(case when t.PROJ_CLASS='文体设施' then PROJECT_NUM else 0 end) A9
+         ,trunc(sum(case when t.PROJ_CLASS='文体设施' then t.real_capital else 0 end)/10000,2) A10
+          ,sum(case when t.PROJ_CLASS='卫生设施' then PROJECT_NUM else 0 end) A11
+         ,trunc(sum(case when t.PROJ_CLASS='卫生设施' then t.real_capital else 0 end)/10000,2) A12
+          ,sum(case when t.PROJ_CLASS='路灯' then PROJECT_NUM else 0 end) A13
+         ,trunc(sum(case when t.PROJ_CLASS='路灯' then t.real_capital else 0 end)/10000,2) A14
+          ,sum(case when t.PROJ_CLASS='农田水利' then PROJECT_NUM else 0 end) A15
+         ,trunc(sum(case when t.PROJ_CLASS='农田水利' then t.real_capital else 0 end)/10000,2) A16
+          ,sum(case when t.PROJ_CLASS='公共设施服务' then PROJECT_NUM else 0 end) A17
+         ,trunc(sum(case when t.PROJ_CLASS='公共设施服务' then t.real_capital else 0 end)/10000,2) A18
+          ,sum(case when t.PROJ_CLASS='村集体经济类别' then PROJECT_NUM else 0 end) A19
+         ,trunc(sum(case when t.PROJ_CLASS='村集体经济类别' then t.real_capital else 0 end)/10000,2) A20
+          ,sum(case when t.PROJ_CLASS='教育教学' then PROJECT_NUM else 0 end) A21
+         ,trunc(sum(case when t.PROJ_CLASS='教育教学' then t.real_capital else 0 end)/10000,2) A22
+         from R2_DM_HELP_PROJECT_CTY_Y t
+		where 1=1
+		  <include refid="r_year_sql"/> 
+		  <include refid="level_sql"/>
+		  <include refid="query_condition_sql"/>
+		  <include refid="query_condition_sql1"/>
+		group by <include refid="count_group_by_sql"/>
+				
+	</select>
+	
+	<!-- 项目分析-到户 统计 -->
+	<select id="projectAnalysisToFamilyCount"  parameterType="hashmap" resultType="hashmap">
+			
+		select 
+		  <include refid="level_area_sql"/>
+		  sum(t.PROJECT_NUM) A3
+         ,trunc(sum(t.real_capital)/10000,2) A4   
+         ,sum(case when t.PROJ_CLASS2='产业扶贫' then PROJECT_NUM else 0 end) A5
+         ,trunc(sum(case when t.PROJ_CLASS2='产业扶贫' then t.real_capital else 0 end)/10000,2) A6
+          ,sum(case when t.PROJ_CLASS2='贷款贴息' then PROJECT_NUM else 0 end) A7
+         ,trunc(sum(case when t.PROJ_CLASS2='贷款贴息' then t.real_capital else 0 end)/10000,2) A8
+          ,sum(case when t.PROJ_CLASS2='住房改造' then PROJECT_NUM else 0 end) A9
+         ,trunc(sum(case when t.PROJ_CLASS2='住房改造' then t.real_capital else 0 end)/10000,2) A10
+          ,sum(case when t.PROJ_CLASS2='资产扶贫' then PROJECT_NUM else 0 end) A11
+         ,trunc(sum(case when t.PROJ_CLASS2='资产扶贫' then t.real_capital else 0 end)/10000,2) A12
+          ,sum(case when t.PROJ_CLASS2='慰问' then PROJECT_NUM else 0 end) A13
+         ,trunc(sum(case when t.PROJ_CLASS2='慰问' then t.real_capital else 0 end)/10000,2) A14
+          ,sum(case when t.PROJ_CLASS2='就业扶贫' then PROJECT_NUM else 0 end) A15
+         ,trunc(sum(case when t.PROJ_CLASS2='就业扶贫' then t.real_capital else 0 end)/10000,2) A16
+          ,sum(case when t.PROJ_CLASS2='技能培训' then PROJECT_NUM else 0 end) A17
+         ,trunc(sum(case when t.PROJ_CLASS2='技能培训' then t.real_capital else 0 end)/10000,2) A18
+          ,sum(case when t.PROJ_CLASS2='教育扶贫' then PROJECT_NUM else 0 end) A19
+         ,trunc(sum(case when t.PROJ_CLASS2='教育扶贫' then t.real_capital else 0 end)/10000,2) A20
+          ,sum(case when t.PROJ_CLASS2='政策补贴和社会保障' then PROJECT_NUM else 0 end) A21
+         ,trunc(sum(case when t.PROJ_CLASS2='政策补贴和社会保障' then t.real_capital else 0 end)/10000,2) A22
+         from R2_DM_HELP_PROJECT_CTY_Y t
+		where 1=1
+		  <include refid="r_year_sql"/> 
+		  <include refid="level_sql"/>
+		  <include refid="query_condition_sql"/>
+		  <include refid="query_condition_sql1"/>
+		group by <include refid="group_by_sql"/>
+		order by S_ID
+		
+	</select>
+	
+	<!-- 项目分析-到户-合计  -->
+	<select id="projectAnalysisToFamilyTotal"  parameterType="hashmap" resultType="hashmap">
+	
+			select 
+		  <include refid="count_area_sql"/>
+		  count(t.PROJECT_NUM) A3
+         ,trunc(sum(t.real_capital)/10000,2) A4   
+         ,count(case when t.PROJ_CLASS2='产业扶贫' then PROJECT_NUM else 0 end) A5
+         ,trunc(sum(case when t.PROJ_CLASS2='产业扶贫' then t.real_capital else 0 end)/10000,2) A6
+          ,count(case when t.PROJ_CLASS2='贷款贴息' then PROJECT_NUM else 0 end) A7
+         ,trunc(sum(case when t.PROJ_CLASS2='贷款贴息' then t.real_capital else 0 end)/10000,2) A8
+          ,count(case when t.PROJ_CLASS2='住房改造' then PROJECT_NUM else 0 end) A9
+         ,trunc(sum(case when t.PROJ_CLASS2='住房改造' then t.real_capital else 0 end)/10000,2) A10
+          ,count(case when t.PROJ_CLASS2='资产扶贫' then PROJECT_NUM else 0 end) A11
+         ,trunc(sum(case when t.PROJ_CLASS2='资产扶贫' then t.real_capital else 0 end)/10000,2) A12
+          ,count(case when t.PROJ_CLASS2='慰问' then PROJECT_NUM else 0 end) A13
+         ,trunc(sum(case when t.PROJ_CLASS2='慰问' then t.real_capital else 0 end)/10000,2) A14
+          ,count(case when t.PROJ_CLASS2='就业扶贫' then PROJECT_NUM else 0 end) A15
+         ,trunc(sum(case when t.PROJ_CLASS2='就业扶贫' then t.real_capital else 0 end)/10000,2) A16
+          ,count(case when t.PROJ_CLASS2='技能培训' then PROJECT_NUM else 0 end) A17
+         ,trunc(sum(case when t.PROJ_CLASS2='技能培训' then t.real_capital else 0 end)/10000,2) A18
+          ,count(case when t.PROJ_CLASS2='教育扶贫' then PROJECT_NUM else 0 end) A19
+         ,trunc(sum(case when t.PROJ_CLASS2='教育扶贫' then t.real_capital else 0 end)/10000,2) A20
+          ,count(case when t.PROJ_CLASS2='政策补贴和社会保障' then PROJECT_NUM else 0 end) A21
+         ,trunc(sum(case when t.PROJ_CLASS2='政策补贴和社会保障' then t.real_capital else 0 end)/10000,2) A22
+         from R2_DM_HELP_PROJECT_CTY_Y t
+		where 1=1
+		  <include refid="r_year_sql"/> 
+		  <include refid="level_sql"/>
+		  <include refid="query_condition_sql"/>
+		  <include refid="query_condition_sql1"/>
+		group by <include refid="count_group_by_sql"/>
+				
+		</select>
+	
+	<!-- 项目分析明细总数  -->
+	<select id="projectAnalysisDetailCount"  parameterType="hashmap" resultType="long">
+	
+			select 
+
+				count(*)
+				
+				from
+				(
+				select t1.*,ROWNUM RM
+				from
+				(
+				SELECT
+				
+					CITY_NAME A2 --市 
+				,COUNTY_NAME A3 --县 
+				,TOWN_NAME A4 --镇 
+				,COUNTRY_NAME A5 --村
+				 ,PROJ_CLASS A6 --项目属性
+				,PROJ_TYPE A7 --项目类型 
+				,count(proj_id) A8 --项目个数 
+				,TO_CHAR(trunc(sum(real_capital)/10000,2),'9999990.00')  A9 --投入资金
+       			,trunc(count(case when proj_status='完成' then proj_id else null end)/count(proj_id),2)*100 || '%' A10
+				 from R_DW_HELP_PROJECT_Y t
+				 <where>
+					<include refid="year_sql"/>
+					<include refid="area_sql"/>
+					<include refid="query_condition_sql1"/>
+					<include refid="query_projclass_sql"/>
+				</where>
+				 group by CITY_NAME,COUNTY_NAME,TOWN_NAME,COUNTRY_NAME,PROJ_TYPE,PROJ_CLASS
+				) t1
+				
+				)
+				
+	</select>
+	<!-- 项目分析明细 -->
+	<select id="projectAnalysisDetail"  parameterType="hashmap" resultType="hashmap">
+			select 
+
+				*
+				
+				from
+				(
+				select t1.*,ROWNUM RM
+				from
+				(
+				SELECT
+				
+				 CITY_NAME A2 --市 
+				,COUNTY_NAME A3 --县 
+				,TOWN_NAME A4 --镇 
+				,COUNTRY_NAME A5 --村
+				 ,PROJ_CLASS A6 --项目属性
+				,decode(PROJ_TYPE,1,'到村项目',2,'到户项目','') A7 --项目类型 
+				,count(proj_id) A8 --项目个数 
+				,TO_CHAR(trunc(sum(real_capital)/10000,2),'9999990.00') A9 --投入资金
+       			,trunc(count(case when proj_status='完成' then proj_id else null end)/count(proj_id),2)*100 || '%' A10
+       			,COUNTRY_PAC B1
+				 from R_DW_HELP_PROJECT_Y t
+				<where>
+					<include refid="year_sql"/>
+					<include refid="area_sql"/>
+					<include refid="query_condition_sql1"/>
+					<include refid="query_projclass_sql"/>
+				</where>
+				 group by CITY_NAME,COUNTY_NAME,TOWN_NAME,COUNTRY_NAME,PROJ_TYPE,PROJ_CLASS,COUNTRY_PAC
+				) t1
+				
+				)
+				
+				<if test="page !=null">
+						WHERE RM BETWEEN #{pageSize}*(#{page}-1)+1 AND #{pageSize}  * #{page}
+				</if>
+						
+	</select>
+	
+	
+	<!-- 项目排序	-->
+	<select id="projectAnalysisSortCount"  parameterType="hashmap" resultType="long">
+			SELECT COUNT(*) FROM
+			
+			(
+			
+			SELECT A1.*,ROWNUM RM
+			FROM
+			(
+			
+			SELECT
+			<include refid="sort_area_sql1"/>
+
+			<if test=" '' != taxis_indexes and null != taxis_indexes">
+					<if test="1 == taxis_indexes"> count(case when t.STAT_YEAR=#{year} or t.STAT_YEAR &lt; #{year} then t.PROJECT_NUM else 0 end) A3</if>
+					<if test="2 == taxis_indexes">sum(case when t.STAT_YEAR=#{year} or t.STAT_YEAR &lt; #{year} then t.real_capital else 0 end) A3</if>
+			       <if test="3 == taxis_indexes"> count(case when (t.STAT_YEAR=#{year} or t.STAT_YEAR &lt; #{year}) and t.proj_type=1 then PROJECT_NUM else 0 end) A3</if>
+					<if test="4 == taxis_indexes">sum(case when (t.STAT_YEAR=#{year} or t.STAT_YEAR &lt; #{year}) and t.proj_type=1 then t.real_capital else 0 end) A3</if>
+					<if test="5 == taxis_indexes">count(case when (t.STAT_YEAR=#{year} or t.STAT_YEAR &lt; #{year}) and t.proj_type=2 then PROJECT_NUM else 0 end) A3</if>
+					<if test="6 == taxis_indexes">sum(case when (t.STAT_YEAR=#{year} or t.STAT_YEAR &lt; #{year}) and t.proj_type=2 then t.real_capital else 0 end) A3</if>
+					<if test="7 == taxis_indexes"> count(case when t.STAT_YEAR=#{year} then t.PROJECT_NUM else 0 end) A3</if>
+					<if test="8 == taxis_indexes">sum(case when t.STAT_YEAR=#{year} then t.real_capital else 0 end) A3</if>
+			       <if test="9 == taxis_indexes"> count(case when t.STAT_YEAR=#{year} and t.proj_type=1 then PROJECT_NUM else 0 end) A3</if>
+					<if test="10 == taxis_indexes">sum(case when t.STAT_YEAR=#{year} and t.proj_type=1 then t.real_capital else 0 end) A3</if>
+					<if test="11 == taxis_indexes">count(case when t.STAT_YEAR=#{year} and t.proj_type=2 then PROJECT_NUM else 0 end) A3</if>
+					<if test="12 == taxis_indexes">sum(case when t.STAT_YEAR=#{year} and t.proj_type=2 then t.real_capital else 0 end) A3</if>
+			</if>
+			
+			FROM					
+			R2_DM_HELP_PROJECT_CTY_Y t
+			<where>
+				<include refid="level_sql"/>
+				<include refid="r_year_sql1"/>
+				<include refid="query_condition_sql1"/>
+			</where>
+			GROUP BY <include refid="group_sort_area_sql1"/>
+			
+			) A1
+			)
+		
+	</select>
+	<!-- 排序 -->
+	<select id="projectAnalysisSort"  parameterType="hashmap" resultType="hashmap">
+			
+			SELECT * FROM
+			
+			(
+			
+			SELECT A1.*,ROWNUM RM
+			FROM
+			(
+			
+			SELECT
+			<include refid="sort_area_sql1"/>
+
+			<if test=" '' != taxis_indexes and null != taxis_indexes">
+					<if test="1 == taxis_indexes"> sum(case when t.STAT_YEAR=#{year} or t.STAT_YEAR &lt; #{year} then t.PROJECT_NUM else 0 end) A3</if>
+					<if test="2 == taxis_indexes">trunc(sum(case when t.STAT_YEAR=#{year} or t.STAT_YEAR &lt; #{year} then t.real_capital else 0 end)/10000,2) A3</if>
+			       <if test="3 == taxis_indexes"> sum(case when (t.STAT_YEAR=#{year} or t.STAT_YEAR &lt; #{year}) and t.proj_type=1 then PROJECT_NUM else 0 end) A3</if>
+					<if test="4 == taxis_indexes">trunc(sum(case when (t.STAT_YEAR=#{year} or t.STAT_YEAR &lt; #{year}) and t.proj_type=1 then t.real_capital else 0 end)/10000,2) A3</if>
+					<if test="5 == taxis_indexes">sum(case when (t.STAT_YEAR=#{year} or t.STAT_YEAR &lt; #{year}) and t.proj_type=2 then PROJECT_NUM else 0 end) A3</if>
+					<if test="6 == taxis_indexes">trunc(sum(case when (t.STAT_YEAR=#{year} or t.STAT_YEAR &lt; #{year}) and t.proj_type=2 then t.real_capital else 0 end)/10000,2) A3</if>
+					<if test="7 == taxis_indexes"> sum(case when t.STAT_YEAR=#{year} then t.PROJECT_NUM else 0 end) A3</if>
+					<if test="8 == taxis_indexes">trunc(sum(case when t.STAT_YEAR=#{year} then t.real_capital else 0 end)/10000,2) A3</if>
+			       <if test="9 == taxis_indexes"> sum(case when t.STAT_YEAR=#{year} and t.proj_type=1 then PROJECT_NUM else 0 end) A3</if>
+					<if test="10 == taxis_indexes">trunc(sum(case when t.STAT_YEAR=#{year} and t.proj_type=1 then t.real_capital else 0 end)/10000,2) A3</if>
+					<if test="11 == taxis_indexes">sum(case when t.STAT_YEAR=#{year} and t.proj_type=2 then PROJECT_NUM else 0 end) A3</if>
+					<if test="12 == taxis_indexes">trunc(sum(case when t.STAT_YEAR=#{year} and t.proj_type=2 then t.real_capital else 0 end)/10000,2) A3</if>
+			</if>
+			
+			FROM					
+			R2_DM_HELP_PROJECT_CTY_Y t
+			<where>
+				<include refid="level_sql"/>
+				<include refid="r_year_sql1"/>
+				<include refid="query_condition_sql1"/>
+			</where>
+	
+			GROUP BY <include refid="group_sort_area_sql1"/>
+			ORDER BY A3 desc
+			
+			) A1
+			)
+		
+		
+			<if test="page !=null">
+					WHERE RM BETWEEN #{pageSize}*(#{page}-1)+1 AND #{pageSize}  * #{page}
+			</if>
+		</select>
+		
+		<select id="projectAnalysisSortDetail"  parameterType="hashmap" resultType="hashmap">
+
+			select 	<include refid="sort_area_sql2"/>
+         sum(t.PROJECT_NUM) A3
+         ,trunc(sum(t.real_capital)/10000,2) A4
+         ,sum(case when t.proj_type=2 then PROJECT_NUM else 0 end) A5
+         ,trunc(sum(case when t.proj_type=2 then t.real_capital else 0 end)/10000,2) A6
+         ,sum(case when t.proj_type=2 and t.PROJ_CLASS2='产业扶贫' then PROJECT_NUM else 0 end) A7
+         ,trunc(sum(case when t.proj_type=2 and t.PROJ_CLASS2='产业扶贫' then t.real_capital else 0 end)/10000,2) A8
+          ,sum(case when t.proj_type=2 and t.PROJ_CLASS2='贷款贴息' then PROJECT_NUM else 0 end) A9
+         ,trunc(sum(case when t.proj_type=2 and t.PROJ_CLASS2='贷款贴息' then t.real_capital else 0 end)/10000,2) A10
+          ,sum(case when t.proj_type=2 and t.PROJ_CLASS2='住房改造' then PROJECT_NUM else 0 end) A11
+         ,trunc(sum(case when t.proj_type=2 and t.PROJ_CLASS2='住房改造' then t.real_capital else 0 end)/10000,2) A12
+          ,sum(case when t.proj_type=2 and t.PROJ_CLASS2='资产扶贫' then PROJECT_NUM else 0 end) A13
+         ,trunc(sum(case when t.proj_type=2 and t.PROJ_CLASS2='资产扶贫' then t.real_capital else 0 end)/10000,2) A14
+          ,sum(case when t.proj_type=2 and t.PROJ_CLASS2='慰问' then PROJECT_NUM else 0 end) A15
+         ,trunc(sum(case when t.proj_type=2 and t.PROJ_CLASS2='慰问' then t.real_capital else 0 end)/10000,2) A16
+          ,sum(case when t.proj_type=2 and t.PROJ_CLASS2='就业扶贫' then PROJECT_NUM else 0 end) A17
+         ,trunc(sum(case when t.proj_type=2 and t.PROJ_CLASS2='就业扶贫' then t.real_capital else 0 end)/10000,2) A18
+          ,sum(case when t.proj_type=2 and t.PROJ_CLASS2='技能培训' then PROJECT_NUM else 0 end) A19
+         ,trunc(sum(case when t.proj_type=2 and t.PROJ_CLASS2='技能培训' then t.real_capital else 0 end)/10000,2) A20
+          ,sum(case when t.proj_type=2 and t.PROJ_CLASS2='教育扶贫' then PROJECT_NUM else 0 end) A21
+         ,trunc(sum(case when t.proj_type=2 and t.PROJ_CLASS2='教育扶贫' then t.real_capital else 0 end)/10000,2) A22
+          ,sum(case when t.proj_type=2 and t.PROJ_CLASS2='政策补贴和社会保障' then PROJECT_NUM else 0 end) A23
+         ,trunc(sum(case when t.proj_type=2 and t.PROJ_CLASS2='政策补贴和社会保障' then t.real_capital else 0 end)/10000,2) A24
+          ,sum(case when t.proj_type=1 then PROJECT_NUM else 0 end) A25
+         ,trunc(sum(case when t.proj_type=1 then t.real_capital else 0 end)/10000,2) A26
+          ,sum(case when t.proj_type=1 and t.PROJ_CLASS2='村道硬底化' then PROJECT_NUM else 0 end) A27
+         ,trunc(sum(case when t.proj_type=1 and t.PROJ_CLASS2='村道硬底化' then t.real_capital else 0 end)/10000,2) A28
+          ,sum(case when t.proj_type=1 and t.PROJ_CLASS2='饮水工程' then PROJECT_NUM else 0 end) A29
+         ,trunc(sum(case when t.proj_type=1 and t.PROJ_CLASS2='饮水工程' then t.real_capital else 0 end)/10000,2) A30
+          ,sum(case when t.proj_type=1 and t.PROJ_CLASS2='文体设施' then PROJECT_NUM else 0 end) A31
+         ,trunc(sum(case when t.proj_type=1 and t.PROJ_CLASS2='文体设施' then t.real_capital else 0 end)/10000,2) A32
+          ,sum(case when t.proj_type=1 and t.PROJ_CLASS2='卫生设施' then PROJECT_NUM else 0 end) A33
+         ,trunc(sum(case when t.proj_type=1 and t.PROJ_CLASS2='卫生设施' then t.real_capital else 0 end)/10000,2) A34
+          ,sum(case when t.proj_type=1 and t.PROJ_CLASS2='路灯' then PROJECT_NUM else 0 end) A35
+         ,trunc(sum(case when t.proj_type=1 and t.PROJ_CLASS2='路灯' then t.real_capital else 0 end)/10000,2) A36
+          ,sum(case when t.proj_type=1 and t.PROJ_CLASS2='农田水利' then PROJECT_NUM else 0 end) A37
+         ,trunc(sum(case when t.proj_type=1 and t.PROJ_CLASS2='农田水利' then t.real_capital else 0 end)/10000,2) A38
+          ,sum(case when t.proj_type=1 and t.PROJ_CLASS2='公共设施服务' then PROJECT_NUM else 0 end) A39
+         ,trunc(sum(case when t.proj_type=1 and t.PROJ_CLASS2='公共设施服务' then t.real_capital else 0 end)/10000,2) A40
+          ,sum(case when t.proj_type=1 and t.PROJ_CLASS2='村集体经济类别' then PROJECT_NUM else 0 end) A41
+         ,trunc(sum(case when t.proj_type=1 and t.PROJ_CLASS2='村集体经济类别' then t.real_capital else 0 end)/10000,2) A42
+          ,sum(case when t.proj_type=1 and t.PROJ_CLASS2='教育教学' then PROJECT_NUM else 0 end) A43
+         ,trunc(sum(case when t.proj_type=1 and t.PROJ_CLASS2='教育教学' then t.real_capital else 0 end)/10000,2) A44
+         from R2_DM_HELP_PROJECT_CTY_Y t
+        
+			<where>
+				<include refid="area_sql"/>
+				<include refid="r_year_sql"/>
+			</where>
+ 			group by <include refid="group_sort_area_sql2"/>
+	</select>
+		
+		<!-- 获取表的建档立卡时间 -->
+		<select id="getNewCreateDate"  parameterType="hashmap" resultType="Long">	
+		select STAT_TIME
+		from P_TAB_NEW_STATDATE
+	    where TAB_NAME = #{T_NAME}
+	</select>
+	
+	<!-- 排序类型 -->
+	<sql id="sort_area_sql1">
+			
+			<if test=" '' != sort_area and null != sort_area and 1 == sort_area  ">
+				CITY_PAC S_ID, CITY_NAME A2,
+			</if>
+			<if test=" '' != sort_area and null != sort_area and 2 == sort_area  ">
+				COUNTY_PAC S_ID,CITY_NAME||'>'||COUNTY_NAME A2,
+			</if>
+			
+			<if test=" '' != sort_area and null != sort_area and 3 == sort_area  ">
+				 TOWN_PAC S_ID ,CITY_NAME||'>'||COUNTY_NAME||'>'||TOWN_NAME A2,
+			</if>
+			
+			<if test=" '' != sort_area and null != sort_area and 4 == sort_area  ">
+				COUNTRY_PAC S_ID ,CITY_NAME||'>'||COUNTY_NAME||'>'||TOWN_NAME||'>'||COUNTRY_NAME  A2,
+			</if>
+			
+	</sql>
+	<sql id="group_sort_area_sql1">
+			<if test=" '' != sort_area and null != sort_area and 1 == sort_area  ">
+				CITY_PAC , CITY_NAME 
+			</if>
+			<if test=" '' != sort_area and null != sort_area and 2 == sort_area  ">
+				COUNTY_PAC ,CITY_NAME||'>'||COUNTY_NAME 
+			</if>
+			
+			<if test=" '' != sort_area and null != sort_area and 3 == sort_area  ">
+				TOWN_PAC ,CITY_NAME||'>'||COUNTY_NAME||'>'||TOWN_NAME
+			</if>
+			
+			<if test=" '' != sort_area and null != sort_area and 4 == sort_area  ">
+				COUNTRY_PAC ,CITY_NAME||'>'||COUNTY_NAME||'>'||TOWN_NAME||'>'||COUNTRY_NAME
+			</if>
+			
+	</sql>
+	
+	<!-- 排序类型 -->
+	<sql id="sort_area_sql2">
+			
+			<if test=" '' != level and null != level and 'city' == level  ">
+				CITY_PAC S_ID, CITY_NAME A2,
+			</if>
+			<if test=" '' != level and null != level and 'county' == level  ">
+				COUNTY_PAC S_ID,CITY_NAME||'>'||COUNTY_NAME A2,
+			</if>
+			
+			<if test=" '' != level and null != level and 'town' == level  ">
+				 TOWN_PAC S_ID ,CITY_NAME||'>'||COUNTY_NAME||'>'||TOWN_NAME A2,
+			</if>
+			
+			<if test=" '' != level and null != level and 'country' == level  ">
+				COUNTRY_PAC S_ID ,CITY_NAME||'>'||COUNTY_NAME||'>'||TOWN_NAME||'>'||COUNTRY_NAME  A2,
+			</if>
+			
+	</sql>
+	<sql id="group_sort_area_sql2">
+			<if test=" '' != level and null != level and 'city' == level  ">
+				CITY_PAC , CITY_NAME 
+			</if>
+			<if test=" '' != level and null != level and 'county' == level  ">
+				COUNTY_PAC ,CITY_NAME||'>'||COUNTY_NAME 
+			</if>
+			
+			<if test=" '' != level and null != level and 'town' == level  ">
+				TOWN_PAC ,CITY_NAME||'>'||COUNTY_NAME||'>'||TOWN_NAME
+			</if>
+			
+			<if test=" '' != level and null != level and 'country' == level  ">
+				COUNTRY_PAC ,CITY_NAME||'>'||COUNTY_NAME||'>'||TOWN_NAME||'>'||COUNTRY_NAME
+			</if>
+			
+	</sql>
+	
+</mapper>

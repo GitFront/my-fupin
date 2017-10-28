@@ -1,0 +1,132 @@
+{
+  "code": 0,
+  "msg": "获取信息成功",
+  "data": {
+    "chart_config_tab": [{
+    "tooltip" : {
+        "formatter": "{b} : {c} ({d}%)"
+    },
+      "title": {
+        "text": "贫困户贫困属性分布",
+        "left": "center",
+        "top":20,
+        "textStyle":{
+          "color": "#fff",
+          "fontSize":15
+        }
+      },
+      "series" : [
+        {
+          "name": "贫困属性",
+          "type": "pie",
+          "radius": ["37%", "70%"],
+          "center":["50%", "60%"],
+          "label": {
+            "normal": {
+              "show": false
+            }
+          },
+            "data":[
+                {"value":301923, "name":"低保贫困"},
+                {"value":189841, "name":"五保贫困户"},
+                {"value":164943, "name":"一般贫困户"}
+            ],
+            "itemStyle": {
+                "emphasis": {
+                    "shadowBlur": 40
+                }
+            }
+        }
+    ]
+}, {
+        "legend": {
+          "data":["是","否"],
+          "x" : "center",
+          "y" : "bottom",
+          "textStyle" : {
+            "color" : "#fff"
+          }
+        },
+        "title": {
+          "text": "劳动能力户及残疾户情况",
+          "left": "center",
+          "textStyle":{
+            "color": "#fff",
+            "fontSize":15
+          }
+        },
+        "grid":{
+          "right":20,
+          "top":80,
+          "width":280
+        },
+        "textStyle" : {
+          "color" : "#fff"
+        },
+        "tooltip": {},
+        "xAxis" : {
+          "type" : "category",
+          "data" : ["有无劳动能力","是否残疾"],
+          "axisLine":{
+            "lineStyle":{
+              "color":"#fff"
+            }
+          }
+        },
+        "yAxis" : {
+          "splitLine":{
+            "show":false
+          },
+          "axisLine":{
+            "lineStyle":{
+              "color":"#fff"
+            }
+          }
+        },
+        "series" : [
+          {
+            "name":"是",
+            "type":"bar",
+            "data":[289849,129402],
+            "itemStyle": {
+              "normal": {
+                "barBorderRadius": 8
+              },
+              "emphasis": {
+                "barBorderRadius": 8
+              }
+            },
+            "markPoint": {
+              "data": [
+                {"type": "max", "name": "最大值"},
+                {"type": "min", "name": "最小值"}
+              ]
+            }
+          },
+          {
+            "name":"否",
+            "type":"bar",
+            "data":[366858,1184012],
+            "itemStyle": {
+              "normal": {
+                "barBorderRadius": 8
+              },
+              "emphasis": {
+                "barBorderRadius": 8
+              }
+            },
+            "markPoint": {
+              "data": [
+                {"type": "max", "name": "最大值"},
+                {"type": "min", "name": "最小值"}
+              ]
+            }
+
+          }
+        ]
+      }
+    ]
+
+
+}
+}

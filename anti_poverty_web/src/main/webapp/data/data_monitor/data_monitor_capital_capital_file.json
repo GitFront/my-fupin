@@ -1,0 +1,215 @@
+{
+	"code": 0,
+	"msg": "获取信息成功",
+	"data": {
+		"table": {
+			"title": "",
+			"export_url": "",
+			"head": [
+				[
+					{
+						"content": "文件号"
+					},
+					{
+						"content": "操作"
+					},
+					{
+						"content": "资金级别"
+					},
+					{
+						"content": "金额"
+					}
+				]
+			],
+			"body": [
+				[
+					{
+						"content": "粤扶组[2015]1号"
+					},
+					{
+						"content": "查看",
+						"action_type": "file_detail",
+						"action_data": {
+							"file_id": 1
+						}
+					},
+					{
+						"content": "dss"
+					},
+					{
+						"content": "59988"
+					}
+				],
+				[
+					{
+						"content": "sw扶组[2017]1号"
+					},
+					{
+						"content": "查看",
+						"action_type": "file_detail",
+						"action_data": {
+							"file_id": 1
+						}
+					},
+					{
+						"content": "dss"
+					},
+					{
+						"content": "59988"
+					}
+				],
+				[
+					{
+						"content": "粤扶组[2017]1号"
+					},
+					{
+						"content": "查看",
+						"action_type": "file_detail",
+						"action_data": {
+							"file_id": 1
+						}
+					},
+					{
+						"content": "dss"
+					},
+					{
+						"content": "59988"
+					}
+				],
+				[
+					{
+						"content": "粤扶组[2017]1号"
+					},
+					{
+						"content": "查看",
+						"action_type": "file_detail",
+						"action_data": {
+							"file_id": 1
+						}
+					},
+					{
+						"content": "dss"
+					},
+					{
+						"content": "59988"
+					}
+				],
+				[
+					{
+						"content": "粤扶组[2017]1号"
+					},
+					{
+						"content": "查看",
+						"action_type": "file_detail",
+						"action_data": {
+							"file_id": 1
+						}
+					},
+					{
+						"content": "dss"
+					},
+					{
+						"content": "59988"
+					}
+				],
+				[
+					{
+						"content": "粤扶组[2017]1号"
+					},
+					{
+						"content": "查看",
+						"action_type": "file_detail",
+						"action_data": {
+							"file_id": 1
+						}
+					},
+					{
+						"content": "dss"
+					},
+					{
+						"content": "59988"
+					}
+				],
+				[
+					{
+						"content": "粤扶组[2017]1号"
+					},
+					{
+						"content": "查看",
+						"action_type": "file_detail",
+						"action_data": {
+							"file_id": 1
+						}
+					},
+					{
+						"content": "dss"
+					},
+					{
+						"content": "59988"
+					}
+				],
+				[
+					{
+						"content": "粤扶组[2017]1号"
+					},
+					{
+						"content": "查看",
+						"action_type": "file_detail",
+						"action_data": {
+							"file_id": 1
+						}
+					},
+					{
+						"content": "dss"
+					},
+					{
+						"content": "59988"
+					}
+				],
+				[
+					{
+						"content": "粤扶组[2017]1号"
+					},
+					{
+						"content": "查看",
+						"action_type": "file_detail",
+						"action_data": {
+							"file_id": 1
+						}
+					},
+					{
+						"content": "dss"
+					},
+					{
+						"content": "59988"
+					}
+				],
+				[
+					{
+						"content": "粤扶组[2017]1号"
+					},
+					{
+						"content": "查看",
+						"action_type": "file_detail",
+						"action_data": {
+							"file_id": 1
+						}
+					},
+					{
+						"content": "dss"
+					},
+					{
+						"content": "59988"
+					}
+				]
+			
+			],
+			"pagination": {
+				"page_total": 2,
+				"page_cur": 1,
+				"amount_total": 18
+			}
+		}
+	}
+}
+

@@ -1,0 +1,12 @@
+{
+	"code": 0,
+	"msg": "获取信息成功",
+	"data": {
+		//年度资金来源（万元）
+		"chart_config_capital_source": {},
+		//年度资金区域排序（万元）
+		"chart_config_area_order": {},
+		//统计表，同data_monitor_table.json定义
+		"table": {}
+	}
+}

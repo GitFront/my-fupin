@@ -1,0 +1,663 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+        
+<mapper namespace="com.aspire.birp.modules.antiPoverty.dao.ExampleCountryDao">
+<sql id="dim_Detail_sql">
+		a
+				INNER JOIN (
+				 select CITY_NAME_S A2 
+				 ,COUNTY_NAME_S A3 
+				 ,TOWN_NAME_S A4 
+				 ,COUNTRY_NAME_S A5
+				 ,COUNTRY_ID 
+				 from DIM_HELP_AREA_MAP  
+				 WHERE help_p_pac=#{helppac} 
+				 ) t2 ON (a.COUNTRY_PAC=t2.COUNTRY_ID)
+	</sql>
+<sql id="dim_DetailCount_sql">
+	a
+				INNER JOIN (
+				 select
+				 COUNTRY_ID 
+				 from DIM_HELP_AREA_MAP  
+				 WHERE help_p_pac=#{helppac} 
+				 ) t2 ON (a.COUNTRY_PAC=t2.COUNTRY_ID)
+				
+				
+				
+</sql>
+    <sql id="dim_area_sql">
+		INNER JOIN
+		(SELECT 
+		  PAC,
+		  SORT
+		  FROM
+		  DIM_AREA_INFO
+		  WHERE 1=1
+		  <include refid="p_area_sql"/>
+		  ) B ON(A.S_ID=B.PAC)
+		ORDER BY B.SORT 
+	</sql>
+	<sql id="COUNTRY_M_sql">
+		AND  STAT_TIME=#{R_DW_CTYOBJ_NATURAL_M} 
+	</sql>
+	
+	<sql id="p_area_sql">
+		 <if test=" '' != level and null != level and 'province' == level  ">
+				AND PPAC = #{id}
+			</if>
+			
+			<if test=" '' != level and null != level and 'city' == level  ">
+				AND PPAC = #{id}
+			</if>
+			
+			<if test=" '' != level and null != level and 'county' == level  ">
+				AND PPAC = #{id} 
+			</if>
+			
+			<if test=" '' != level and null != level and 'town' == level  ">
+				AND PPAC = #{id} 
+			</if>
+			
+			<if test=" '' != level and null != level and 'country' == level  ">
+				AND PAC = #{id}
+			</if>
+	</sql>
+    
+	<!--首页展示数据-->
+	<select id="queryCountryIndexStaticData"  parameterType="hashmap" resultType="hashmap">
+
+			SELECT
+			     count(1) PROVICE_NATURAL_NUM --省定贫困村-行政村
+			    ,count(CASE WHEN  MODEL_BUILD_STATUS='达标' THEN 1 ELSE null END) E_NATURAL_NUM --示范村达标-行政村
+			    ,count(CASE WHEN  MODEL_BUILD_STATUS='建设中' THEN 1 ELSE null END) BUILD_NATURAL_NUM --示范村进行中-行政村
+			    ,count(CASE WHEN  MODEL_BUILD_STATUS='未启动' THEN 1 ELSE null END) NOTB_NATURAL_NUM --示范村未启动-行政村
+			    ,count(CASE WHEN  UPGRADE_BUILD_STATUS='达标' THEN 1 ELSE null END) PE_NATURAL_NUM --完成提升创建-行政村
+			    ,count(CASE WHEN  UPGRADE_BUILD_STATUS='建设中' THEN 1 ELSE null END) PBUILD_NATURAL_NUM --建设中提升创建-行政村
+			    ,count(CASE WHEN  UPGRADE_BUILD_STATUS='未启动' THEN 1 ELSE null END) PNOTB_NATURAL_NUM --未启动提升创建-行政村
+			    ,nvl(sum(NATURAL_NUM),0) NATURAL_NUM --左边自然村数
+			   
+			    ,nvl(sum(NOSTART_MODEL_NUM),0) NOSTART_MODEL_NUM  --未启动示范村
+				,nvl(sum(BUILDING_MODEL_NUM),0) BUILDING_MODEL_NUM --建设中示范村
+				,nvl(sum(COMPLETE_MODEL_NUM),0) COMPLETE_MODEL_NUM --已完成示范村
+				
+				,nvl(sum(IMP_PORP_MODEL_NUM),0) IMP_PORP_MODEL_NUM --完成编制整治规划自然村数
+				,nvl(sum(B_IMP_PORP_MODEL_NUM),0) B_IMP_PORP_MODEL_NUM --建设中编制整治规划自然村数
+				,nvl(sum(N_IMP_PORP_MODEL_NUM),0) N_IMP_PORP_MODEL_NUM --未启动编制整治规划自然村数
+				,nvl(sum(IMP_TCTDTR_MODEL_NUM),0) IMP_TCTDTR_MODEL_NUM --完成三清三拆三整治自然村数
+				,nvl(sum(B_IMP_TCTDTR_MODEL_NUM),0) B_IMP_TCTDTR_MODEL_NUM --建设中三清三拆三整治自然村数
+				,nvl(sum(N_IMP_TCTDTR_MODEL_NUM),0) N_IMP_TCTDTR_MODEL_NUM --未启动三清三拆三整治自然村数
+				
+				,nvl(sum(IMP_ROAD_HARD_MODEL_NUM),0) IMP_ROAD_HARD_MODEL_NUM  --补齐短板措施-道路
+				,nvl(sum(IMP_GARBAGE_TREAT_MODEL_NUM),0) IMP_GARBAGE_TREAT_MODEL_NUM  --补齐短板措施-垃圾
+				,nvl(sum(IMP_SEWAGE_TREAT_MODEL_NUM),0) IMP_SEWAGE_TREAT_MODEL_NUM --补齐短板措施-污水
+				,nvl(sum(IMP_WATER_SUPPLY_MODEL_NUM),0) IMP_WATER_SUPPLY_MODEL_NUM --补齐短板措施-供水
+				
+				,nvl(sum(NOSTART_UPGRADE_NUM),0) NOSTART_UPGRADE_NUM --未开始提升创建
+				,nvl(sum(BUILDING_UPGRADE_NUM),0) BUILDING_UPGRADE_NUM --进行中提升创建
+				,nvl(sum(COMPLETE_UPGRADE_NUM),0) COMPLETE_UPGRADE_NUM --已完成提升创建
+				
+				,nvl(sum(IMP_PTPP_UPGRADE_NUM),0) IMP_PTPP_UPGRADE_NUM  --完成编制提升规划自然村数
+				,nvl(sum(B_IMP_PTPP_UPGRADE_NUM),0) B_IMP_PTPP_UPGRADE_NUM  --建设中编制提升规划自然村数
+				,nvl(sum(N_IMP_PTPP_UPGRADE_NUM),0) N_IMP_PTPP_UPGRADE_NUM  --未启动编制提升规划自然村数
+				,nvl(sum(IMP_GREEN_UPGRADE_NUM),0) IMP_GREEN_UPGRADE_NUM  --完成绿化美化自然村数，建设中和未启动（待定）
+				
+				,nvl(sum(IMP_HOUES_MODEL_NUM),0) IMP_HOUES_MODEL_NUM
+				,nvl(sum(IMP_PUBLIC_FACILITY_MODEL_NUM),0) IMP_PUBLIC_FACILITY_MODEL_NUM  --实现公共服务设施自然村数
+				,nvl(sum(IMP_VILLAGER_COUNEIL_MODEL_NUM),0) IMP_VILLAGER_COUNEIL_MODEL_NUM
+				,nvl(sum(INFRASTRUCTURE_UPGRADE_NUM),0) INFRASTRUCTURE_UPGRADE_NUM --完善基础设施自然村数
+				,nvl(sum(OOPM_UPGRADE_NUM),0) OOPM_UPGRADE_NUM  --健全脱贫机制自然村数
+				,nvl(sum(GOVEM_UPGRADE_NUM),0) GOVEM_UPGRADE_NUM  --完善治理机制自然村数
+
+
+				 FROM (SELECT * from 
+				 R_DW_POOROBJ_COUNTRY_M
+				<where>
+					<include refid="level_sql"/>
+					<include refid="month_sql"/>
+					and IS_KEY_POVERTY = 1
+				</where>) t1
+				INNER JOIN (
+				 select
+				 COUNTRY_ID 
+				 from DIM_HELP_AREA_MAP  
+				 WHERE help_p_pac=#{helppac} 
+				 ) t2 ON (t1.country_pac=t2.COUNTRY_ID)		
+	</select>
+	
+	<select id="queryExampleCountryNewMonth"  parameterType="hashmap" resultType="long">
+	SELECT  max(ACC_MONTH) MONTH  FROM R_DW_POOROBJ_COUNTRY_M
+	</select>
+	
+	<!-- 获取村图片 -->
+	<select id="queryExampleCountryCountryPhoto"  parameterType="hashmap" resultType="hashmap">
+
+			select rm.country_name,rm.MODEL_BUILD_STATUS, rm.NATURAL_ID,rm.NATURAL_NAME,rm.BUILD_STATUS,rp.PIC_PATH,rp.PIC_DESC,rp.PIC_ID from
+			(SELECT rn.natural_id,rn.natural_name,rn.BUILD_STATUS,rn.country_pac,rn.country_name ,rn.MODEL_BUILD_STATUS
+			from R_DW_CTYOBJ_NATURAL_M rn 
+			where COUNTRY_PAC = #{id} 
+			 and IS_MORE_20=1
+			 and STAT_MONTH = #{month}) rm
+			left join
+			(SELECT COUNTRY_PAC,NATURAL_ID ,NATURAL_NAME ,PIC_PATH ,PIC_DESC ,PIC_ID 
+			FROM R_DW_CTYOBJ_PIC_M 
+			where COUNTRY_PAC = #{id}) rp
+			on(rm.natural_id = rp.NATURAL_ID) order by rm.NATURAL_ID
+	</select>
+	
+	<!--柱形 one-->
+	<select id="queryExampleManagement1"  parameterType="hashmap" resultType="hashmap">
+select 
+       SUBSTR(STAT_MONTH, 5,6)   month ,
+     CASE WHEN sum ( CASE WHEN porp_status=3 THEN  1  ELSE 0 END)=0 THEN '0.00' ELSE   to_char(trunc( sum ( CASE WHEN porp_status=3 THEN  1  ELSE 0 END) /  COUNT(COUNTRY_PAC) * 100, 2), 'fm9999990.00') END A1,
+     CASE WHEN sum ( CASE WHEN tctdtr_status=3 THEN  1  ELSE 0 END)=0 THEN '0.00' ELSE  to_char(trunc( sum ( CASE WHEN tctdtr_status=3 THEN  1  ELSE 0 END)/  COUNT(COUNTRY_PAC) * 100, 2), 'fm9999990.00') END A2,
+     CASE WHEN sum ( CASE WHEN road_hard_status=3 THEN  1  ELSE 0 END)=0 THEN '0.00' ELSE  to_char(trunc( sum ( CASE WHEN road_hard_status=3 THEN  1  ELSE 0 END)/  COUNT(COUNTRY_PAC) * 100, 2), 'fm9999990.00') END A3,
+     CASE WHEN sum ( CASE WHEN sewage_treat_status=3 THEN  1  ELSE 0 END)=0 THEN '0.00' ELSE  to_char(trunc( sum ( CASE WHEN garbage_treat_status=3 THEN  1  ELSE 0 END)/  COUNT(COUNTRY_PAC) * 100, 2), 'fm9999990.00') END A4,
+     CASE WHEN sum ( CASE WHEN sewage_treat_status=3 THEN  1  ELSE 0 END)=0 THEN '0.00' ELSE  to_char(trunc( sum ( CASE WHEN sewage_treat_status=3 THEN  1  ELSE 0 END)/  COUNT(COUNTRY_PAC) * 100, 2), 'fm9999990.00') END A5,
+     CASE WHEN sum ( CASE WHEN water_supply_status=3 THEN  1  ELSE 0 END)=0 THEN '0.00' ELSE  to_char(trunc( sum ( CASE WHEN water_supply_status=3 THEN  1  ELSE 0 END)/  COUNT(COUNTRY_PAC) * 100, 2), 'fm9999990.00') END A6,
+     CASE WHEN sum ( CASE WHEN houes_reform_status=3 THEN  1  ELSE 0 END)=0 THEN '0.00' ELSE  to_char(trunc( sum ( CASE WHEN houes_reform_status=3 THEN  1  ELSE 0 END)/  COUNT(COUNTRY_PAC) * 100, 2), 'fm9999990.00') END A7,
+     CASE WHEN sum ( CASE WHEN public_facility_status=3 THEN  1  ELSE 0 END)=0 THEN '0.00' ELSE  to_char(trunc( sum ( CASE WHEN public_facility_status=3 THEN  1  ELSE 0 END)/  COUNT(COUNTRY_PAC) * 100, 2), 'fm9999990.00') END  A8,
+     CASE WHEN sum ( CASE WHEN villager_couneil_status=3 THEN  1  ELSE 0 END)=0 THEN '0.00' ELSE  to_char(trunc( sum ( CASE WHEN villager_couneil_status=3 THEN  1  ELSE 0 END)/  COUNT(COUNTRY_PAC) * 100, 2), 'fm9999990.00') END A9,
+     CASE WHEN sum ( CASE WHEN build_status='达标' THEN  1  ELSE 0 END)=0 THEN '0.00' ELSE  to_char(trunc( sum ( CASE WHEN build_status='达标' THEN  1  ELSE 0 END)/  COUNT(COUNTRY_PAC) * 100, 2), 'fm9999990.00') END A10,
+     CASE WHEN sum ( CASE WHEN porp_status=2 THEN  1  ELSE 0 END)=0 THEN '0.00' ELSE  to_char(trunc( sum ( CASE WHEN porp_status=2 THEN  1  ELSE 0 END)/  COUNT(COUNTRY_PAC) * 100, 2), 'fm9999990.00') END B1,
+     CASE WHEN sum ( CASE WHEN tctdtr_status=2 THEN  1  ELSE 0 END)=0 THEN '0.00' ELSE  to_char(trunc( sum ( CASE WHEN tctdtr_status=2 THEN  1  ELSE 0 END)/  COUNT(COUNTRY_PAC) * 100, 2), 'fm9999990.00') END B2,
+     CASE WHEN sum ( CASE WHEN road_hard_status=2 THEN  1  ELSE 0 END)=0 THEN '0.00' ELSE  to_char(trunc( sum ( CASE WHEN road_hard_status=2 THEN  1  ELSE 0 END)/  COUNT(COUNTRY_PAC) * 100, 2), 'fm9999990.00') END B3,
+     CASE WHEN sum ( CASE WHEN garbage_treat_status=2 THEN  1  ELSE 0 END)=0 THEN '0.00' ELSE  to_char(trunc( sum ( CASE WHEN garbage_treat_status=2 THEN  1  ELSE 0 END)/  COUNT(COUNTRY_PAC) * 100, 2), 'fm9999990.00') END B4,
+     CASE WHEN sum ( CASE WHEN sewage_treat_status=2 THEN  1  ELSE 0 END)=0 THEN '0.00' ELSE  to_char(trunc( sum ( CASE WHEN sewage_treat_status=2 THEN  1  ELSE 0 END)/  COUNT(COUNTRY_PAC) * 100, 2), 'fm9999990.00') END B5,
+     CASE WHEN sum ( CASE WHEN water_supply_status=2 THEN  1  ELSE 0 END)=0 THEN '0.00' ELSE   to_char(trunc( sum ( CASE WHEN water_supply_status=2 THEN  1  ELSE 0 END)/  COUNT(COUNTRY_PAC) * 100, 2), 'fm9999990.00') END  B6,
+     CASE WHEN sum ( CASE WHEN houes_reform_status=2 THEN  1  ELSE 0 END)=0 THEN '0.00' ELSE  to_char(trunc( sum ( CASE WHEN houes_reform_status=2 THEN  1  ELSE 0 END)/  COUNT(COUNTRY_PAC) * 100, 2), 'fm9999990.00') END B7,
+     CASE WHEN sum ( CASE WHEN public_facility_status=2 THEN  1  ELSE 0 END)=0 THEN '0.00' ELSE to_char(trunc( sum ( CASE WHEN public_facility_status=2 THEN  1  ELSE 0 END)/  COUNT(COUNTRY_PAC) * 100, 2), 'fm9999990.00') END B8,
+     CASE WHEN sum ( CASE WHEN villager_couneil_status=2 THEN  1  ELSE 0 END)=0 THEN '0.00' ELSE  to_char(trunc( sum ( CASE WHEN villager_couneil_status=2 THEN  1  ELSE 0 END)/  COUNT(COUNTRY_PAC) * 100, 2), 'fm9999990.00') END B9,
+     CASE WHEN sum ( CASE WHEN build_status='建设中' THEN  1  ELSE 0 END)=0 THEN '0.00' ELSE  to_char(trunc( sum ( CASE WHEN build_status='建设中' THEN  1  ELSE 0 END)/  COUNT(COUNTRY_PAC) * 100, 2), 'fm9999990.00') END B10,
+     CASE WHEN sum ( CASE WHEN porp_status=1 THEN  1  ELSE 0 END)=0 THEN '0.00' ELSE  to_char(trunc( sum ( CASE WHEN porp_status=1 THEN  1  ELSE 0 END)/  COUNT(COUNTRY_PAC) * 100, 2), 'fm9999990.00') END C1,
+     CASE WHEN sum ( CASE WHEN tctdtr_status=1 THEN  1  ELSE 0 END)=0 THEN '0.00' ELSE   to_char(trunc( sum ( CASE WHEN tctdtr_status=1 THEN  1  ELSE 0 END)/  COUNT(COUNTRY_PAC) * 100, 2), 'fm9999990.00') END C2,
+     CASE WHEN sum ( CASE WHEN road_hard_status=1 THEN  1  ELSE 0 END)=0 THEN '0.00' ELSE  to_char(trunc( sum ( CASE WHEN road_hard_status=1 THEN  1  ELSE 0 END)/  COUNT(COUNTRY_PAC) * 100, 2), 'fm9999990.00') END C3,
+     CASE WHEN sum ( CASE WHEN garbage_treat_status=1 THEN  1  ELSE 0 END)=0 THEN '0.00' ELSE  to_char(trunc( sum ( CASE WHEN garbage_treat_status=1 THEN  1  ELSE 0 END)/  COUNT(COUNTRY_PAC) * 100, 2), 'fm9999990.00') END C4,
+     CASE WHEN sum ( CASE WHEN sewage_treat_status=1 THEN  1  ELSE 0 END)=0 THEN '0.00' ELSE  to_char(trunc( sum ( CASE WHEN sewage_treat_status=1 THEN  1  ELSE 0 END)/  COUNT(COUNTRY_PAC) * 100, 2), 'fm9999990.00') END C5,
+     CASE WHEN sum ( CASE WHEN water_supply_status=1 THEN  1  ELSE 0 END)=0 THEN '0.00' ELSE  to_char(trunc( sum ( CASE WHEN water_supply_status=1 THEN  1  ELSE 0 END)/  COUNT(COUNTRY_PAC) * 100, 2), 'fm9999990.00') END C6,
+     CASE WHEN sum ( CASE WHEN houes_reform_status=1 THEN  1  ELSE 0 END)=0 THEN '0.00' ELSE  to_char(trunc( sum ( CASE WHEN houes_reform_status=1 THEN  1  ELSE 0 END)/  COUNT(COUNTRY_PAC) * 100, 2), 'fm9999990.00') END C7,
+     CASE WHEN sum ( CASE WHEN public_facility_status=1 THEN  1  ELSE 0 END)=0 THEN '0.00' ELSE  to_char(trunc( sum ( CASE WHEN public_facility_status=1 THEN  1  ELSE 0 END)/  COUNT(COUNTRY_PAC) * 100, 2), 'fm9999990.00') END C8,
+     CASE WHEN sum ( CASE WHEN villager_couneil_status=1 THEN  1  ELSE 0 END)=0 THEN '0.00' ELSE  to_char(trunc( sum ( CASE WHEN villager_couneil_status=1 THEN  1  ELSE 0 END)/  COUNT(COUNTRY_PAC) * 100, 2), 'fm9999990.00') END C9,
+     CASE WHEN sum ( CASE WHEN build_status='未启动' THEN  1  ELSE 0 END)=0 THEN '0.00' ELSE  to_char(trunc( sum ( CASE WHEN build_status='未启动' THEN  1  ELSE 0 END)/  COUNT(COUNTRY_PAC) * 100, 2), 'fm9999990.00') END C10 
+      from R_DW_CTYOBJ_NATURAL_M 
+      <include refid="dim_Detail_sql"/>
+      <where>
+			<if test=" '' != year and null != year">
+			 STAT_YEAR =#{year}	
+		  </if>
+			<include refid="COUNTRY_M_sql"/>
+			<include refid="level_sql"/>
+	   </where>
+     GROUP BY STAT_MONTH 
+         
+	</select>
+  
+	<!--柱形 two-->
+	<select id="queryExampleManagement2"  parameterType="hashmap" resultType="hashmap">
+	select 
+       SUBSTR(STAT_MONTH, 5,6)   month ,
+     sum ( CASE WHEN porp_status=3 THEN  1  ELSE 0 END) A1,
+     sum ( CASE WHEN tctdtr_status=3 THEN  1  ELSE 0 END) A2,
+     sum ( CASE WHEN road_hard_status=3 THEN  1  ELSE 0 END) A3,
+     sum ( CASE WHEN garbage_treat_status=3 THEN  1  ELSE 0 END) A4,
+     sum ( CASE WHEN sewage_treat_status=3 THEN  1  ELSE 0 END) A5,
+     sum ( CASE WHEN water_supply_status=3 THEN  1  ELSE 0 END) A6,
+     sum ( CASE WHEN houes_reform_status=3 THEN  1  ELSE 0 END) A7,
+     sum ( CASE WHEN public_facility_status=3 THEN  1  ELSE 0 END)  A8,
+     sum ( CASE WHEN villager_couneil_status=3 THEN  1  ELSE 0 END) A9,
+     sum ( CASE WHEN build_status='达标' THEN  1  ELSE 0 END) A10,
+     sum ( CASE WHEN porp_status=2 THEN  1  ELSE 0 END) B1,
+     sum ( CASE WHEN tctdtr_status=2 THEN  1  ELSE 0 END) B2,
+     sum ( CASE WHEN road_hard_status=2 THEN  1  ELSE 0 END) B3,
+     sum ( CASE WHEN garbage_treat_status=2 THEN  1  ELSE 0 END) B4,
+     sum ( CASE WHEN sewage_treat_status=2 THEN  1  ELSE 0 END) B5,
+     sum ( CASE WHEN water_supply_status=2 THEN  1  ELSE 0 END)  B6,
+     sum (  CASE WHEN houes_reform_status=2 THEN  1  ELSE 0 END) B7,
+     sum ( CASE WHEN public_facility_status=2 THEN  1  ELSE 0 END) B8,
+     sum ( CASE WHEN villager_couneil_status=2 THEN  1  ELSE 0 END) B9,
+     sum ( CASE WHEN build_status='建设中' THEN  1  ELSE 0 END) B10,
+     sum ( CASE WHEN porp_status=1 THEN  1  ELSE 0 END) C1,
+     sum ( CASE WHEN tctdtr_status=1 THEN  1  ELSE 0 END) C2,
+     sum ( CASE WHEN road_hard_status=1 THEN  1  ELSE 0 END) C3,
+     sum ( CASE WHEN garbage_treat_status=1 THEN  1  ELSE 0 END) C4,
+     sum ( CASE WHEN sewage_treat_status=1 THEN  1  ELSE 0 END) C5,
+     sum ( CASE WHEN water_supply_status=1 THEN  1  ELSE 0 END) C6,
+     sum ( CASE WHEN houes_reform_status=1 THEN  1  ELSE 0 END) C7,
+     sum ( CASE WHEN public_facility_status=1 THEN  1  ELSE 0 END) C8,
+     sum ( CASE WHEN villager_couneil_status=1 THEN  1  ELSE 0 END) C9,
+     sum ( CASE WHEN build_status='未启动' THEN  1  ELSE 0 END) C10 
+      from R_DW_CTYOBJ_NATURAL_M  
+      <include refid="dim_Detail_sql"/>
+      <where>
+			<if test=" '' != year and null != year">
+			STAT_YEAR =#{year}	
+			</if>
+			<include refid="COUNTRY_M_sql"/>
+			<include refid="level_sql"/>
+	   </where>
+     GROUP BY STAT_MONTH 
+	</select>
+	
+	<!--合计 -->
+	<select id="queryExampleManagementTableC"  parameterType="hashmap" resultType="hashmap">
+			select
+		    	<include refid="count_area_sql"/>
+		    	<include refid="query_sql"/>
+		    	
+			
+				<where>
+				a.country_pac=b.country_id and b.if_further_poor=1
+					<include refid="COUNTRY_M_sql"/>
+					<include refid="level_sql"/>
+					<include refid="r_month_sql"/>
+				</where>
+			GROUP BY <include refid="count_group_by_sql"/>
+	</select>
+	
+	<!-- 合计详细 -->
+	<select id="queryExampleManagementTable"  parameterType="hashmap" resultType="hashmap">
+
+			SELECT A.*,B.SORT FROM
+			(select
+		    	<include refid="level_area_sql"/>
+		    	<include refid="query_sql"/>
+				
+				<where>
+				a.country_pac=b.country_id and b.if_further_poor=1
+					<include refid="level_sql"/>
+					<include refid="COUNTRY_M_sql"/>
+					<include refid="r_month_sql"/>
+				</where>
+			GROUP BY  <include refid="by_group"/>) A
+			<include refid="dim_area_sql"/>
+
+	</select>
+<!--分析详细-->
+
+	<!--分析详细-->
+		<select id="queryFundAnalysisManagementDetail"  parameterType="hashmap" resultType="hashmap">
+			select 
+
+				*
+				
+				from
+				(
+				select a.*,ROWNUM RM
+				from
+				(
+				select
+				<include refid="query_detailed_sql"/>
+				 <where>
+					<include refid="level_sql"/>
+					<include refid="year_sql"/>
+					<include refid="COUNTRY_M_sql"/>
+					<include refid="query_state_sql"/>
+					and IS_MORE_20 =1
+				</where>	
+				) 
+				 <include refid="dim_Detail_sql"/>
+				)
+				
+				<if test="page !=null">
+						WHERE RM BETWEEN #{pageSize}*(#{page}-1)+1 AND #{pageSize}  * #{page}
+				</if>
+		</select>
+	
+	<!--分析详细总数-->
+		<select id="queryFundAnalysisManagementDetailCount"  parameterType="hashmap" resultType="long">
+		select 
+
+				count(*)
+				
+				from
+				(
+				select a.*,ROWNUM RM
+				from
+				(
+				select
+				<include refid="query_detailed_sql"/>
+				 <where>
+				 <include refid="COUNTRY_M_sql"/>
+					<include refid="level_sql"/>
+					<include refid="year_sql"/>
+					<include refid="query_state_sql"/>
+					and IS_MORE_20 =1
+				</where>
+				)
+				 <include refid="dim_DetailCount_sql"/>
+				)
+				
+		</select>
+<!-- 示范村管理sql -->
+	<sql id="query_sql">
+	count(distinct country_pac)as a3, 
+    SUM(CASE WHEN is_more_20=1 THEN  1  ELSE 0 END)    AS A4,
+	<if test=" '' != state and null != state">
+		<if test="'done' == state"> 
+		 sum ( CASE WHEN porp_status=3 THEN  1  ELSE 0 END) A5,
+	     sum ( CASE WHEN tctdtr_status=3 THEN  1  ELSE 0 END) A6,
+	     sum ( CASE WHEN road_hard_status=3 THEN  1  ELSE 0 END) A7,
+	     sum ( CASE WHEN garbage_treat_status=3 THEN  1  ELSE 0 END) A8,
+	     sum ( CASE WHEN sewage_treat_status=3 THEN  1  ELSE 0 END) A9,
+	     sum ( CASE WHEN water_supply_status=3 THEN  1  ELSE 0 END) A10,
+	     sum ( CASE WHEN houes_reform_status=3 THEN  1  ELSE 0 END) A11,
+	     sum ( CASE WHEN public_facility_status=3 THEN  1  ELSE 0 END)  A12,
+	     sum ( CASE WHEN villager_couneil_status=3 THEN  1  ELSE 0 END) A13,
+	     sum ( CASE WHEN build_status='达标' THEN  1  ELSE 0 END) A14
+		</if><!-- 自然村达标-->
+		<if test="'doing' == state">
+		sum ( CASE WHEN porp_status=2 THEN  1  ELSE 0 END) A5,
+	    sum ( CASE WHEN tctdtr_status=2 THEN  1  ELSE 0 END) A6,
+	    sum ( CASE WHEN road_hard_status=2 THEN  1  ELSE 0 END) A7,
+	    sum ( CASE WHEN garbage_treat_status=2 THEN  1  ELSE 0 END) A8,
+	    sum ( CASE WHEN sewage_treat_status=2 THEN  1  ELSE 0 END) A9,
+	    sum ( CASE WHEN water_supply_status=2 THEN  1  ELSE 0 END)  A10,
+	    sum ( CASE WHEN houes_reform_status=2 THEN  1  ELSE 0 END) A11,
+	    sum ( CASE WHEN public_facility_status=2 THEN  1  ELSE 0 END) A12,
+	    sum ( CASE WHEN villager_couneil_status=2 THEN  1  ELSE 0 END) A13,
+	    sum ( CASE WHEN build_status='建设中' THEN  1  ELSE 0 END) A14
+	   	 </if><!-- 自然村建设中 -->
+		 <if test="'unstart'== state">
+		 sum ( CASE WHEN porp_status=1 THEN  1  ELSE 0 END) A5,
+	     sum ( CASE WHEN tctdtr_status=1 THEN  1  ELSE 0 END) A6,
+	     sum ( CASE WHEN road_hard_status=1 THEN  1  ELSE 0 END) A7,
+	    sum ( CASE WHEN garbage_treat_status=1 THEN  1  ELSE 0 END) A8,
+	     sum ( CASE WHEN sewage_treat_status=1 THEN  1  ELSE 0 END) A9,
+	    sum ( CASE WHEN water_supply_status=1 THEN  1  ELSE 0 END) A10,
+	    sum ( CASE WHEN houes_reform_status=1 THEN  1  ELSE 0 END) A11,
+	     sum ( CASE WHEN public_facility_status=1 THEN  1  ELSE 0 END) A12,
+	     sum ( CASE WHEN villager_couneil_status=1 THEN  1  ELSE 0 END) A13,
+	   sum ( CASE WHEN build_status='未启动' THEN  1  ELSE 0 END) A14 
+		 </if><!-- 自然村未启动-->
+	 </if>
+	 <if test=" '' != level and null != level and 'country' != level  ">
+     	  <if test=" '' != state and null != state">
+			<if test="'done' == state">, count ( distinct case when model_build_status='达标' then country_pac end) as a15</if><!-- 示范村达标-->
+			<if test="'doing' == state">, count ( distinct case when model_build_status='建设中' then country_pac end) as a15</if><!-- 示范村建设中 -->
+			<if test="'unstart'== state">, count ( distinct case when model_build_status='未启动' then country_pac end) as a15</if><!-- 示范村未启动-->
+		 </if>
+	</if>
+	 from   R_DW_CTYOBJ_NATURAL_M <include refid="dim_Detail_sql"/>,DIM_AREA_5LVL b
+         
+	</sql>
+	
+
+	
+
+	
+<!-- 分析详细sql -->
+	<sql id="query_detailed_sql">
+		CITY_NAME AS  A2
+      ,COUNTY_NAME AS A3
+      ,TOWN_NAME   AS A4 
+      ,COUNTRY_NAME  AS A5,
+      NATURAL_NAME AS A6, --20户以上的自然村名称
+      BUILD_STATUS AS A7,--编制整治规划
+       CASE TCTDTR_STATUS 
+          WHEN 1 THEN '未启动' 
+          WHEN 2 THEN '建设中'
+          WHEN 3 THEN '已完成'
+          END  AS A8,--三清三拆三整治
+       CASE ROAD_HARD_STATUS 
+          WHEN 1 THEN '未启动' 
+          WHEN 2 THEN '建设中'
+          WHEN 3 THEN '已完成'
+          END  AS A9,--村道巷道硬化自然
+      CASE GARBAGE_TREAT_STATUS 
+          WHEN 1 THEN '未启动' 
+          WHEN 2 THEN '建设中'
+          WHEN 3 THEN '已完成'
+          END   AS A10 ,--垃圾处理
+       CASE SEWAGE_TREAT_STATUS 
+          WHEN 1 THEN '未启动' 
+          WHEN 2 THEN '建设中'
+          WHEN 3 THEN '已完成'
+          END  AS A11,--污水处理
+       CASE WATER_SUPPLY_STATUS 
+          WHEN 1 THEN '未启动' 
+          WHEN 2 THEN '建设中'
+          WHEN 3 THEN '已完成'
+          END  AS A12,--集中供水
+       CASE HOUES_REFORM_STATUS 
+          WHEN 1 THEN '未启动' 
+          WHEN 2 THEN '建设中'
+          WHEN 3 THEN '已完成'
+          END  AS A13,--住房建设
+       CASE PUBLIC_FACILITY_STATUS 
+          WHEN 1 THEN '未启动' 
+          WHEN 2 THEN '建设中'
+          WHEN 3 THEN '已完成'
+          END   AS A14,--公共服务设施
+       CASE VILLAGER_COUNEIL_STATUS 
+          WHEN 1 THEN '未启动' 
+          WHEN 2 THEN '建设中'
+          WHEN 3 THEN '已完成'
+          END  AS A15,--成立村民理事会
+      BUILD_STATUS AS A16,--自然村达标
+      MODEL_BUILD_STATUS  AS A17--示范村达标
+      ,country_pac
+     
+      from 
+      
+      R_DW_CTYOBJ_NATURAL_M 
+	</sql>
+<!-- 筛选条件sql -->
+   <sql id="query_condition_sql">
+		<if test=" '' != state and null != state">
+			<if test="'done'== state">AND MODEL_BUILD_STATUS = '达标'</if><!-- 示范村达标-->
+			<if test="'doing' == state">AND MODEL_BUILD_STATUS = '建设中'</if><!-- 示范村建设中 -->
+			<if test="'unstart' == state">AND MODEL_BUILD_STATUS = '未启动'</if><!-- 示范村未启动-->
+		</if>
+		<if test=" '' != build and null != build">
+			<if test="'done'== build">AND BUILD_STATUS = '达标'</if><!-- 自然村达标 -->
+			<if test="'doing' == build">AND BUILD_STATUS = '建设中'</if><!-- 自然村建设中 -->
+			<if test="'unstart' == build">AND BUILD_STATUS = '未启动'</if><!-- 自然村未启动 -->
+		</if>	
+	</sql>
+	
+	<sql id="query_state_sql">
+<!-- 		<if test=" '' != state and null != state">
+		
+		<if test="'done'== state">  
+			
+				<if test="'done'== build">AND MODEL_BUILD_STATUS = '达标'   AND BUILD_STATUS = '达标' 
+				</if>自然村达标
+				<if test="'doing' == build">AND MODEL_BUILD_STATUS = '建设中'  AND BUILD_STATUS = '达标'
+				</if>自然村建设中
+				<if test="'unstart' == build">AND BUILD_STATUS not in ('达标','建设中','未启动') AND MODEL_BUILD_STATUS not in ('达标','建设中','未启动')
+				</if>自然村未启动
+			
+		</if>示范村达标
+			
+		<if test="'doing' == state">
+			
+				<if test="'done'== build">AND BUILD_STATUS not in ('达标','建设中','未启动') AND MODEL_BUILD_STATUS not in ('达标','建设中','未启动')
+				</if>自然村达标
+				<if test="'doing' == build"> AND MODEL_BUILD_STATUS = '建设中'AND BUILD_STATUS = '建设中'
+				</if>自然村建设中
+				<if test="'unstart' == build">AND BUILD_STATUS not in ('达标','建设中','未启动') AND MODEL_BUILD_STATUS not in ('达标','建设中','未启动')
+				</if>自然村未启动
+			
+			
+		</if>示范村建设中
+			
+		<if test="'unstart' == state"> 
+			
+				<if test="'done'== build">AND BUILD_STATUS not in ('达标','建设中','未启动') AND MODEL_BUILD_STATUS not in ('达标','建设中','未启动')
+				</if>自然村达标
+				<if test="'doing' == build">AND MODEL_BUILD_STATUS = '建设中' AND BUILD_STATUS = '未启动' 
+				</if>自然村建设中
+				<if test="'unstart' == build">AND MODEL_BUILD_STATUS = '未启动' AND BUILD_STATUS = '未启动' 
+				</if>自然村未启动
+			</if>示范村未启动
+		</if>
+		
+		 -->
+			<if test="'done'== build"> 
+				 <if test="'done'== state"> 
+				 AND BUILD_STATUS = '达标'  AND MODEL_BUILD_STATUS = '未启动'
+				 </if><!-- 示范村达标-->
+				 <if test="'doing' == state">
+				 AND BUILD_STATUS not in ('达标','建设中','未启动') AND MODEL_BUILD_STATUS not in ('达标','建设中','未启动')
+				 </if><!-- 示范村建设中 -->
+				 <if test="'unstart' == state">
+				  AND BUILD_STATUS not in ('达标','建设中','未启动') AND MODEL_BUILD_STATUS not in ('达标','建设中','未启动')
+				 </if><!-- 示范村未启动-->
+			</if><!-- 自然村达标 -->
+			<if test="'doing' == build">
+			 <if test="'done'== state"> 
+				 AND BUILD_STATUS = '达标'  AND MODEL_BUILD_STATUS = '建设中'
+				 </if><!-- 示范村达标-->
+				 <if test="'doing' == state">
+				  AND BUILD_STATUS = '建设中'  AND MODEL_BUILD_STATUS = '建设中'
+				 </if><!-- 示范村建设中 -->
+				 <if test="'unstart' == state">
+				 AND BUILD_STATUS = '未启动'  AND MODEL_BUILD_STATUS = '建设中'
+				 </if><!-- 示范村未启动-->
+			</if><!-- 自然村建设中 -->
+			<if test="'unstart' == build">AND BUILD_STATUS = '未启动'
+			 <if test="'done'== state"> 
+				  AND BUILD_STATUS not in ('达标','建设中','未启动') AND MODEL_BUILD_STATUS not in ('达标','建设中','未启动')
+				 </if><!-- 示范村达标-->
+				 <if test="'doing' == state">
+				   AND BUILD_STATUS not in ('达标','建设中','未启动') AND MODEL_BUILD_STATUS not in ('达标','建设中','未启动')
+				 </if><!-- 示范村建设中 -->
+				 <if test="'unstart' == state">
+				 AND BUILD_STATUS = '未启动'  AND MODEL_BUILD_STATUS = '未启动'
+				 </if><!-- 示范村未启动-->
+			</if><!-- 自然村未启动 -->
+	
+	</sql>
+	
+	<sql id="count_area_sql">
+			<if test=" '' != level and null != level and 'province' == level  ">
+				'440000000000' S_ID , '合计' A2,
+			</if>
+			<if test=" '' != level and null != level and 'city' == level  ">
+				CITY_PAC S_ID, '合计' A2,
+			</if>
+			
+			<if test=" '' != level and null != level and 'county' == level  ">
+				COUNTY_PAC S_ID,'合计' A2,
+			</if>
+			
+			<if test=" '' != level and null != level and 'town' == level  ">
+				 TOWN_PAC S_ID ,'合计' A2,
+			</if>
+			
+			<if test=" '' != level and null != level and 'country' == level  ">
+				COUNTRY_PAC S_ID ,'合计'  A2,
+			</if>			
+	</sql>
+	<!-- 层级sql -->
+	<sql id="level_sql">
+			
+			<if test=" '' != level and null != level and 'province' == level  ">
+				
+			</if>
+			
+			<if test=" '' != level and null != level and 'city' == level  ">
+				AND CITY_PAC = #{id}
+			</if>
+			
+			<if test=" '' != level and null != level and 'county' == level  ">
+				AND COUNTY_PAC = #{id} 
+			</if>
+			
+			<if test=" '' != level and null != level and 'town' == level  ">
+				AND TOWN_PAC = #{id} 
+			</if>
+			
+			<if test=" '' != level and null != level and 'country' == level  ">
+				AND COUNTRY_PAC = #{id}
+			</if>
+	</sql>
+	<sql id="year_sql">
+		<if test=" '' != year and null != year">
+			AND STAT_YEAR =#{year}	
+		</if>
+		<if test=" '' != month and null != month">
+			AND STAT_MONTH =#{month}	
+		</if>
+	</sql>
+	
+	<sql id="month_sql">
+	
+		<if test=" '' != month and null != month">
+			AND ACC_MONTH =#{month}		
+		</if>
+	
+	</sql>
+	
+	<sql id="r_month_sql">
+	
+		<if test=" '' != month and null != month">
+			AND STAT_MONTH = 	#{month}		
+		</if>
+	
+	</sql>
+	
+	<sql id="count_group_by_sql">
+			<if test=" '' != level and null != level and 'province' == level  ">
+				 1
+			</if>
+			<if test=" '' != level and null != level and 'city' == level  ">
+				 a.CITY_PAC , a.CITY_NAME
+			</if>
+			
+			<if test=" '' != level and null != level and 'county' == level  ">
+				 a.COUNTY_PAC ,a.COUNTY_NAME  
+			</if>
+			
+			<if test=" '' != level and null != level and 'town' == level  ">
+				   a.TOWN_PAC ,a.TOWN_NAME 
+			</if>
+			
+			<if test=" '' != level and null != level and 'country' == level  ">
+				a.COUNTRY_PAC  ,a.COUNTRY_NAME
+			</if>
+	</sql>
+	<sql id="level_area_sql">
+			
+			<if test=" '' != level and null != level and 'province' == level  ">
+				a.CITY_PAC S_ID, a.CITY_NAME A2, 
+			</if>
+			<if test=" '' != level and null != level and 'city' == level  ">
+				a.COUNTY_PAC S_ID,a.COUNTY_NAME A2,
+			</if>
+			
+			<if test=" '' != level and null != level and 'county' == level  ">
+				 a.TOWN_PAC S_ID ,a.TOWN_NAME A2, 
+			</if>
+			
+			<if test=" '' != level and null != level and 'town' == level  ">
+				a.COUNTRY_PAC S_ID ,a.COUNTRY_NAME  A2, 
+			</if>
+			
+			<if test=" '' != level and null != level and 'country' == level  ">
+				a.COUNTRY_PAC S_ID ,a.COUNTRY_NAME  A2, 
+			</if>
+	</sql>
+	<sql id="by_group">
+	
+			<if test=" '' != level and null != level and 'province' == level  ">
+				 a.CITY_PAC , a.CITY_NAME
+			</if>
+			<if test=" '' != level and null != level and 'city' == level  ">
+				 a.COUNTY_PAC ,a.COUNTY_NAME
+			</if>
+			
+			<if test=" '' != level and null != level and 'county' == level  ">
+				   a.TOWN_PAC ,a.TOWN_NAME 
+			</if>
+			
+			<if test=" '' != level and null != level and 'town' == level  ">
+				a.COUNTRY_PAC  ,a.COUNTRY_NAME 
+			</if>
+			
+			<if test=" '' != level and null != level and 'country' == level  ">
+				a.COUNTRY_PAC  ,a.COUNTRY_NAME 
+			</if>	
+	</sql>
+</mapper>

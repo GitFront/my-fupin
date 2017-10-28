@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html>
+
+
+<head>
+    <meta charset="UTF-8">
+    <title>广东省扶贫办大数据平台</title>
+    <link rel="stylesheet" href="../css/main.css">
+    <link rel="stylesheet" href="../css/rank.css">
+    <style>
+
+    #mapWrap{
+        display: block;
+        padding-right: 300px;
+    }
+    #map{
+        position: absolute;
+        right: 380px;
+        width: 1366px;
+        height: 500px;
+        padding-top: 90px;
+    }
+    </style>
+</head>
+<div class="main-wrap">
+    <!--公共地图部分-->
+    <section id="mapWrap">
+        <div id="map" ></div>
+    </section>
+
+    <!--贫困分析-省（市、镇、县， 村）html结构-->
+    <div data-root="poor_ctrl">
+        <header>
+            <h1></h1>
+             <ul class="nav-ul countryHide ">
+                <li class="on"><a  href="javascript:void(0);">贫困分析</a><i></i></li>
+                <li  ><a href="./duty.html">责任监控</a><i></i></li>
+                <li><a href="./protectObser.html">项目监控</a><i></i></li>
+                <li ><a href="./success.html">脱贫成效</a><i></i></li>
+                <li ><a href="./assess.html">绩效考核</a><i></i></li>
+                <li><a href="./apply.html">应用云</a><i class="word2"></i></li>
+            </ul>
+            <ul class="nav-ul nav-country hide">
+                <li class="on"><a  href="javascript:void(0);">贫困分析</a><i></i></li>
+                <li><a href="./accurateCountry.html">精准帮扶</a><i></i></li>
+                <li><a href="./successCountry.html">扶贫成效</a><i></i></li>
+                <li><a href="./assessCountry.html">绩效考核</a><i></i></li>
+                <li><a href="./searchCountry.html">搜索</a><i class="word2"></i></li>
+            </ul>
+        </header>
+
+
+        <section id="centerIndex" class="center-index">
+            
+        </section>
+
+        <section class="main-left">
+            <i id="countryDangan" class="hide"></i>
+            <div  class="rank-wrap countryHide">
+                <div id="leftRank" class="rank-div">
+
+                </div>
+
+                
+            </div>
+        </section>  <!-- end main-left -->
+
+        <section id="poorMainRight" class="main-right">
+            <div id="rightInner" class="inner">
+                <p style="height:26px;"></p>
+                <div class="top selector-div" tabindex="1">
+                    <strong>选择指标</strong>
+                    <em class="selector-title">致贫原因</em>
+                    <ul id="tabIndexUl" class="selector-ul">
+                        <li class="countryHide"><strong>村内村外</strong></li>
+                        <li><strong>贫困指数</strong></li>
+                        <li><strong>致贫原因</strong></li>
+                        <li><strong>贫困属性</strong></li>
+                        <li><strong>住房条件</strong></li>
+                        <li><strong>劳动力分析</strong></li>
+                        <li><strong>健康情况</strong></li>
+                        <li><strong>教育文化</strong></li>
+                        <li><strong class="none-border">社保医保</strong></li>
+                    </ul>
+                </div>
+
+                <div id="echartDiv" class="chart-div">
+                    <div id="echart1" class="echart">
+                    </div>
+
+                    <div id="echart2" class="echart">
+                    </div>
+                </div>
+
+            </div>
+
+            <div  id="mainRightShrink"  class="shrink">
+                <i class="arrow-right"></i>
+            </div>
+        </section>  <!-- end main-right -->
+
+        <!-- 底部左侧操作按钮 -->
+         <p class="btn-group year-btn-group">
+                <a href="javascript:void(0);" class="btn btn-group-left check">2016</a>
+                <a href="javascript:void(0);" class="btn btn-group-center">2017</a>
+                <a href="javascript:void(0);" class="btn btn-group-right">2018</a>
+            </p>
+        <p id="mapBtn" class="map-back-btn hide">返回 <span class="up-area"> 广东省</span></p>
+      
+            <p class="map-shrink">
+                <strong>地图缩放</strong>
+                <i id="mapBigger" class="map-bigger"></i>
+                <i id="mapSmaller" class="map-smaller"></i>
+            </p>
+       
+    </div>
+    <!--详情弹窗-->
+    <div class=" pop-win-wrap" style="display:none;">
+    <div class="pop-win-box">
+    <div class="pop-win-close js-pop-close"></div>
+    <!--村档案详情弹窗-->
+    <div id="poorCountryDetail" class="js-poor-country-detail file-detail" data-root="poor_country_detail_ctrl">
+        <div class="poor-file-info"></div>
+        <!--村档案js模板-->
+        <script type="text/html" id="poorFileInfoTpl">
+            <div class="file-title">村档案</div>
+            <div class="file-album">
+                <img src="<%=avatar%>" alt=""/>
+            </div>
+            <table class="file-info-tb" style="margin-left: 100px;">
+                <tr>
+                    <td>村委负责人：</td>
+                    <td><%=name%></td>
+                </tr>
+                <tr>
+                    <td>职务：</td>
+                    <td><%=duty%></td>
+                </tr>
+                <tr>
+                    <td>联系电话：</td>
+                    <td><span class="phone"><%=phone%></span><img src="../images/phone.png" alt="" class="phone-icon"/></td>
+                </tr>
+            </table>
+        </script>
+        <div class="poor-more-info">
+            <nav class="poor-tab">
+                <ul>
+                    <li class="active js-pop-tab" data-tab="js-country-analyze">村短板分析</li>
+                    <li class="js-pop-tab" data-tab="js-country-help-info">帮扶信息</li>
+                    <li class="js-pop-tab" data-tab="js-country-album-box">相册</li>
+                </ul>
+            </nav>
+            <div class="poor-container">
+                <div class="country-analyze js-country-analyze"></div>
+                <script type="text/html" id="countryAnalyzeTpl">
+                    <dl>
+                        <dt>贫困现状</dt>
+                        <dd class="top-data">
+                            <div>
+                                <h3><%=status.amount_households%></h3>
+                                <p>相对贫困户(省定标准)</p>
+                            </div>
+                            <div>
+                                <h3><%=status.amount_people%></h3>
+                                <p>贫困人</p>
+                            </div>
+                            <div>
+                                <h3><%=status.rate_poor%></h3>
+                                <p>贫困发生率</p>
+                            </div>
+                        </dd>
+                    </dl>
+                    <dl>
+                        <dt>村短板分析</dt>
+                        <dd class="fx-content"><%=analysis%></dd>
+                    </dl>
+                </script>
+                <div class="help-info js-country-help-info" style="display:none;"></div>
+                <script type="text/html" id="countryHelpInfoTpl">
+                    <ul>
+                        <li>
+                            <h3>帮扶人信息</h3>
+                            <table>
+                                <thead>
+                                <tr>
+                                    <td>帮扶人姓名</td>
+                                    <td>帮扶人单位</td>
+                                    <td>职务</td>
+                                    <td>隶属关系</td>
+                                    <td>帮扶开始时间</td>
+                                    <td>帮扶结束时间</td>
+                                    <td>联系电话</td>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <%for (var i=0; i<person.length; i++){%>
+                                <tr>
+                                    <td><%=person[i].name%></td>
+                                    <td><%=person[i].organization%></td>
+                                    <td><%=person[i].duty%></td>
+                                    <td><%=person[i].relation%></td>
+                                    <td><%=person[i].time_start%></td>
+                                    <td><%=person[i].time_end%></td>
+                                    <td><%=person[i].phone%></td>
+                                </tr>
+                                <%}%>
+                                </tbody>
+                            </table>
+                        </li>
+                        <li>
+                            <h3>帮扶计划</h3>
+                            <table>
+                                <thead>
+                                <tr>
+                                    <td>项目名称</td>
+                                    <td>项目内容</td>
+                                    <td>计量单位</td>
+                                    <td>数量</td>
+                                    <td>计划资金总额（元）</td>
+                                    <td>实施时间</td>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <%for (var i=0; i<plan.length; i++){%>
+                                <tr>
+                                    <td><%=plan[i].name%></td>
+                                    <td><%=plan[i].content%></td>
+                                    <td><%=plan[i].unit%></td>
+                                    <td><%=plan[i].amount%></td>
+                                    <td><%=plan[i].total_money%></td>
+                                    <td><%=plan[i].time%></td>
+                                </tr>
+                                <%}%>
+                                </tbody>
+                            </table>
+                        </li>
+                        <li>
+                            <h3>政策扶持</h3>
+                            <table>
+                                <thead>
+                                <tr>
+                                    <td>类型</td>
+                                    <td>金额</td>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <%for (var i=0; i<policy.length; i++){%>
+                                <tr>
+                                    <td><%=policy[i].type%></td>
+                                    <td><%=policy[i].amount%></td>
+                                </tr>
+                                <%}%>
+                                </tbody>
+                            </table>
+                        </li>
+                    </ul>
+                </script>
+                <div class="album-box js-country-album-box" style="display:none;">
+                    <nav class="album-tab">
+                        <ul>
+                            <li class="active js-country-album-tab" data-img="school">学校</li>
+                            <li class="js-country-album-tab" data-img="health_station">卫生站</li>
+                            <li class="js-country-album-tab" data-img="country_other">其他</li>
+                        </ul>
+                    </nav>
+                    <div class="album-list-wrap">
+                        <div class="all-album">
+                            <div class="album-list">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <!--相册js模板-->
+    <script type="text/html" id="albumTpl">
+        <%for (var i=0; i<albums.length; i++){%>
+        <img src="<%=albums[i].img%>" alt="" class="album-item"/>
+        <%}%>
+    </script>
+    <!--户档案详情弹窗-->
+    <div id="poorFamilyDetail" class="js-poor-family-detail file-detail" style="display:none;" data-root="poor_country_detail_ctrl">
+        <div class="poor-file-info"></div>
+        <script type="text/html" id="poorFileFamilyInfoTpl">
+            <div class="file-title">贫困户档案</div>
+            <div class="file-album">
+                <img src="../images/hu-tou.png" alt=""/>
+            </div>
+            <table class="file-info-tb">
+                <tr>
+                    <td class="title">户主姓名：</td>
+                    <td ><%=house_holder%></td>
+                </tr>
+                <tr>
+                    <td class="title">户主联系电话：</td>
+                    <td><span class="phone"><%=tel%></span><img src="../images/phone.png" alt="" class="phone-icon"></td>
+                </tr>
+                <tr style="margin-top:-20px;">
+                    <td class="title">贫困户属性：</td>
+                    <td class="p2"><%=poor_property%></td>
+                </tr>
+                <tr>
+                    <td class="title">致贫原因：</td>
+                    <td><%=poor_main_reason%></td>
+                </tr>
+                <tr>
+                    <td class="title">人均可支配收入：</td>
+                    <td><%=family_income%></td>
+                </tr>
+            </table>
+        </script>
+        <div class="poor-more-info">
+            <nav class="poor-tab">
+                <ul>
+                    <li class="active js-pop-tab" data-tab="js-family-file">家庭档案</li>
+                    <li class="js-pop-tab" data-tab="js-family-help-info">帮扶信息</li>
+                    <li class="js-pop-tab" data-tab="js-family-album-box">相册</li>
+                </ul>
+            </nav>
+            <div class="poor-container">
+                <div class="family-file js-family-file"></div>
+                <script type="text/html" id="familyFileTpl">
+                    <dl>
+                        <dd class="top-data">
+                            <div>
+                                <h3><%=member_count%></h3>
+                                <p>家庭成员数</p>
+                                <a class="js-check-family-pic" data-img="family">查看图片</a>
+                            </div>
+                            <div>
+                                <h3><%=house_area%></h3>
+                                <p>住房条件</p>
+                                <a class="js-check-family-pic" data-img="house">查看图片</a>
+                            </div>
+                        </dd>
+                        <dd class="top-data">
+                            <div>
+                                <h3><%=health_status%></h3>
+                                <p>健康状况</p>
+                                <a class="js-check-family-pic" data-img="health">查看图片</a>
+                            </div>
+                        </dd>
+                        <dd class="top-data">
+                            <div>
+                                <h3><%=work_ability%></h3>
+                                <p>劳动能力</p>
+                            </div>
+                        </dd>
+                        <dd class="top-data">
+                            <div>
+                                <h3><%=education%></h3>
+                                <p>教育情况</p>
+                                <a class="js-check-family-pic" data-img="education">查看图片</a>
+                            </div>
+                        </dd>
+                        <dd class="top-data">
+                            <div>
+                                <h3><%=basic_medical_insurance%></h3>
+                                <p>基本医疗保险</p>
+                            </div>
+                            <div>
+                                <h3><%=basic_pension_insurance%></h3>
+                                <p>基本养老保险</p>
+                            </div>
+                            <div>
+                                <h3><%=serious_disease_insurance%></h3>
+                                <p>重大疾病保险</p>
+                            </div>
+                        </dd>
+                    </dl>
+                </script>
+                <div class="help-info js-family-help-info" style="display:none;">
+                </div>
+                <script type="text/html" id="familyHelpInfoTpl">
+                    <ul>
+                        <li>
+                            <h3>帮扶人信息</h3>
+                            <table>
+                                <thead>
+                                <tr>
+                                    <td>帮扶人姓名</td>
+                                    <td>帮扶人单位</td>
+                                    <td>职务</td>
+                                    <td>隶属关系</td>
+                                    <td>帮扶开始时间</td>
+                                    <td>帮扶结束时间</td>
+                                    <!--<td>联系电话</td>-->
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <%for (var i=0; i<helper_info.length; i++){%>
+                                <tr>
+                                    <td><%=helper_info[i].helper_name%></td>
+                                    <td><%=helper_info[i].helper_unit%></td>
+                                    <td><%=helper_info[i].helper_duty%></td>
+                                    <td><%=helper_info[i].helper_relative%></td>
+                                    <td><%=helper_info[i].begin_date%></td>
+                                    <td><%=helper_info[i].time_end%></td>
+                                    <!--<td><%=helper_info[i].phone%></td>-->
+                                </tr>
+                                <%}%>
+                                </tbody>
+                            </table>
+                        </li>
+                        <li>
+                            <h3>帮扶计划</h3>
+                            <table>
+                                <thead>
+                                <tr>
+                                    <td>项目名称</td>
+                                    <td>项目内容</td>
+                                    <td>计量单位</td>
+                                    <td>数量</td>
+                                    <td>计划资金总额（元）</td>
+                                    <td>实施时间</td>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <%for (var i=0; i<helper_plan.length; i++){%>
+                                <tr>
+                                    <td><%=helper_plan[i].project_name%></td>
+                                    <td><%=helper_plan[i].project_content%></td>
+                                    <td><%=helper_plan[i].measurement_unit%></td>
+                                    <td><%=helper_plan[i].count%></td>
+                                    <td><%=helper_plan[i].total%></td>
+                                    <td><%=helper_plan[i].implement_date%></td>
+                                </tr>
+                                <%}%>
+                                </tbody>
+                            </table>
+                        </li>
+                        <li>
+                            <h3>政府扶持</h3>
+                            <table>
+                                <thead>
+                                <tr>
+                                    <td>类型</td>
+                                    <td>金额</td>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <%for (var i=0; i<policies_support.length; i++){%>
+                                <tr>
+                                    <td><%=policies_support[i].category%></td>
+                                    <td><%=policies_support[i].money%></td>
+                                </tr>
+                                <%}%>
+                                </tbody>
+                            </table>
+                        </li>
+                    </ul>
+                </script>
+                <div class="album-box js-family-album-box" style="display:none;">
+                    <nav class="album-tab">
+                        <ul>
+                            <li class="active js-family-album-tab" data-img="family">家庭合照</li>
+                            <li class="js-family-album-tab" data-img="house">房屋</li>
+                            <li class="js-family-album-tab" data-img="health">健康状况</li>
+                            <li class="js-family-album-tab" data-img="education">教育情况</li>
+                        </ul>
+                    </nav>
+                    <div class="album-list-wrap">
+                        <div class="all-album">
+                            <div class="album-list">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+    </div>
+
+
+    <!-- 加载 -->
+<div id="loadingDiv" class="hide">
+    
+    <div class="spinner">
+
+  <div class="spinner-container container1">
+
+    <div class="circle1"></div>
+
+    <div class="circle2"></div>
+
+    <div class="circle3"></div>
+
+    <div class="circle4"></div>
+
+  </div>
+
+  <div class="spinner-container container2">
+
+    <div class="circle1"></div>
+
+    <div class="circle2"></div>
+
+    <div class="circle3"></div>
+
+    <div class="circle4"></div>
+
+  </div>
+
+  <div class="spinner-container container3">
+
+    <div class="circle1"></div>
+
+    <div class="circle2"></div>
+
+    <div class="circle3"></div>
+
+    <div class="circle4"></div>
+
+  </div>
+
+</div>
+</div>
+<!--end 加载 -->
+
+</div> <!-- end main-wrap -->
+
+
+
+
+
+<!-- 模板 -->
+<script id="tplLeftRank" type="text/html">
+    <p class="title">贫困户数</p>
+    <%for(i=0;i < chart_config_top_poor.list.length;i++){%>
+    <%var item=chart_config_top_poor.list[i]%>
+    <%if(i<3){%>
+    <div class="skillbar clearfix " data-percent="<%=item.percent%>">
+        <div class="skillbar-title" data-index="<%=i%>"><span data-index="<%=i%>"><%=item.name%></span></div>
+        <div class="skillbar-bar  top3"></div>
+    </div>
+
+    <%} else if (i<6&&i>2) {%>
+    <div class="skillbar clearfix " data-percent="<%=item.percent%>">
+        <div class="skillbar-title" data-index="<%=i%>"><span data-index="<%=i%>"><%=item.name%></span></div>
+        <div class="skillbar-bar top6"></div>
+    </div>
+
+
+    <%}else{%>
+    <div class="skillbar clearfix " data-percent="<%=item.percent%>">
+        <div class="skillbar-title" data-index="<%=i%>"><span data-index="<%=i%>"><%=item.name%></span></div>
+        <div class="skillbar-bar top10"></div>
+    </div>
+    <%}%>
+    <%}%>
+</script>
+
+<script id="tplCenterIndex" type="text/html">
+    <p><%=stat.amount_poor_families%><br><label>相对贫困户</label></p>
+    
+    <p><%=stat.amount_poor_people%><span class="per"><%=stat.rate_poor%></span><br><label>相对贫困人口</label></p>
+    <p><%=stat.amount_plan%><br><label >计划脱贫人口数</label></p>
+</script>
+
+
+<script src="../js/libs/jquery.min.js"></script>
+<script src="../js/libs/echarts.min.js"></script>
+
+<script src="../js/libs/template-native.js"></script>
+<script src="../js/libs/plugin.slimscroll.min.js"></script>
+<script src="../js/controllers/render.js"></script>
+<script src="../js/controllers/poor_ctrl.js"></script>
+<script src="../js/common/button.js"></script>
+<script src="../js/tabArea.js"></script>
+<script src="../js/tabIndexChart.js"></script>
+<!--fengxiqiu 村，户详情-->
+<script src="../js/controllers/poor_country_detail_ctrl.js"></script>
+
+<!-- map -->
+    <script type="text/javascript" src="../script/common/jquery-namespace.js"></script>
+  <script type="text/javascript" src="../script/highcharts/Highcharts-4.1.5/highcharts.js"></script>
+  <script type="text/javascript" src="../script/highcharts/Highcharts-4.1.5/highcharts-more.js"></script>
+  <script type="text/javascript" src="../script/highcharts/Highcharts-4.1.5/modules/exporting.js"></script>
+  <script type="text/javascript" src="../script/highcharts/Highcharts-4.1.5/highcharts-zh_CN.js"></script>
+  <script type="text/javascript" src="../script/highcharts/Highcharts-4.1.5/modules/solid-gauge.js"></script>
+  <script type="text/javascript" src="../script/highcharts/Highmaps-1.1.7/modules/map.js"></script>
+  <script type="text/javascript" src="../script/highcharts/Highmaps-1.1.7/modules/data.js"></script>
+  <script type="text/javascript" src="../script/highcharts/Highmaps-1.1.7/modules/drilldown.js"></script>
+ <script type="text/javascript" src="../script/highcharts/Highmaps-1.1.7/themes/dark-unica.js"></script>
+
+  <script type="text/javascript" src="../script/common/common.js"></script>
+  <script type="text/javascript" src="../script/common/layer/layer.js"></script>
+  <script type="text/javascript" src="../script/common/common-utils.js"></script>
+  <script type="text/javascript" src="../script/common/common-map.js"></script>
+
+  <script type="text/javascript" src="../script/charts/common-highcharts.js"></script>
+  <script type="text/javascript" src="../script/charts/common-highmaps.js"></script>
+  <script type="text/javascript" src="../script/charts/common-report-page.js"></script>
+  <script type="text/javascript" src="../script/charts/Highcharts.js"></script>
+  <script type="text/javascript" src="../script/charts/common-highcharts-map.js"></script>
+  <script type="text/javascript" src="../script/maps/cn-guangdong.js"></script>
+  <script type="text/javascript" src="../script/data3.js"></script>
+  <script type="text/javascript" src="../script/index_map.js"></script>
+  
+</body> 

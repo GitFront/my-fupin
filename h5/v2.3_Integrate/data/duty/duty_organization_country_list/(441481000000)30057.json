@@ -1,0 +1,30 @@
+{
+	"data":{
+		"belong_organization":"兴宁市林业局",
+		"list":[
+			{
+				"id":"441481115202",
+				"order":1,
+				"contact_phone":"13431824037",
+				"contact_name":"刘伟标",
+				"country_name":"高坑村委会"
+			},
+			{
+				"id":"441481115217",
+				"order":2,
+				"contact_phone":"18312787862",
+				"contact_name":"王德环",
+				"country_name":"中和村委会"
+			},
+			{
+				"id":"441481115201",
+				"order":3,
+				"contact_phone":"15876709602",
+				"contact_name":"刘宇平",
+				"country_name":"浮北村委会"
+			}
+		]
+	},
+	"code":0,
+	"msg":"获取信息成功"
+}

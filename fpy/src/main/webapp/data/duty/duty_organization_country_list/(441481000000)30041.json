@@ -1,0 +1,30 @@
+{
+	"data":{
+		"belong_organization":"兴宁市文联",
+		"list":[
+			{
+				"id":"441481003204",
+				"order":1,
+				"contact_phone":"3231865",
+				"contact_name":"吴利宏",
+				"country_name":"大岭村委会"
+			},
+			{
+				"id":"441481003211",
+				"order":2,
+				"contact_phone":"3231614",
+				"contact_name":"罗林超",
+				"country_name":"大路村委会"
+			},
+			{
+				"id":"441481003206",
+				"order":3,
+				"contact_phone":"3215028",
+				"contact_name":"吴聪贵",
+				"country_name":"横新村委会"
+			}
+		]
+	},
+	"code":0,
+	"msg":"获取信息成功"
+}

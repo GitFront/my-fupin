@@ -1,0 +1,28 @@
+{
+	"code": 0,
+	"msg": "获取信息成功",
+	"data": {
+		//同area_path.json的定义
+		"area_path": [],
+		//类型
+		"types": {
+			//选中值名
+			"selected_name": "就业扶贫",
+			//选中值
+			"selected_value": "1",
+			//可选列表
+			"list": [
+				{
+					"name": "就业扶贫",
+					"value": "1"
+				},
+				{
+					"name": "产业扶贫",
+					"value": "2"
+				}
+			]
+		},
+		//标题
+		"title": "截止2017年7月1日xx区域名称个人事项在办项目明细"
+	}
+}

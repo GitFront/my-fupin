@@ -1,0 +1,637 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+        
+<mapper namespace="com.aspire.birp.modules.antiPoverty.dao.CountryFileDao">
+	<!--脱贫轨迹-->
+	<select id="queryCountryfileAidTrail"  parameterType="hashmap" resultType="hashmap">
+
+				SELECT
+				 TRUNC((POOR_RATE * 100),1)||'%' POOR_RATE,  <!-- 贫困发生率 -->
+				(POOR_RATE_TARGET * 100) ||'%' POOR_RATE_TARGET,
+			
+				POOR_RATE_SCORE,
+				CASE WHEN  POOR_RATE_TARGET>POOR_RATE THEN 1
+				ELSE 0 END  AS POOR_HAS_ACHIEVED,
+
+
+				
+				(TRUNC(OWN_CAPITAL/10000,2) || '万元') OWN_CAPITAL,  <!-- 自筹扶贫资金 -->
+				OWN_CAPITAL_SCORE,
+				 (TRUNC(OWN_CAPITAL_TARGET/10000,2) || '万元') OWN_CAPITAL_TARGET,
+				CASE WHEN OWN_CAPITAL >= OWN_CAPITAL_TARGET THEN 1
+				ELSE 0 END  AS OWN_HAS_ACHIEVED,
+
+
+				CASE  ROAD  <!-- 道路硬底化 -->
+				when 1 THEN '达标'
+				ELSE '未达标' END  AS ROAD,
+				'达标'  AS ROAD_TARGET,
+				ROAD_SCORE,
+				CASE  ROAD
+				when 1 THEN 1
+				ELSE 0 END  AS ROAD_HAS_ACHIEVED,
+
+
+				CASE  WATER  <!-- 农村饮水保障 -->
+				when 1 THEN '达标'
+				ELSE '未达标' END  AS WATER,
+				'达标'  AS WATER_TARGET,
+				WATER_SCORE,
+				CASE  WATER
+				when 1 THEN 1
+				ELSE 0 END  AS WATER_HAS_ACHIEVED,
+
+				CASE  ELECTRIFY  <!-- 贫困村通电 -->
+				when 1 THEN '达标'
+				ELSE '未达标' END  AS ELECTRIFY,
+				'达标'  AS ELECTRIFY_TARGET,
+				ELECTRIFY_SCORE,
+				CASE  ELECTRIFY
+				when 1 THEN 1
+				ELSE 0 END  AS ELECTRIFY_HAS_ACHIEVED,
+
+				CASE  TV  <!-- 贫困村通广播电视得分 -->
+				when 1 THEN '达标'
+				ELSE '未达标' END  AS TV,
+				'达标'  AS TV_TARGET,
+				TV_SCORE,
+				CASE  TV
+				when 1 THEN 1
+				ELSE 0 END  AS TV_HAS_ACHIEVED,
+
+				CASE  NET  <!-- 贫困村通宽带网络 -->
+				when 1 THEN '达标'
+				ELSE '未达标' END  AS NET,
+				'达标'  AS NET_TARGET,
+				NET_SCORE,
+				CASE  NET
+				when 1 THEN 1
+				ELSE 0 END  AS NET_HAS_ACHIEVED,
+
+				CASE  HEALTH  <!-- 贫困村医疗设施建设 -->
+				when 1 THEN '达标'
+				ELSE '未达标' END  AS HEALTH,
+				'达标'  AS HEALTH_TARGET,
+				HEALTH_SCORE,
+				CASE  HEALTH
+				when 1 THEN 1
+				ELSE 0 END  AS HEALTH_HAS_ACHIEVED
+				FROM
+				F_COUNTRYFILE_AID_TRAIL_D
+
+				WHERE COUNTRY_PAC=#{COUNTRY_PAC}
+				AND MONTH_TAG=#{MONTH_TAG}
+				<if test="F_COUNTRYFILE_AID_TRAIL_D != null and F_COUNTRYFILE_AID_TRAIL_D != '' ">
+				AND STAT_TIME  =#{F_COUNTRYFILE_AID_TRAIL_D}
+				</if>
+
+	</select>
+
+	<!--脱贫轨迹图表-->
+	<select id="queryCountryfileChart"  parameterType="hashmap" resultType="hashmap">
+		SELECT
+		TO_CHAR(TO_DATE(MONTH_TAG,'YYYY-MM-DD') ,'YYYY.MM' ) AS S_NAME,
+		'综合得分' AS S_GROUP,
+		ROUND(TOTAL_SCORE,2) AS S_TOTAL_SCORE
+		FROM
+		F_COUNTRYFILE_AID_TRAIL_D
+		WHERE COUNTRY_PAC =#{COUNTRY_PAC}
+		AND MONTH_TAG  BETWEEN TO_CHAR(ADD_MONTHS(to_date(#{F_COUNTRYFILE_AID_TRAIL_DM},'yyyy-mm-dd'), -11),'YYYYMMDD') AND #{F_COUNTRYFILE_AID_TRAIL_DM}
+
+	</select>
+
+
+	<!--资金投入  每月资金列表-->
+	<select id="queryCapitalList"  parameterType="hashmap" resultType="hashmap">
+	SELECT
+	CC.COUNTRY_PAC AS S_COUNTRY_PAC,
+	TO_CHAR (
+		TO_DATE (
+			CC.PROJ_INVEST_MONTH,
+			'YYYY-MM'
+		),
+		'YYYY.MM'
+	) AS S_TITLE,
+	CC.OWN_CAPITAL AS S_ORGANIZATION,
+	CC.HC_CITY AS S_helper_CITY_FINANCE,
+	CC.HC_TOWN AS S_DISTRICT_TOWN_FINANCE,
+	CC.HC_SOCIETY AS S_helper_SOCIAL_MONEY,
+	CC.CNP_CENTER AS S_CENTRAL_FINANCE,
+	CC.CNP_PROVINCE AS S_PROVINCE_FINANCE,
+	CC.CNP_CENTER_INDUSTRY AS S_CENTRAL_INDUSTRY,
+	CC.CNP_PROVINCE_INDUSTRY AS S_PROVINCE_INDUSTRY,
+	CC.CNP_SOCIETY AS S_central_SOCIAL_MONEY,
+	CC.BHC_CITY AS S_helped_CITY_FINANCE,
+	CC.BHC_TOWN AS S_COUNTY_TOWN_FINANCE,
+	CC.BHC_CITY_INDUSTRY AS S_CITY_INDUSTRY,
+	CC.BHC_TOWN_INDUSTRY AS S_COUNTY_TOWN_INDUSTRY,
+	CC.BHC_SOCIETY AS S_HELPED_SOCIAL_MONEY,
+	(
+		ROUND (OWN_CAPITAL+ 
+				HC_CITY + 
+				HC_TOWN + 
+				HC_SOCIETY + 
+				CNP_CENTER + 
+				CNP_PROVINCE + 
+				CNP_CENTER_INDUSTRY +
+				CNP_PROVINCE_INDUSTRY + 
+				CNP_SOCIETY+
+				BHC_CITY + 
+				BHC_TOWN + 
+				BHC_CITY_INDUSTRY + 
+				BHC_TOWN_INDUSTRY +
+				BHC_SOCIETY,
+			2
+		)
+	) AS S_SUMMARY
+	FROM
+	F_COUNTRYFILE_CAPITAL_D CC
+	<where>
+			<if test="START_MONTH != null and START_MONTH != '' and END_MONTH != null and END_MONTH != '' ">
+			AND  CC.PROJ_INVEST_MONTH BETWEEN #{START_MONTH} AND #{END_MONTH}
+			</if>
+			<if test="F_COUNTRYFILE_CAPITAL_D != null and F_COUNTRYFILE_CAPITAL_D != '' ">
+			AND CC.STAT_TIME  =#{F_COUNTRYFILE_CAPITAL_D}
+			</if>
+			AND CC.COUNTRY_PAC  =#{COUNTRY_PAC}
+	</where>
+	
+	ORDER BY CC.PROJ_INVEST_MONTH DESC
+	</select>
+
+
+
+
+	<!--当年资金汇总列表-->
+	<select id="queryCapitalListByYear"  parameterType="hashmap" resultType="hashmap">
+		SELECT
+		SUM (OWN_CAPITAL) AS S_ORGANIZATION,
+		SUM (HC_CITY) AS S_HELPER_CITY_FINANCE,
+		SUM (HC_TOWN) AS S_DISTRICT_TOWN_FINANCE,
+		SUM (HC_SOCIETY) AS S_HELPER_SOCIAL_MONEY,
+		SUM (CNP_CENTER) AS S_CENTRAL_FINANCE,
+		SUM (CNP_PROVINCE) AS S_PROVINCE_FINANCE,
+		SUM (CNP_CENTER_INDUSTRY) AS S_CENTRAL_INDUSTRY,
+		SUM (CNP_PROVINCE_INDUSTRY) AS S_PROVINCE_INDUSTRY,
+		SUM (CNP_SOCIETY) AS S_CENTRAL_SOCIAL_MONEY,
+		SUM (BHC_CITY) AS S_HELPED_CITY_FINANCE,
+		SUM (BHC_TOWN) AS S_COUNTY_TOWN_FINANCE,
+		SUM (BHC_CITY_INDUSTRY) AS S_CITY_INDUSTRY,
+		SUM (BHC_TOWN_INDUSTRY) AS S_COUNTY_TOWN_INDUSTRY,
+		SUM (BHC_SOCIETY) AS S_HELPED_SOCIAL_MONEY,
+		ROUND (
+			(
+				SUM (OWN_CAPITAL) + SUM (HC_CITY) + SUM (HC_TOWN) + SUM (HC_SOCIETY) + SUM (CNP_CENTER) + SUM (CNP_PROVINCE) + SUM (CNP_CENTER_INDUSTRY) + SUM (CNP_PROVINCE_INDUSTRY) + SUM (CNP_SOCIETY) + SUM (BHC_CITY) + SUM (BHC_TOWN) + SUM (BHC_CITY_INDUSTRY) + SUM (BHC_TOWN_INDUSTRY) + SUM (BHC_SOCIETY)
+			),
+			2
+		) AS S_SUMMARY
+		FROM
+			F_COUNTRYFILE_CAPITAL_D  CC
+		<where>
+			<if test="F_COUNTRYFILE_CAPITAL_D != null and F_COUNTRYFILE_CAPITAL_D != '' ">
+				AND STAT_TIME  =#{F_COUNTRYFILE_CAPITAL_D}
+			</if>
+			<if test="START_MONTH != null and START_MONTH != '' and END_MONTH != null and END_MONTH != '' ">
+				AND  PROJ_INVEST_MONTH BETWEEN #{START_MONTH} AND #{END_MONTH}
+			</if>
+	
+			AND CC.COUNTRY_PAC =#{COUNTRY_PAC}
+		</where> 
+		
+		GROUP BY COUNTRY_PAC
+	
+	</select>
+
+	<!--累计到户-->
+	<select id="queryCapitalTotalCount"  parameterType="hashmap" resultType="hashmap">
+		SELECT
+		ROUND (
+			(
+				SUM (OWN_CAPITAL) + SUM (HC_CITY) + SUM (HC_TOWN) + SUM (HC_SOCIETY) + SUM (CNP_CENTER) + SUM (CNP_PROVINCE) + SUM (CNP_CENTER_INDUSTRY) + SUM (CNP_PROVINCE_INDUSTRY) + SUM (CNP_SOCIETY) + SUM (BHC_CITY) + SUM (BHC_TOWN) + SUM (BHC_CITY_INDUSTRY) + SUM (BHC_TOWN_INDUSTRY) + SUM (BHC_SOCIETY)
+			) /10000,
+			2
+		) AS S_TOTAL
+		FROM
+			F_COUNTRYFILE_CAPITAL_D
+		WHERE
+			COUNTRY_PAC =#{COUNTRY_PAC}
+			
+		<if test="F_COUNTRYFILE_CAPITAL_D != null and F_COUNTRYFILE_CAPITAL_D != '' ">
+			AND
+				
+			(
+				 STAT_TIME  =#{F_COUNTRYFILE_CAPITAL_D} 
+				 OR STAT_TIME=TO_CHAR(ADD_MONTHS(to_date(#{F_COUNTRYFILE_CAPITAL_DY} ,'yyyy'), -12),'YYYY') || '1201'
+				 OR STAT_TIME=TO_CHAR(ADD_MONTHS(to_date(#{F_COUNTRYFILE_CAPITAL_DY} ,'yyyy'), -24),'YYYY') || '1201'
+			)
+		</if>	
+		
+		<if test="START_MONTH != null and START_MONTH != '' and END_MONTH != null and END_MONTH != '' ">
+			AND  PROJ_INVEST_MONTH BETWEEN TO_CHAR(ADD_MONTHS(to_date(#{START_MONTH},'yyyy-mm'), -24),'YYYYMM')AND #{END_MONTH}
+		</if>
+		GROUP BY COUNTRY_PAC
+	
+	
+	</select>
+	
+	
+
+	<!--当年累计到户-->
+	<select id="queryCapitalCount"  parameterType="hashmap" resultType="hashmap">
+		SELECT
+		ROUND (
+			(
+				SUM (OWN_CAPITAL) + SUM (HC_CITY) + SUM (HC_TOWN) + SUM (HC_SOCIETY) + SUM (CNP_CENTER) + SUM (CNP_PROVINCE) + SUM (CNP_CENTER_INDUSTRY) + SUM (CNP_PROVINCE_INDUSTRY) + SUM (CNP_SOCIETY) + SUM (BHC_CITY) + SUM (BHC_TOWN) + SUM (BHC_CITY_INDUSTRY) + SUM (BHC_TOWN_INDUSTRY) + SUM (BHC_SOCIETY)
+			) /10000,
+			2
+		) AS S_TOTAL
+		FROM
+			F_COUNTRYFILE_CAPITAL_D
+		WHERE
+			COUNTRY_PAC =#{COUNTRY_PAC}
+			
+		<if test="F_COUNTRYFILE_CAPITAL_D != null and F_COUNTRYFILE_CAPITAL_D != '' ">
+			AND STAT_TIME  =#{F_COUNTRYFILE_CAPITAL_D} 
+		
+		</if>	
+		
+		<if test="START_MONTH != null and START_MONTH != '' and END_MONTH != null and END_MONTH != '' ">
+			AND  PROJ_INVEST_MONTH BETWEEN #{START_MONTH} AND #{END_MONTH}
+		</if>
+
+		GROUP BY COUNTRY_PAC
+			
+
+	</select>
+
+
+
+
+	<!--业务办理-->
+	<select id="queryBusiProcessList"  parameterType="hashmap" resultType="hashmap">
+		SELECT
+		ADDR_LINK AS S_LINK ,<!-- 链接 -->
+		ITEM_NAME AS  S_TEXT,<!-- 名称 -->
+		ITEM_ID AS S_ITEM_ID,<!-- 事项ID -->
+		CLASSIFY AS S_CLASSIFY,<!-- 分类导航 -->
+		PROCESS_DEPARTMENT AS  S_PROCESS_DEPARTMENT<!-- 实施部门 -->
+		FROM F_COUNTRYFILE_BUSI_PROCESS
+		WHERE COUNTRY_PAC=#{COUNTRY_PAC}
+		<if test="PROCESS_STATUS != null and PROCESS_STATUS != '' ">
+			AND PROCESS_STATUS LIKE concat(#{PROCESS_STATUS},'%')
+		</if>
+	</select>
+
+
+	<!--帮扶会议详情-->
+	<select id="queryCountryfileMeetingById"  parameterType="hashmap" resultType="hashmap">
+
+				
+		SELECT
+		HELP_DESC as S_DESC,
+		replace((select wmsys.wm_concat(t.path)
+		from TR_PIC_COUNTRY_MEETING_D t where t.MEETING_ID=HELP_ID
+		group by t.MEETING_ID),',',';') AS S_PICS
+		FROM F_COUNTRYFILE_HELPMEETING
+		WHERE  HELP_ID=#{HELP_ID}
+	
+		<if test="STAT_TIME != null and STAT_TIME != '' ">
+			AND STAT_TIME = #{STAT_TIME}
+		</if>
+
+
+	</select>
+
+	<!--帮扶会议列表-->
+	<select id="queryCountryfileMeetingList"  parameterType="hashmap" resultType="hashmap">
+
+			
+			SELECT
+			HELP_ID AS S_ID,
+			ADDR AS S_ADDR,
+			COUNTRY_NAME AS S_COUNTRY_NAME,
+	 
+			TO_CHAR(TO_DATE(STAT_TIME,'YYYY-MM-DD') ,'YYYY/MM/DD') AS S_TIME,
+			replace((select wmsys.wm_concat(t.path_zoom)
+  			from TR_PIC_COUNTRY_MEETING_D t where t.MEETING_ID=HELP_ID
+ 			group by t.MEETING_ID),',',';') AS S_PICS,
+			case when  length(SUBSTR(HELP_DESC,0,90))>=90 then SUBSTR(HELP_DESC,0,90) || '...'
+			else HELP_DESC
+			end  AS S_DESC
+			FROM
+				F_COUNTRYFILE_HELPMEETING 
+			WHERE
+				COUNTRY_PAC =#{COUNTRY_PAC}
+
+			<if test="STAT_TIME != null and STAT_TIME != '' ">
+				AND STAT_TIME = #{STAT_TIME}
+			</if>
+			ORDER BY STAT_TIME DESC
+
+	</select>
+
+
+	<!--帮扶动态详情-->
+	<select id="queryCountryfileTrendsById"  parameterType="hashmap" resultType="hashmap">
+
+		SELECT
+		
+		replace((select wmsys.wm_concat(t.path)
+	 	from TR_PIC_HELP_COUNTRY_TRENDS_D t where t.HELP_TRENDS_ID=HELP_ID
+	 	group by t.HELP_TRENDS_ID),',',';') AS S_PICS,
+		HELP_DESC AS S_DESC
+		
+		
+		FROM
+		F_COUNTRYFILE_HELP_TRENDS 
+		
+		
+		WHERE  HELP_ID=#{HELP_ID}
+		<if test="STAT_TIME != null and STAT_TIME != '' ">
+			AND STAT_TIME = #{STAT_TIME}
+		</if>
+
+
+	</select>
+
+	<!--帮扶动态列表-->
+	<select id="queryCountryfileTrendsList"  parameterType="hashmap" resultType="hashmap">
+
+		
+		SELECT
+		HELP_ID AS S_ID,
+		ADDR AS S_ADDR,
+		TO_CHAR(TO_DATE(STAT_TIME,'YYYY-MM-DD') ,'YYYY/MM/DD')
+		AS S_TIME,
+		replace((select wmsys.wm_concat(t.path_zoom)
+	 	from TR_PIC_HELP_COUNTRY_TRENDS_D t where t.HELP_TRENDS_ID=HELP_ID
+	 	group by t.HELP_TRENDS_ID),',',';') AS S_PICS,
+		case when  length(SUBSTR(HELP_DESC,0,90))>=90 then SUBSTR(HELP_DESC,0,90) || '...'
+		else HELP_DESC
+		end  AS S_DESC
+		FROM
+		F_COUNTRYFILE_HELP_TRENDS 
+
+		WHERE COUNTRY_PAC =#{COUNTRY_PAC}
+		
+		<if test="STAT_TIME != null and STAT_TIME != '' ">
+			AND STAT_TIME = #{STAT_TIME}
+		</if>
+		ORDER BY STAT_TIME DESC
+		
+		
+		
+
+
+	</select>
+	
+	<!--帮扶施策图片列表  -->
+	<select id="queryCountryfileHelpPic"  parameterType="hashmap" resultType="hashmap">
+		select 
+		PATH
+		from TR_PIC_COUNTRY_PROJECT_D
+		WHERE 
+		PROJ_ID =#{PROJ_ID}
+		AND PIC_TYPE=#{PIC_TYPE}
+		AND rownum=1
+	</select>
+	
+
+	<!--帮扶施策列表-->
+	<select id="queryCountryfileHelpList"  parameterType="hashmap" resultType="hashmap">
+			SELECT
+			PROJ_ID AS S_PROJ_ID,
+			PROJ_NAME AS S_NAME,<!-- 项目名称 -->
+			HELP_CLASS AS S_TYPE,<!-- 扶贫类别 -->
+			PROJ_CNT AS S_PROJ_CNT,<!-- 规模和单位合并了 -->
+			PLAN_CAPITAL AS  S_INVEST_EXPECTED,<!-- 预计投入资金 -->
+			REAL_CAPITAL AS  S_INVEST_ACTUAL,<!-- 实际投入资金 -->
+			PROJ_PROFIT AS  S_PROFIT,<!-- 项目收益 -->
+			BEGIN_TIME AS  S_TIME_START,<!-- 开始时间 -->
+			FINISH_TIME AS  S_TIME_COMPLETED<!-- 完成时间 -->
+			FROM
+			F_COUNTRYFILE_HELP_METHOD_D
+			WHERE COUNTRY_PAC=#{COUNTRY_PAC}
+			AND PROJ_STATUS=#{PROJ_STATUS}
+	</select>
+
+	<!--帮扶施策汇总-->
+	<select id="queryCountryfileHelpCount"  parameterType="hashmap" resultType="hashmap">
+			SELECT
+			COUNT(PROJ_ID)  AS S_TOTAL,
+			(SELECT COUNT(1) FROM F_COUNTRYFILE_HELP_METHOD_D WHERE PROJ_STATUS ='完成' AND COUNTRY_PAC=A.COUNTRY_PAC) S_COMPLETED,
+			(SELECT COUNT(1) FROM F_COUNTRYFILE_HELP_METHOD_D WHERE PROJ_STATUS ='进行中' AND COUNTRY_PAC=A.COUNTRY_PAC) S_RUNNING,
+			ROUND(
+			SUM(REAL_CAPITAL)/10000,2 
+			)
+			AS S_INVESTED,
+			
+			case when SUM(PROJ_PROFIT)=0 then 0
+			else ROUND(SUM(PROJ_PROFIT)/10000,2) 
+			end S_PROFIT
+			FROM
+			F_COUNTRYFILE_HELP_METHOD_D A
+			WHERE COUNTRY_PAC=#{COUNTRY_PAC}
+			GROUP BY COUNTRY_PAC
+	</select>
+
+	<!--帮扶计划-->
+	<select id="queryCountryFilePlanList"  parameterType="hashmap" resultType="hashmap">
+		SELECT
+		CHP.COUNTRY_PAC S_COUNTRY_PAC,
+		CHP.COUNTRY_DUTY_NAME AS S_RESPONSIBLE_SIGN,<!-- 户主名称 -->
+		CHP.LEADER_NAME AS S_COUNTRY_LEADER_SIGN,<!-- 驻村干部名称 -->
+		CHP.PLAN_MAKE_TIME AS S_TIME,<!-- 制定时间 -->
+		CHP.PLAN_CONTENT AS S_CONTENT,
+		CHP.PLAN_YEAR AS  S_PLAN_YEAR
+		FROM
+		F_COUNTRYFILE_HELP_PLAN_D CHP
+		WHERE
+		CHP.COUNTRY_PAC =#{COUNTRY_PAC}
+
+		<if test="PLAN_YEAR != null and PLAN_YEAR != '' ">
+			AND PLAN_YEAR IN
+
+			<foreach collection="PLAN_YEAR" open="(" close=")" separator="," item="item">
+				#{item}
+			</foreach>
+
+		</if>
+
+	</select>
+
+	<!--发展现状-->
+	<select id="queryCountryDevStatus"  parameterType="hashmap" resultType="hashmap">
+
+			SELECT
+			DPI as S_AVERAGE,
+			COUNTRY_INCOME AS S_COLLECTIVE,
+
+			MEDICAL_INSURANCE_CNT  AS S_RURAL_MEDICAL,
+			ENDOWMENT_INSURANCE_CNT AS S_PENSION_INSURANCE,
+			MED_ASSISTANCE_COUNT AS S_MEDICAL_HELP,
+
+			DANGER_RST_COUNT AS S_AMOUNT,
+
+			NO_ROAD_KM AS S_DISTANCE_ADMIN_TO_TOWN,
+			IS_CAR AS  S_BUS_AVAILABLE,
+			VILLAGE_NO_ROAD_COUNT AS S_AMOUNT_NATURAL_TO_ADMIN,
+			VILLAGE_NO_ROAD_KM S_DISTANCE_NATURAL,
+
+			NO_ELEC_VILLAGE_COUNT AS S_NOT_ENABLED_LIVING_COUNTRY,
+			NO_PROC_ELEC_VILLAGE_COUNT AS S_NOT_ENA_PROD_COUNTRY,
+			NO_ELEC_FAMILY_COUNT AS S_NOT_ENABLED_LIVING_FAMILY,
+			HAS_ELEC_VILLAGE_COUNT AS S_ENABLED_COUNTRY,
+
+			NOTSAFE_DRINK_COUNT AS S_UNSAFE,
+			DIF_DRINK_COUNT AS S_DIFFICULT,
+
+			SPC_COP_ORGANIZATION_COUNT AS S_AMOUNT_FSC,
+			SPC_COP_ORGANIZATION_RST_COUNT AS  S_AMOUNT_FAMILY_FSC,
+
+			CTRY_TOURISM_RST_COUNT AS S_TRAVEL_FAMILY,
+			CTRY_TOURISM_WORKER_COUNT AS S_TRAVEL_PEOPLE,
+			HAPPY_FARMER_RST_COUNT AS S_RURAL_INN_FAMILY,
+			HAPPY_FARMER_AVG_INCOME AS S_RURAL_INN_AVERAGE,
+
+			LIBRARY_COUNT AS S_LIBRARY,
+			TV_FAM AS S_TV,
+
+			HEALTH_CLINIC_COUNT AS S_OFFICE,
+			HEALTH_CLINIC_DOC_COUNT AS S_DOCTOR,
+			PUBLIC_WC_COUNT AS S_TOILET,
+			GARBAGE_POINT_COUNT AS S_GARBAGE,
+
+			INTERNET_COUNT AS S_BROADBAND_FAMILY,
+			PHONE_WITH_INTERNET_RST_COUNT AS S_MOBILE_FAMILY,
+			ELEC_CTRY_WITH_INTERNET_COUNT AS S_BROADBAND_NATURAL,
+			SCHOOL_WITH_INTERNET_COUNT AS S_BROADBAND_COUNTRY,
+			CTRY_INFO_ASSISTANCE_COUNT AS S_ADMIN_STAFF,
+
+			RELOCATE_RST_COUNT AS S_RST_AMOUNT,<!-- 户数 -->  <!-- "amount": "0户/0人" -->
+			RELOCATE_PERSON_COUNT AS S_PERSON_AMOUNT,<!-- 人数  -->
+
+			NWORKER_WITH_MIDSCHOOL_COUNT AS S_MIDDLE_SCHOOL,
+			BOUNTYPLAN_COUNT AS S_JOINED,
+			NWORKER_WITH_HSCHOOL_COUNT AS S_HIGH_SCHOOL,
+
+
+			MICROFINANCE_RST_COUNT AS S_ALLOW,
+			LOAN_RST_COUNT AS S_CUR_YEAR,
+			OVER_LOAN_RST_COUNT AS S_DUE,
+
+			PCP_COUNT AS S_PARTY_AMOUNT,
+			TRUNC(PCP_COUNT/POP*100,1) AS S_RATIO
+
+			FROM
+			F_COUNTRYFILE_BASIC_INFO_D
+
+			WHERE COUNTRY_PAC=#{COUNTRY_PAC}
+
+
+
+
+	</select>
+
+
+
+
+	<!--基本情况-->
+	<select id="queryCountryFileStatus"  parameterType="hashmap" resultType="hashmap">
+				SELECT
+				COUNTRY_NAME AS S_COUNTRY_NAME,<!-- 村名字 -->
+				(SELECT  COUNTRY_PROPERTY_NAME FROM DIM_COUNTRY_PROPERTY where COUNTRY_PROPERTY=A.COUNTRY_PROPERTY ) S_COUNTRY_ATTRIBUTE,
+				TERRAIN AS S_TOPOGRAPHY,<!-- 地形地貌 -->
+				DEV_DIRECTION AS S_DEV_TARGET,<!-- 发展方向 -->
+				CHILD_COUNTRY_COUNT AS S_GROUPS，<!-- 村民小组数 -->
+
+				FAM AS  S_FAM,<!-- 总户数 -->
+				POOR_FAM AS S_POOR_FAM,<!-- 贫困户数 -->
+				LOW_FAM AS S_LOW_FAM,<!-- 低保户数 -->
+				FIV_FAM AS S_FIV_FAM,<!-- 五保户数 -->
+
+				POP AS S_POP,<!-- 总人口 -->
+				POOR_POP AS S_POOR_POP,<!-- 贫困人口 -->
+				DISABLED_POP AS S_DISABLED_POP,<!-- 残疾人口 -->
+				FEME_POP AS S_FEME_POP,<!-- 妇女人口 -->
+				LOW_POP AS S_LOW_POP,<!-- 低保贫困人口 -->
+				FIV_POP AS S_FIV_POP,<!-- 五保贫困人口 -->
+				MINORITY_POP AS S_MINORITY_POP,<!-- 少数民族人口 -->
+
+
+				WB_POP AS  S_WB_POP,<!-- 劳动力人口 -->
+				OUT_WORK_POP AS  S_OUT_WORK_POP,<!-- 外出务工人口 -->
+				FARM_WORK_POP AS  S_FARM_WORK_POP,<!-- 在家务农人口 -->
+
+				PLANTATION_AREA AS S_CULTIVATED_TOTAL,<!-- 耕地总面积 -->
+				VALID_PLANTATION_AREA AS S_CULTIVATED_AVAILABLE,<!-- 耕地有效面积 -->
+				FOREAST_AREA AS S_FOREST_TOTAL,<!-- 林地总面积 -->
+				FRUIT_AREA   AS  S_FOREST_AVAILABLE,<!-- 林地果树面积 -->
+				GRASSLAND_AREA	AS S_GRASS_TOTAL,<!-- 牧草地总面积 -->
+				WATER_AREA	AS S_WATER_TOTAL<!-- 水域总面积 -->
+				FROM
+				F_COUNTRYFILE_BASIC_INFO_D A
+				WHERE COUNTRY_PAC=#{COUNTRY_PAC}
+	</select>
+	<!--村首页基本信息-->
+	<select id="queryCountryFileBasicInfo"  parameterType="hashmap" resultType="hashmap">
+			SELECT
+			CBI.COUNTRY_NAME AS S_COUNTRY_NAME, 
+			CBI.PERSON_IN_CHARGE AS S_RESPONSIBLE_NAME,
+			CBI.PERSON_IN_CHARGE_TEL AS S_RESPONSIBLE_PHONE,
+			CBI.PERSON_IN_CHARGE_JOB AS S_RESPONSIBLE_DUTY,
+			CBI.TEAM_LEADER AS S_COUNTRY_LEADER_NAME,
+			CBI.TEAM_LEADER_TEL AS S_TEAM_LEADER_TEL,
+			CBI.TEAM_LEADER_UNIT AS S_COUNTRY_LEADER_ORG,
+			CBI.TO_COUNTRY_BEGIN AS S_COUNTRY_LEADER_START_TIME,   
+			CBI.FAM AS S_AMOUNT_TOTAL_FAMILY,
+			CBI.POP AS S_AMOUNT_TOTAL_PEOPLE,
+			CBI.POOR_FAM AS S_AMOUNT_POOR_FAMILY,
+			CBI.POOR_POP AS S_AMOUNT_POOR_PEOPLE,
+			MHP.AID_POOR_FAM AS S_AMOUNT_SUCCESS_FAMILY,
+			MHP.AID_POOR_POP AS S_AMOUNT_SUCCESS_PEOPLE,
+			TRUNC(CBI.POOR_POP/CBI.POP*100,1) AS  S_RATIO_POOR,
+			ROUND(CBI.SCORE,2)AS S_SCORE,
+			CASE WHEN CBI.SCORE >= 100 THEN 1
+					ELSE 0 END  AS S_HAS_ACHIEVED,
+			(
+				select 
+				PATH AS S_COUNTRY_LEADER_AVATAR
+				from TR_PIC_HELP_CADRE_D  
+				where PERSON_ID =CBI.TEAM_LEADER_ID
+				AND ROWNUM = 1
+
+			) AS  S_COUNTRY_LEADER_AVATAR ,
+			(
+			
+				SELECT
+				PATH
+				FROM
+					TR_PIC_COUNTRY_D
+				WHERE
+					pic_type = 1
+				AND COUNTRY_PAC =CBI.COUNTRY_PAC
+				AND ROWNUM = 1
+			
+			) AS   S_RESPONSIBLE_AVATAR
+			
+			
+			FROM
+			F_COUNTRYFILE_BASIC_INFO_D  CBI,
+			R_MONITOR_HOME_PAGE_D MHP
+			
+			WHERE MHP.PAC=CBI.COUNTRY_PAC
+			
+			AND  MHP.AREA_TYPE=1
+			AND CBI.COUNTRY_PAC=#{COUNTRY_PAC}
+			AND MHP.STAT_TIME =#{R_MONITOR_HOME_PAGE_D}	
+			
+			
+	</select>
+
+
+
+
+ 	 	
+</mapper>

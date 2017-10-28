@@ -1,0 +1,562 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+        
+<mapper namespace="com.aspire.birp.modules.antiPoverty.dao.WarningDao">
+	
+<!--走访异常 柱形-->
+	<select id="queryAlarmedImplementManagement"  parameterType="hashmap" resultType="hashmap">
+		select ACC_YEAR||'年' S_NAME
+	      ,p_value   S_VALUE
+	      ,p_name S_GROUP
+		from (
+		  select ACC_YEAR , SUM(IS_VISIT_EXCEPTION) visit , count(1) poor
+		  FROM R_DW_POOROBJ_FAM_Y
+		  WHERE is_merge = 0   and is_revoked = 0  and is_termination = 0 and ACC_YEAR =2016 and stat_year=2016 <include refid="level_sql"/>
+		  group by ACC_YEAR
+		    union all 
+		  select ACC_YEAR , SUM(IS_VISIT_EXCEPTION) visit , count(1) poor
+		  FROM R_DW_POOROBJ_FAM_Y
+		  WHERE is_merge = 0   and is_revoked = 0  and is_termination = 0 and ACC_YEAR =2017 and stat_year=2017 <include refid="level_sql"/>
+		  group by ACC_YEAR
+		    union all 
+		  select ACC_YEAR , SUM(IS_VISIT_EXCEPTION) visit , count(1) poor
+		  FROM R_DW_POOROBJ_FAM_Y
+		  WHERE is_merge = 0   and is_revoked = 0  and is_termination = 0 and ACC_YEAR =2018 and stat_year=2018 <include refid="level_sql"/>
+		  group by ACC_YEAR 
+		) tmp
+		  UNPIVOT (p_value for p_name in ( visit as '未被走访累计贫困户数' , poor as '累计贫困户数'  ))
+		  where ACC_YEAR &lt;= #{year}
+		  order by 1 
+	</select>
+<!--走访异常 柱形2-->
+	<select id="queryAlarmedImplementManagement2"  parameterType="hashmap" resultType="hashmap">
+		SELECT * FROM (SELECT
+		CITY_NAME  S_NAME
+		
+		,SUM(IS_VISIT_EXCEPTION)  S_VALUE 
+		,'未被走访累计贫困户数' S_GROUP
+		FROM
+		R_DW_POOROBJ_FAM_Y
+		<where>
+			is_merge=0 and is_revoked=0 and is_termination=0
+			and stat_year= #{year}
+			<include refid="level_sql"/>
+			<include refid="year_sql"/>
+			
+		</where>
+		GROUP BY CITY_NAME,1
+		ORDER BY SUM(IS_VISIT_EXCEPTION) DESC )
+		WHERE ROWNUM&lt;6
+		union all
+		
+		SELECT * FROM (SELECT
+		CITY_NAME  S_NAME
+		, count(1)  S_VALUE 
+		,'累计贫困户数' S_GROUP
+		FROM
+		R_DW_POOROBJ_FAM_Y
+		<where>
+					is_merge=0 and is_revoked=0 and is_termination=0
+					and stat_year= #{year}
+			<include refid="level_sql"/>
+			<include refid="year_sql"/>
+			 
+		</where>
+		GROUP BY CITY_NAME,1
+		ORDER BY SUM(IS_VISIT_EXCEPTION) DESC)
+		WHERE ROWNUM&lt;6
+	</select>
+	<!-- 合计 -->
+	<select id="queryAlarmedA3"  parameterType="hashmap" resultType="hashmap">
+			select 
+			SUM(HELP_PERSON_CNT)  A4
+			from r_Monitor_Home_Page_d 
+		where
+			STAT_YEAR =#{year}
+			AND AREA_TYPE=1
+			AND PPAC=#{id}	
+			AND HELP_PERSON_CNT>0	
+	</select>
+	<!-- 合计 -->
+	<select id="queryAlarmedA4"  parameterType="hashmap" resultType="hashmap">
+	select 
+			PAN
+			,SUM(HELP_PERSON_CNT)  A4
+			from r_Monitor_Home_Page_d 
+		where
+			STAT_YEAR =#{year}
+			AND AREA_TYPE=1
+			AND PPAC=#{id}
+			AND AID_POOR_FAM>0
+		GROUP BY PAN
+		ORDER BY PAN
+		
+
+	</select>
+
+	<!-- 合计 -->
+	<select id="queryAlarmedA5"  parameterType="hashmap" resultType="hashmap">
+		select 
+			SUM(HELP_PERSON_CNT)  A4
+			from r_Monitor_Home_Page_d 
+		where
+			 STAT_YEAR =#{year}
+			AND AREA_TYPE=1
+			AND PAC=#{id}
+			AND HELP_PERSON_CNT>0
+	</select>
+	<sql id="by_sql">
+	
+			<if test=" '' != level and null != level and 'province' == level  ">
+				 CITY_NAME
+			</if>
+			<if test=" '' != level and null != level and 'city' == level  ">
+				 COUNTY_NAME
+			</if>
+			
+			<if test=" '' != level and null != level and 'county' == level  ">
+				 TOWN_NAME 
+			</if>
+			
+			<if test=" '' != level and null != level and 'town' == level  ">
+				COUNTRY_NAME
+			</if>
+			
+			<if test=" '' != level and null != level and 'country' == level  ">
+				COUNTRY_NAME
+			</if>
+	</sql>
+	<!-- 走访异常 合计 -->
+	<select id="queryAlarmedImplementManagementTableC"  parameterType="hashmap" resultType="hashmap">
+			select
+		    	<include refid="count_area_sql"/>
+		     	
+		       count(1) A3 --贫困户数
+		      ,SUM(IS_VISIT_EXCEPTION)  as A5 --一年内未走访贫困户数
+		 	  ,CASE WHEN ( count(1))=0 THEN '0.00' ELSE to_char(trunc(nvl(SUM(IS_VISIT_EXCEPTION),0) /   count(1) * 100, 2), '9999990.00') END || '%' a6  --比例
+		 	  
+		 	  
+		 	  	      from
+		      
+		     R_DW_POOROBJ_FAM_Y
+			
+			<where>
+						is_merge=0 and is_revoked=0 and is_termination=0
+						and stat_year= #{year}
+				<include refid="level_sql"/>
+				<include refid="year_sql"/>
+				<include refid="query_condition"/>
+			</where>
+			GROUP BY <include refid="count_group_by_sql"/>
+		
+	</select>
+	<!-- 走访异常分析 -->
+	<select id="queryAlarmedImplementManagementTable"  parameterType="hashmap" resultType="hashmap">
+	select
+          
+         <include refid="level_area_sql"/>
+		       count(1) A3 --贫困户数
+		      ,0 A4
+		      ,SUM(IS_VISIT_EXCEPTION)  as A5 --一年内未走访贫困户数
+		 	   ,CASE WHEN ( count(1))=0 THEN '0.00' ELSE to_char(trunc(nvl(SUM(IS_VISIT_EXCEPTION),0) /   count(1) * 100, 2), '9999990.00') END || '%' a6  --比例
+		 	  
+		 	  
+		 	  	from
+		      
+		     R_DW_POOROBJ_FAM_Y
+			
+			<where>
+			is_merge=0 and is_revoked=0 and is_termination=0
+			and stat_year= #{year}
+				<include refid="level_sql"/>
+				<include refid="year_sql"/>
+				<include refid="query_condition"/>
+			</where>
+			GROUP BY <include refid="group_by_sql"/>
+	     	ORDER BY <include refid="by_sql"/>
+	</select>
+<!-- 走访异常明细 -->
+	<select id="queryAlarmedImplementAnalysisDetail"  parameterType="hashmap" resultType="hashmap">
+		select 
+
+				*
+				
+				from
+				(
+				select t1.*,ROWNUM RM
+				from
+				(
+				 SELECT
+				
+				t1.CITY_NAME A2
+				,t1.COUNTY_NAME A3
+				,t1.TOWN_NAME A4
+				,t1.COUNTRY_NAME A5
+				,FAM_CODE  as A6
+				,FAM_ID S_ID 
+				,FAM_NAME a7 
+				,RESIDENCY_CAPTAIN a8 
+				,FAM_HELPER a9 
+				,YEAR_VISIT_NUM a10 
+				,TOTAL_VISIT_NUM  a11 
+				
+				from
+				 R_DW_POOROBJ_FAM_Y t1 
+				   
+				 <where>
+				 is_merge=0 and is_revoked=0 and is_termination=0
+					<include refid="level_sql"/>
+					<include refid="query_condition"/>
+					<include refid="query_alarmed_detail"/>
+					<include refid="year_sql"/>
+					
+				</where>	
+				) t1
+				
+				)
+				
+				<if test="page !=null">
+						WHERE RM BETWEEN #{pageSize}*(#{page}-1)+1 AND #{pageSize}  * #{page}
+				</if>
+				</select>		
+<!-- 走访异常明细总数  -->
+	<select id="queryAlarmedImplementAnalysisDetailCount"  parameterType="hashmap" resultType="long">
+	
+			select 
+
+				count(*)
+				
+				from
+				(
+				select t1.*,ROWNUM RM
+				from
+				(
+				 SELECT
+				
+				
+				t1.CITY_NAME A2
+				,t1.COUNTY_NAME A3
+				,t1.TOWN_NAME A4
+				,t1.COUNTRY_NAME A5
+				,FAM_CODE  as A6
+				,FAM_ID S_ID
+				,FAM_NAME a7 
+				,RESIDENCY_CAPTAIN a8 
+				,FAM_HELPER a9 
+				,YEAR_VISIT_NUM a10 
+				,TOTAL_VISIT_NUM  a11  
+				   from 
+				R_DW_POOROBJ_FAM_Y t1 
+				 <where>
+				 is_merge=0 and is_revoked=0 and is_termination=0
+					<include refid="level_sql"/>
+					<include refid="query_condition"/>
+					<include refid="query_alarmed_detail"/>
+					<include refid="year_sql"/>
+				</where>
+				) t1
+				
+				)
+				
+	</select>
+	
+		
+<!-- 走访异常 排序 -->
+	<select id="queryAlarmedImplementAnalysisSort"  parameterType="hashmap" resultType="hashmap">
+		select 
+
+				*
+				
+				from
+				(
+				select t1.*,ROWNUM RM
+				from
+				(
+				 SELECT
+				<include refid="sort_area_sql"/>
+				<include refid="alarmed_area_sql"/>
+				
+	
+				from 
+				R_DW_POOROBJ_FAM_Y t1 
+				   
+				 <where>
+				 is_merge=0 and is_revoked=0 and is_termination=0
+					<include refid="level_sql"/>
+					<include refid="year_sql"/>
+					<include refid="query_condition"/>
+				</where>	
+				GROUP BY <include refid="group_sort_area_sql"/>
+				ORDER BY A3 DESC
+				) t1
+				
+				)
+				
+				<if test="page !=null">
+						WHERE RM BETWEEN #{pageSize}*(#{page}-1)+1 AND #{pageSize}  * #{page}
+				</if>
+				</select>
+<!--走访异常总数  -->
+	<select id="queryAlarmedImplementAnalysisSortCount"  parameterType="hashmap" resultType="long">
+	
+			select 
+
+				count(*)
+				
+				from
+				(
+				select t1.*,ROWNUM RM
+				from
+				(
+				 SELECT
+				<include refid="sort_area_sql"/>
+				<include refid="alarmed_area_sql"/>
+				
+				
+				
+				from 
+				R_DW_POOROBJ_FAM_Y t1 
+				   
+				 <where>
+				 is_merge=0 and is_revoked=0 and is_termination=0
+					<include refid="level_sql"/>
+					<include refid="year_sql"/>
+					<include refid="query_condition"/>
+				</where>
+				GROUP BY <include refid="group_sort_area_sql"/>
+				ORDER BY A3 DESC
+				) t1
+				
+				)
+				
+	</select>
+<!--走访异常  排序详细 -->
+	<select id="queryAlarmedSortDetail"  parameterType="hashmap" resultType="hashmap">
+	select
+				<include refid="detail_area_sql"/>
+         	    count(1) A3 --贫困户数
+		       ,0 A4 --帮扶责任人数
+		      ,SUM(IS_VISIT_EXCEPTION)  as A5 --一年内未走访贫困户数
+		 	  ,CASE WHEN ( count(1))=0 THEN '0.00' ELSE to_char(trunc(nvl(SUM(IS_VISIT_EXCEPTION),0) /   count(1) * 100, 2), '9999990.00') END || '%' a6  --比例
+		 	  
+		 	  
+		 	  	      from
+		      
+		     R_DW_POOROBJ_FAM_Y
+			
+			<where>
+			is_merge=0 and is_revoked=0 and is_termination=0
+				<include refid="level_sql"/>
+				<include refid="year_sql"/>
+			</where>
+			GROUP BY <include refid="count_group_by_sql"/>
+		
+		
+	</select>
+	<sql id="count_group_by_sql">
+			<if test=" '' != level and null != level and 'province' == level  ">
+				 1
+			</if>
+			<if test=" '' != level and null != level and 'city' == level  ">
+				 CITY_PAC , CITY_NAME
+			</if>
+			
+			<if test=" '' != level and null != level and 'county' == level  ">
+				 COUNTY_PAC ,COUNTY_NAME  
+			</if>
+			
+			<if test=" '' != level and null != level and 'town' == level  ">
+				   TOWN_PAC ,TOWN_NAME 
+			</if>
+			
+			<if test=" '' != level and null != level and 'country' == level  ">
+				COUNTRY_PAC  ,COUNTRY_NAME
+			</if>
+	</sql>
+		<!-- 层级分组 -->
+	<sql id="group_by_sql">
+	
+			<if test=" '' != level and null != level and 'province' == level  ">
+				 CITY_PAC , CITY_NAME
+			</if>
+			<if test=" '' != level and null != level and 'city' == level  ">
+				 COUNTY_PAC ,COUNTY_NAME
+			</if>
+			
+			<if test=" '' != level and null != level and 'county' == level  ">
+				   TOWN_PAC ,TOWN_NAME 
+			</if>
+			
+			<if test=" '' != level and null != level and 'town' == level  ">
+				 COUNTRY_PAC  ,COUNTRY_NAME 
+			</if>
+			
+			<if test=" '' != level and null != level and 'country' == level  ">
+				COUNTRY_PAC  ,COUNTRY_NAME 
+			</if>
+			
+		
+	</sql>
+	<!--  -->
+	<sql id="level_area_sql">
+			
+			<if test=" '' != level and null != level and 'province' == level  ">
+				CITY_PAC S_ID, CITY_NAME A2, 
+			</if>
+			<if test=" '' != level and null != level and 'city' == level  ">
+				COUNTY_PAC S_ID,COUNTY_NAME A2,
+			</if>
+			
+			<if test=" '' != level and null != level and 'county' == level  ">
+				 TOWN_PAC S_ID ,TOWN_NAME A2, 
+			</if>
+			
+			<if test=" '' != level and null != level and 'town' == level  ">
+				COUNTRY_PAC S_ID ,COUNTRY_NAME  A2, 
+			</if>
+			
+			<if test=" '' != level and null != level and 'country' == level  ">
+				COUNTRY_PAC S_ID ,COUNTRY_NAME  A2, 
+			</if>
+	</sql>
+
+	<!-- count  -->
+	<sql id="count_area_sql">
+			<if test=" '' != level and null != level and 'province' == level  ">
+				'440000000000' S_ID , '合计' A2,
+			</if>
+			<if test=" '' != level and null != level and 'city' == level  ">
+				CITY_PAC S_ID, '合计' A2,
+			</if>
+			
+			<if test=" '' != level and null != level and 'county' == level  ">
+				COUNTY_PAC S_ID,'合计' A2,
+			</if>
+			
+			<if test=" '' != level and null != level and 'town' == level  ">
+				 TOWN_PAC S_ID ,'合计' A2,
+			</if>
+			
+			<if test=" '' != level and null != level and 'country' == level  ">
+				COUNTRY_PAC S_ID ,'合计'  A2,
+			</if>			
+	</sql>
+	<sql id="year_sql">
+	
+		<if test=" '' != year and null != year">
+			AND ACC_YEAR = 	#{year}		
+		</if>
+	
+	</sql>
+	<sql id="acc_year_sql">
+	
+		<if test=" '' != year and null != year">
+			AND (ACC_YEAR = #{year} or ACC_YEAR &lt; #{year})		
+		</if>
+	</sql>
+	<sql id="query_condition">
+		<if test=" '' != scope and null != scope">
+			<if test="2 == scope">AND IS_KEY_POVERTY=1</if><!-- 贫困村 -->
+			<if test="3 == scope">AND IS_KEY_POVERTY=0</if><!-- 分散村 -->
+			<if test="4 == scope">AND IS_OLD_REVOLUTIONARY=1</if><!-- 革命老区 -->
+			<if test="5 == scope">AND IS_CENTRAL_SOVIET=1</if><!-- 中央苏区 -->
+		</if>
+	</sql>	
+	<!-- 层级sql -->
+	<sql id="level_sql">
+			
+			<if test=" '' != level and null != level and 'province' == level  ">
+				
+			</if>
+			
+			<if test=" '' != level and null != level and 'city' == level  ">
+				AND CITY_PAC = #{id}
+			</if>
+			
+			<if test=" '' != level and null != level and 'county' == level  ">
+				AND COUNTY_PAC = #{id} 
+			</if>
+			
+			<if test=" '' != level and null != level and 'town' == level  ">
+				AND TOWN_PAC = #{id} 
+			</if>
+			
+			<if test=" '' != level and null != level and 'country' == level  ">
+				AND COUNTRY_PAC = #{id}
+			</if>
+	</sql>
+	<!-- 层级sql -->
+	<sql id="sort_area_sql">
+			
+			<if test=" '' != sort_area and null != sort_area and 1 == sort_area  ">
+				CITY_PAC S_ID, CITY_NAME A2,
+			</if>
+			<if test=" '' != sort_area and null != sort_area and 2 == sort_area  ">
+				COUNTY_PAC S_ID,CITY_NAME||'>'||COUNTY_NAME A2,
+			</if>
+			
+			<if test=" '' != sort_area and null != sort_area and 3 == sort_area  ">
+				 TOWN_PAC S_ID ,CITY_NAME||'>'||COUNTY_NAME||'>'||TOWN_NAME A2,
+			</if>
+			
+			<if test=" '' != sort_area and null != sort_area and 4 == sort_area  ">
+				COUNTRY_PAC S_ID ,CITY_NAME||'>'||COUNTY_NAME||'>'||TOWN_NAME||'>'||COUNTRY_NAME  A2,
+			</if>
+			
+	</sql>				
+	<sql id="group_sort_area_sql">
+			
+			<if test=" '' != sort_area and null != sort_area and 1 == sort_area  ">
+				CITY_PAC , CITY_NAME 
+			</if>
+			<if test=" '' != sort_area and null != sort_area and 2 == sort_area  ">
+				COUNTY_PAC ,CITY_NAME||'>'||COUNTY_NAME 
+			</if>
+			
+			<if test=" '' != sort_area and null != sort_area and 3 == sort_area  ">
+				 TOWN_PAC  ,CITY_NAME||'>'||COUNTY_NAME||'>'||TOWN_NAME
+			</if>
+			
+			<if test=" '' != sort_area and null != sort_area and 4 == sort_area  ">
+				COUNTRY_PAC  ,CITY_NAME||'>'||COUNTY_NAME||'>'||TOWN_NAME||'>'||COUNTRY_NAME 
+			</if>
+			
+	</sql>
+		<sql id="detail_area_sql">
+		
+			<if test=" '' != level and null != level and 'city' == level  ">
+				CITY_PAC S_ID, CITY_NAME A2,
+			</if>
+			
+			<if test=" '' != level and null != level and 'county' == level  ">
+				COUNTY_PAC S_ID,COUNTY_NAME A2,
+			</if>
+			
+			<if test=" '' != level and null != level and 'town' == level  ">
+				 TOWN_PAC S_ID ,TOWN_NAME A2,
+			</if>
+			
+			<if test=" '' != level and null != level and 'country' == level  ">
+				COUNTRY_PAC S_ID ,COUNTRY_NAME  A2,
+			</if>
+	</sql>
+	
+		
+	<sql id="query_alarmed_detail">
+		<if test=" '' != poor_attribute and null != poor_attribute">
+			<if test="2 == poor_attribute">AND YEAR_VISIT_NUM &gt;=1</if><!--  全覆盖的村       未全覆盖的村-->
+			<if test="3 == poor_attribute">AND YEAR_VISIT_NUM=0</if>
+			
+		</if>
+	</sql>
+	
+	<sql id="alarmed_area_sql">
+			<if test=" '' != exception_type and null != exception_type and 1 == exception_type  ">
+				CASE WHEN ( count(1))=0 THEN '0.00' ELSE to_char(trunc(nvl(SUM(IS_VISIT_EXCEPTION),0) /   count(1) * 100, 2), '9999990.00') END || '%' a3  
+			</if>
+			<if test=" '' != exception_type and null != exception_type and 2 == exception_type  ">
+				SUM(IS_VISIT_EXCEPTION)  A3 
+			</if>
+	</sql>
+</mapper>

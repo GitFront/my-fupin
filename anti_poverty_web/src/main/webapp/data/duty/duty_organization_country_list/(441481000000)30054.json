@@ -1,0 +1,23 @@
+{
+	"data":{
+		"belong_organization":"兴宁市武装部",
+		"list":[
+			{
+				"id":"441481115206",
+				"order":1,
+				"contact_phone":"13539181306",
+				"contact_name":"刘新海",
+				"country_name":"浮塘村委会"
+			},
+			{
+				"id":"441481115222",
+				"order":2,
+				"contact_phone":"15113481361",
+				"contact_name":"钟文材",
+				"country_name":"罗栋村委会"
+			}
+		]
+	},
+	"code":0,
+	"msg":"获取信息成功"
+}

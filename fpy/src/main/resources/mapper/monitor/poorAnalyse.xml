@@ -1,0 +1,669 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+        
+<mapper namespace="com.aspire.birp.modules.antiPoverty.dao.PoorAnalyseDao">
+	<!--aid_year true 脱贫  false 未脱贫    -->
+	
+	<sql id="stat_time_sql">
+		<if test="null != year and ''!=null ">
+			and STAT_TIME=case
+			when to_number(SUBSTR(STAT_TIME,1,4))=to_number(to_char(sysdate,'yyyy'))  
+			
+			then to_number(#{TW_FAMILY_INCOME_MM})
+			
+			else to_number(SUBSTR(STAT_TIME,1,4)||'1201')
+			end  
+			
+			
+		
+		</if>
+	</sql>
+	<sql id="c_month_sql">
+		<if test="null != year and ''!=null ">
+			and MONTH_OF_ACC=case
+			when to_number(SUBSTR(MONTH_OF_ACC,1,4))=to_number(to_char(sysdate,'yyyy'))  
+			
+			then to_number(SUBSTR(#{TW_FAMILY_INCOME_MM},1,6))
+			
+			else to_number(SUBSTR(MONTH_OF_ACC,1,4)||'12')
+			end  
+			
+			
+		
+		</if>
+	</sql>
+	
+	
+	<!-- detail_area_sql  -->
+	<sql id="detail_area_sql">
+		
+			<if test=" '' != level and null != level and 'city' == level  ">
+				CITY_ID S_ID, CITY_NAME_S A2,
+			</if>
+			
+			<if test=" '' != level and null != level and 'county' == level  ">
+				COUNTY_ID S_ID,COUNTY_NAME_S A2,
+			</if>
+			
+			<if test=" '' != level and null != level and 'town' == level  ">
+				 TOWN_ID S_ID ,TOWN_NAME_S A2,
+			</if>
+			
+			<if test=" '' != level and null != level and 'country' == level  ">
+				COUNTRY_ID S_ID ,COUNTRY_NAME_S  A2,
+			</if>
+	</sql>
+	
+	<!-- 合计用  -->
+	<sql id="count_group_by_sql">
+	
+			<if test=" '' != level and null != level and 'province' == level  ">
+				 1
+			</if>
+			<if test=" '' != level and null != level and 'city' == level  ">
+				 CITY_ID , CITY_NAME_S
+			</if>
+			
+			<if test=" '' != level and null != level and 'county' == level  ">
+				 COUNTY_ID ,COUNTY_NAME_S  
+			</if>
+			
+			<if test=" '' != level and null != level and 'town' == level  ">
+				   TOWN_ID ,TOWN_NAME_S 
+			</if>
+			
+			<if test=" '' != level and null != level and 'country' == level  ">
+				COUNTRY_ID  ,COUNTRY_NAME_S 
+			</if>
+	</sql>
+
+
+	<!-- 区域 -->
+	<sql id="level_area_sql">
+			
+			<if test=" '' != level and null != level and 'province' == level  ">
+				CITY_ID S_ID, CITY_NAME_S A2,
+			</if>
+			<if test=" '' != level and null != level and 'city' == level  ">
+				COUNTY_ID S_ID,COUNTY_NAME_S A2,
+			</if>
+			
+			<if test=" '' != level and null != level and 'county' == level  ">
+				 TOWN_ID S_ID ,TOWN_NAME_S A2,
+			</if>
+			
+			<if test=" '' != level and null != level and 'town' == level  ">
+				COUNTRY_ID S_ID ,COUNTRY_NAME_S  A2,
+			</if>
+			
+			<if test=" '' != level and null != level and 'country' == level  ">
+				COUNTRY_ID S_ID ,COUNTRY_NAME_S  A2,
+			</if>
+	</sql>
+
+
+
+
+
+	<!-- 层级sql -->
+	<sql id="level_sql">
+			
+			<if test=" '' != level and null != level and 'province' == level  ">
+				
+			</if>
+			
+			<if test=" '' != level and null != level and 'city' == level  ">
+				AND CITY_ID = #{id}
+			</if>
+			
+			<if test=" '' != level and null != level and 'county' == level  ">
+				AND COUNTY_ID = #{id} 
+			</if>
+			
+			<if test=" '' != level and null != level and 'town' == level  ">
+				AND TOWN_ID = #{id} 
+			</if>
+			
+			<if test=" '' != level and null != level and 'country' == level  ">
+				AND COUNTRY_ID = #{id}
+			</if>
+	</sql>
+	<!-- 层级分组 -->
+	<sql id="group_by_sql">
+	
+			<if test=" '' != level and null != level and 'province' == level  ">
+				 CITY_ID , CITY_NAME_S 
+			</if>
+			<if test=" '' != level and null != level and 'city' == level  ">
+				 COUNTY_ID ,COUNTY_NAME_S 
+			</if>
+			
+			<if test=" '' != level and null != level and 'county' == level  ">
+				   TOWN_ID ,TOWN_NAME_S 
+			</if>
+			
+			<if test=" '' != level and null != level and 'town' == level  ">
+				 COUNTRY_ID  ,COUNTRY_NAME_S 
+			</if>
+			
+			<if test=" '' != level and null != level and 'country' == level  ">
+				COUNTRY_ID  ,COUNTRY_NAME_S 
+			</if>
+			
+		
+	</sql>
+	<!-- STAT_TIME  -->
+	<sql id="year_sql">
+				<if test="'' != year and null != year">
+				ACC_YEAR = #{year} 
+			</if>
+	</sql>
+	
+	<sql id="query_condition_sql">
+		
+		<if test="list!=null and list.size()>0">
+			AND POOR_MAIN_REASON in  
+			<foreach item="item" index="index" collection="list" open="(" separator="," close=")">  
+			 #{item}  
+			</foreach>  
+				<!-- AND POOR_MAIN_REASON in (#{poor_reason}) -->
+		</if>
+	
+	
+		<if test=" '' != scope and null != scope">
+			<if test="2 == scope">AND IS_KEY_POVERTY=1</if><!-- 贫困村 -->
+			<if test="3 == scope">AND IS_KEY_POVERTY=0</if><!-- 分散村 -->
+			<if test="4 == scope">AND IS_OLD_REVOLUTIONARY=1</if><!-- 革命老区 -->
+			<if test="5 == scope">AND IS_CENTRAL_SOVIET=1</if><!-- 中央苏区 -->
+		</if>
+				
+		<if test=" '' != poor_attribute and null != poor_attribute">
+			<if test="'normal' == poor_attribute">AND POOR_TYPE=1</if><!-- 一般贫困户 -->
+			<if test="'low' == poor_attribute">AND POOR_TYPE=2</if><!-- 低保户 -->
+			<if test="'five' == poor_attribute">AND POOR_TYPE=3</if><!-- 五保户 -->
+		</if>
+				
+		<if test=" '' != labor_attribute and null != labor_attribute">
+			<if test="'have_labor' == labor_attribute">AND LABOR_TYPE=1</if><!-- 有劳 -->
+			<if test="'no_labor' == labor_attribute">AND LABOR_TYPE=0</if><!-- 无劳 -->
+		</if>
+	
+	</sql>
+	
+	<!-- 合计用  -->
+	<sql id="count_area_sql">
+			<if test=" '' != level and null != level and 'province' == level  ">
+				'440000000000' S_ID , '合计' A2,
+			</if>
+			<if test=" '' != level and null != level and 'city' == level  ">
+				CITY_ID S_ID, '合计' A2,
+			</if>
+			
+			<if test=" '' != level and null != level and 'county' == level  ">
+				COUNTY_ID S_ID,'合计' A2,
+			</if>
+			
+			<if test=" '' != level and null != level and 'town' == level  ">
+				 TOWN_ID S_ID ,'合计' A2,
+			</if>
+			
+			<if test=" '' != level and null != level and 'country' == level  ">
+				COUNTRY_ID S_ID ,'合计'  A2,
+			</if>
+	</sql>
+	
+	<sql id="aid_year_sql">
+	
+		<if test="null != aid_year  and true == aid_year">
+				<![CDATA[ 	
+					and AID_DATE<=STAT_DT
+				
+				 ]]> <!-- 脱贫 -->
+				
+		</if>
+		
+		<if test="null != aid_year  and true == aid_year and year !=null and '' !=year">
+					and substr(AID_DATE,1,4)=#{year}
+				
+		</if>
+		
+		
+		<if test="null != aid_year  and false == aid_year">
+				and IF_CURR_POOR = 1
+		</if>
+	
+	</sql>
+	<sql id="month_sql">
+
+				<choose>
+					<when test="null != year and '' != year">
+					
+						AND ACC_YEAR=
+						CASE
+							WHEN to_number(#{year}) = to_number(to_char(sysdate,'yyyy')) then  to_number(substr(#{TW_FAMILY_INCOME_MM},1,6))
+							WHEN to_number(#{year}) &lt; to_number(to_char(sysdate,'yyyy')) then  to_number(#{year}||'12')
+						END
+						AND substr(ACC_YEAR,1,4)=#{year}		
+					
+					</when>
+					<otherwise>
+					
+							AND ACC_YEAR=
+							CASE
+								WHEN substr(ACC_YEAR,1,4) = to_char(sysdate,'yyyy') then  to_number(substr(#{TW_FAMILY_INCOME_MM},1,6))
+								WHEN substr(ACC_YEAR,1,4) &lt; to_char(sysdate,'yyyy') then  to_number(substr(MONTH_OF_ACC,1,4)||'12')
+							END
+				
+					
+					</otherwise>
+				</choose>
+		
+	
+	</sql>
+	
+	<!-- 排序类型 -->
+	<sql id="sort_area_sql">
+			
+			<if test=" '' != sort_area and null != sort_area and 1 == sort_area  ">
+				CITY_ID S_ID, CITY_NAME_S A2,
+			</if>
+			<if test=" '' != sort_area and null != sort_area and 2 == sort_area  ">
+				COUNTY_ID S_ID,CITY_NAME_S||'>'||COUNTY_NAME_S A2,
+			</if>
+			
+			<if test=" '' != sort_area and null != sort_area and 3 == sort_area  ">
+				 TOWN_ID S_ID ,CITY_NAME_S||'>'||COUNTY_NAME_S||'>'||TOWN_NAME_S A2,
+			</if>
+			
+			<if test=" '' != sort_area and null != sort_area and 4 == sort_area  ">
+				COUNTRY_ID S_ID ,CITY_NAME_S||'>'||COUNTY_NAME_S||'>'||TOWN_NAME_S||'>'||COUNTRY_NAME_S  A2,
+			</if>
+			
+	</sql>
+	<sql id="group_sort_area_sql">
+			<if test=" '' != sort_area and null != sort_area and 1 == sort_area  ">
+				CITY_ID , CITY_NAME_S 
+			</if>
+			<if test=" '' != sort_area and null != sort_area and 2 == sort_area  ">
+				COUNTY_ID ,CITY_NAME_S||'>'||COUNTY_NAME_S 
+			</if>
+			
+			<if test=" '' != sort_area and null != sort_area and 3 == sort_area  ">
+				 TOWN_ID  ,CITY_NAME_S||'>'||COUNTY_NAME_S||'>'||TOWN_NAME_S 
+			</if>
+			
+			<if test=" '' != sort_area and null != sort_area and 4 == sort_area  ">
+				COUNTRY_ID  ,CITY_NAME_S||'>'||COUNTY_NAME_S||'>'||TOWN_NAME_S||'>'||COUNTRY_NAME_S  
+			</if>
+			
+	</sql>
+	
+	<sql id="area_sql">
+		 <if test=" '' != level and null != level and 'province' == level  ">
+				
+			</if>
+			
+			<if test=" '' != level and null != level and 'city' == level  ">
+				AND CITY_PAC = #{id}
+			</if>
+			
+			<if test=" '' != level and null != level and 'county' == level  ">
+				AND COUNTY_PAC = #{id} 
+			</if>
+			
+			<if test=" '' != level and null != level and 'town' == level  ">
+				AND TOWN_PAC = #{id} 
+			</if>
+			
+			<if test=" '' != level and null != level and 'country' == level  ">
+				AND COUNTRY_PAC = #{id}
+			</if>
+	</sql>
+	<sql id="current_common_sql">
+		and is_merge=0 
+		and is_revoked=0 
+		and is_termination=0 
+		and is_current=1
+	</sql>
+		<!-- 贫困户属性图 -->
+	<select id="queryPoorAttribute"  parameterType="hashmap" resultType="hashmap">
+
+				SELECT DECODE(t1.POOR_TYPE,1,'一般贫困户',2,'低保户',3,'五保户','其他') as S_NAME ,
+				count(t1.POOR_TYPE) S_VALUE
+				FROM (SELECT * from 
+				r_dw_poorobj_fam_y t
+				<where>
+					<include refid="year_sql"/>
+					<include refid="area_sql"/>
+					<!-- <include refid="month_sql"/> -->
+					<include refid="query_condition_sql"/>
+					<include refid="current_common_sql"/>
+				</where>) t1
+				INNER JOIN (
+				 select
+				 COUNTRY_ID 
+				 from DIM_HELP_AREA_MAP  
+				 WHERE help_p_pac=#{helppac} 
+				 ) t2 ON (t1.country_pac=t2.COUNTRY_ID)		
+				GROUP BY POOR_TYPE
+	
+	</select>
+	
+			<!-- 致贫原因 -->
+		<select id="queryPoorReason"  parameterType="hashmap" resultType="hashmap">
+
+				select (select POOR_MAIN_REASON_NAME from DIM_POOR_MAIN_REASON 
+				where POOR_MAIN_REASON = nvl(t1.POOR_MAIN_REASON,'0') ) S_NAME,
+				count(nvl(t1.POOR_MAIN_REASON,'0')) S_VALUE 
+				FROM (SELECT * from r_dw_poorobj_fam_y t
+				<where>
+					<include refid="year_sql"/>
+					<include refid="area_sql"/>
+					<!-- <include refid="month_sql"/> -->
+					<include refid="query_condition_sql"/>
+					<include refid="current_common_sql"/>
+				</where>) t1
+				INNER JOIN (
+				 select
+				 COUNTRY_ID 
+				 from DIM_HELP_AREA_MAP  
+				 WHERE help_p_pac=#{helppac} 
+				 ) t2 ON (t1.country_pac=t2.COUNTRY_ID)	
+				group by t1.POOR_MAIN_REASON 
+				order by S_VALUE desc
+	
+	</select>
+	
+		<!-- 收入状况 -->
+		<select id="queryPoorIncome"  parameterType="hashmap" resultType="hashmap">
+				select DECODE(incomeClass,1,'4000以下',2,'4000-7365以上',3,'7365以上','其他') S_NAME, 
+				count(incomeClass) S_VALUE from
+				(select 
+				CASE WHEN PER_INCOME &lt; 4000 THEN '1'  
+				WHEN PER_INCOME &gt;= 4000 AND PER_INCOME &lt; 7365  THEN '2'  
+				WHEN PER_INCOME &gt;=7365 THEN '3'   
+				ELSE NULL END incomeClass,t.*  from R_DW_POOROBJ_FAM_Y t
+				<where>
+				<include refid="year_sql"/>
+					<include refid="area_sql"/>
+					<include refid="query_condition_sql"/>
+					<include refid="current_common_sql"/>
+				</where>) t1
+				INNER JOIN (
+				 select
+				 COUNTRY_ID 
+				 from DIM_HELP_AREA_MAP  
+				 WHERE help_p_pac=#{helppac} 
+				 ) t2 ON (t1.country_pac=t2.COUNTRY_ID)	
+				group by incomeClass
+
+	</select>
+	
+		<!-- 年龄 -->
+		<select id="queryPoorAge"  parameterType="hashmap" resultType="hashmap">
+
+				select t1.ageClass S_NAME, count(t1.ageClass) S_VALUE from
+				(select 
+				CASE WHEN t.POP_AGE >0 and t.POP_AGE &lt; 16 THEN '0-16岁'  
+				WHEN t.POP_AGE &gt;= 16 AND t.POP_AGE &lt; 30  THEN '16-30岁'  
+				WHEN t.POP_AGE &gt;= 30 AND t.POP_AGE &lt; 50  THEN '30-50岁'  
+				WHEN t.POP_AGE &gt;= 50 AND t.POP_AGE &lt; 60  THEN '50-60岁'  
+				WHEN t.POP_AGE &gt;= 60 AND t.POP_AGE &lt; 65  THEN '60-65岁'  
+				WHEN t.POP_AGE &gt;= 65 AND t.POP_AGE &lt; 80  THEN '65-80岁' 
+				WHEN t.POP_AGE &gt;=80 THEN '80以上'   
+				ELSE '未填写' END ageClass,t.POP_AGE,t.country_pac
+				from R_DW_POOROBJ_POP_Y t
+				<where>
+					<include refid="year_sql"/>
+					<include refid="area_sql"/>
+					<!-- <include refid="month_sql"/> -->
+					<include refid="query_condition_sql"/>
+					<include refid="current_common_sql"/>
+				</where>
+				)  t1
+				INNER JOIN (
+				 select
+				 COUNTRY_ID 
+				 from DIM_HELP_AREA_MAP  
+				 WHERE help_p_pac=#{helppac} 
+				 ) t2 ON (t1.country_pac=t2.COUNTRY_ID)
+				
+				group by t1.ageClass
+	
+	</select>
+	
+		<!-- 性别 -->
+		<select id="queryPoorSex"  parameterType="hashmap" resultType="hashmap">
+
+				select DECODE(t1.pop_sex,0,'男',1,'女','其他') S_NAME,
+				count(1) S_VALUE 
+				FROM (SELECT * from R_DW_POOROBJ_POP_Y t
+				<where>
+					<include refid="year_sql"/>
+					<include refid="area_sql"/>
+					<!-- <include refid="month_sql"/> -->
+					<include refid="query_condition_sql"/>
+					<include refid="current_common_sql"/>
+				</where>) t1
+				INNER JOIN (
+				 select
+				 COUNTRY_ID 
+				 from DIM_HELP_AREA_MAP  
+				 WHERE help_p_pac=#{helppac} 
+				 ) t2 ON (t1.country_pac=t2.COUNTRY_ID)	
+				group by t1.pop_sex
+	
+	</select>
+	
+		<!-- 民族 -->
+		<select id="queryPoorNationality"  parameterType="hashmap" resultType="hashmap">
+
+				 select rownum rn,r.* from (select (select nationality_name from dim_nationality 
+				 where nationality=nvl(t1.pop_nationality,'0')) S_NAME,
+				 count(nvl(t1.pop_nationality,'0')) S_VALUE 
+                 FROM (SELECT * from R_DW_POOROBJ_POP_Y t
+				<where>
+					<include refid="year_sql"/>
+					<include refid="area_sql"/>
+					<!-- <include refid="month_sql"/> -->
+					<include refid="query_condition_sql"/>
+					<include refid="current_common_sql"/>
+				</where>) t1
+				INNER JOIN (
+				 select
+				 COUNTRY_ID 
+				 from DIM_HELP_AREA_MAP  
+				 WHERE help_p_pac=#{helppac} 
+				 ) t2 ON (t1.country_pac=t2.COUNTRY_ID)		
+					group by t1.pop_nationality order by S_VALUE desc) r where rownum &lt; 6
+	
+	</select>
+	
+		<!--政治面貌 -->
+		<select id="queryPoorProtical"  parameterType="hashmap" resultType="hashmap">
+
+				select (select PROTICAL_NAME from DIM_PROTICAL where  PROTICAL=NVL(t1.POP_PROTICAL,'0')) S_NAME,
+				count(NVL(t1.POP_PROTICAL,'0')) S_VALUE
+                FROM (SELECT * from R_DW_POOROBJ_POP_Y t
+				<where>
+					<include refid="year_sql"/>
+					<include refid="area_sql"/>
+					<!-- <include refid="month_sql"/> -->
+					<include refid="query_condition_sql"/>
+					<include refid="current_common_sql"/>
+				</where>) t1
+				INNER JOIN (
+				 select
+				 COUNTRY_ID 
+				 from DIM_HELP_AREA_MAP  
+				 WHERE help_p_pac=#{helppac} 
+				 ) t2 ON (t1.country_pac=t2.COUNTRY_ID)		
+				group by t1.POP_PROTICAL
+	
+	</select>
+	
+		<!-- 文化程度 -->
+		<select id="queryPoorEducation"  parameterType="hashmap" resultType="hashmap">
+
+				select (select EDUCATION_name from DIM_EDUCATION where  EDUCATION=NVL(t1.POP_EDUCATION,'0')) S_NAME,
+				count(NVL(t1.POP_EDUCATION,'0')) S_VALUE
+                FROM (SELECT * from R_DW_POOROBJ_POP_Y t
+				<where>
+					<include refid="year_sql"/>
+					<include refid="area_sql"/>
+					<!-- <include refid="month_sql"/> -->
+					<include refid="query_condition_sql"/>
+					<include refid="current_common_sql"/>
+				</where>) t1
+				INNER JOIN (
+				 select
+				 COUNTRY_ID 
+				 from DIM_HELP_AREA_MAP  
+				 WHERE help_p_pac=#{helppac} 
+				 ) t2 ON (t1.country_pac=t2.COUNTRY_ID)		
+				group by t1.POP_EDUCATION
+	
+	</select>
+	
+		<!-- 健康状况 -->
+		<select id="queryPoorHealthStatus"  parameterType="hashmap" resultType="hashmap">
+
+				select (select HEALTH_STATUS_name from DIM_HEALTH_STATUS where  HEALTH_STATUS=NVL(t1.POP_HEALTH_STATUS,'0')) S_NAME,
+				count(NVL(t1.POP_HEALTH_STATUS,'0')) S_VALUE
+                FROM (SELECT * from R_DW_POOROBJ_POP_Y t
+				<where>
+					<include refid="year_sql"/>
+					<include refid="area_sql"/>
+					<!-- <include refid="month_sql"/> -->
+					<include refid="query_condition_sql"/>
+					<include refid="current_common_sql"/>
+				</where>) t1
+				INNER JOIN (
+				 select
+				 COUNTRY_ID 
+				 from DIM_HELP_AREA_MAP  
+				 WHERE help_p_pac=#{helppac} 
+				 ) t2 ON (t1.country_pac=t2.COUNTRY_ID)		
+				group by t1.POP_HEALTH_STATUS
+	
+	</select>
+	
+		<!-- 劳动力状况 -->
+		<select id="queryPoorLaborStatus"  parameterType="hashmap" resultType="hashmap">
+
+				select (select WORK_ABILITY_NAME from DIM_WORK_ABILITY where  WORK_ABILITY=NVL(t1.POP_WORK_ABILITY,'0')) S_NAME,
+				count(NVL(t1.POP_WORK_ABILITY,'0')) S_VALUE
+                FROM (SELECT * from R_DW_POOROBJ_POP_Y t 
+				<where>
+					<include refid="year_sql"/>
+					<include refid="area_sql"/>
+					<!-- <include refid="month_sql"/> -->
+					<include refid="query_condition_sql"/>
+					<include refid="current_common_sql"/>
+				</where>) t1
+				INNER JOIN (
+				 select
+				 COUNTRY_ID 
+				 from DIM_HELP_AREA_MAP  
+				 WHERE help_p_pac=#{helppac} 
+				 ) t2 ON (t1.country_pac=t2.COUNTRY_ID)		
+				group by t1.POP_WORK_ABILITY
+	
+	</select>
+	
+		<!-- 务工状况 -->
+		<select id="queryPoorWorkStatus"  parameterType="hashmap" resultType="hashmap">
+
+				select (select WORK_STATUS_name from DIM_WORK_STATUS where  WORK_STATUS=NVL(t1.POP_WORK_STATUS,'0')) S_NAME,
+				count(NVL(t1.POP_WORK_STATUS,'0')) S_VALUE
+                FROM (SELECT * from R_DW_POOROBJ_POP_Y t
+				<where>
+					<include refid="year_sql"/>
+					<include refid="area_sql"/>
+					<!-- <include refid="month_sql"/> -->
+					<include refid="query_condition_sql"/>
+					<include refid="current_common_sql"/>
+				</where>) t1
+				INNER JOIN (
+				 select
+				 COUNTRY_ID 
+				 from DIM_HELP_AREA_MAP  
+				 WHERE help_p_pac=#{helppac} 
+				 ) t2 ON (t1.country_pac=t2.COUNTRY_ID)		
+				group by t1.POP_WORK_STATUS
+	
+	</select>
+	
+	<!-- 贫困分析明细总数  -->
+	<select id="queryPoorAnalysisDetailCount"  parameterType="hashmap" resultType="long">
+	
+				select count(*)
+				from
+				(
+				 SELECT
+				 COUNTRY_PAC 
+				 from R_DW_POOROBJ_FAM_Y
+				 <where>
+					<include refid="year_sql"/>
+					<include refid="area_sql"/>
+					<include refid="query_condition_sql"/>
+					<include refid="current_common_sql"/>
+				</where>
+				) t1
+				INNER JOIN (
+				 select
+				 COUNTRY_ID 
+				 from DIM_HELP_AREA_MAP  
+				 WHERE help_p_pac=#{helppac} 
+				 ) t2 ON (t1.country_pac=t2.COUNTRY_ID)	
+				
+	</select>
+	<!-- 贫困分析明细 -->
+	<select id="queryPoorAnalysisDetail"  parameterType="hashmap" resultType="hashmap">
+			select 
+
+				*
+				
+				from
+				(
+				select t1.*,t2.*,ROWNUM RM
+				from
+				(
+				 SELECT
+				
+				 COUNTRY_PAC
+				 ,FAM_CODE A6 --户码 
+				,FAM_NAME A7 --户主姓名 
+				,DECODE(POOR_TYPE,1,'一般贫困户',2,'低保户',3,'五保户','其他') A8 --贫困户属性 
+				,DECODE(LABOR_TYPE,0,'无劳动能力',1,'有劳动能力')  A9 --劳动力属性
+				,(select poor_main_reason_name from dim_poor_main_reason   where poor_main_reason=r.POOR_MAIN_REASON) A10 -- 致贫原因
+				,BEGIN_PER_INCOME A11 --人均可支配收入
+				,FAM_ID S_ID
+				 from R_DW_POOROBJ_FAM_Y r
+				<where>
+					<include refid="year_sql"/>
+					<include refid="area_sql"/>
+					<include refid="query_condition_sql"/>
+					<include refid="current_common_sql"/>
+				</where>	
+				) t1
+				INNER JOIN (
+				 select CITY_NAME_S A2 
+				 ,COUNTY_NAME_S A3 
+				 ,TOWN_NAME_S A4 
+				 ,COUNTRY_NAME_S A5
+				 ,COUNTRY_ID 
+				 from DIM_HELP_AREA_MAP  
+				 WHERE help_p_pac=#{helppac} 
+				 ) t2 ON (t1.country_pac=t2.COUNTRY_ID)
+				
+				)
+				
+				<if test="page !=null">
+						WHERE RM BETWEEN #{pageSize}*(#{page}-1)+1 AND #{pageSize}  * #{page}
+				</if>
+						
+	</select>
+	
+</mapper>

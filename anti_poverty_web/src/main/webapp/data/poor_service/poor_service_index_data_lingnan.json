@@ -1,0 +1,91 @@
+{
+	"code" : 0,
+	"msg" : "获取信息成功",
+	"data" : {
+		"chart_config" : {
+			"convert_method" : "genChartLineBarsConfig",
+			"config" : [{
+					"name" : "韶关市",
+					"group" : "购买人数",
+					"value" : "126435",
+					"type" : "bar"
+				}, {
+					"name" : "河源市",
+					"group" : "购买人数",
+					"value" : "8388",
+					"type" : "bar"
+				}, {
+					"name" : "梅州市",
+					"group" : "购买人数",
+					"value" : "3241",
+					"type" : "bar"
+				}, {
+					"name" : "湛江市",
+					"group" : "购买人数",
+					"value" : "9482",
+					"type" : "bar"
+				}, {
+					"name" : "云浮市",
+					"group" : "购买人数",
+					"value" : "1019",
+					"type" : "bar"
+				}, {
+					"name" : "茂名市",
+					"group" : "购买人数",
+					"value" : "715",
+					"type" : "bar"
+				}, {
+					"name" : "肇庆市",
+					"group" : "购买人数",
+					"value" : "213",
+					"type" : "bar"
+				}, {
+					"name" : "汕头市",
+					"group" : "购买人数",
+					"value" : "27",
+					"type" : "bar"
+				}, {
+					"name" : "韶关市",
+					"group" : "成交额（万元）",
+					"value" : "621.35",
+					"type" : "line"
+				}, {
+					"name" : "河源市",
+					"group" : "成交额（万元）",
+					"value" : "163.88",
+					"type" : "line"
+				}, {
+					"name" : "梅州市",
+					"group" : "成交额（万元）",
+					"value" : "111.21",
+					"type" : "line"
+				}, {
+					"name" : "湛江市",
+					"group" : "成交额（万元）",
+					"value" : "29.91",
+					"type" : "line"
+				}, {
+					"name" : "云浮市",
+					"group" : "成交额（万元）",
+					"value" : "6.33",
+					"type" : "line"
+				}, {
+					"name" : "茂名市",
+					"group" : "成交额（万元）",
+					"value" : "4.89",
+					"type" : "line"
+				}, {
+					"name" : "肇庆市",
+					"group" : "成交额（万元）",
+					"value" : "0.9",
+					"type" : "line"
+				}, {
+					"name" : "汕头市",
+					"group" : "成交额（万元）",
+					"value" : "0.13",
+					"type" : "line"
+				}
+			]
+		}
+	}
+}

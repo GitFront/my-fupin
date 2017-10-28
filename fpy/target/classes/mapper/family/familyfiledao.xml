@@ -1,0 +1,613 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+        
+<mapper namespace="com.aspire.birp.modules.antiPoverty.dao.FamilyFileDao">
+
+
+
+		<select id="queryPovertyMember"  parameterType="hashmap" resultType="hashmap">
+			SELECT 
+			 TO_NUMBER(SUBSTR(A.RELATIVE,2,3)) +1 SID
+			,A.MENEBER_NAME AS S_NAME
+			,CASE WHEN A.MEMBER_SEX=0 THEN '男' WHEN A.MEMBER_SEX=1 THEN '女' ELSE '未填写或其他' END AS S_SEX
+			,CASE WHEN A.IDENTITY_TYPE=1 THEN '身份证' WHEN A.IDENTITY_TYPE=2 THEN '残疾证' WHEN A.IDENTITY_TYPE=3 THEN '中国人民解放军军官证' ELSE '其他' END AS S_CREDENTIAL_TYPE
+			,CASE WHEN LENGTH(A.IDENTITY_NO)=15  AND REGEXP_LIKE(SUBSTR(A.IDENTITY_NO,7,4),'^[0-9]+$') THEN TRUNC(TO_CHAR(SYSDATE,'YYYY')-1900-SUBSTR(A.IDENTITY_NO,7,2) + (TO_CHAR(SYSDATE,'MM')-SUBSTR(A.IDENTITY_NO,9 ,2))/12 ) 
+			      WHEN LENGTH(A.IDENTITY_NO)>=18 AND REGEXP_LIKE(SUBSTR(A.IDENTITY_NO,7,6),'^[0-9]+$') THEN TRUNC(TO_CHAR(SYSDATE,'YYYY')     -SUBSTR(A.IDENTITY_NO,7,4) + (TO_CHAR(SYSDATE,'MM')-SUBSTR(A.IDENTITY_NO,11,2))/12 )  
+			      END  AS S_AGE
+			,NVL(B.RELATIVE_NAME,'未填写') AS  S_RELATIONSHIP
+			,NVL(C.NATIONALITY_NAME,'未填写') AS S_NATIONALITY
+			,NVL(D.PROTICAL_NAME,'未填写') AS S_POLITICAL_AFFILIATION
+			,NVL(E.EDUCATION_NAME,'未填写') AS S_EDUCATION
+			,CASE WHEN A.IN_SCHOOL=1 THEN '在校' WHEN A.IN_SCHOOL=2 THEN '非在校' ELSE '未填写' END AS S_AT_SCHOOL
+			,NVL(F.HEALTH_STATUS_NAME,'未填写') AS S_HEALTH
+			,CASE WHEN A.WORK_ABILITY=1 THEN '劳动力' WHEN A.WORK_ABILITY=2 THEN '丧失劳动力' WHEN A.WORK_ABILITY=3 THEN '无劳动力' ELSE '未填写' END AS S_LABOR_CAPACITY
+			,NVL(G.WORK_STATUS_NAME,'未填写') AS S_WORK_STATUS
+			,NVL(A.WORK_YEARS,'未填写') AS  S_WORK_TIME
+			,CASE WHEN A.IN_ARMY=1 THEN '是' WHEN A.IN_ARMY=0 THEN '否' ELSE '未填写' END AS S_ACTIVE_SERVICE
+			,CASE WHEN A.HAVE_ILLNESS_INS=1 THEN '是' WHEN A.HAVE_ILLNESS_INS=0 THEN '否' ELSE '未填写' END AS S_SERIOUS_ILLNESS_INSURANCE
+			,CASE WHEN A.SKILL_SCHOOL_WILL=1 THEN '有意愿' WHEN A.SKILL_SCHOOL_WILL=0 THEN '无意愿' ELSE '未填写' END AS  S_TECHNICAL_SCHOOL_WILLING
+			,NVL(A.TRAINING_REQ,'未填写') AS S_TRAIN_NEED
+			,NVL(A.SKILL_INFO,'未填写') AS S_SKILL_STATUS
+			,NVL(A.WORK_WILL,'未填写') AS S_EMPLOYMENT_WILLING
+			,NVL(A.WORK_EXPECT,'未填写') AS  S_EMPLOYMENT_EXPECTATION
+			,CASE WHEN A.HAVE_EMPLOYEE_INS=1 THEN '是' WHEN A.HAVE_EMPLOYEE_INS=0 THEN '否' ELSE '未填写' END  AS S_STAFF_PENSION_INSURANCE
+			,CASE WHEN A.HAVE_COUNTRY_MED_INS=1 THEN '是' WHEN A.HAVE_COUNTRY_MED_INS=0 THEN '否' ELSE '未填写' END AS S_RESIDENT_MEDICAL_INSURANCE
+			,CASE WHEN A.HAVE_RESIDENT_INS=1 THEN '是' WHEN A.HAVE_RESIDENT_INS=0 THEN '否' ELSE '未填写' END  AS S_RESIDENT_PENSION_INSURANCE
+			,NVL(A.PENSON_LEVEL,'未填写') AS  S_PENSION_LEVEL
+			
+			FROM TR_POVERTY_MEMBER_D A
+			,DIM_RELATIVE B 
+			,DIM_NATIONALITY C 
+			,DIM_PROTICAL  D 
+			,DIM_EDUCATION  E 
+			,DIM_HEALTH_STATUS F
+			,DIM_WORK_STATUS G
+			    
+			WHERE A.RELATIVE=B.RELATIVE(+)
+			AND A.NATIONALITY=C.NATIONALITY(+) 
+			AND A.PROTICAL=D.PROTICAL(+)
+			AND A.EDUCATION=E.EDUCATION(+) 
+			AND A.HEALTH_STATUS=F.HEALTH_STATUS(+) 
+			AND A.WORK_STATUS=G.WORK_STATUS(+) 
+			
+			AND A.RESIDENCE_ID =#{FAM_ID}<!--户ID-->
+			ORDER BY 1
+				
+	
+	</select>
+
+
+
+
+	<!--家庭相册-->
+	<select id="queryFamilyfileFamPic"  parameterType="hashmap" resultType="hashmap">
+			SELECT * FROM 
+				(select
+				FBI.FAM_NAME AS S_HOUSE_HOLDER_NAME,
+				PATH,
+				PATH_ZOOM ,
+				1 num 
+				
+				from TR_PIC_FAMILY_D PF 
+				, F_FAMILYFILE_BASIC_INFO_D FBI
+				WHERE 
+				FBI.FAM_ID=PF.RESIDENCE_ID
+				AND PIC_TYPE='3'
+				AND FBI.FAM_ID =#{FAM_ID} )
+				
+				UNION
+				
+				(select
+				FBI.FAM_NAME AS S_HOUSE_HOLDER_NAME,
+				PATH,
+				PATH_ZOOM,
+				2 num 
+				from TR_PIC_MEMBER_D PM 
+				, F_FAMILYFILE_BASIC_INFO_D FBI
+				WHERE 
+				FBI.FAM_ID=PM.RESIDENCE_ID
+				AND PIC_TYPE='7'
+				AND FBI.FAM_ID =#{FAM_ID} )
+				
+				UNION
+				(select
+				FBI.FAM_NAME AS S_HOUSE_HOLDER_NAME,
+				PATH,
+				PATH_ZOOM,
+				3 num 
+				from TR_PIC_FAMILY_D PF 
+				, F_FAMILYFILE_BASIC_INFO_D FBI
+				WHERE 
+				FBI.FAM_ID=PF.RESIDENCE_ID
+				AND PIC_TYPE!='3'
+				AND FBI.FAM_ID =#{FAM_ID} )
+				
+				UNION
+				(select
+				FBI.FAM_NAME AS S_HOUSE_HOLDER_NAME,
+				PATH,
+				PATH_ZOOM ,
+				4 num
+				from TR_PIC_MEMBER_D PM 
+				, F_FAMILYFILE_BASIC_INFO_D FBI
+				WHERE 
+				FBI.FAM_ID=PM.RESIDENCE_ID
+				AND PIC_TYPE!='7'
+				AND FBI.FAM_ID =#{FAM_ID} )
+				
+				ORDER BY num
+				
+				
+				
+				
+				
+		
+			
+
+				
+	</select>
+
+
+
+	<!--脱贫轨迹图表-->
+	<select id="queryFamilyfileChart"  parameterType="hashmap" resultType="hashmap">
+			SELECT
+			TO_CHAR(TO_DATE(MONTH_TAG,'YYYY-MM-DD') ,'YYYY.MM' ) AS S_NAME,
+			'综合得分' AS S_GROUP,
+			ROUND(TOTAL_SCORE,2) AS S_TOTAL_SCORE
+			FROM
+			F_FAMILYFILE_AID_TRAIL_D
+			WHERE FAM_ID =#{FAM_ID}
+			AND MONTH_TAG  BETWEEN TO_CHAR(ADD_MONTHS(to_date(#{F_FAMILYFILE_AID_TRAIL_DM},'yyyy-mm-dd'), -11),'YYYYMMDD') AND #{F_FAMILYFILE_AID_TRAIL_DM}
+		
+
+	</select>
+	<!--脱贫轨迹 -->
+	<select id="queryFamilyfileAidTrail"  parameterType="hashmap" resultType="hashmap">
+				SELECT
+				FAM_PROPERTY,<!--户属性-->
+
+				(FAM_DPI || '元') FAM_DPI , <!--家庭人均可支配收入值-->
+				(FAM_DPI_TARGET || '元') FAM_DPI_TARGET, <!--家庭人均可支配收入目标值-->
+				FAM_DPI_SCORE,<!--家庭人均可支配收入得分-->
+				CASE WHEN FAM_DPI >= FAM_DPI_TARGET THEN 1
+				ELSE 0 END  AS FAM_HAS_ACHIEVED,<!--家庭是否达标-->
+
+				CASE  BASIC_LIVING
+				when 1 THEN '达标'
+				ELSE '未达标' END  AS BASIC_LIVING,<!--低保五保政策落实值-->
+				'达标'  AS BASIC_TARGET, <!--低保五保政策落目标值-->
+				BASIC_LIVING_SCORE,  <!--低保五保政策落实得分-->
+				CASE  BASIC_LIVING
+				when 1 THEN 1
+				ELSE 0 END  AS BASIC_HAS_ACHIEVED,<!--低保五保是否达标-->
+
+				(EDUCATION*100)|| '%' EDUCATION,<!--义务教育值-->
+				(EDUCATION_TARGET*100) || '%' EDUCATION_TARGET,<!--义务教育目标值 93%-->
+				EDUCATION_SCORE,<!--义务教育得分-->
+				CASE WHEN EDUCATION >= EDUCATION_TARGET THEN 1
+				ELSE 0 END  AS EDUCATION_HAS_ACHIEVED,
+
+				(SOCIAL*100)|| '%' SOCIAL,<!--社会保障值-->
+				SOCIAL_SCORE,<!--社会保障得分-->
+				100 || '%'  as SOCIAL_TARGET, <!--义务教育目标值 93%-->
+				CASE WHEN SOCIAL >= 1 THEN 1
+				ELSE 0 END  AS SOCIAL_HAS_ACHIEVED,
+
+
+				CASE  HOUSE
+				when 1 THEN '达标'
+				ELSE '未达标' END  AS HOUSE,<!--住房保障值-->
+
+				'达标'  AS HOUSE_TARGET,<!--住房目标值-->
+				HOUSE_SCORE,   <!--住房保障得分-->
+				CASE  HOUSE
+				when 1 THEN 1
+				ELSE 0 END  AS HOUSE_HAS_ACHIEVED,<!--是否达标-->
+
+
+
+
+				(MEDICAL*100)  || '%'  MEDICAL,<!--医疗保障值-->
+				TRUNC(MEDICAL_SCORE,2)   MEDICAL_SCORE,<!--医疗保障得分-->
+				100 || '%' as MEDICAL_TARGET, <!--医疗目标值-->
+				CASE WHEN MEDICAL >= 1 THEN 1
+				ELSE 0 END  AS MEDICAL_HAS_ACHIEVED,
+
+
+				CASE  HELP_FAM
+				when 1 THEN '达标'
+				ELSE '未达标' END  AS HELP_FAM,<!--帮扶到户值-->
+				'达标'  AS HELP_FAM_TARGET,
+				HELP_FAM_SCORE, <!--帮扶到户得分-->
+				CASE  HELP_FAM
+				when 1 THEN 1
+				ELSE 0 END  AS HELP_FAM_HAS_ACHIEVED<!--帮扶到户得分-->
+
+
+				FROM F_FAMILYFILE_AID_TRAIL_D
+
+				WHERE FAM_ID =#{FAM_ID}
+				AND MONTH_TAG=#{MONTH_TAG}
+
+				<if test="F_FAMILYFILE_AID_TRAIL_D != null and F_FAMILYFILE_AID_TRAIL_D != '' ">
+					 AND STAT_TIME  =#{F_FAMILYFILE_AID_TRAIL_D}
+				</if>
+
+
+
+
+
+	</select>
+
+
+
+
+
+
+	<!--资金投入  每月资金列表-->
+	<select id="queryCapitalList"  parameterType="hashmap" resultType="hashmap">
+		SELECT
+		FC.FAM_ID AS S_FAM_ID,
+		TO_CHAR (
+			TO_DATE (
+				FC.PROJ_INVEST_MONTH,
+				'YYYY-MM'
+			),
+			'YYYY.MM'
+		) AS S_TITLE,
+		FC.OWN_CAPITAL AS S_ORGANIZATION,
+		FC.HC_CITY AS S_helper_CITY_FINANCE,
+		FC.HC_TOWN AS S_DISTRICT_TOWN_FINANCE,
+		FC.HC_SOCIETY AS S_helper_SOCIAL_MONEY,
+		FC.CNP_CENTER AS S_CENTRAL_FINANCE,
+		FC.CNP_PROVINCE AS S_PROVINCE_FINANCE,
+		FC.CNP_CENTER_INDUSTRY AS S_CENTRAL_INDUSTRY,
+		FC.CNP_PROVINCE_INDUSTRY AS S_PROVINCE_INDUSTRY,
+		FC.CNP_SOCIETY AS S_central_SOCIAL_MONEY,
+		FC.BHC_CITY AS S_helped_CITY_FINANCE,
+		FC.BHC_TOWN AS S_COUNTY_TOWN_FINANCE,
+		FC.BHC_CITY_INDUSTRY AS S_CITY_INDUSTRY,
+		FC.BHC_TOWN_INDUSTRY AS S_COUNTY_TOWN_INDUSTRY,
+		FC.BHC_SOCIETY AS S_HELPED_SOCIAL_MONEY,
+		ROUND (
+				(
+					OWN_CAPITAL +  HC_CITY +  HC_TOWN +  HC_SOCIETY +  CNP_CENTER + CNP_PROVINCE +  CNP_CENTER_INDUSTRY +  CNP_PROVINCE_INDUSTRY +CNP_SOCIETY +  BHC_CITY +  BHC_TOWN +  BHC_CITY_INDUSTRY +  BHC_TOWN_INDUSTRY+  BHC_SOCIETY
+				),
+				2
+			) AS S_SUMMARY
+		FROM
+			F_FAMILYFILE_CAPITAL_D fc	
+		WHERE
+		FC.FAM_ID =#{FAM_ID}
+		<if test=" null !=F_FAMILYFILE_CAPITAL_D  and  '' != F_FAMILYFILE_CAPITAL_D ">
+				 AND FC.STAT_TIME  =#{F_FAMILYFILE_CAPITAL_D}
+			</if>
+		ORDER BY
+			FC.PROJ_INVEST_MONTH DESC
+		
+		
+	</select>
+
+
+
+
+
+	<!--当年资金汇总列表-->
+	<select id="queryCapitalListByYear"  parameterType="hashmap" resultType="hashmap">
+		SELECT
+			SUM (OWN_CAPITAL) AS S_ORGANIZATION,
+			SUM (HC_CITY) AS S_HELPER_CITY_FINANCE,
+			SUM (HC_TOWN) AS S_DISTRICT_TOWN_FINANCE,
+			SUM (HC_SOCIETY) AS S_HELPER_SOCIAL_MONEY,
+			SUM (CNP_CENTER) AS S_CENTRAL_FINANCE,
+			SUM (CNP_PROVINCE) AS S_PROVINCE_FINANCE,
+			SUM (CNP_CENTER_INDUSTRY) AS S_CENTRAL_INDUSTRY,
+			SUM (CNP_PROVINCE_INDUSTRY) AS S_PROVINCE_INDUSTRY,
+			SUM (CNP_SOCIETY) AS S_CENTRAL_SOCIAL_MONEY,
+			SUM (BHC_CITY) AS S_HELPED_CITY_FINANCE,
+			SUM (BHC_TOWN) AS S_COUNTY_TOWN_FINANCE,
+			SUM (BHC_CITY_INDUSTRY) AS S_CITY_INDUSTRY,
+			SUM (BHC_TOWN_INDUSTRY) AS S_COUNTY_TOWN_INDUSTRY,
+			SUM (BHC_SOCIETY) AS S_HELPED_SOCIAL_MONEY,
+			ROUND (
+			(
+				SUM (OWN_CAPITAL) + SUM (HC_CITY) + SUM (HC_TOWN) + SUM (HC_SOCIETY) + SUM (CNP_CENTER) + SUM (CNP_PROVINCE) + SUM (CNP_CENTER_INDUSTRY) + SUM (CNP_PROVINCE_INDUSTRY) + SUM (CNP_SOCIETY) + SUM (BHC_CITY) + SUM (BHC_TOWN) + SUM (BHC_CITY_INDUSTRY) + SUM (BHC_TOWN_INDUSTRY) + SUM (BHC_SOCIETY)
+			),2) AS S_SUMMARY
+		FROM F_FAMILYFILE_CAPITAL_D FC
+		where
+		FC.FAM_ID=#{FAM_ID}
+		
+		<if test=" null !=F_FAMILYFILE_CAPITAL_D  and  '' != F_FAMILYFILE_CAPITAL_D ">
+					 AND FC.STAT_TIME  =#{F_FAMILYFILE_CAPITAL_D}
+		</if>
+		
+		<if test="null != START_MONTH  and ''!= START_MONTH  and null !=END_MONTH and '' !=END_MONTH">
+					AND  PROJ_INVEST_MONTH BETWEEN #{START_MONTH} AND #{END_MONTH}
+		</if>
+		GROUP BY
+			FAM_ID
+		
+	</select>
+
+
+
+	<!--资金投入 当年累计到户-->
+	<select id="queryCapitalCount"  parameterType="hashmap" resultType="hashmap">
+		SELECT
+		ROUND(
+		(SUM(OWN_CAPITAL) +
+		SUM(HC_CITY) +
+		SUM(HC_TOWN) +
+		SUM(HC_SOCIETY) +
+		SUM(CNP_CENTER) +
+		SUM(CNP_PROVINCE) +
+		SUM(CNP_CENTER_INDUSTRY) +
+		SUM(CNP_PROVINCE_INDUSTRY) +
+		SUM(CNP_SOCIETY) +
+		SUM(BHC_CITY) +
+		SUM(BHC_TOWN) +
+		SUM(BHC_CITY_INDUSTRY) +
+		SUM(BHC_TOWN_INDUSTRY) +
+		SUM(BHC_SOCIETY) )/10000,2) AS S_TOTAL
+		FROM F_FAMILYFILE_CAPITAL_D FC
+		WHERE  FC.FAM_ID=#{FAM_ID}
+		<if test=" null !=F_FAMILYFILE_CAPITAL_D  and  '' != F_FAMILYFILE_CAPITAL_D ">
+			AND FC.STAT_TIME  =#{F_FAMILYFILE_CAPITAL_D}
+		</if>
+		<if test="null != START_MONTH  and ''!= START_MONTH  and null !=END_MONTH and '' !=END_MONTH">
+					AND  PROJ_INVEST_MONTH BETWEEN #{START_MONTH} AND #{END_MONTH}
+				</if>
+		GROUP BY FAM_ID
+		
+	</select>
+	
+	
+	
+	<!--资金投入  累计到户-->
+	<select id="queryCapitalTotalCount"  parameterType="hashmap" resultType="hashmap">
+	
+		
+		SELECT
+		ROUND(
+		(SUM(OWN_CAPITAL) +
+		SUM(HC_CITY) +
+		SUM(HC_TOWN) +
+		SUM(HC_SOCIETY) +
+		SUM(CNP_CENTER) +
+		SUM(CNP_PROVINCE) +
+		SUM(CNP_CENTER_INDUSTRY) +
+		SUM(CNP_PROVINCE_INDUSTRY) +
+		SUM(CNP_SOCIETY) +
+		SUM(BHC_CITY) +
+		SUM(BHC_TOWN) +
+		SUM(BHC_CITY_INDUSTRY) +
+		SUM(BHC_TOWN_INDUSTRY) +
+		SUM(BHC_SOCIETY) )/10000,2) AS S_TOTAL
+		FROM F_FAMILYFILE_CAPITAL_D FC
+		WHERE  FC.FAM_ID=#{FAM_ID}
+		<if test=" null !=F_FAMILYFILE_CAPITAL_D  and  '' != F_FAMILYFILE_CAPITAL_D ">
+			AND
+				
+			(
+				 STAT_TIME  =#{F_FAMILYFILE_CAPITAL_D} 
+				 OR STAT_TIME=TO_CHAR(ADD_MONTHS(to_date(#{F_FAMILYFILE_CAPITAL_DY} ,'yyyy'), -12),'YYYY') || '1201'
+				 OR STAT_TIME=TO_CHAR(ADD_MONTHS(to_date(#{F_FAMILYFILE_CAPITAL_DY} ,'yyyy'), -24),'YYYY') || '1201'
+			)
+			
+		</if>
+		<if test="null != START_MONTH  and ''!= START_MONTH  and null !=END_MONTH and '' !=END_MONTH">
+			AND  PROJ_INVEST_MONTH BETWEEN TO_CHAR(ADD_MONTHS(to_date(#{START_MONTH},'yyyy-mm'), -24),'YYYYMM') AND #{END_MONTH}
+		</if>
+		GROUP BY FAM_ID
+	</select>
+
+
+
+
+	<!--帮扶动态详情-->
+	<select id="queryFamilyFileTrendsById"  parameterType="hashmap" resultType="hashmap">
+		
+		SELECT
+		HELP_ID AS S_ID,
+		TO_CHAR(TO_DATE(STAT_TIME,'YYYY-MM-DD') ,'YYYY/MM/DD')
+		AS S_TIME,
+		replace((select wmsys.wm_concat(t.path)
+	    from TR_PIC_HELP_FAMILY_TRENDS_D t where t.HELP_TRENDS_ID=HELP_ID
+	    group by t.HELP_TRENDS_ID),',',';') AS S_PICS,
+		case when  length(SUBSTR(HELP_DESC,0,90))>=90 then SUBSTR(HELP_DESC,0,90) || '...'
+		else HELP_DESC
+		end  AS S_DESC
+		FROM
+		F_FAMILYFILE_HELP_TRENDS_D 
+		
+		
+		
+		WHERE  HELP_ID=#{HELP_ID}
+		<if test="null != STAT_TIME and  '' != STAT_TIME ">
+			AND STAT_TIME = #{STAT_TIME}
+		</if>
+		ORDER BY STAT_TIME DESC
+	</select>
+
+
+
+
+
+
+	<!--帮扶动态列表-->
+	<select id="queryFamilyFileTrends"  parameterType="hashmap" resultType="hashmap">
+			
+			SELECT
+			HELP_ID AS S_ID,
+			TO_CHAR(TO_DATE(STAT_TIME,'YYYY-MM-DD') ,'YYYY/MM/DD')
+			AS S_TIME,
+			replace((select wmsys.wm_concat(t.path)
+		    from TR_PIC_HELP_FAMILY_TRENDS_D t where t.HELP_TRENDS_ID=HELP_ID
+		    group by t.HELP_TRENDS_ID),',',';') AS S_PICS,
+			case when  length(SUBSTR(HELP_DESC,0,90))>=90 then SUBSTR(HELP_DESC,0,90) || '...'
+			else HELP_DESC
+			end  AS S_DESC
+			FROM
+			F_FAMILYFILE_HELP_TRENDS_D 
+			
+			WHERE FAM_ID =#{FAM_ID}
+			<if test="null != STAT_TIME and  '' != STAT_TIME  ">
+				AND STAT_TIME = #{STAT_TIME}
+			</if>
+			ORDER BY STAT_TIME DESC
+	</select>
+
+	<!--业务办理-->
+	<select id="queryBusiProcessList"  parameterType="hashmap" resultType="hashmap">
+		SELECT
+		ADDR_LINK AS S_LINK ,
+		ITEM_NAME AS  S_TEXT,
+		FAM_ID AS S_FAM_ID
+		FROM F_FAMILYFILE_BUSI_PROCESS_D FFBPD
+		WHERE FFBPD.FAM_ID=#{FAM_ID}
+		<if test="PROCESS_STATUS != null and PROCESS_STATUS != '' ">
+			AND FFBPD.PROCESS_STATUS LIKE concat(#{PROCESS_STATUS},'%')
+		</if>
+	</select>
+
+
+	<!--帮扶施策图片列表  -->
+	<select id="queryFamilyFileHelpPic"  parameterType="hashmap" resultType="hashmap">
+		select 
+		PATH
+		from TR_PIC_FAMILY_PROJECT_D
+		WHERE 
+		PROJ_ID =#{PROJ_ID}
+		AND PIC_TYPE=#{PIC_TYPE}
+		AND rownum=1
+	</select>
+
+	<!--帮扶策划列表-->
+	<select id="queryFamilyFileMethodList"  parameterType="hashmap" resultType="hashmap">
+		SELECT
+		FHM.PROJ_ID AS S_PROJ_ID,
+		FHM.HELP_CLASS AS S_TYPE,
+		FHM.PROJ_OBJECT AS S_OBJECT,
+		FHM.PROJ_NAME AS S_NAME,
+		FHM.PROJ_CNT AS S_AMOUNT,
+		FHM.PLAN_CAPITAL AS  S_INVEST_EXPECTED,
+		FHM.REAL_CAPITAL AS  S_INVEST_ACTUAL,
+		FHM.PROJ_PROFIT AS  S_PROFIT,
+		FHM.PROJ_STATUS AS  S_STATUS,
+		FHM.BEGIN_TIME AS S_TIME_START,
+		FHM.FINISH_TIME AS  S_TIME_COMPLETED
+		
+		FROM
+		F_FAMILYFILE_HELP_METHOD_D FHM
+		WHERE FAM_ID=#{FAM_ID}
+	</select>
+	<!--帮扶策划汇总-->
+	<select id="queryFamilyFileMethodCount"  parameterType="hashmap" resultType="hashmap">
+		
+		SELECT
+		COUNT(PROJ_ID)  AS S_TOTAL,
+		(SELECT COUNT(1) FROM F_FAMILYFILE_HELP_METHOD_D WHERE PROJ_STATUS ='完成' AND  FAM_ID=A.FAM_ID) S_COMPLETED,
+		(SELECT COUNT(1) FROM F_FAMILYFILE_HELP_METHOD_D WHERE PROJ_STATUS ='进行中' AND  FAM_ID=A.FAM_ID) S_RUNNING,
+		ROUND(SUM(REAL_CAPITAL)/10000,2) AS S_INVESTED,
+		case when SUM(PROJ_PROFIT) =0 then 0
+		else ROUND(SUM(PROJ_PROFIT)/10000,2) end  S_PROFIT, 
+		ROUND(SUM(PLAN_CAPITAL)/10000,2) S_INVEST_EXPECTED
+		FROM
+		F_FAMILYFILE_HELP_METHOD_D A
+		WHERE FAM_ID=#{FAM_ID}
+		GROUP BY FAM_ID
+	</select>
+
+
+
+	<!--帮扶计划-->
+	<select id="queryFamilyFilePlan"  parameterType="hashmap" resultType="hashmap">
+			SELECT
+				FHP.FAM_ID S_FAM_ID,
+				FHP.FAM_NAME AS S_CHOUSE_HOLDER_SIGN,
+				FHP.LEADER_NAME AS S_COUNTRY_LEADER_SIGN,
+				FHP.PLAN_MAKE_TIME AS S_TIME,
+				FHP.PLAN_CONTENT AS S_CONTENT,
+				FHP.PLAN_YEAR AS  S_PLAN_YEAR
+			FROM
+				F_FAMILYFILE_HELP_PLAN_D FHP
+			WHERE
+				FHP.FAM_ID =#{FAM_ID}
+
+			<if test="PLAN_YEAR != null and PLAN_YEAR != '' ">
+				AND PLAN_YEAR IN
+
+				<foreach collection="PLAN_YEAR" open="(" close=")" separator="," item="item">
+					#{item}
+				</foreach>
+
+			</if>
+
+	</select>
+	<!--生活条件-->
+	<select id="queryFamilyFileCond"  parameterType="hashmap" resultType="hashmap">
+			SELECT
+			FBI.FAM_ID AS S_FAM_ID,
+			FBI.PLANTATION_AREA AS S_TOTAL1,
+			FBI.VALID_PLANTATION_AREA AS S_AVAILABLE,
+			FBI.FOREAST_AREA AS S_TOTAL2,
+			FBI.BACK_FOREAST_AREA AS S_RETURN,
+			FBI.FRUIT_AREA AS S_FRUIT,
+			FBI.GRASSLAND_AREA AS S_GRASS_TOTAL,
+			FBI.WATER_AREA AS S_WATER_TOTAL,
+			FBI.HAVE_ELEC AS S_PRODUCTION_ELECTRICITY,
+			FBI.HAVE_PRODUCT_ELEC AS S_LIVING_ELECTRICITY,
+			FBI.DRINK_SAFETY AS S_WATER_SAFETY,
+			FBI.HOUSE_AREA AS S_HOUSE_AREA,
+			FBI.MAIN_ROAD_DIS AS S_DISTANCE_MAIN_ROAD,
+			FBI.HOUSE_ROAD_KIND AS S_ROAD_TYPE,
+			FBI.MAIN_FUEL AS S_FUEL_TYPE,
+			FBI.HAVE_WC AS S_TOILET,
+			FBI.JOIN_FARMER_COP AS S_JOINED_FSC
+			FROM
+			F_FAMILYFILE_BASIC_INFO_D FBI
+			WHERE  FBI.FAM_ID=#{FAM_ID}
+	</select>
+
+	<!--户档案基本信息-->
+	<select id="queryFamilyFileInfo"  parameterType="hashmap" resultType="hashmap">
+			SELECT
+			FBI.FAM_ID AS S_FAM_ID,
+			FBI.FAM_NAME AS S_HOUSE_HOLDER_NAME,
+			(
+				SELECT
+					PATH
+				FROM
+					TR_PIC_FAMILY_D
+				WHERE
+					PIC_TYPE = 3
+				AND ROWNUM = 1
+				AND RESIDENCE_ID = FBI.FAM_ID
+			) AS S_HOUSE_HOLDER_AVATAR,
+			FBI.FAM_TEL AS S_HOUSE_HOLDER_PHONE,
+			FBI.POOR_PROPERTY_DESC AS S_POOR_ATTRIBUTE,
+			FBI.MAIN_POOR_REASON AS S_POOR_REASON,
+			concat(FBI.INCOME,'元')  AS S_START_INCOME,
+			FBI.TEAM_LEADER AS S_COUNTRY_LEADER_NAME,
+			FBI.TEAM_LEADER_TEL AS S_COUNTRY_LEADER_PHONE,
+			FBI.HELP_BEGIN_TIME AS S_COUNTRY_LEADER_START_TIME,
+			(
+				SELECT
+					PATH
+				FROM
+					TR_PIC_HELP_CADRE_D
+				WHERE
+					PERSON_ID = FBI.TEAM_LEADER_ID
+			) AS S_COUNTRY_LEADER_AVATAR,
+			FBI.HELP_UNIT_NAME AS S_COUNTRY_LEADER_ORG,
+			
+			
+			NVL(FBI.REAL_EDU_MEMBER_CNT,0) AS S_EDU,
+			TRUNC (MEDICAL * 100, 1) AS S_MEDICAL_SECURITY,
+			FBI.INCOME AS S_INCOME,
+			FBI.REAL_EDU_MEMBER_CNT AS S_EDU_TOTAL,
+			FBI.NEED_EDU_MEMBER_CNT AS S_EDU_ACHIEVED,
+			FBI.FAM_MEMBER_CNT AS S_MEDICAL_SECURITY_TOTAL,
+			FBI.MEDICAL_MEMBER_CNT AS S_MEDICAL_SECURITY_ACHIEVED,
+			FBI.IF_HOUSE_DANGER AS S_IS_DANGER_HOUSE,
+			CASE WHEN HOUSE_SCORE >= 100 THEN 1 ELSE 0 END as S_HAS_HOUSE_BECOME_SAFE ,
+			FBI.HOUSE_DANGER_LVL AS S_HOUSE_DANGER_LEVEL,
+			NVL (ROUND(FAT.TOTAL_SCORE, 2), 0) AS S_INDEX_,
+			CASE WHEN FAT.TOTAL_SCORE >= 100 THEN 1 ELSE 0 END AS S_HAS_ACHIEVED
+			
+			
+			
+			FROM
+			F_FAMILYFILE_BASIC_INFO_D FBI
+			LEFT JOIN F_FAMILYFILE_AID_TRAIL_D FAT 
+			ON FAT.FAM_ID = FBI.FAM_ID
+			WHERE FBI.FAM_ID=#{FAM_ID}
+			AND FAT.STAT_TIME =#{F_FAMILYFILE_AID_TRAIL_D}
+	
+	</select>
+
+
+
+</mapper>

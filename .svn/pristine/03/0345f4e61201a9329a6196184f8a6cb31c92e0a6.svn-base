@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+	<script type="text/javascript" src="../../js/libs/flexible.js"></script>
+	<title>广东扶贫</title>
+	<link type="text/css" rel="stylesheet" href="../../css/all.css">
+</head>
+
+<body>
+
+<div id="app" class="p-wrap p-family-file-implement">
+	<app-header ref="appHeader" title="资金投入" show-back="true"></app-header>
+	<section class="implement-item clearfix" v-cloak>
+		<header class="p-title">户资金收入概括</header>
+		<ul class="implement-sum">
+			<li>
+				<div class="implement-sum-item fl">
+					<h3>累计到户资金</h3>
+					<p>{{summary.total | money}}元</p>
+				</div>
+				<div class="implement-sum-item fr">
+					<h3>当年到户资金</h3>
+					<p>{{summary.cur_year | money}}元</p>
+				</div>
+			</li>
+			<li class="implement-other-item">
+				<div class="implement-other-title">单位自筹资金</div>
+				<div class="implement-other-content">累计{{table.organization | money}}元</div>
+			</li>
+		</ul>
+	</section>
+	<section class="implement-item clearfix" v-cloak>
+		<header class="p-title">帮扶市资金</header>
+		<ul class="implement-item-list">
+			<li class="implement-other-item">
+				<div class="implement-other-title">单位自筹资金</div>
+				<div class="implement-other-content">累计{{helper_city.city_finance | money}}元</div>
+			</li>
+			<li class="implement-other-item">
+				<div class="implement-other-title">地级和镇级财政</div>
+				<div class="implement-other-content">累计{{helper_city.city_finance | money}}元</div>
+			</li>
+			<li class="implement-other-item">
+				<div class="implement-other-title">社会资金</div>
+				<div class="implement-other-content">累计{{helper_city.social_money | money}}元</div>
+			</li>
+		</ul>
+	</section>
+	<section class="implement-item clearfix" v-cloak>
+		<header class="p-title">中央和省资金</header>
+		<ul class="implement-item-list">
+			<li class="implement-other-item">
+				<div class="implement-other-title">中央财政</div>
+				<div class="implement-other-content">累计{{central_province.central_finance | money}}元</div>
+			</li>
+			<li class="implement-other-item">
+				<div class="implement-other-title">省级财政</div>
+				<div class="implement-other-content">累计{{central_province.province_finance | money}}元</div>
+			</li>
+			<li class="implement-other-item">
+				<div class="implement-other-title">中央行业</div>
+				<div class="implement-other-content">累计{{central_province.central_industry | money}}元</div>
+			</li>
+			<li class="implement-other-item">
+				<div class="implement-other-title">省级行业</div>
+				<div class="implement-other-content">累计{{central_province.province_industry | money}}元</div>
+			</li>
+			<li class="implement-other-item">
+				<div class="implement-other-title">社会资金</div>
+				<div class="implement-other-content">累计{{central_province.social_money | money}}元</div>
+			</li>
+		</ul>
+	</section>
+</div>
+
+<script type="text/javascript" src="../../js/libs/vue.min.js"></script>
+<script type="text/javascript" src="../../js/libs/vue-resource.min.js"></script>
+
+<script type="text/javascript" src="../../js/urls_mock.js"></script>
+<script type="text/javascript" src="../../js/common.js"></script>
+<script type="text/javascript" src="../../js/components.js"></script>
+
+<script type="text/javascript" src="../../js/pages/family_file/invested.js"></script>
+</body>
+</html>

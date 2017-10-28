@@ -1,0 +1,228 @@
+#poorServiceIndexWrap {
+    $safe-w: 1100px;
+    margin: 0 auto;
+    margin-top: 26px;
+    width: $safe-w;
+    height: 600px;
+    .select-row {
+        float: right;
+    }
+    .poor-server-top {
+        position: relative;
+        margin-top: 2px;
+        width: $safe-w - 4px;
+        height: 306px;
+    }
+    .poor-server-bttm {
+        position: relative;
+        margin-top: 32px;
+        width: $safe-w - 4px;
+        height: 292px;
+        .select-box {
+            z-index: 10;
+            position: absolute;
+            top: 18px;
+            right: 40px;
+            width: 96px;
+            line-height: 1;
+            span {
+                width: 80px;
+            }
+        }
+    }
+    .poor-server-top,
+    .poor-server-bttm {
+        .title {
+            $h: 30px;
+            position: relative;
+            margin-top: 27px;
+            margin-bottom: 12px;
+            line-height: $h;
+            height: $h;
+            strong {
+                float: left;
+                margin-right: 12px;
+            }
+            .blue-tab {
+                float: left;
+            }
+            .yellow-link-btn {
+                position: absolute;
+                right: 0;
+                bottom: -6px;
+                font-size: 12px;
+            }
+        }
+        .chart-wrap-50p {
+            $w: 493px;
+            $h: 198px;
+            float: left;
+            padding-left: 33px;
+            width: 493px;
+            .chart-item {
+                @extend %BB;
+                padding: 12px 0px;
+                width: $w;
+                height: 226px;
+                border: 2px solid #434265;
+                box-shadow: 0px 10px 38px #181827;
+                .chart {
+                    width: $w - 4px;
+                    height: $h;
+                }
+            }
+            &:nth-child(3) {
+                padding-left: 42px;
+            }
+        }
+        .chart-wrap-100p {
+            @extend %BB;
+            //            padding:0 40px 0 33px;
+            width: 100%;
+            .title {
+                margin-left: 33px;
+                margin-bottom: 0;
+            }
+            .chart-item {
+                @extend %BB;
+                padding-bottom: 12px;
+                width: 100%;
+                height: 236px;
+            }
+        }
+    }
+}
+
+//弹窗
+#popupPoorServiceDetail {
+    .monitor-header {
+        .select-row {
+            padding-top: 2px;
+        }
+        .header-title {
+            padding-left: 20px;
+        }
+        .back-btn {
+            right: 31px;
+            margin-right: 31px;
+        }
+
+    }
+    .popup-content {
+        $w: 1326px;
+        width: $w;
+        height: 800px;
+        margin: 0 auto;
+        .content-header {
+            position: relative;
+            .title {
+                margin-top: 14px;
+                padding-left: 20px;
+                line-height: 50px;
+                color: $yellow;
+                font-size: 16px;
+            }
+            .select-row {
+                position: absolute;
+                top: 11px;
+                right: 85px;
+                .select-box {
+                    width: 120px;
+                    span {
+                        width: 80px;
+                    }
+                }
+            }
+        }
+    }
+    //查询页面
+    .data-search-box {
+        position: relative;
+        top: 3px;
+        border-sizing: border-box;
+        padding: 24px 15px;
+        .search-top-option {
+            right: 18px;
+            top: -24px;
+            position: absolute;
+            width: 136px;
+            .export-btn {
+                float: left;
+                position: static;
+            }
+            span {
+                color: $yellow;
+                padding: 0 10px;
+            }
+        }
+        .data-search-header {
+            border: 1px solid #88E7FB;
+            overflow: hidden;
+            font-size: 12px;
+            margin: 5px 0 20px;
+            //width:847px;
+            input,
+            button {
+                height: 30px;
+                background: none;
+                border: 0;
+            }
+            input {
+                float: left;
+                width: 1200px;
+                color: #88E7FB;
+                padding-left: 20px;
+                box-sizing: border-box;
+            }
+            button.btn-search {
+                float: right;
+                background: #88E7FB;
+                width: 70px;
+                color: #191821;
+                cursor: pointer;
+            }
+        }
+        .data-search-content {
+            height: 420px;
+            //overflow:hidden;
+            $search-w: 1010px;
+            $search-h: 420px;
+            .detail-search-content {
+                height: $search-h;
+            }
+            .analyse-tb {
+                width: 100%;
+                thead {
+                    td {
+                        min-width: 45px;
+                    }
+                }
+            }
+            .jsp-search-content {
+                width: 100%;
+                height: 371px;
+                .jspPane {
+                    width: 100%!important;
+                }
+                .analyse-tb {
+                    border-top: 0!important;
+                    tbody>tr:first-child {
+                        td {
+                            border-top: 0!important;
+                        }
+                    }
+                }
+            }
+            .none-search {
+                text-align: center;
+                padding-top: 160px;
+                display: none;
+            }
+            //表格
+           
+            .table-title{
+                margin-bottom: 10px;
+            }
+        }
+    }
+}

@@ -1,0 +1,16 @@
+{
+	"data":{
+		"belong_organization":"兴宁市慢性病防治院",
+		"list":[
+			{
+				"id":"441481001200",
+				"order":1,
+				"contact_phone":"13643095682",
+				"contact_name":"李胜辉",
+				"country_name":"米寨村委会"
+			}
+		]
+	},
+	"code":0,
+	"msg":"获取信息成功"
+}

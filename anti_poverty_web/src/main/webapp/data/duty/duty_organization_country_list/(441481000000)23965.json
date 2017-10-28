@@ -1,0 +1,16 @@
+{
+	"data":{
+		"belong_organization":"广州市天河区人民政府珠吉街道办事处",
+		"list":[
+			{
+				"id":"441481117204",
+				"order":1,
+				"contact_phone":"18218785652",
+				"contact_name":"何永宏",
+				"country_name":"禾村村委会"
+			}
+		]
+	},
+	"code":0,
+	"msg":"获取信息成功"
+}

@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>扶贫专项-广东省扶贫云</title>
+	<link rel="stylesheet" href="../../../static/themes/css/fupin/main.css">
+	<link rel="stylesheet" href="../../../static/themes/css/fupin/rank.css">
+</head>
+
+<style>
+	.main-wrap {
+		background: url(../../../static/themes/images/fupin/not-online.png) no-repeat 0 0;
+	}
+</style>
+
+<body>
+<div class="main-wrap">
+	<!--公共地图部分-->
+	<section id="mapWrap">
+		<div id="map"></div>
+	</section>
+	<!--责任监控html结构-->
+	<div id="dutyWrap" data-root="duty_ctrl">
+
+		<header>
+			<ul class="nav-ul countryHide ">
+				<li><a href="./overview.html">扶贫概览</a><i></i></li>
+				<li><a href="./search.html">帮扶搜索</a><i></i></li>
+				<li class="on"><a href="javascript:void(0)">扶贫专项</a><i></i></li>
+				<li><a href="./accurate.html">精准识别</a><i></i></li>
+				<li><a href="./apply.html">应用云</a><i class="word2"></i></li>
+			</ul>
+		</header>
+
+
+		<!-- 底部左侧操作按钮 -->
+
+
+	</div>
+
+	<!--村档案详情-->
+
+	<!--户档案详情-->
+
+
+</div> <!-- end main-wrap -->
+
+
+<script src="../../../static/js/modules/fupin/libs/jquery.min.js"></script>
+<script src="../../../static/js/modules/fupin/libs/echarts.min.js"></script>
+<script src="../../../static/js/modules/fupin/libs/template-native.js"></script>
+<script src="../../../static/js/modules/fupin/libs/plugin.slimscroll.min.js"></script>
+<script src="../../../static/js/modules/fupin/controllers/render.js"></script>
+<!-- <script src="../../../static/js/modules/fupin/controllers/poor_ctrl.js"></script> -->
+<script src="../../../static/js/modules/fupin/controllers/duty_ctrl.js"></script>
+<script src="../../../static/js/modules/fupin/common/button.js"></script>
+<script src="../../../static/js/modules/fupin/tabArea.js"></script>
+<script src="../../../static/js/modules/fupin/tabIndexChart.js"></script>
+</body>
+
+</html>
+
+

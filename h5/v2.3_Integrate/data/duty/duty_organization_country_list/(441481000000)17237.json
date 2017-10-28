@@ -1,0 +1,16 @@
+{
+	"data":{
+		"belong_organization":"广州市天河区住房和建设水务局",
+		"list":[
+			{
+				"id":"441481131205",
+				"order":1,
+				"contact_phone":"13643096364",
+				"contact_name":"张淦清",
+				"country_name":"大坑村委会"
+			}
+		]
+	},
+	"code":0,
+	"msg":"获取信息成功"
+}

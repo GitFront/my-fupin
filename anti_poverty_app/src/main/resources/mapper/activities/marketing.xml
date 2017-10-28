@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="aspire.bi.activities.marketing">
+	
+   <select id="getUser" resultType="java.util.HashMap" parameterType="java.lang.String">   
+	    select * from  wx_userinfo where 1 = 1 
+	    <if test="null != open_id">
+	      and open_id=#{open_id}
+	    </if>
+   </select>
+   
+   <select id="s_use_act_user_d" resultType="java.util.HashMap" parameterType="java.lang.String">   
+	      SELECT stat_time, merchant_id, merchant_name, act_user, act_rate, new_act_user, old_act_user  FROM s_use_act_user_d
+	      <where>
+	            <if test="null != merchant_id and '' != merchant_id">
+	               merchant_id=#{merchant_id}
+	            </if>
+	      </where>
+    </select>
+   
+   <select id="s_use_act_user_d_count" resultType="java.util.HashMap" parameterType="java.lang.String">   
+	      SELECT count(*) as total FROM s_use_act_user_d
+	      <where>
+	            <if test="null != merchant_id and '' != merchant_id">
+	               merchant_id=#{merchant_id}
+	            </if>
+	      </where>
+   </select>
+ 	
+ 	 	
+</mapper>

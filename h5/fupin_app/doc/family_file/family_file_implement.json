@@ -1,0 +1,33 @@
+{
+	"code": 0,
+	"msg": "获取信息成功",
+	"data": {
+		//施策总览
+		"summary": {
+			//进行中／已完成／项目总数
+			"amount_project": "76/47/123",
+			//已投入资金（元）
+			"capital_invested": "247583",
+			//项目收益（元）
+			"project_revenue": "23"
+		},
+		//进行中项目
+		"projects_running": [
+			{
+				//项目名
+				"name": "高车唐村道路改造工程",
+				//项目值
+				"value": "道路建设"
+			}
+		],
+		//已完成项目
+		"projects_completed": [
+			{
+				//项目名
+				"name": "高车唐村自来水到户工程",
+				//项目值
+				"value": "安全饮水"
+			}
+		]
+	}
+}

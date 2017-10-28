@@ -1,0 +1,1350 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.aspire.birp.modules.antiPoverty.dao.FundMonitoringDao">
+<sql id="dim_Detail_sql">
+		
+				INNER JOIN (
+				 select CITY_NAME_S A2 
+				 ,COUNTY_NAME_S A3 
+				 ,TOWN_NAME_S A4 
+				 ,COUNTRY_NAME_S A5
+				 ,COUNTRY_ID 
+				 from DIM_HELP_AREA_MAP  
+				 WHERE help_p_pac=#{helppac} 
+				 ) t2 ON (t1.B1=t2.COUNTRY_ID)
+				
+			
+	</sql>
+<sql id="dim_DetailCount_sql">
+	
+				INNER JOIN (
+				 select
+				 COUNTRY_ID 
+				 from DIM_HELP_AREA_MAP  
+				 WHERE help_p_pac=#{helppac} 
+				 ) t2 ON (t1.B1=t2.COUNTRY_ID)
+				
+				
+				
+</sql>
+<sql id="help_sql">
+		   <if test=" null != helppac and '' != helppac">
+				AND HELP_P_PAC = #{helppac}
+			</if>
+	</sql> 
+    <sql id="dim_area_sql">
+		INNER JOIN
+		(SELECT 
+		  PAC,
+		  SORT
+		  FROM
+		  DIM_AREA_INFO
+		  WHERE 1=1
+		  <include refid="p_area_sql"/>
+		  ) B ON(A.S_ID=B.PAC)
+		ORDER BY B.SORT 
+	</sql>
+	
+	<sql id="p_area_sql">
+		 <if test=" '' != level and null != level and 'province' == level  ">
+				AND PPAC = #{id}
+			</if>
+			
+			<if test=" '' != level and null != level and 'city' == level  ">
+				AND PPAC = #{id}
+			</if>
+			
+			<if test=" '' != level and null != level and 'county' == level  ">
+				AND PPAC = #{id} 
+			</if>
+			
+			<if test=" '' != level and null != level and 'town' == level  ">
+				AND PPAC = #{id} 
+			</if>
+			
+			<if test=" '' != level and null != level and 'country' == level  ">
+				AND PAC = #{id}
+			</if>
+	</sql>
+  	<sql id="COUNTRY_Y_sql">
+		AND STAT_TIME=#{R2_DM_HELP_PROJECT_CTY_Y} 		
+	</sql>	
+	<sql id="COUNTRY_M_sql">
+		AND  STAT_TIME=#{R2_DM_HELP_PROJECT_CTY_Y} 
+	</sql>	
+	<sql id="COUNTRY_FY_sql">
+		AND STAT_TIME=#{R_DW_HELP_PROJECT_Y} 		
+	</sql>	  
+<!--资金管理-->
+	<!--柱形 one-->
+		<select id="queryFundMonitoringManagement1"  parameterType="hashmap" resultType="hashmap">
+			    SELECT * FROM (SELECT
+			    	 trunc(SUM(CN_FINANCIAL+CN_INDUSTRY)/10000, 2) AS S_VALUE 
+				    ,'中央' AS S_GROUP
+				    FROM
+				    R2_DM_HELP_PROJECT_CTY_Y
+						<where>
+						<include refid="COUNTRY_Y_sql"/>
+						<include refid="level_sql"/>
+						<include refid="help_sql"/>
+						<include refid="yearTth_sql"/>
+					</where>
+				   GROUP BY STAT_YEAR
+				   ORDER BY STAT_YEAR)
+				   union all
+				     SELECT * FROM (SELECT
+				    trunc(SUM(PIN_SOCIETY+PIN_FINANCIAL+PIN_INDUSTRY)/10000, 2) AS S_VALUE 
+				    ,'省级' AS S_GROUP
+				    FROM
+				    R2_DM_HELP_PROJECT_CTY_Y
+						<where>
+						<include refid="COUNTRY_Y_sql"/>
+						<include refid="level_sql"/>
+						<include refid="help_sql"/>
+						<include refid="yearTth_sql"/>
+					</where>
+				   GROUP BY STAT_YEAR 
+				   ORDER BY STAT_YEAR)
+				   union all
+				     SELECT * FROM (SELECT
+				     trunc(SUM(HC_SOCIETY+HC_TOWN_FINANCIAL+HC_CITY_FINANCIAL)/10000, 2) AS S_VALUE 
+				    ,'帮扶市' AS S_GROUP
+				    FROM
+				    R2_DM_HELP_PROJECT_CTY_Y
+						<where>
+						<include refid="COUNTRY_Y_sql"/>
+						<include refid="level_sql"/>
+						<include refid="help_sql"/>
+						<include refid="yearTth_sql"/>
+					</where>
+				   GROUP BY STAT_YEAR
+				   ORDER BY STAT_YEAR)
+				   union all
+				     SELECT * FROM (SELECT
+				    trunc(SUM(BHC_SOCIETY+BHC_TOWN_INDUSTRY+BHC_CITY_INDUSTRY+BHC_TOWN_FINANCIAL+BHC_CITY_FINANCIAL)/10000, 2) AS S_VALUE 
+				    ,'被帮扶市' AS S_GROUP
+				    FROM
+				    R2_DM_HELP_PROJECT_CTY_Y
+						<where>
+						<include refid="COUNTRY_Y_sql"/>
+						<include refid="level_sql"/>
+						<include refid="help_sql"/>
+						<include refid="yearTth_sql"/>
+					</where>
+				   GROUP BY STAT_YEAR,1 
+				   ORDER BY STAT_YEAR)
+				   union all
+				     SELECT * FROM (SELECT
+				    trunc(SUM(UNIT_SELF_RAISED/10000), 2) AS S_VALUE 
+				    ,'自筹资金' AS S_GROUP
+				    FROM
+				    R2_DM_HELP_PROJECT_CTY_Y
+						<where>
+						<include refid="COUNTRY_Y_sql"/>
+						<include refid="level_sql"/>
+						<include refid="help_sql"/>
+						<include refid="yearTth_sql"/>
+					</where>
+				   GROUP BY STAT_YEAR
+				   ORDER BY STAT_YEAR)
+		</select>
+	<!--柱形 two-->
+		<select id="queryFundMonitoringManagement2"  parameterType="hashmap" resultType="hashmap">
+			SELECT * FROM (SELECT
+				 <include refid="level_area_sql1"/> as  S_NAME
+				,trunc(SUM(REAL_CAPITAL)/10000, 2) as S_VALUE
+				,'年度项目资金总额' AS S_GROUP
+				FROM
+				R2_DM_HELP_PROJECT_CTY_Y
+				<where>
+					<include refid="COUNTRY_Y_sql"/>
+					<include refid="yearTth_sql"/>
+					<include refid="help_sql"/>
+					<include refid="level_sql"/>
+				</where>
+				GROUP BY <include refid="level_area_sql1"/>
+				ORDER BY S_VALUE desc)
+				WHERE ROWNUM&lt;6
+		</select>
+	<!--柱形 three -->
+		<select id="queryFundMonitoringManagement3"  parameterType="hashmap" resultType="hashmap">
+			SELECT * FROM (SELECT
+				 <include refid="level_area_sql1"/> as  S_NAME
+				,trunc(SUM(REAL_CAPITAL)/10000, 2) as S_VALUE
+				,'年度项目资金总额' AS S_GROUP
+				FROM
+				R2_DM_HELP_PROJECT_CTY_Y
+				<where>
+				<include refid="COUNTRY_Y_sql"/>
+					<include refid="yearTth_sql"/>
+					<include refid="help_sql"/>
+					<include refid="level_sql"/>
+				</where>
+				GROUP BY <include refid="level_area_sql1"/>
+				 ORDER BY S_VALUE desc)
+		</select>
+	<!--合计 -->
+		<select id="queryFundMonitoringManagementTableC"  parameterType="hashmap" resultType="hashmap">
+
+			select
+		    	<include refid="count_area_sql"/>
+		    	<include refid="query_sql"/>
+				<where>
+				<include refid="COUNTRY_Y_sql"/>
+					<include refid="level_sql"/>
+					<include refid="help_sql"/>
+					<include refid="yearTth_sql"/>
+				</where>
+			GROUP BY <include refid="count_group_by_sql"/>
+		</select>
+	<!-- 合计详细 -->
+		<select id="queryFundMonitoringManagementTable"  parameterType="hashmap" resultType="hashmap">
+
+		SELECT A.*,B.SORT FROM
+		(select
+		    	<include refid="level_area_sql"/>
+		    	<include refid="query_sql"/>
+				<where>
+					<include refid="COUNTRY_Y_sql"/>
+					<include refid="level_sql"/>
+					<include refid="help_sql"/>
+					<include refid="yearTth_sql"/>
+				</where>
+			GROUP BY  <include refid="by_group"/>) A
+		<include refid="dim_area_sql"/>
+			
+		</select>
+	
+<!--资金分析-->
+
+	<!--柱形 one-->
+		<select id="queryFundAnalysisManagement1"  parameterType="hashmap" resultType="hashmap">
+		SELECT * FROM (SELECT
+				 to_char(to_date(STAT_MONTH,'yyyymm'),'yyyy.mm')  S_NAME
+				,trunc(SUM(REAL_CAPITAL)/10000, 2) as S_VALUE
+				,'项目资金总额' AS S_GROUP
+				FROM
+				R2_DM_PROJFUNDS_PROJTYPE_M
+				<where>
+				<include refid="COUNTRY_M_sql"/>
+					<include refid="yearTth_sql"/>
+					<include refid="level_sql"/>
+					<include refid="help_sql"/>
+					<include refid="class_sql"/>
+				</where>
+				GROUP BY STAT_MONTH
+				ORDER BY STAT_MONTH desc)
+				WHERE ROWNUM&lt;6
+        		ORDER BY S_NAME 
+		</select>
+		
+	<!--柱形 two-->
+		<select id="queryFundAnalysisManagement2"  parameterType="hashmap" resultType="hashmap">
+			SELECT * FROM (SELECT
+				 PROJ_CLASS as  S_NAME
+				,trunc(SUM(REAL_CAPITAL)/10000, 2) as S_VALUE
+				,'项目资金总额' AS S_GROUP
+				FROM
+				R2_DM_HELP_PROJECT_CTY_Y
+				<where>
+				<include refid="COUNTRY_Y_sql"/>
+					<include refid="yearTth_sql"/>
+					<include refid="level_sql"/>
+					<include refid="help_sql"/>
+					<include refid="class_sql"/>
+				</where>
+				GROUP BY PROJ_CLASS
+				ORDER BY S_VALUE desc)
+				WHERE ROWNUM&lt;6
+		</select>
+		
+	<!--柱形 three -->
+		<select id="queryFundAnalysisManagement3"  parameterType="hashmap" resultType="hashmap">
+			SELECT * FROM (SELECT
+				 PROJ_CLASS as  S_NAME
+				,trunc(SUM(REAL_CAPITAL)/10000, 2) as S_VALUE
+				,'项目资金总额' AS S_GROUP
+				FROM
+				R2_DM_HELP_PROJECT_CTY_Y
+				<where>
+					<include refid="COUNTRY_Y_sql"/>
+					<include refid="yearTth_sql"/>
+					<include refid="level_sql"/>
+					<include refid="help_sql"/>
+					<include refid="class_sql"/>
+				</where>
+				GROUP BY PROJ_CLASS
+				ORDER BY S_VALUE desc)
+				
+		</select>
+		
+	<!--合计 -->
+		<select id="queryFundAnalysisManagementTableC"  parameterType="hashmap" resultType="hashmap">
+			select
+			    	<include refid="count_area_sql"/>
+			    	<include refid="query_sql"/>
+					<where>
+					<include refid="COUNTRY_Y_sql"/>
+						<include refid="level_sql"/>
+						<include refid="yearTth_sql"/>
+						<include refid="help_sql"/>
+						<include refid="class_sql"/>
+					</where>
+				GROUP BY <include refid="count_group_by_sql"/>
+		</select>
+		
+	<!-- 合计详细 -->
+		<select id="queryFundAnalysisManagementTable"  parameterType="hashmap" resultType="hashmap">
+			SELECT A.*,B.SORT FROM
+			(select
+			    	<include refid="level_area_sql"/>
+			    	<include refid="query_sql"/>
+					<where>
+					<include refid="COUNTRY_Y_sql"/>
+						<include refid="level_sql"/>
+						<include refid="yearTth_sql"/>
+						<include refid="help_sql"/>
+						<include refid="class_sql"/>
+					</where>
+				GROUP BY  <include refid="by_group"/>) A
+			<include refid="dim_area_sql"/>	
+				
+		</select>
+
+<!--资金分析详细-->
+
+	<!--分析详细-->
+		<select id="queryFundAnalysisManagementDetail"  parameterType="hashmap" resultType="hashmap">
+			select 
+
+				*
+				
+				from
+				(
+				select t1.*,ROWNUM RM
+				from
+				(
+				select
+				<include refid="query_detailed_sql"/>
+				 <where>
+				 
+					<include refid="COUNTRY_FY_sql"/>
+					<include refid="level_sql"/>
+					<include refid="year_sql"/>
+					<include refid="class_sql"/>
+					<include refid="query_condition_sql"/>
+				</where>	
+				) t1
+				 <include refid="dim_Detail_sql"/>
+				)
+				
+				<if test="page !=null">
+						WHERE RM BETWEEN #{pageSize}*(#{page}-1)+1 AND #{pageSize}  * #{page}
+				</if>
+		</select>
+	
+	<!--分析详细总数-->
+		<select id="queryFundAnalysisManagementDetailCount"  parameterType="hashmap" resultType="long">
+		select 
+
+				count(*)
+				
+				from
+				(
+				select t1.*,ROWNUM RM
+				from
+				(
+				select
+				<include refid="query_detailed_sql"/>
+				 <where>
+					 <include refid="COUNTRY_FY_sql"/>
+					<include refid="level_sql"/>
+					<include refid="year_sql"/>
+					<include refid="class_sql"/>
+					<include refid="query_condition_sql"/>
+				</where>
+				) t1
+				 <include refid="dim_DetailCount_sql"/>
+				)
+				
+		</select>
+	
+<!--资金排序-->
+
+	<!--资金排序-->
+		<select id="queryFundAnalysisSort"  parameterType="hashmap" resultType="hashmap">
+			select 
+
+				*
+				
+				from
+				(
+				select t1.*,ROWNUM RM
+				from
+				(
+				 SELECT
+				<include refid="sort_area_sql"/>
+				<include refid="road_area_sql"/>
+				from R2_DM_HELP_PROJECT_CTY_Y t1 
+				 <where>
+				 <include refid="COUNTRY_Y_sql"/>
+					<include refid="level_sql"/>
+					<include refid="yearTth_sql"/>
+					<include refid="help_sql"/>
+					<include refid="query_condition_sql"/>
+				</where>	
+				GROUP BY <include refid="group_sort_area_sql"/>
+				ORDER BY <include refid="group_sort_area_sql"/> DESC
+				) t1
+				)
+				
+				<if test="page !=null">
+						WHERE RM BETWEEN #{pageSize}*(#{page}-1)+1 AND #{pageSize}  * #{page}
+				</if>
+		</select>
+	
+	<!--资金排序总数-->
+		<select id="queryFundAnalysisSortCount"  parameterType="hashmap" resultType="long">
+		select 
+
+				count(*)
+				
+				from
+				(
+				select t1.*,ROWNUM RM
+				from
+				(
+				 SELECT
+				<include refid="sort_area_sql"/>
+				<include refid="road_area_sql"/>
+				from R2_DM_HELP_PROJECT_CTY_Y t1 
+				 <where>
+				 <include refid="COUNTRY_Y_sql"/>
+					<include refid="level_sql"/>
+					<include refid="help_sql"/>
+					<include refid="yearTth_sql"/>
+				</where>
+				GROUP BY <include refid="group_sort_area_sql"/>
+				ORDER BY <include refid="group_sort_area_sql"/> DESC
+				) t1
+				)
+		</select>
+<!--资金排序123-->
+
+	<!--资金排序123-->
+		<select id="queryFundAnalysisSortTtH"  parameterType="hashmap" resultType="hashmap">
+			select 
+
+				*
+				
+				from
+				(
+				select t1.*,ROWNUM RM
+				from
+				(
+				 SELECT
+				<include refid="sortTth_area_sql"/>
+				<include refid="roadTth_area_sql"/>
+				from R_DW_FUNDS_FILE_ALLOCATE t1 
+				 <where>
+					<include refid="levelTth_sql"/>
+					<include refid="yearTth_sql"/>
+				</where>	
+				<!-- GROUP BY <include refid="groupTth_sort_area_sql"/>
+				ORDER BY A3 DESC -->
+				ORDER BY STAT_YEAR DESC
+				) t1
+				
+				)
+				
+				<if test="page !=null">
+						WHERE RM BETWEEN #{pageSize}*(#{page}-1)+1 AND #{pageSize}  * #{page}
+				</if>
+		</select>
+	
+	<!--资金排序总数123-->
+		<select id="queryFundAnalysisSortTtHCount"  parameterType="hashmap" resultType="long">
+		select 
+
+				count(*)
+				
+				from
+				(
+				select t1.*,ROWNUM RM
+				from
+				(
+				 SELECT
+				<include refid="sortTth_area_sql"/>
+				<include refid="roadTth_area_sql"/>
+				from R_DW_FUNDS_FILE_ALLOCATE t1 
+				 <where>
+					<include refid="levelTth_sql"/>
+					<include refid="yearTth_sql"/>
+				</where>
+				<!-- GROUP BY <include refid="groupTth_sort_area_sql"/>
+				ORDER BY A3 DESC -->
+				ORDER BY STAT_YEAR DESC
+				) t1
+				
+				)
+		</select>
+		
+	<!--排序详细-->
+		<select id="queryFundAnalysisSortDetail"  parameterType="hashmap" resultType="hashmap">
+		select
+          <include refid="detail_area_sql"/>
+          <include refid="query_sql"/>
+          <where>
+          <include refid="COUNTRY_Y_sql"/>
+				<include refid="level_sql"/>
+				<include refid="help_sql"/>
+				<include refid="yearTth_sql"/>
+		</where>
+			GROUP BY  <include refid="count_group_by_sql"/>
+		</select>
+	<!--  -->
+	<select id="queryPoorFamilyListTable"  parameterType="hashmap" resultType="hashmap">
+	select 
+
+				*
+				
+				from
+				(
+				select t1.*,ROWNUM RM
+				from
+				(
+				select 
+                DIM.COUNTRY_NAME_S   AS A2,
+                FBI.FAM_NAME AS A3,
+                CASE WHEN FBI.LONGITUDE IS NULL or FBI.LONGITUDE IS NULL THEN ' ' ELSE trunc(FBI.LONGITUDE, 2)||'，'||trunc(FBI.LATITUDE, 2) END AS   A4,
+                CASE WHEN FBI.AID_TIME=29991231 THEN '' ELSE SUBSTR(FBI.AID_TIME, 1,4) END   AS   A5,
+                FBI.AID_POOR_IDX    AS A6,
+                FBI.visits_cnt_yr AS A7,
+                FBI.FAM_ID  AS FAMILYID
+                FROM
+                F_FAMILYFILE_BASIC_INFO_D FBI, 
+                DIM_AREA_5LVL DIM
+            where FBI.COUNTRY_PAC = DIM.COUNTRY_ID
+                and FBI.POOR_STATUS not in (3,4,5)
+          and FBI.POOR_DELETE_STATUS=0 
+		            AND
+				    <if test=" '' != level and null != level and 'town' == level  ">
+						 DIM.TOWN_ID=#{COUNTRY_PAC}
+					</if>
+			
+					<if test=" '' != level and null != level and 'country' == level  ">
+						 DIM.COUNTRY_ID=#{COUNTRY_PAC}
+				    </if>
+				) t1
+				
+				)
+				
+				<if test="page !=null">
+						WHERE RM BETWEEN #{pageSize}*(#{page}-1)+1 AND #{pageSize}  * #{page}
+				</if>
+	</select>
+	<!-- -->
+	<select id="queryPoorFamilyListTableC"  parameterType="hashmap" resultType="long">
+select 
+
+				count(*)
+				
+				from
+				(
+				select t1.*,ROWNUM RM
+				from
+				(
+				
+				select 
+                DIM.COUNTRY_NAME_S   AS A2,
+                FBI.FAM_NAME AS A3,
+                CASE WHEN FBI.LONGITUDE IS NULL or FBI.LONGITUDE IS NULL THEN ' ' ELSE trunc(FBI.LONGITUDE, 2)||'，'||trunc(FBI.LATITUDE, 2) END AS   A4,
+                CASE WHEN FBI.AID_TIME=29991231 THEN '' ELSE SUBSTR(FBI.AID_TIME, 1,4) END   AS   A5,
+                FBI.AID_POOR_IDX    AS A6,
+                FBI.visits_cnt_yr AS A7,
+                FBI.FAM_ID  AS FAMILYID
+                FROM
+                F_FAMILYFILE_BASIC_INFO_D FBI, 
+                DIM_AREA_5LVL DIM
+            where FBI.COUNTRY_PAC = DIM.COUNTRY_ID
+                and FBI.POOR_STATUS not in (3,4,5)
+         		 and FBI.POOR_DELETE_STATUS=0 
+		            AND
+				    <if test=" '' != level and null != level and 'town' == level  ">
+						 DIM.TOWN_ID=#{COUNTRY_PAC}
+					</if>
+			
+					<if test=" '' != level and null != level and 'country' == level  ">
+						 DIM.COUNTRY_ID=#{COUNTRY_PAC}
+				    </if>
+				   
+				) t1
+				
+				)
+	</select>
+<!-- 管理分析sql -->
+	<sql id="query_sql">
+			  trunc(SUM(UNIT_SELF_RAISED+
+                 HC_SOCIETY + HC_TOWN_FINANCIAL + HC_CITY_FINANCIAL+
+                 CN_FINANCIAL + CN_INDUSTRY+
+                 PIN_SOCIETY +PIN_FINANCIAL + PIN_INDUSTRY+
+                 BHC_CITY_FINANCIAL + BHC_TOWN_FINANCIAL+BHC_CITY_INDUSTRY + BHC_TOWN_INDUSTRY + BHC_SOCIETY) / 10000, 2)
+              AS A3
+		     ,trunc(SUM(UNIT_SELF_RAISED)/10000, 2)  AS A4
+		     ,trunc(SUM(HC_SOCIETY+HC_TOWN_FINANCIAL+HC_CITY_FINANCIAL)/10000, 2) AS A5
+		     ,trunc(SUM(HC_CITY_FINANCIAL)/10000, 2) AS A6
+		     ,trunc(SUM(HC_TOWN_FINANCIAL)/10000, 2) AS A7
+		     ,trunc(SUM(HC_SOCIETY)/10000, 2) AS A8
+		     ,trunc(SUM(CN_FINANCIAL+CN_INDUSTRY)/10000, 2) AS A9
+		     ,trunc(SUM(CN_FINANCIAL)/10000, 2) AS A10
+		     ,trunc(SUM(CN_INDUSTRY)/10000, 2) AS A11
+		     ,trunc(SUM(PIN_SOCIETY+PIN_FINANCIAL+PIN_INDUSTRY)/10000, 2) AS A12
+		     ,trunc(SUM(PIN_FINANCIAL)/10000, 2) AS A13
+		     ,trunc(SUM(PIN_INDUSTRY)/10000, 2) AS A14
+		     ,trunc(SUM(PIN_SOCIETY)/10000, 2) AS A15
+		     ,trunc(SUM(BHC_CITY_FINANCIAL+BHC_TOWN_FINANCIAL+BHC_CITY_INDUSTRY+BHC_TOWN_INDUSTRY+BHC_SOCIETY)/10000, 2) AS A16
+		     ,trunc(SUM(BHC_CITY_FINANCIAL)/10000, 2) AS A17
+		     ,trunc(SUM(BHC_TOWN_FINANCIAL)/10000, 2) AS A18
+		     ,trunc(SUM(BHC_CITY_INDUSTRY)/10000, 2)  AS A19
+		     ,trunc(SUM(BHC_TOWN_INDUSTRY)/10000, 2)  AS A20
+		     ,trunc(SUM(BHC_SOCIETY)/10000, 2)		 AS A21
+		     
+		     from
+		      
+		      R2_DM_HELP_PROJECT_CTY_Y
+	</sql>
+
+<!-- 分析详细sql -->
+	<sql id="query_detailed_sql">
+			  CITY_NAME AS  A2
+			 ,COUNTY_NAME AS A3
+			 ,TOWN_NAME	  AS A4
+			 ,COUNTRY_NAME  AS A5
+			 ,FAM_NAME              AS A6
+			 ,POP_NAME				AS A7
+			 ,CASE PROJ_TYPE 
+					WHEN 1 THEN '到村' 
+					WHEN 2 THEN '到户'
+         	 END AS A8
+		     ,PROJ_CLASS  AS A9
+		     ,PLAN_CAPITAL AS A10
+		     ,PROJ_PROGRESS AS A11
+		     ,substr(lpad(BEGIN_TIME,8,'0'),1,4)||'.'||substr(lpad(BEGIN_TIME,8,'0'),5,2) AS A12
+             ,substr(lpad(FINISH_TIME,8,'0'),1,4)||'.'||substr(lpad(FINISH_TIME,8,'0'),5,2)  AS A13
+		     ,trunc(REAL_CAPITAL/10000, 2) AS A14
+		     ,trunc(UNIT_SELF_RAISED/10000, 2) AS A15
+		     ,trunc(HC_CITY_FINANCIAL/10000, 2) AS A16
+		     ,trunc(HC_TOWN_FINANCIAL/10000, 2)  AS A17
+		     ,trunc(HC_SOCIETY/10000, 2) AS A18
+		     ,trunc(CN_FINANCIAL/10000, 2) AS A19
+		     ,trunc(CN_INDUSTRY/10000, 2) AS A20
+		     ,trunc(PIN_FINANCIAL/10000, 2) AS A21
+		     ,trunc(PIN_INDUSTRY/10000, 2) AS A22
+		     ,trunc(PIN_SOCIETY/10000, 2) AS A23
+		     ,trunc(BHC_CITY_FINANCIAL/10000, 2)  AS A24
+		     ,trunc(BHC_TOWN_FINANCIAL/10000, 2)  AS A25
+		     ,trunc(BHC_CITY_INDUSTRY/10000, 2)		 AS A26
+		     ,trunc(BHC_TOWN_INDUSTRY/10000, 2)    AS A27
+		     ,trunc(POP_SELF_RAISED/10000, 2)           AS A28
+		     ,trunc(BHC_SOCIETY/10000, 2)           AS A29
+		     ,trunc(MEDICARE/10000, 2)		 AS A30
+		     ,trunc(PROJ_PROFIT/10000, 2)		 AS A31
+		     ,PROJ_TYPE		    AS TYPE
+		     ,COUNTRY_PAC		AS B1
+		     ,HELP_ID		    AS S_ID
+		     from
+		      
+		      R_DW_HELP_PROJECT_Y t1
+	</sql>
+	
+	<!-- 根据文件号id查询文件详情信息 -->
+	<select id="queryFundFileByFileId"  parameterType="hashmap" resultType="hashmap">
+				
+				select 
+				PAC S_ID
+				,AREA_NAME S_NAME
+				,FUNDS_LEVEL S_LEVEL
+				,PPAC
+				,FILE_ID
+				,FILE_NAME
+				,CN_ALLOCATE_DATE
+				,to_char(trunc(CN_ALLOCATE_MONEY/10000,1),'fm99999999999990.00') CN_ALLOCATE_MONEY
+				,ALLOCATE_CITY_NAME
+				,PIN_ALLOCATE_DATE
+				,to_char(trunc(PIN_ALLOCATE_MONEY/10000,1),'fm99999999999990.00') PIN_ALLOCATE_MONEY
+				,PIN_ALLOCATE_CYCLE
+				,to_char(trunc(PIN_ALLOCATE_BALANCE/10000,1),'fm99999999999990.00') PIN_ALLOCATE_BALANCE
+				,ALLOCATE_COUNTY_NAME
+				,CITY_ALLOCATE_DATE
+				,to_char(trunc(CITY_ALLOCATE_MONEY/10000,1),'fm99999999999990.00') CITY_ALLOCATE_MONEY
+				,CITY_ALLOCATE_CYCLE
+				,to_char(trunc(CITY_ALLOCATE_BALANCE/10000,1),'fm99999999999990.00') CITY_ALLOCATE_BALANCE
+				,ALLOCATE_TOWN_NAME
+				,COUNTY_ALLOCATE_DATE
+				,to_char(trunc(COUNTY_ALLOCATE_MONEY/10000,1),'fm99999999999990.00') COUNTY_ALLOCATE_MONEY
+				,COUNTY_ALLOCATE_CYCLE
+				,to_char(trunc(COUNTY_ALLOCATE_BALANCE/10000,1),'fm99999999999990.00') COUNTY_ALLOCATE_BALANCE
+				,ALLOCATE_COUNTRY_NAME
+				,TOWN_ALLOCATE_DATE
+				,to_char(trunc(TOWN_ALLOCATE_MONEY/10000,1),'fm99999999999990.00') TOWN_ALLOCATE_MONEY
+				,TOWN_ALLOCATE_CYCLE
+				,to_char(trunc(TOWN_ALLOCATE_BALANCE/10000,1),'fm99999999999990.00') TOWN_ALLOCATE_BALANCE
+				from R_DW_FUNDS_FILE_ALLOCATE 
+				where
+					PAC = #{PAC}
+					AND FILE_ID = #{FILE_ID}
+					AND STAT_TIME = #{year}
+		</select>
+		
+		<!-- 查询文件号根据文件号id-->
+		<select id="queryFundFileById"  parameterType="hashmap" resultType="hashmap">
+			SELECT 
+			PAC
+			,FILE_ID
+			,FILE_NAME
+			,FUNDS_LEVEL 
+			FROM
+			 R_DW_FUNDS_FILE_Y 
+			WHERE 
+			FILE_ID = #{FILE_ID}
+		</select>
+		
+	<!-- 查询文件号列表 -->
+	<select id="queryFundFileList"  parameterType="hashmap" resultType="hashmap">
+			
+			SELECT * FROM
+			
+			(
+			
+			SELECT t.*,ROWNUM RM
+			FROM
+			(
+			
+				select 
+				FILE_NAME A1
+				,STAT_YEAR A2
+				,FUNDS_LEVEL A3
+				,to_char(trunc(FUNDS_TOTAL/10000,2),'fm9999999999999990.00') A4
+				,FILE_ID A5
+				from R_DW_FUNDS_FILE_Y 
+				WHERE 
+				 INSTR(FILE_NAME,#{keyword}) > 0
+			ORDER BY STAT_YEAR DESC
+			) t
+			)
+		
+		
+			<if test="page !=null">
+					WHERE RM BETWEEN #{pageSize}*(#{page}-1)+1 AND #{pageSize}  * #{page}
+			</if>
+		</select>
+		
+		<!-- 查询文件号列表 总数-->
+		<select id="queryFundFileListCount"  parameterType="hashmap" resultType="long">
+			SELECT COUNT(*) FROM
+			 R_DW_FUNDS_FILE_Y 
+				WHERE 
+				 INSTR(FILE_NAME,#{keyword}) > 0
+		</select>
+		
+		<!-- 查询文件详情 统计表 -->
+	<select id="queryFundFileDetailList"  parameterType="hashmap" resultType="hashmap">
+			
+			SELECT * FROM
+			
+			(
+			
+			SELECT t.*,ROWNUM A0
+			FROM
+			(
+			
+				select 
+				FILE_NAME A1
+				,CN_ALLOCATE_DATE A2
+				,to_char(trunc(CN_ALLOCATE_MONEY/10000,2),'fm99999999999990.00') A3
+				,ALLOCATE_CITY_NAME A4
+				,FILE_NAME A5
+				,PIN_ALLOCATE_DATE A6
+				,to_char(trunc(PIN_ALLOCATE_MONEY/10000,2),'fm99999999999990.00') A7
+				,PIN_ALLOCATE_CYCLE A8
+				,ALLOCATE_COUNTY_NAME A9
+				,FILE_NAME A10
+				,CITY_ALLOCATE_DATE A11
+				,to_char(trunc(CITY_ALLOCATE_MONEY/10000,2),'fm99999999999990.00') A12
+				,CITY_ALLOCATE_CYCLE A13
+				,ALLOCATE_TOWN_NAME A14
+				,FILE_NAME A15
+				,COUNTY_ALLOCATE_DATE A16
+				,to_char(trunc(COUNTY_ALLOCATE_MONEY/10000,2),'fm99999999999990.00') A17
+				,COUNTY_ALLOCATE_CYCLE A18
+				,ALLOCATE_COUNTRY_NAME A19
+				,FILE_NAME A20
+				,TOWN_ALLOCATE_DATE A21
+				,to_char(trunc(TOWN_ALLOCATE_MONEY/10000,2),'fm99999999999990.00') A22
+				,TOWN_ALLOCATE_CYCLE A23
+				,PROJ_NAME A24
+				,PROJ_BEGIN_DATE A25
+				,REAL_CAPITAL A26
+				,PROJ_PROFIT A27
+				from R_DW_FUNDS_FILE_ALLOCATE 
+				<where>
+					<include refid="file_area_sql"/>
+					AND FILE_ID = #{id}
+				</where> 
+			
+			) t
+			)
+		
+		
+			<if test="page !=null">
+					WHERE A0 BETWEEN #{pageSize}*(#{page}-1)+1 AND #{pageSize}  * #{page}
+			</if>
+		</select>
+		
+		<!-- 查询文件详情 记录总数-->
+		<select id="queryFundFileDetailListCount"  parameterType="hashmap" resultType="long">
+			select 
+				COUNT(*)
+				from R_DW_FUNDS_FILE_ALLOCATE 
+				<where>
+					<include refid="file_area_sql"/>
+					AND FILE_ID = #{id}
+				</where> 
+		</select>
+		
+			<!-- 查询文件详情 统计表 导出 有余额 -->
+	<select id="queryFundFileDetailListo"  parameterType="hashmap" resultType="hashmap">
+			
+			SELECT * FROM
+			
+			(
+			
+			SELECT t.*,ROWNUM A0
+			FROM
+			(
+			
+				select 
+				FILE_NAME A2
+				,CN_ALLOCATE_DATE A3
+				,to_char(trunc(CN_ALLOCATE_MONEY/10000,2),'fm99999999999990.00') A4
+				,ALLOCATE_CITY_NAME A5
+				,FILE_NAME A6
+				,PIN_ALLOCATE_DATE A7
+				,to_char(trunc(PIN_ALLOCATE_MONEY/10000,2),'fm99999999999990.00') A8
+				,PIN_ALLOCATE_CYCLE A9
+				,to_char(trunc(PIN_ALLOCATE_BALANCE/10000,2),'fm99999999999990.00') A10
+				,ALLOCATE_COUNTY_NAME A11
+				,FILE_NAME A12
+				,CITY_ALLOCATE_DATE A13
+				,to_char(trunc(CITY_ALLOCATE_MONEY/10000,2),'fm99999999999990.00') A14
+				,CITY_ALLOCATE_CYCLE A15
+				,to_char(trunc(CITY_ALLOCATE_BALANCE/10000,2),'fm99999999999990.00') A16
+				,ALLOCATE_TOWN_NAME A17
+				,FILE_NAME A18
+				,COUNTY_ALLOCATE_DATE A19
+				,to_char(trunc(COUNTY_ALLOCATE_MONEY/10000,2),'fm99999999999990.00') A20
+				,COUNTY_ALLOCATE_CYCLE A21
+				,to_char(trunc(COUNTY_ALLOCATE_BALANCE/10000,2),'fm99999999999990.00') A22
+				,ALLOCATE_COUNTRY_NAME A23
+				,FILE_NAME A24
+				,TOWN_ALLOCATE_DATE A25
+				,to_char(trunc(TOWN_ALLOCATE_MONEY/10000,2),'fm99999999999990.00') A26
+				,TOWN_ALLOCATE_CYCLE A27
+				,to_char(trunc(TOWN_ALLOCATE_BALANCE/10000,2),'fm99999999999990.00') A28
+				,PROJ_NAME A29
+				,PROJ_BEGIN_DATE A30
+				,REAL_CAPITAL A31
+				,PROJ_PROFIT A32
+				from R_DW_FUNDS_FILE_ALLOCATE 
+				<where>
+					<include refid="file_area_sql"/>
+					AND FILE_ID = #{id}
+				</where> 
+			
+			) t
+			)
+		
+		
+			<if test="page !=null">
+					WHERE A0 BETWEEN #{pageSize}*(#{page}-1)+1 AND #{pageSize}  * #{page}
+			</if>
+		</select>
+		
+		<!-- 文件佐证-->
+		<select id="queryFundFileBasicInfo"  parameterType="hashmap" resultType="hashmap">
+			select 
+			 DOC_SUPPORT_PATH A1
+			,DOC_SUPPORT_SUFFIX A2
+			from r_dw_funds_file_support t 
+			where t.file_id=#{id}
+		</select>
+		
+			<!-- 查询文件树 -->
+	<select id="queryFundFileTree"  parameterType="hashmap" resultType="hashmap">
+				select 
+				PAC S_ID
+				,AREA_NAME S_NAME
+				,PPAC
+				,FILE_ID
+				,FILE_NAME
+				,CN_ALLOCATE_DATE
+				,to_char(trunc(CN_ALLOCATE_MONEY/10000,1),'fm99999999999990.00') CN_ALLOCATE_MONEY
+				,ALLOCATE_CITY_NAME
+				,PIN_ALLOCATE_DATE
+				,to_char(trunc(PIN_ALLOCATE_MONEY/10000,1),'fm99999999999990.00') PIN_ALLOCATE_MONEY
+				,PIN_ALLOCATE_CYCLE
+				,to_char(trunc(PIN_ALLOCATE_BALANCE/10000,1),'fm99999999999990.00') PIN_ALLOCATE_BALANCE
+				,ALLOCATE_COUNTY_NAME
+				,CITY_ALLOCATE_DATE
+				,to_char(trunc(CITY_ALLOCATE_MONEY/10000,1),'fm99999999999990.00') CITY_ALLOCATE_MONEY
+				,CITY_ALLOCATE_CYCLE
+				,to_char(trunc(CITY_ALLOCATE_BALANCE/10000,1),'fm99999999999990.00') CITY_ALLOCATE_BALANCE
+				,ALLOCATE_TOWN_NAME
+				,COUNTY_ALLOCATE_DATE
+				,to_char(trunc(COUNTY_ALLOCATE_MONEY/10000,1),'fm99999999999990.00') COUNTY_ALLOCATE_MONEY
+				,COUNTY_ALLOCATE_CYCLE
+				,to_char(trunc(COUNTY_ALLOCATE_BALANCE/10000,1),'fm99999999999990.00') COUNTY_ALLOCATE_BALANCE
+				,ALLOCATE_COUNTRY_NAME
+				,TOWN_ALLOCATE_DATE
+				,to_char(trunc(TOWN_ALLOCATE_MONEY/10000,1),'fm99999999999990.00') TOWN_ALLOCATE_MONEY
+				,TOWN_ALLOCATE_CYCLE
+				,to_char(trunc(TOWN_ALLOCATE_BALANCE/10000,1),'fm99999999999990.00') TOWN_ALLOCATE_BALANCE
+				from R_DW_FUNDS_FILE_ALLOCATE 
+				<where>
+					<include refid="file_area_sql"/>
+					AND FILE_ID = #{id}
+				</where> 
+			
+		</select>
+		
+				<!-- 查询文件子树 -->
+	<select id="queryFundFileSubTree"  parameterType="hashmap" resultType="hashmap">
+				select 
+				PAC S_ID
+				,AREA_NAME S_NAME
+				,PPAC
+				,FILE_ID
+				,FILE_NAME
+				,CN_ALLOCATE_DATE
+				,to_char(trunc(CN_ALLOCATE_MONEY/10000,1),'fm99999999999990.00') CN_ALLOCATE_MONEY
+				,ALLOCATE_CITY_NAME
+				,PIN_ALLOCATE_DATE
+				,to_char(trunc(PIN_ALLOCATE_MONEY/10000,1),'fm99999999999990.00') PIN_ALLOCATE_MONEY
+				,PIN_ALLOCATE_CYCLE
+				,to_char(trunc(PIN_ALLOCATE_BALANCE/10000,1),'fm99999999999990.00') PIN_ALLOCATE_BALANCE
+				,ALLOCATE_COUNTY_NAME
+				,CITY_ALLOCATE_DATE
+				,to_char(trunc(CITY_ALLOCATE_MONEY/10000,1),'fm99999999999990.00') CITY_ALLOCATE_MONEY
+				,CITY_ALLOCATE_CYCLE
+				,to_char(trunc(CITY_ALLOCATE_BALANCE/10000,1),'fm99999999999990.00') CITY_ALLOCATE_BALANCE
+				,ALLOCATE_TOWN_NAME
+				,COUNTY_ALLOCATE_DATE
+				,to_char(trunc(COUNTY_ALLOCATE_MONEY/10000,1),'fm99999999999990.00') COUNTY_ALLOCATE_MONEY
+				,COUNTY_ALLOCATE_CYCLE
+				,to_char(trunc(COUNTY_ALLOCATE_BALANCE/10000,1),'fm99999999999990.00') COUNTY_ALLOCATE_BALANCE
+				,ALLOCATE_COUNTRY_NAME
+				,TOWN_ALLOCATE_DATE
+				,to_char(trunc(TOWN_ALLOCATE_MONEY/10000,1),'fm99999999999990.00') TOWN_ALLOCATE_MONEY
+				,TOWN_ALLOCATE_CYCLE
+				,to_char(trunc(TOWN_ALLOCATE_BALANCE/10000,1),'fm99999999999990.00') TOWN_ALLOCATE_BALANCE
+				from R_DW_FUNDS_FILE_ALLOCATE 
+				where
+					PPAC = #{PAC}
+					AND FILE_ID = #{file_id}
+				
+			
+		</select>
+		
+		<!-- 子PAC查询上级区域 -->
+	<select id="queryFundFileBySubId"  parameterType="hashmap"
+       resultType="hashmap">
+		SELECT * FROM (select 
+				PAC S_ID
+				,STAT_TIME
+				,AREA_NAME S_NAME
+				,PPAC
+				,FUNDS_LEVEL S_LEVEL
+				,FILE_ID
+				,FILE_NAME
+				,CN_ALLOCATE_DATE
+				,to_char(trunc(CN_ALLOCATE_MONEY/10000,1),'fm99999999999990.00') CN_ALLOCATE_MONEY
+				,ALLOCATE_CITY_NAME
+				,PIN_ALLOCATE_DATE
+				,to_char(trunc(PIN_ALLOCATE_MONEY/10000,1),'fm99999999999990.00') PIN_ALLOCATE_MONEY
+				,PIN_ALLOCATE_CYCLE
+				,to_char(trunc(PIN_ALLOCATE_BALANCE/10000,1),'fm99999999999990.00') PIN_ALLOCATE_BALANCE
+				,ALLOCATE_COUNTY_NAME
+				,CITY_ALLOCATE_DATE
+				,to_char(trunc(CITY_ALLOCATE_MONEY/10000,1),'fm99999999999990.00') CITY_ALLOCATE_MONEY
+				,CITY_ALLOCATE_CYCLE
+				,to_char(trunc(CITY_ALLOCATE_BALANCE/10000,1),'fm99999999999990.00') CITY_ALLOCATE_BALANCE
+				,ALLOCATE_TOWN_NAME
+				,COUNTY_ALLOCATE_DATE
+				,to_char(trunc(COUNTY_ALLOCATE_MONEY/10000,1),'fm99999999999990.00') COUNTY_ALLOCATE_MONEY
+				,COUNTY_ALLOCATE_CYCLE
+				,to_char(trunc(COUNTY_ALLOCATE_BALANCE/10000,1),'fm99999999999990.00') COUNTY_ALLOCATE_BALANCE
+				,ALLOCATE_COUNTRY_NAME
+				,TOWN_ALLOCATE_DATE
+				,to_char(trunc(TOWN_ALLOCATE_MONEY/10000,1),'fm99999999999990.00') TOWN_ALLOCATE_MONEY
+				,TOWN_ALLOCATE_CYCLE
+				,to_char(trunc(TOWN_ALLOCATE_BALANCE/10000,1),'fm99999999999990.00') TOWN_ALLOCATE_BALANCE
+				from R_DW_FUNDS_FILE_ALLOCATE 
+				 START WITH PAC = #{PAC} CONNECT BY PRIOR PPAC = PAC)
+				WHERE 
+				FILE_ID = #{FILE_ID}
+				AND STAT_TIME = #{year}
+				ORDER BY S_LEVEL
+	</select> 
+	
+	
+<!-- 筛选条件sql -->
+   <sql id="query_condition_sql">
+		<if test=" '' != scope and null != scope">
+			<if test="2 == scope">AND IS_KEY_POVERTY = 1</if><!-- 贫困村 -->
+			<if test="3 == scope">AND IS_KEY_POVERTY = 0</if><!-- 分散村 -->
+			<if test="4 == scope">AND IS_OLD_REVOLUTIONARY = 1</if><!-- 革命老区 -->
+			<if test="5 == scope">AND IS_CENTRAL_SOVIET = 1 </if><!-- 中央苏区 -->
+		</if>	
+	</sql>
+	<!-- count  -->
+	<sql id="count_area_sql">
+			<if test=" '' != level and null != level and 'province' == level  ">
+				'440000000000' S_ID , '合计' A2,
+			</if>
+			<if test=" '' != level and null != level and 'city' == level  ">
+				CITY_PAC S_ID, '合计' A2,
+			</if>
+			
+			<if test=" '' != level and null != level and 'county' == level  ">
+				COUNTY_PAC S_ID,'合计' A2,
+			</if>
+			
+			<if test=" '' != level and null != level and 'town' == level  ">
+				 TOWN_PAC S_ID ,'合计' A2,
+			</if>
+			
+			<if test=" '' != level and null != level and 'country' == level  ">
+				COUNTRY_PAC S_ID ,'合计'  A2,
+			</if>			
+	</sql>
+	<!-- 层级sql -->
+	<sql id="level_sql">
+			
+			<if test=" '' != level and null != level and 'province' == level  ">
+				
+			</if>
+			
+			<if test=" '' != level and null != level and 'city' == level  ">
+				AND CITY_PAC = #{id}
+			</if>
+			
+			<if test=" '' != level and null != level and 'county' == level  ">
+				AND COUNTY_PAC = #{id} 
+			</if>
+			
+			<if test=" '' != level and null != level and 'town' == level  ">
+				AND TOWN_PAC = #{id} 
+			</if>
+			
+			<if test=" '' != level and null != level and 'country' == level  ">
+				AND COUNTRY_PAC = #{id}
+			</if>
+	</sql>
+	<sql id="levelTth_sql">
+			
+			<if test=" '' != level and null != level and 'province' == level  ">
+				
+			</if>
+			
+			<if test=" '' != level and null != level and 'city' == level  ">
+				AND ALLOCATE_CITY_PAC = #{id}
+			</if>
+			
+			<if test=" '' != level and null != level and 'county' == level  ">
+				AND ALLOCATE_COUNTY_PAC = #{id} 
+			</if>
+			
+			<if test=" '' != level and null != level and 'town' == level  ">
+				AND ALLOCATE_TOWN_PAC = #{id} 
+			</if>
+			
+			<if test=" '' != level and null != level and 'country' == level  ">
+				AND ALLOCATE_COUNTRY_PAC = #{id}
+			</if>
+	</sql>
+	<sql id="level_area_sql1">
+			
+			<if test=" '' != level and null != level and 'province' == level  ">
+				CITY_NAME 
+			</if>
+			<if test=" '' != level and null != level and 'city' == level  ">
+				COUNTY_NAME 
+			</if>
+			
+			<if test=" '' != level and null != level and 'county' == level  ">
+				TOWN_NAME 
+			</if>
+			
+			<if test=" '' != level and null != level and 'town' == level  ">
+				COUNTRY_NAME 
+			</if>
+			
+			<if test=" '' != level and null != level and 'country' == level  ">
+				COUNTRY_NAME
+			</if>
+	</sql>
+	<sql id="count_group_by_sql">
+			<if test=" '' != level and null != level and 'province' == level  ">
+				 1
+			</if>
+			<if test=" '' != level and null != level and 'city' == level  ">
+				 CITY_PAC , CITY_NAME
+			</if>
+			
+			<if test=" '' != level and null != level and 'county' == level  ">
+				 COUNTY_PAC ,COUNTY_NAME  
+			</if>
+			
+			<if test=" '' != level and null != level and 'town' == level  ">
+				   TOWN_PAC ,TOWN_NAME 
+			</if>
+			
+			<if test=" '' != level and null != level and 'country' == level  ">
+				COUNTRY_PAC  ,COUNTRY_NAME
+			</if>
+	</sql>
+	<sql id="by_group">
+	
+			<if test=" '' != level and null != level and 'province' == level  ">
+				 CITY_PAC , CITY_NAME
+			</if>
+			<if test=" '' != level and null != level and 'city' == level  ">
+				 COUNTY_PAC ,COUNTY_NAME
+			</if>
+			
+			<if test=" '' != level and null != level and 'county' == level  ">
+				   TOWN_PAC ,TOWN_NAME 
+			</if>
+			
+			<if test=" '' != level and null != level and 'town' == level  ">
+				 COUNTRY_PAC  ,COUNTRY_NAME 
+			</if>
+			
+			<if test=" '' != level and null != level and 'country' == level  ">
+				COUNTRY_PAC  ,COUNTRY_NAME 
+			</if>	
+	</sql>
+	<sql id="year_sql">
+	
+		<if test=" '' != year and null != year">
+			AND ACC_YEAR = 	#{year}		
+		</if>
+	
+	</sql>
+	<sql id="yearTth_sql">
+		<if test=" '' != year and null != year">
+			AND STAT_YEAR =#{year}		
+		</if>
+	
+	</sql>
+	
+	<sql id="detail_area_sql">
+		
+			<if test=" '' != level and null != level and 'city' == level  ">
+				CITY_PAC S_ID, CITY_NAME A2,
+			</if>
+			
+			<if test=" '' != level and null != level and 'county' == level  ">
+				COUNTY_PAC S_ID,COUNTY_NAME A2,
+			</if>
+			
+			<if test=" '' != level and null != level and 'town' == level  ">
+				 TOWN_PAC S_ID ,TOWN_NAME A2,
+			</if>
+			
+			<if test=" '' != level and null != level and 'country' == level  ">
+				COUNTRY_PAC S_ID ,COUNTRY_NAME  A2,
+			</if>
+	</sql>
+
+	<sql id="class_sql">
+				
+		<if test="list!=null and list.size()>0">
+			AND PROJ_CLASS in  
+			<foreach item="item" index="index" collection="list" open="(" separator="," close=")">  
+			 #{item}  
+			</foreach>  
+		</if>
+		<if test="list==null or list.size()==0">
+			AND PROJ_CLASS is null
+		</if>
+		
+
+	</sql>
+	<!-- 层级sql -->
+	<sql id="sort_area_sql">
+			
+			<if test=" '' != sort_area and null != sort_area and 1 == sort_area  ">
+				CITY_PAC S_ID, CITY_NAME A2,
+			</if>
+			<if test=" '' != sort_area and null != sort_area and 2 == sort_area  ">
+				COUNTY_PAC S_ID,CITY_NAME||'>'||COUNTY_NAME A2,
+			</if>
+			
+			<if test=" '' != sort_area and null != sort_area and 3 == sort_area  ">
+				 TOWN_PAC S_ID ,CITY_NAME||'>'||COUNTY_NAME||'>'||TOWN_NAME A2,
+			</if>
+			
+			<if test=" '' != sort_area and null != sort_area and 4 == sort_area  ">
+				COUNTRY_PAC S_ID ,CITY_NAME||'>'||COUNTY_NAME||'>'||TOWN_NAME||'>'||COUNTRY_NAME  A2,
+			</if>
+			
+	</sql>	
+	<sql id="group_sort_area_sql">
+			
+			<if test=" '' != sort_area and null != sort_area and 1 == sort_area  ">
+				CITY_PAC , CITY_NAME 
+			</if>
+			<if test=" '' != sort_area and null != sort_area and 2 == sort_area  ">
+				COUNTY_PAC ,CITY_NAME||'>'||COUNTY_NAME 
+			</if>
+			
+			<if test=" '' != sort_area and null != sort_area and 3 == sort_area  ">
+				 TOWN_PAC  ,CITY_NAME||'>'||COUNTY_NAME||'>'||TOWN_NAME
+			</if>
+			
+			<if test=" '' != sort_area and null != sort_area and 4 == sort_area  ">
+				COUNTRY_PAC  ,CITY_NAME||'>'||COUNTY_NAME||'>'||TOWN_NAME||'>'||COUNTRY_NAME 
+			</if>
+			
+	</sql>
+	<sql id="sortTth_area_sql">
+			
+			<if test=" '' != sort_area and null != sort_area and 1 == sort_area  ">
+				ALLOCATE_CITY_PAC S_ID, ALLOCATE_CITY_NAME A2,
+			</if>
+			<if test=" '' != sort_area and null != sort_area and 2 == sort_area  ">
+				ALLOCATE_COUNTY_PAC S_ID,ALLOCATE_CITY_NAME||'>'||ALLOCATE_COUNTY_NAME A2,
+			</if>
+			
+			<if test=" '' != sort_area and null != sort_area and 3 == sort_area  ">
+				 ALLOCATE_TOWN_PAC S_ID ,ALLOCATE_CITY_NAME||'>'||ALLOCATE_COUNTY_NAME||'>'||ALLOCATE_TOWN_NAME A2,
+			</if>
+			
+			<if test=" '' != sort_area and null != sort_area and 4 == sort_area  ">
+				ALLOCATE_COUNTRY_PAC S_ID ,ALLOCATE_CITY_NAME||'>'||ALLOCATE_COUNTY_NAME||'>'||ALLOCATE_TOWN_NAME||'>'||ALLOCATE_COUNTRY_NAME  A2,
+			</if>
+	
+	</sql>	
+<!-- 	<sql id="groupTth_sort_area_sql">
+			<if test=" '' != sort_area and null != sort_area and 1 == sort_area  ">
+				ALLOCATE_CITY_PAC,FILE_NAME , ALLOCATE_CITY_NAME ,ALLOCATE_MONEY
+			</if>
+			<if test=" '' != sort_area and null != sort_area and 2 == sort_area  ">
+				ALLOCATE_COUNTY_PAC,FILE_NAME ,ALLOCATE_CITY_NAME||'>'||ALLOCATE_COUNTY_NAME
+			</if>
+			
+			<if test=" '' != sort_area and null != sort_area and 3 == sort_area  ">
+				 ALLOCATE_TOWN_PAC, FILE_NAME  ,ALLOCATE_CITY_NAME||'>'||ALLOCATE_COUNTY_NAME||'>'||ALLOCATE_TOWN_NAME
+			</if>
+			
+			<if test=" '' != sort_area and null != sort_area and 4 == sort_area  ">
+				ALLOCATE_COUNTRY_PAC,FILE_NAME  ,ALLOCATE_CITY_NAME||'>'||ALLOCATE_COUNTY_NAME||'>'||ALLOCATE_TOWN_NAME||'>'||ALLOCATE_COUNTRY_NAME 
+			</if>
+			<if test=" '' != taxis_indexes and null != taxis_indexes and 2 == taxis_indexes  ">
+			,ALLOCATE_MONEY 
+			</if>
+			<if test=" '' != taxis_indexes and null != taxis_indexes and 3 == taxis_indexes  ">
+			,ALLOCATE_BALANCE
+			</if>			
+			<if test=" '' != taxis_indexes and null != taxis_indexes and 4 == taxis_indexes  ">
+			,ALLOCATE_DATE
+			</if>
+	</sql> -->
+	<sql id="roadTth_area_sql">
+
+			<if test=" '' != taxis_indexes and null != taxis_indexes and 2 == taxis_indexes  ">
+			FILE_NAME  AS  A3,
+			trunc(ALLOCATE_MONEY/10000,2) AS A4,
+			FILE_ID as fileId
+			</if>
+			<if test=" '' != taxis_indexes and null != taxis_indexes and 3 == taxis_indexes  ">
+			FILE_NAME AS  A3,
+			trunc(ALLOCATE_BALANCE/10000,2)   AS A4,
+			FILE_ID as fileId
+			</if>			
+			<if test=" '' != taxis_indexes and null != taxis_indexes and 4 == taxis_indexes  ">
+			 FILE_NAME  AS  A3,
+			trunc(ALLOCATE_DATE/10000,2)  AS A4,
+			FILE_ID as fileId
+			</if>			
+	</sql>	
+	<sql id="road_area_sql">
+			<if test=" '' != taxis_indexes and null != taxis_indexes and 1 == taxis_indexes  ">
+			 trunc(SUM(REAL_CAPITAL)/10000, 2)  AS  A3
+			</if>			
+			<if test=" '' != taxis_indexes and null != taxis_indexes and 5 == taxis_indexes  ">
+			 trunc(SUM(CN_INDUSTRY+PIN_INDUSTRY+BHC_TOWN_INDUSTRY+BHC_CITY_INDUSTRY )/10000, 2) AS  A3
+			</if>			
+			<if test=" '' != taxis_indexes and null != taxis_indexes and 6 == taxis_indexes  ">
+			 trunc(SUM(HC_SOCIETY+PIN_SOCIETY+BHC_SOCIETY)/10000, 2)  AS  A3
+			</if>			
+			<if test=" '' != taxis_indexes and null != taxis_indexes and 7 == taxis_indexes  ">
+			 trunc(SUM(UNIT_SELF_RAISED)/10000, 2)  AS  A3
+			</if>			
+	</sql>	
+	<sql id="level_area_sql">
+			
+			<if test=" '' != level and null != level and 'province' == level  ">
+				CITY_PAC S_ID, CITY_NAME A2, 
+			</if>
+			<if test=" '' != level and null != level and 'city' == level  ">
+				COUNTY_PAC S_ID,COUNTY_NAME A2,
+			</if>
+			
+			<if test=" '' != level and null != level and 'county' == level  ">
+				 TOWN_PAC S_ID ,TOWN_NAME A2, 
+			</if>
+			
+			<if test=" '' != level and null != level and 'town' == level  ">
+				COUNTRY_PAC S_ID ,COUNTRY_NAME  A2, 
+			</if>
+			
+			<if test=" '' != level and null != level and 'country' == level  ">
+				COUNTRY_PAC S_ID ,COUNTRY_NAME  A2, 
+			</if>
+	</sql>
+	
+	<sql id="file_area_sql">
+			
+			<if test=" '' != level and null != level and 'province' == level  ">
+				 
+			</if>
+			<if test=" '' != level and null != level and 'city' == level  ">
+			  AND ALLOCATE_CITY_PAC = #{area_id}
+			</if>
+			
+			<if test=" '' != level and null != level and 'county' == level  ">
+				AND ALLOCATE_COUNTY_PAC = #{area_id}
+			</if>
+			
+			<if test=" '' != level and null != level and 'town' == level  ">
+				AND ALLOCATE_TOWN_PAC = #{area_id}
+			</if>
+			
+			<if test=" '' != level and null != level and 'country' == level  ">
+				AND ALLOCATE_COUNTRY_PAC = #{area_id}
+			</if>
+	</sql>
+
+
+
+
+
+
+
+
+
+</mapper>

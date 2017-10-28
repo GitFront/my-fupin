@@ -1,0 +1,23 @@
+{
+	"data":{
+		"belong_organization":"兴宁市电信局",
+		"list":[
+			{
+				"id":"441481001205",
+				"order":1,
+				"contact_phone":"07533392111",
+				"contact_name":"张伟平",
+				"country_name":"鹅湖村委会"
+			},
+			{
+				"id":"441481001204",
+				"order":2,
+				"contact_phone":"07533392350",
+				"contact_name":"赖伟钦",
+				"country_name":"鹅三村委会"
+			}
+		]
+	},
+	"code":0,
+	"msg":"获取信息成功"
+}

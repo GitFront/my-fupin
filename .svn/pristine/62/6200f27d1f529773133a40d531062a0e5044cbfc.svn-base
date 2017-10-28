@@ -1,0 +1,26 @@
+{
+    "code": 0,
+    "msg": "获取省/市/县/镇信息成功",
+    "data":{
+        "district_id":"guangdong",
+        "district_name":"广东省村内村外分析",
+        "intro":"困户(省定标准)70.8万，贫困人口176.5万，贫困发生率4.6%。2015年农村人均可支配收入xxxx元。",
+        "chart_config":{
+
+        },
+        "list":[
+            {
+                "district_id":1,
+                "district_name":"清远市",
+                "poor_family":63710,
+                "poor_count":140007
+            },
+            {
+                "district_id":2,
+                "district_name":"阳山市",
+                "poor_family":63710,
+                "poor_count":140007
+            }
+        ]
+    }
+}

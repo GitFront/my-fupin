@@ -1,0 +1,16 @@
+{
+	"data":{
+		"belong_organization":"梅州市人民检察院",
+		"list":[
+			{
+				"id":"441481107222",
+				"order":1,
+				"contact_phone":"15812927133",
+				"contact_name":"罗奇金",
+				"country_name":"林场村委会"
+			}
+		]
+	},
+	"code":0,
+	"msg":"获取信息成功"
+}

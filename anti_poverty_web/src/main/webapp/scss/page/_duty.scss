@@ -1,0 +1,160 @@
+//责任监控特殊部分
+#dutyWrap{
+	font-size: 16px;
+	.main-right{
+		top: 64px;
+		right: 0;
+		height: 705px;
+		width: 478px;
+		#dutyRightInner{
+			position: relative;
+			width: 450px;
+			padding-left: 14px;
+			background: $ml-rgba-c;
+			.bangfuDetail-btn{
+				z-index: 2;
+				display: block;
+				position: absolute;
+				bottom: 50px;
+				border-radius:5px;
+				left: 33px;
+				width:398px;
+				height: 38px;
+				font-size: 16px;
+				line-height: 38px;
+				background: rgba(102,145,249, 0.25);
+				box-shadow:$div-shadow;
+				color: #fff;
+				cursor: pointer;
+				text-align: center;
+			}
+			.title{
+				&:first-child{
+					margin-top: 50px;
+				}
+				margin: 0 auto;
+				padding:0 6px;
+				width: 330px;
+				min-height: 104px;
+				border-radius:6px;
+				border: 1px solid #6691f9;
+				background: rgba(102,145,249, 0.25);
+				box-shadow:$div-shadow;
+				p{
+					text-align: center;
+					line-height: 30px;
+					&:first-child{
+						margin-top: 6px;
+					}
+				}
+			}
+
+			.arrow-down{
+				width: 450px;
+				margin: 16px 0 0px 0;
+				i{
+					margin: 0 auto;
+					display: block;
+					width: 17px;
+					height: 13px;
+				@include bgPng(arrow-down);
+				}
+				
+			}
+			.area-level{
+				width: 94%;
+				margin: 0 auto;
+			.duty-area{
+				display: block;
+				float: left;
+				@extend %BB;
+				padding:0 10px;
+				margin: 12px 6px 0 6px;
+				height: 34px;
+				line-height: 32px;
+				width:auto;
+				border: 1px solid $m-c;
+				border-radius:5px;
+				box-shadow:$div-shadow;
+				cursor: pointer;
+				&.check{
+					background: $m-c;
+					color: #fff;
+				}
+			  }
+
+			  .duty-area-3line{
+			  	float: left;
+			  	padding:8px 10px;
+			  	text-align: center;
+			  	min-width: 48px;
+			  	margin: 12px 6px 0 6px;
+			  	line-height: 28px;
+			  	border-radius:6px;
+				border: 1px solid #6691f9;
+				background: rgba(102,145,249, 0.25);
+				box-shadow:$div-shadow;
+			  }
+			}
+		}
+	}
+	
+
+
+}
+
+//弹出窗口-帮扶概览
+.pop-bangfu-detail{
+	.inner{
+		width: 808px;
+		height: 100%;
+		margin: 0 auto;
+		.pop-title{
+			margin-top: 42px;
+			font-size: 24px;
+			line-height: 24px;
+			margin-bottom: 14px;
+		}
+		.back-btn{
+			display: block;
+			margin-right: 18px;
+			float: right;
+			width: 60px;
+			height: 26px;
+			text-align: center;
+			border: 1px solid $m-c;
+			font-size: 16px;
+			border-radius:5px;
+			cursor: pointer;
+		}
+		.top-amount{
+			margin-top: 20px;
+			p{
+				float: left;
+				margin-right: 90px;
+				font-size: 36px;
+				line-height: 26px;
+				label{
+					padding-left: 4px;
+					font-size: 16px;
+					color: #8a8b8e;
+				}
+
+				&:last-child{
+					margin-right: 0;
+				}
+			}
+		}
+		.table-title{
+			margin-top: 10px;
+			line-height: 50px;
+		}
+	}
+}
+
+
+
+
+
+
+/* end all */

@@ -1,0 +1,29 @@
+{
+	"code": 0,
+	"msg": "获取信息成功",
+	"data": {
+		//贫困户属性
+		"chart_config_poor_attribute": {},
+		//致贫原因
+		"chart_config_poor_reason": {},
+		//收入状况
+		"chart_config_income": {},
+		//年龄
+		"chart_config_age": {},
+		//性别
+		"chart_config_sex": {},
+		//民族
+		"chart_config_nation": {},
+		//政治面貌
+		"chart_config_political_affiliation": {},
+		//文化程度
+		"chart_config_edu_status": {},
+		//健康状况
+		"chart_config_health_status": {},
+		//劳动力状况
+		"chart_config_labor_status": {},
+		//务工状况
+		"chart_config_employment_status": {}
+	}
+}
+

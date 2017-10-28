@@ -1,0 +1,383 @@
+{
+  "code": 0,
+  "msg": "获取省/市/县/镇信息成功",
+  "data":{
+    "district_id":"guangdong",
+    "district_name":"永和镇贫困现状分析",
+    "intro":"全乡(镇)有24个村，农村人口 ___人。<br/>相对贫困村<em>4个</em>，贫困户(省定标准) <em>802 户</em> ，贫困人口<em>1630人</em>。",
+    "chart_config":[
+      {
+        "chart": {
+          "type": "solidgauge"
+        },
+        "title": "",
+        "pane": {
+          "center": [
+            "50%",
+            "80%"
+          ],
+          "size": "140%",
+          "startAngle": -90,
+          "endAngle": 90,
+          "background": {
+            "backgroundColor": "#EEE",
+            "innerRadius": "60%",
+            "outerRadius": "100%",
+            "shape": "arc"
+          }
+        },
+        "tooltip": {
+          "enabled": true
+        },
+        "exporting": {
+          "enabled": false
+        },
+        "yAxis": {
+          "enabled": false,
+          "stops": [
+            [
+              0.1,
+              "#007AE1"
+            ]
+          ],
+          "lineWidth": 0,
+          "minorTickInterval": null,
+          "tickPixelInterval": 400,
+          "tickWidth": 0,
+          "title": {
+            "text": "相对贫困村",
+            "y": 25,
+            "style": {
+              "color": "#007AE1"
+            }
+          },
+          "labels": {
+            "enabled": false
+          },
+          "min": 0,
+          "max": 50
+        },
+        "plotOptions": {
+          "solidgauge": {
+            "dataLabels": {
+              "y": 16,
+              "borderWidth": 0,
+              "useHTML": true
+            }
+          }
+        },
+        "series": [
+          {
+            "name": "相对贫困村",
+            "data": [
+              4
+            ],
+            "dataLabels": {
+              "style": {
+                "color": "#007AE1"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "chart": {
+          "type": "solidgauge"
+        },
+        "title": "",
+        "pane": {
+          "center": [
+            "50%",
+            "80%"
+          ],
+          "size": "140%",
+          "startAngle": -90,
+          "endAngle": 90,
+          "background": {
+            "backgroundColor": "#EEE",
+            "innerRadius": "60%",
+            "outerRadius": "100%",
+            "shape": "arc"
+          }
+        },
+        "tooltip": {
+          "enabled": true
+        },
+        "exporting": {
+          "enabled": false
+        },
+        "yAxis": {
+          "enabled": false,
+          "stops": [
+            [
+              0.1,
+              "#007AE1"
+            ]
+          ],
+          "lineWidth": 0,
+          "minorTickInterval": null,
+          "tickPixelInterval": 400,
+          "tickWidth": 0,
+          "title": {
+            "text": "贫困户",
+            "y": 25,
+            "style": {
+              "color": "#007AE1"
+            }
+          },
+          "labels": {
+            "enabled": false
+          },
+          "min": 0,
+          "max": 5000
+        },
+        "plotOptions": {
+          "solidgauge": {
+            "dataLabels": {
+              "y": 16,
+              "borderWidth": 0,
+              "useHTML": true
+            }
+          }
+        },
+        "series": [
+          {
+            "name": "贫困户",
+            "data": [
+              802
+            ],
+            "dataLabels": {
+              "style": {
+                "color": "#007AE1"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "chart": {
+          "type": "solidgauge"
+        },
+        "title": "",
+        "pane": {
+          "center": [
+            "50%",
+            "80%"
+          ],
+          "size": "140%",
+          "startAngle": -90,
+          "endAngle": 90,
+          "background": {
+            "backgroundColor": "#EEE",
+            "innerRadius": "60%",
+            "outerRadius": "100%",
+            "shape": "arc"
+          }
+        },
+        "tooltip": {
+          "enabled": true
+        },
+        "exporting": {
+          "enabled": false
+        },
+        "yAxis": {
+          "enabled": false,
+          "stops": [
+            [
+              0.1,
+              "#007AE1"
+            ]
+          ],
+          "lineWidth": 0,
+          "minorTickInterval": null,
+          "tickPixelInterval": 400,
+          "tickWidth": 0,
+          "title": {
+            "text": "贫困人口",
+            "y": 25,
+            "style": {
+              "color": "#007AE1"
+            }
+          },
+          "labels": {
+            "enabled": false
+          },
+          "min": 0,
+          "max": 8000
+        },
+        "plotOptions": {
+          "solidgauge": {
+            "dataLabels": {
+              "y": 16,
+              "borderWidth": 0,
+              "useHTML": true
+            }
+          }
+        },
+        "series": [
+          {
+            "name": "贫苦人口",
+            "data": [
+              1630
+            ],
+            "dataLabels": {
+              "style": {
+                "color": "#007AE1"
+              }
+            }
+          }
+        ]
+      }
+    ]
+  ,
+    "list":[
+      {
+        "district_id":1,
+        "district_name":"新寨村委会",
+        "poor_family":36,
+        "poor_count":100,
+        "poor_index":48
+      },
+      {
+        "district_id":2,
+        "district_name":"仁里村委会",
+        "poor_family":54,
+        "poor_count":128,
+        "poor_index":62
+      },
+      {
+        "district_id":2,
+        "district_name":"成鹊村委会",
+        "poor_family":44,
+        "poor_count":87,
+        "poor_index":43
+      },
+      {
+        "district_id":2,
+        "district_name":"沙坪村委会",
+        "poor_family":35,
+        "poor_count":64,
+        "poor_index":46
+      },
+      {
+        "district_id":2,
+        "district_name":"新中村委会",
+        "poor_family":14,
+        "poor_count":28,
+        "poor_index":23
+      },
+      {
+        "district_id":2,
+        "district_name":"永生村委会",
+        "poor_family":43,
+        "poor_count":91,
+        "poor_index":48
+      },
+      {
+        "district_id":2,
+        "district_name":"永星村委会",
+        "poor_family":50,
+        "poor_count":128,
+        "poor_index":53
+      },
+      {
+        "district_id":2,
+        "district_name":"华岭村委会",
+        "poor_family":29,
+        "poor_count":55,
+        "poor_index":32
+      },
+      {
+        "district_id":2,
+        "district_name":"华峰村委会",
+        "poor_family":35,
+        "poor_count":89,
+        "poor_index":42
+      },
+      {
+        "district_id":2,
+        "district_name":"长安村委会",
+        "poor_family":30,
+        "poor_count":50,
+        "poor_index":37
+      },
+      {
+        "district_id":2,
+        "district_name":"蓝排村委会",
+        "poor_family":38,
+        "poor_count":86,
+        "poor_index":44
+      },
+      {
+        "district_id":2,
+        "district_name":"锦洞村委会",
+        "poor_family":24,
+        "poor_count":40,
+        "poor_index":30
+      },
+      {
+        "district_id":2,
+        "district_name":"长新村委会",
+        "poor_family":11,
+        "poor_count":12,
+        "poor_index":18
+      },
+      {
+        "district_id":2,
+        "district_name":"林场村委会",
+        "poor_family":33,
+        "poor_count":73,
+        "poor_index":36
+      },
+      {
+        "district_id":2,
+        "district_name":"湖尾村委会",
+        "poor_family":13,
+        "poor_count":20,
+        "poor_index":19
+      },
+      {
+        "district_id":2,
+        "district_name":"板子村委会",
+        "poor_family":35,
+        "poor_count":70,
+        "poor_index":35
+      },
+      {
+        "district_id":2,
+        "district_name":"振兴村委会",
+        "poor_family":23,
+        "poor_count":41,
+        "poor_index":26
+      },
+      {
+        "district_id":2,
+        "district_name":"崇新村委会",
+        "poor_family":18,
+        "poor_count":20,
+        "poor_index":24
+      },
+      {
+        "district_id":2,
+        "district_name":"大成村委会",
+        "poor_family":84,
+        "poor_count":160,
+        "poor_index":87
+      },
+      {
+        "district_id":2,
+        "district_name":"石陂村委会",
+        "poor_family":70,
+        "poor_count":146,
+        "poor_index":76
+      },
+      {
+        "district_id":2,
+        "district_name":"廉峰村委会",
+        "poor_family":39,
+        "poor_count":73,
+        "poor_index":48
+      }
+    ]
+  }
+}

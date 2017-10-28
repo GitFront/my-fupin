@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+	<script type="text/javascript" src="../../js/libs/flexible.js"></script>
+	<title>广东扶贫</title>
+	<link type="text/css" rel="stylesheet" href="../../css/all.css">
+</head>
+
+<body>
+
+<div id="app" class="p-wrap p-family-file-member">
+	<app-header ref="appHeader" title="家庭成员" show-back="true"></app-header>
+	<section class="member-album" v-cloak>
+		<a href="javascript:void(0);"
+		   :class="['icon-left',{'active':current>0}]"
+		   @click="showPre()"></a>
+		<div class="member-box">
+			<div class="member-album-box">
+				<img :src="current_member.avatar" alt="" class="member-pic">
+			</div>
+			<p class="member-name">{{current_member.name}}</p>
+		</div>
+		<a href="javascript:void(0);"
+		   :class="['icon-right',{'active':current<member_list.length-1}]"
+		   @click="showNext()"></a>
+	</section>
+	<ul class="member-info">
+		<li>
+			<div class="member-info-title">性别</div>
+			<div class="member-info-content">{{current_member.sex}}</div>
+		</li>
+		<li>
+			<div class="member-info-title">身份证</div>
+			<div class="member-info-content">{{current_member.ID_number}}</div>
+		</li>
+		<li>
+			<div class="member-info-title">与户主关系</div>
+			<div class="member-info-content">{{current_member.household_relative}}</div>
+		</li>
+		<li>
+			<div class="member-info-title">民族</div>
+			<div class="member-info-content">{{current_member.nation}}</div>
+		</li>
+		<li>
+			<div class="member-info-title">政治面貌</div>
+			<div class="member-info-content">{{current_member.political_status}}</div>
+		</li>
+		<li>
+			<div class="member-info-title">文化程度</div>
+			<div class="member-info-content">{{current_member.edu_level}}</div>
+		</li>
+		<li>
+			<div class="member-info-title">在校生情况</div>
+			<div class="member-info-content">{{current_member.at_school_condition}}</div>
+		</li>
+		<li>
+			<div class="member-info-title">健康状况</div>
+			<div class="member-info-content">{{current_member.health_condition}}</div>
+		</li>
+		<li>
+			<div class="member-info-title">劳动能力</div>
+			<div class="member-info-content">{{current_member.labor_ability}}</div>
+		</li>
+		<li>
+			<div class="member-info-title">务工情况</div>
+			<div class="member-info-content">{{current_member.labor_condition}}</div>
+		</li>
+		<li>
+			<div class="member-info-title">务工时间</div>
+			<div class="member-info-content">{{current_member.labor_time}}</div>
+		</li>
+		<li>
+			<div class="member-info-title">是否现役军人</div>
+			<div class="member-info-content">{{current_member.is_active_army}}</div>
+		</li>
+		<li>
+			<div class="member-info-title">是否参加大病医</div>
+			<div class="member-info-content">{{current_member.is_join_medical}}</div>
+		</li>
+		<li>
+			<div class="member-info-title">入读技工院校意愿</div>
+			<div class="member-info-content">{{current_member.study_wish}}</div>
+		</li>
+		<li>
+			<div class="member-info-title">培训需求</div>
+			<div class="member-info-content">{{current_member.training_needs}}</div>
+		</li>
+		<li>
+			<div class="member-info-title">技能状况</div>
+			<div class="member-info-content">{{current_member.skill_condition}}</div>
+		</li>
+		<li>
+			<div class="member-info-title">就业意向</div>
+			<div class="member-info-content">{{current_member.job_purpose}}</div>
+		</li>
+		<li>
+			<div class="member-info-title">就业预期</div>
+			<div class="member-info-content">{{current_member.job_expect}}</div>
+		</li>
+		<li>
+			<div class="member-info-title">是否参加城镇职工</div>
+			<div class="member-info-content">{{current_member.is_join_staff}}</div>
+		</li>
+		<li>
+			<div class="member-info-title">是否参加城乡居民基本养老保险</div>
+			<div class="member-info-content">{{current_member.is_join_pension_insurance}}</div>
+		</li>
+		<li>
+			<div class="member-info-title">是否参加城乡居民基本医疗保险</div>
+			<div class="member-info-content">{{current_member.is_join_medical_insurance}}</div>
+		</li>
+		<li>
+			<div class="member-info-title">保险缴费档次或养老金水平</div>
+			<div class="member-info-content">{{current_member.insurance_pension_level}}</div>
+		</li>
+	</ul>
+</div>
+
+<script type="text/javascript" src="../../js/libs/vue.min.js"></script>
+<script type="text/javascript" src="../../js/libs/vue-resource.min.js"></script>
+
+<script type="text/javascript" src="../../js/urls_mock.js"></script>
+<script type="text/javascript" src="../../js/common.js"></script>
+<script type="text/javascript" src="../../js/components.js"></script>
+
+<script type="text/javascript" src="../../js/pages/family_file/member.js"></script>
+</body>
+</html>

@@ -1,0 +1,16 @@
+{
+	"data":{
+		"belong_organization":"保利南方集团有限公司",
+		"list":[
+			{
+				"id":"441481111204",
+				"order":1,
+				"contact_phone":"0753- 3701152",
+				"contact_name":"吴启崇",
+				"country_name":"双头村委会"
+			}
+		]
+	},
+	"code":0,
+	"msg":"获取信息成功"
+}

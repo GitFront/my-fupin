@@ -1,0 +1,36 @@
+{
+	"code": 0,
+	"msg": "获取信息成功",
+	"data": {
+		//出列村、脱贫户、脱贫人口
+		"top_indexes": {
+			//出列村
+			"success_country": {
+				//数值
+				"amount": 23520,
+				//百分比
+				"rate": 14.7
+			},
+			//脱贫户
+			"success_family": {
+				"amount": 23520,
+				"rate": 14.7
+			},
+			//脱贫人口
+			"success_people": {
+				"amount": 23520,
+				"rate": 14.7
+			}
+		},
+		"stat": {
+			//帮扶单位
+			"amount_org": 22177,
+			//责任人
+			"amount_responsible": 3466,
+			//驻村干部
+			"amount_leader": 38597,
+			//帮扶走访量
+			"amount_interview": 135878
+		}
+	}
+}

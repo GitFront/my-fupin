@@ -1,0 +1,71 @@
+{
+	"code": 0,
+	"msg": "获取信息成功",
+	"data": {
+		//可选年份
+		"available_years": [
+			{
+				"name": "2016",
+				"value": "2016"
+			},
+			{
+				"name": "2017",
+				"value": "2017"
+			},
+			{
+				"name": "2018",
+				"value": "2018"
+			}
+		],
+		//默认选中时间
+		"default_time": {
+			"year": "2016"
+		},
+		"summary": {
+			"projects": {
+				//项目个数
+				"total": 123,
+				//进行中个数
+				"running": 76,
+				//已完成个数
+				"completed": 47
+			},
+			//已投入资金，单位万
+			"invested": 247583,
+			//项目收益，单位万
+			"profit": 23
+		},
+		"table": {
+			//已完成
+			"list": [
+				{
+					//项目类别
+					"type": "道路建设",
+					//项目名称
+					"name": "高车塘村道路改造工程",
+					//规模
+					"size": "",
+					//预计投入资金（元）
+					"invest_expected": 0,
+					//实际投入资金（元）
+					"invest_actual": 0,
+					//项目收益（元）
+					"profit": 0,
+					//开始时间
+					"time_start": "",
+					//完成时间
+					"time_completed": "",
+					//项目照片，没照片返回null
+					"album": {
+						//实施前，没照片返回null
+						"before": "xxx.jpg",
+						//实施中，没照片返回null
+						"during": "xxx.jpg",
+						//实施后，没照片返回null
+						"after": "xxx.jpg"
+					}
+				}
+			]
+		}
+	}
+}

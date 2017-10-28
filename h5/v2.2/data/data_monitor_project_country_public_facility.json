@@ -1,0 +1,12 @@
+{
+	"code": 0,
+	"msg": "获取信息成功",
+	"data": {
+		//项目资金趋势
+		"chart_config_money_trend": {},
+		//区域分布
+		"chart_config_area_distribution": {},
+		//统计表，同data_monitor_table.json定义
+		"table": {}
+	}
+}

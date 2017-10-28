@@ -1,0 +1,126 @@
+{
+  "code": 0,
+  "msg": "获取信息成功",
+  "data": {
+    "gross":{
+      "amount_organizations": 3621,
+      "amount_responsible_people": 5120, 
+      "amount_countries": 2456, 
+      "amount_people": 162793 
+    },
+    "list":[
+      {
+        "id":201,
+        "district_name":"梅州市",
+        "amount_poor":26593, 
+        "amount_plan":12036, 
+        "amount_organizations": 621, 
+        "amount_responsible_people": 846
+      },
+      {
+        "id":202,
+        "district_name":"河源市",
+        "amount_poor":26593, 
+        "amount_plan":12036, 
+        "amount_organizations": 621, 
+        "amount_responsible_people": 846
+      },
+      {
+        "id":203,
+        "district_name":"汕头市",
+        "amount_poor":26593, 
+        "amount_plan":12036, 
+        "amount_organizations": 621, 
+        "amount_responsible_people": 846
+      },
+      {
+        "id":204,
+        "district_name":"韶关市",
+        "amount_poor":26593, 
+        "amount_plan":12036, 
+        "amount_organizations": 621, 
+        "amount_responsible_people": 846
+      },
+      {
+        "id":201,
+        "district_name":"惠州市",
+        "amount_poor":26593, 
+        "amount_plan":12036, 
+        "amount_organizations": 621, 
+        "amount_responsible_people": 846
+      },
+      {
+        "id":201,
+        "district_name":"汕尾市",
+        "amount_poor":26593, 
+        "amount_plan":12036, 
+        "amount_organizations": 621, 
+        "amount_responsible_people": 846
+      },
+      {
+        "id":201,
+        "district_name":"阳江市",
+        "amount_poor":26593, 
+        "amount_plan":12036, 
+        "amount_organizations": 621, 
+        "amount_responsible_people": 846
+      },
+      {
+        "id":201,
+        "district_name":"湛江市",
+        "amount_poor":26593, 
+        "amount_plan":12036, 
+        "amount_organizations": 621, 
+        "amount_responsible_people": 846
+      },
+      {
+        "id":201,
+        "district_name":"茂名市",
+        "amount_poor":26593, 
+        "amount_plan":12036, 
+        "amount_organizations": 621, 
+        "amount_responsible_people": 846
+      },
+      {
+        "id":201,
+        "district_name":"肇庆市",
+        "amount_poor":26593, 
+        "amount_plan":12036, 
+        "amount_organizations": 621, 
+        "amount_responsible_people": 846
+      },
+      {
+        "id":201,
+        "district_name":"清远市",
+        "amount_poor":26593, 
+        "amount_plan":12036, 
+        "amount_organizations": 621, 
+        "amount_responsible_people": 846
+      },
+      {
+        "id":201,
+        "district_name":"潮州市",
+        "amount_poor":26593, 
+        "amount_plan":12036, 
+        "amount_organizations": 621, 
+        "amount_responsible_people": 846
+      },
+      {
+        "id":201,
+        "district_name":"揭阳市",
+        "amount_poor":26593, 
+        "amount_plan":12036, 
+        "amount_organizations": 621, 
+        "amount_responsible_people": 846
+      },
+      {
+        "id":201,
+        "district_name":"云浮市",
+        "amount_poor":26593, 
+        "amount_plan":12036, 
+        "amount_organizations": 621, 
+        "amount_responsible_people": 846
+      }
+    ]
+  }
+}

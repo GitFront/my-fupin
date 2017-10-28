@@ -1,0 +1,107 @@
+{
+  "code": 0,
+  "msg": "获取信息成功",
+  "data": {
+    "chart_config_tab": [{
+    "xAxis": [
+        {
+            "type": "category",
+            "data": ["完全无劳动能力户","有劳动能力户"],
+            "axisLine":{
+              "lineStyle":{
+                "color":"#fff"
+              }
+            }
+        }
+    ],
+    "grid":{
+      "width":280,
+      "right":20
+    },
+    "yAxis" : {
+      "splitLine":{
+        "show":false
+      },
+      "axisLine":{
+        "lineStyle":{
+          "color":"#fff"
+        }
+      }
+    },
+    "legend":{
+      "data":["贫困户","贫困人口"],
+      "textStyle" : {
+        "color" : "#fff"
+      }
+    },
+    "series": [
+        {
+            "name":"贫困户",
+            "type":"bar",
+            "data":[28660,35410],
+            "itemStyle": {
+              "normal": {
+                "barBorderRadius": 8
+              },
+              "emphasis": {
+                "barBorderRadius": 8
+              }
+            },
+            "markPoint": {
+              "data": [
+                {"type": "max", "name": "最大值"},
+                {"type": "min", "name": "最小值"}
+              ]
+            }
+        },
+        {
+            "name":"贫困人口",
+            "type":"bar",
+            "data":[43898,135885],
+            "itemStyle": {
+              "normal": {
+                "barBorderRadius": 8
+              },
+              "emphasis": {
+                "barBorderRadius": 8
+              }
+            },
+            "markPoint": {
+              "data": [
+                {"type": "max", "name": "最大值"},
+                {"type": "min", "name": "最小值"}
+              ]
+            }
+
+        }
+    ]
+},{
+    "tooltip" : {
+        "formatter": "{a} <br/>{b} : {c} ({d}%)"
+    },
+    "series" : [
+        {
+            "name": "劳动力分析",
+            "type": "pie",
+            "radius": ["50%", "70%"],
+            "center": ["50%", "50%"],
+            "label": {
+              "normal": {
+                "show": true
+              }
+            },
+            "data":[
+                {"value":67164, "name":"劳动力人数"},
+                {"value":55744, "name":"无劳动力人数"},
+                {"value":12977, "name":"丧失劳动力人数"}
+            ],
+            "itemStyle": {
+                "emphasis": {
+                    "shadowBlur": 50
+                }
+            }
+        }
+    ]
+}]
+}
+}

@@ -1,0 +1,96 @@
+{
+  "code": 0,
+  "msg": "获取信息成功",
+  "data": {
+    "chart_config_tab": [{
+      "legend": {
+        "data":["贫困户","贫困人口"],
+        "x" : "center",
+        "y" : "bottom",
+        "textStyle" : {
+          "color" : "#fff"
+        }
+      },
+      "title": {
+        "text": "村内村外贫困户和人口分布",
+        "left": "center",
+        "textStyle":{
+          "color": "#fff",
+          "fontSize":15
+        }
+      },
+      "grid":{
+        "top":80,
+        "width":280,
+        "right":20
+      },
+      "textStyle" : {
+        "color" : "#fff"
+      },
+      "tooltip": {},
+      "xAxis" : {
+        "type" : "category",
+        "data" : ["相对贫困村内","相对贫困村外"],
+        "axisLine":{
+          "lineStyle":{
+            "color":"#fff"
+          }
+        }
+      },
+      "yAxis" : {
+        "splitLine":{
+          "show":false
+        },
+        "axisLine":{
+          "lineStyle":{
+            "color":"#fff"
+          }
+        }
+      },
+      "series" : [
+        {
+          "name":"贫困户",
+          "type":"bar",
+          "data":[193,609],
+          "itemStyle": {
+            "normal": {
+              "barBorderRadius": 8
+            },
+            "emphasis": {
+              "barBorderRadius": 8
+            }
+          },
+          "markPoint": {
+            "data": [
+              {"type": "max", "name": "最大值"},
+              {"type": "min", "name": "最小值"}
+            ]
+          }
+        },
+        {
+          "name":"贫困人口",
+          "type":"bar",
+          "data":[447,1183],
+          "itemStyle": {
+            "normal": {
+              "barBorderRadius": 8
+            },
+            "emphasis": {
+              "barBorderRadius": 8
+            }
+          },
+          "markPoint": {
+            "data": [
+              {"type": "max", "name": "最大值"},
+              {"type": "min", "name": "最小值"}
+            ]
+          }
+
+        }
+      ]
+    }]
+  }
+}
+
+
+

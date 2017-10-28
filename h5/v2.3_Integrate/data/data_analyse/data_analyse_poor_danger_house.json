@@ -1,0 +1,51 @@
+{
+	"code": 0,
+	"msg": "获取信息成功",
+	"data": {
+		"area_name": "广东省",
+		"danger_house": {
+			"amount": 5851,
+			"percent": 29
+		},
+		"chart_config_level": [
+			{
+				"name":"A-A级",
+				"value":1870
+			},
+			{
+				"name":"B-B级",
+				"value":4890
+			},
+			{
+				"name":"C-C级",
+				"value":2390
+			},
+			{
+				"name":"D-D级",
+				"value":1200
+			},
+			{
+				"name":"未填写",
+				"value":780
+			}
+		],
+		"chart_config_structure":[
+			{
+				"name":"泥草房",
+				"value":500
+			},
+			{
+				"name":"土坯房",
+				"value":370
+			},
+			{
+				"name":"砖砌体",
+				"value":130
+			},
+			{
+				"name":"钢筋混泥土体",
+				"value":130
+			}
+		]
+	}
+}

@@ -1,0 +1,114 @@
+.p-family-file-track{
+  .month-trend{
+    padding:inRem(30);
+    .p-title{
+      border-left:inRem(7) solid $sky-blue;
+      height:inRem(32);
+      line-height:inRem(32);
+      font-size:inRem(32);
+      padding-left:inRem(11);
+      color:$black;
+    }
+    .score-chart{
+      width:inRem(248);
+      height:inRem(248);
+      margin:inRem(40) auto;
+    }
+    .trend-list{
+      width:100%;
+      li.trend-item{
+        border:1px solid #C8C8C8;
+        position:relative;
+        overflow:hidden;
+        min-height:inRem(160);
+        margin-bottom:inRem(20);
+        padding:inRem(20);
+        .trend-index{
+          background-color: $sky-blue;
+          color:#fff;
+          font-size:inRem(30);
+          float:left;
+          padding:inRem(3);
+        }
+        .trend-content{
+          float:left;
+          padding-left:inRem(20);
+          dt{
+            font-size:inRem(32);
+            color:$black;
+          }
+          dd{
+            color:$black;
+            font-size:inRem(30);
+            padding-top:inRem(18);
+            .target-name{
+              font-size:inRem(26);
+              padding-left:inRem(10);
+            }
+            .reality{
+              width:inRem(130);
+              float:left;
+            }
+            .line{
+              float:left;
+              width:1px;
+              height:inRem(50);
+              background-color:#969696;
+              margin-top:inRem(15);
+            }
+            .target{
+              width:inRem(180);
+              float:left;
+              padding-left:inRem(60);
+              h3{
+                color:#969696;
+              }
+            }
+            .weight{
+              float:left;
+              padding-top:inRem(35);
+            }
+          }
+        }
+        .icon-target{
+          color:#fff;
+           width: 0;
+           height: 0;
+          border-left: inRem(110) solid transparent;
+          position: absolute;
+          right: 0;
+          top: 0;
+          .target-txt{
+            position:absolute;
+            width:inRem(120);
+            top:inRem(-85);
+            left:inRem(-95);
+            font-size:inRem(24);
+            transform:rotate(45deg);
+            text-align: center;
+          }
+        }
+
+      }
+      //达标
+      .reach{
+        .reality h3{
+          color:$sky-blue;
+        }
+        .icon-target{
+          border-top: inRem(110) solid $sky-blue;
+        }
+      }
+      //未达标
+      .no-reach{
+        .reality h3{
+          color:$red;
+        }
+        .icon-target{
+          border-top: inRem(110) solid $red;
+        }
+      }
+    }
+  }
+
+}

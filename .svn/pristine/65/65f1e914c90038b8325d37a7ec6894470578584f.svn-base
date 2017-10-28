@@ -1,0 +1,2260 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+        
+<mapper namespace="com.aspire.birp.modules.antiPoverty.dao.FairlyDao">
+
+	<sql id="dim_area_sql">
+		INNER JOIN
+		(SELECT 
+		  PAC,
+		  SORT
+		  FROM
+		  DIM_AREA_INFO
+		  WHERE 1=1
+		  <include refid="p_area_sql"/>
+		  ) B ON(A.S_ID=B.PAC)
+		ORDER BY B.SORT 
+	</sql>
+	
+	<sql id="p_area_sql">
+		 <if test=" '' != level and null != level and 'province' == level  ">
+				AND PPAC = #{id}
+			</if>
+			
+			<if test=" '' != level and null != level and 'city' == level  ">
+				AND PPAC = #{id}
+			</if>
+			
+			<if test=" '' != level and null != level and 'county' == level  ">
+				AND PPAC = #{id} 
+			</if>
+			
+			<if test=" '' != level and null != level and 'town' == level  ">
+				AND PPAC = #{id} 
+			</if>
+			
+			<if test=" '' != level and null != level and 'country' == level  ">
+				AND PAC = #{id}
+			</if>
+	</sql>
+
+<!--道路硬底化 落实 柱形-->
+	<select id="queryRoadImplementManagement"  parameterType="hashmap" resultType="hashmap">
+		SELECT * FROM (SELECT
+		ACC_YEAR || '年'  S_NAME
+		,sum(CTY_TOWN_NO_ROAD_MILEAGE+NAT_CTY_NO_ROAD_MILEAGE) 
+  		S_VALUE -- 帮扶村未通沥青(水泥)路里程数
+		,'帮扶村未通沥青(水泥)路里程数' S_GROUP
+		FROM
+		R_DW_POOROBJ_COUNTRY_Y
+		<where>
+			<include refid="level_sql"/>
+			<include refid="acc_year_sql"/>
+			 <include refid="query_condition"/>
+		</where>
+		GROUP BY ACC_YEAR,1 
+		ORDER BY ACC_YEAR)
+		union all
+		
+		SELECT * FROM (SELECT
+		ACC_YEAR || '年'  S_NAME
+		,sum(ROAD_COMPLETE_MILEAGE)  S_VALUE -- 改造完成里程数
+		,'改造完成里程数' S_GROUP
+		FROM
+		R_DW_POOROBJ_COUNTRY_Y
+		<where>
+			<include refid="level_sql"/>
+			<include refid="acc_year_sql"/>
+			 <include refid="query_condition"/>
+		</where>
+		GROUP BY ACC_YEAR,1
+		ORDER BY ACC_YEAR)
+	</select>
+<!--道路硬底化 落实 柱形2-->
+	<select id="queryRoadImplementManagement2"  parameterType="hashmap" resultType="hashmap">
+		SELECT * FROM (SELECT
+		to_char(to_date(ACC_MONTH,'yyyymm'),'yyyy.mm')  S_NAME
+		,sum(CTY_TOWN_NO_ROAD_MILEAGE+NAT_CTY_NO_ROAD_MILEAGE) 
+  		S_VALUE -- 帮扶村未通沥青(水泥)路里程数
+		,'帮扶村未通沥青(水泥)路里程数' S_GROUP
+		FROM
+		R_DW_POOROBJ_COUNTRY_M
+		<where>
+			<include refid="year_sql"/>
+			<include refid="level_sql"/>
+			 <include refid="query_condition"/>
+		</where>
+		GROUP BY acc_month
+		ORDER BY acc_month)
+		union all
+		
+		SELECT * FROM (SELECT
+		to_char(to_date(ACC_MONTH,'yyyymm'),'yyyy.mm')  S_NAME
+		,sum(ROAD_COMPLETE_MILEAGE)  S_VALUE -- 改造完成里程数
+		,'改造完成里程数' S_GROUP
+		FROM
+		R_DW_POOROBJ_COUNTRY_M
+		<where>
+			<include refid="level_sql"/>
+			<include refid="year_sql"/>
+			 <include refid="query_condition"/>
+		</where>
+		GROUP BY acc_month
+		ORDER BY acc_month)
+	</select>
+
+	<!-- 道路硬底化  落实合计 -->
+	<select id="queryRoadImplementManagementTableC"  parameterType="hashmap" resultType="hashmap">
+			select
+		    	<include refid="count_area_sql"/>
+		      COUNT(COUNTRY_PAC)  A3--村数
+		      ,SUM(CASE WHEN IS_IMP_ROAD=1 THEN 1 ELSE 0 END) A4--完全硬底化村数(个)
+		      ,CASE WHEN COUNT(COUNTRY_PAC)=0 THEN '0.00' ELSE to_char(trunc(nvl(SUM(CASE WHEN IS_IMP_ROAD=1 THEN 1 ELSE 0 END),0) /  COUNT(COUNTRY_PAC) * 100, 2), '9999990.00') END || '%' A5
+		      ,SUM(NO_ROAD_NATURAL_NUM)  as A6 --200人以上自然村到行政村未通沥青(水泥)村数(个)
+		      ,SUM(BY_CTY_TOWN_NO_ROAD_MILEAGE) a7 --年初行政村到乡镇未通沥青(水泥)路里程(公里)
+		      ,SUM(BY_NAT_CTY_NO_ROAD_MILEAGE) a8 --年初自然村到行政村未通沥青(水泥)路里程(公里)
+		      ,SUM(BY_CTY_TOWN_NO_ROAD_MILEAGE+BY_NAT_CTY_NO_ROAD_MILEAGE) a9 --年初帮扶村未通里程数合计(公里)
+		      ,SUM(ROAD_COMPLETE_MILEAGE) a10 --改造完成里程(公里)
+		      ,CASE WHEN (SUM(BY_CTY_TOWN_NO_ROAD_MILEAGE+BY_NAT_CTY_NO_ROAD_MILEAGE))=0 THEN '0.00' ELSE to_char(trunc(nvl(SUM(ROAD_COMPLETE_MILEAGE),0) /SUM(BY_CTY_TOWN_NO_ROAD_MILEAGE+BY_NAT_CTY_NO_ROAD_MILEAGE) * 100, 2), '9999990.00') END ||'%' a11 --改造完成率(%)
+    
+		      from
+		      
+		      R_DW_POOROBJ_COUNTRY_Y
+			
+			<where>
+				<include refid="level_sql"/>
+				<include refid="year_sql"/>
+				<include refid="query_condition"/>
+				
+			</where>
+			GROUP BY <include refid="count_group_by_sql"/>
+		
+		
+	</select>
+	<!-- 道路硬底化  落实分析 -->
+	<select id="queryRoadImplementManagementTable"  parameterType="hashmap" resultType="hashmap">
+	SELECT A.*,B.SORT FROM
+		(select
+         	 <include refid="level_area_sql"/>
+          	 COUNT(COUNTRY_PAC)  A3--村数
+		      ,SUM(CASE WHEN IS_IMP_ROAD=1 THEN 1 ELSE 0 END) A4--完全硬底化村数(个)
+		      ,CASE WHEN COUNT(COUNTRY_PAC)=0 THEN '0.00' ELSE to_char(trunc(nvl(SUM(CASE WHEN IS_IMP_ROAD=1 THEN 1 ELSE 0 END),0) /  COUNT(COUNTRY_PAC) * 100, 2), '9999990.00') END || '%' A5
+		      ,SUM(NO_ROAD_NATURAL_NUM)  as A6 --200人以上自然村到行政村未通沥青(水泥)村数(个)
+		      ,SUM(BY_CTY_TOWN_NO_ROAD_MILEAGE) a7 --年初行政村到乡镇未通沥青(水泥)路里程(公里)
+		      ,SUM(BY_NAT_CTY_NO_ROAD_MILEAGE) a8 --年初自然村到行政村未通沥青(水泥)路里程(公里)
+		      ,SUM(BY_CTY_TOWN_NO_ROAD_MILEAGE+BY_NAT_CTY_NO_ROAD_MILEAGE) a9 --年初帮扶村未通里程数合计(公里)
+		      ,SUM(ROAD_COMPLETE_MILEAGE) a10 --改造完成里程(公里)
+		      ,CASE WHEN (SUM(BY_CTY_TOWN_NO_ROAD_MILEAGE+BY_NAT_CTY_NO_ROAD_MILEAGE))=0 THEN '0.00' ELSE to_char(trunc(nvl(SUM(ROAD_COMPLETE_MILEAGE),0) /SUM(BY_CTY_TOWN_NO_ROAD_MILEAGE+BY_NAT_CTY_NO_ROAD_MILEAGE) * 100, 2), '9999990.00') END ||'%' a11 --改造完成率(%)
+    
+		      from
+		      
+		      R_DW_POOROBJ_COUNTRY_Y
+			
+			<where>
+				<include refid="level_sql"/>
+				<include refid="year_sql"/>
+				<include refid="query_condition"/>
+				
+			</where>
+			GROUP BY <include refid="group_by_sql"/>) A
+		<include refid="dim_area_sql"/>
+	</select>
+<!-- 道路硬底化 落实分析明细细 -->
+	<select id="queryRoadImplementAnalysisDetail"  parameterType="hashmap" resultType="hashmap">
+		select 
+
+				*
+				
+				from
+				(
+				select t1.*,ROWNUM RM
+				from
+				(
+				 SELECT
+				COUNTRY_PAC B1
+				,t1.CITY_NAME A2
+				,t1.COUNTY_NAME A3
+				,t1.TOWN_NAME A4
+				,t1.COUNTRY_NAME A5
+				,trunc(CTY_TOWN_NO_ROAD_MILEAGE+NAT_CTY_NO_ROAD_MILEAGE, 1) AS A6	--帮扶村未通沥青(水泥)路里程数(公里)
+				,NO_ROAD_NATURAL_NUM  as A7 --200人以上自然村到行政村未通沥青(水泥)村数(个)
+				,BY_CTY_TOWN_NO_ROAD_MILEAGE a8 --年初行政村到乡镇未通沥青(水泥)路里程(公里)
+				,BY_NAT_CTY_NO_ROAD_MILEAGE a9 --年初自然村到行政村未通沥青(水泥)路里程(公里)
+				,BY_CTY_TOWN_NO_ROAD_MILEAGE+BY_NAT_CTY_NO_ROAD_MILEAGE a10 --年初帮扶村未通里程数合计(公里)
+				,ROAD_COMPLETE_MILEAGE a111 --改造完成里程(公里)
+				 ,CASE BY_CTY_TOWN_NO_ROAD_MILEAGE+BY_NAT_CTY_NO_ROAD_MILEAGE 
+          WHEN 0 THEN '-' 
+        else (CASE WHEN (BY_CTY_TOWN_NO_ROAD_MILEAGE+BY_NAT_CTY_NO_ROAD_MILEAGE)=0 THEN '0.00' ELSE to_char(trunc(nvl(ROAD_COMPLETE_MILEAGE,0) /(BY_CTY_TOWN_NO_ROAD_MILEAGE+BY_NAT_CTY_NO_ROAD_MILEAGE) * 100, 2), '9999990.00') END ||'%')
+        END 
+        AS A12
+				from R_DW_POOROBJ_COUNTRY_Y t1 
+				   
+				 <where>
+					
+					
+					<include refid="level_sql"/>
+					<include refid="query_condition"/>
+					<include refid="query_road_detail"/>
+					<include refid="year_sql"/>
+				</where>	
+				) t1
+				
+				)
+				
+				<if test="page !=null">
+						WHERE RM BETWEEN #{pageSize}*(#{page}-1)+1 AND #{pageSize}  * #{page}
+				</if>
+				</select>		
+<!-- 道路硬底化明细总数  -->
+	<select id="queryRoadImplementAnalysisDetailCount"  parameterType="hashmap" resultType="long">
+	
+			select 
+
+				count(*)
+				
+				from
+				(
+				select t1.*,ROWNUM RM
+				from
+				(
+				 SELECT
+				
+				COUNTRY_PAC B1
+				,t1.CITY_NAME A2
+				,t1.COUNTY_NAME A3
+				,t1.TOWN_NAME A4
+				,t1.COUNTRY_NAME A5
+				,trunc(CTY_TOWN_NO_ROAD_MILEAGE+NAT_CTY_NO_ROAD_MILEAGE, 1)  as A6 --200人以上自然村到行政村未通沥青(水泥)村数(个)
+				,BY_CTY_TOWN_NO_ROAD_MILEAGE a7 --年初行政村到乡镇未通沥青(水泥)路里程(公里)
+				,BY_NAT_CTY_NO_ROAD_MILEAGE a8 --年初自然村到行政村未通沥青(水泥)路里程(公里)
+				,BY_CTY_TOWN_NO_ROAD_MILEAGE+BY_NAT_CTY_NO_ROAD_MILEAGE a9 --年初帮扶村未通里程数合计(公里)
+				,ROAD_COMPLETE_MILEAGE a10 --改造完成里程(公里)
+				 ,CASE BY_CTY_TOWN_NO_ROAD_MILEAGE+BY_NAT_CTY_NO_ROAD_MILEAGE 
+          WHEN 0 THEN '-' 
+        else (CASE WHEN (BY_CTY_TOWN_NO_ROAD_MILEAGE+BY_NAT_CTY_NO_ROAD_MILEAGE)=0 THEN '0.00' ELSE to_char(trunc(nvl(ROAD_COMPLETE_MILEAGE,0) /(BY_CTY_TOWN_NO_ROAD_MILEAGE+BY_NAT_CTY_NO_ROAD_MILEAGE) * 100, 2), '9999990.00') END ||'%')
+        END 
+        AS A11
+				from R_DW_POOROBJ_COUNTRY_Y t1 
+				   
+				 <where>
+					
+					
+					<include refid="level_sql"/>
+					<include refid="query_condition"/>
+					<include refid="query_road_detail"/>
+					<include refid="year_sql"/>
+				</where>
+				) t1
+				
+				)
+				
+	</select>
+	
+		
+<!-- 道路硬底化 排序 -->
+	<select id="queryRoadImplementAnalysisSort"  parameterType="hashmap" resultType="hashmap">
+		select 
+
+				*
+				
+				from
+				(
+				select t1.*,ROWNUM RM
+				from
+				(
+				 SELECT
+				<include refid="sort_area_sql"/>
+				<include refid="road_area_sql"/>
+				
+				
+				
+				
+				from R_DW_POOROBJ_COUNTRY_Y t1 
+				   
+				 <where>
+					
+					<include refid="level_sql"/>
+					<include refid="year_sql"/>
+					<include refid="query_condition"/>
+				</where>	
+				GROUP BY <include refid="group_sort_area_sql"/>
+				ORDER BY <include refid="group_sort_area_sql"/> DESC
+				) t1
+				
+				)
+				
+				<if test="page !=null">
+						WHERE RM BETWEEN #{pageSize}*(#{page}-1)+1 AND #{pageSize}  * #{page}
+				</if>
+				</select>
+<!-- 道路硬底化排序总数  -->
+	<select id="queryRoadImplementAnalysisSortCount"  parameterType="hashmap" resultType="long">
+	
+			select 
+
+				count(*)
+				
+				from
+				(
+				select t1.*,ROWNUM RM
+				from
+				(
+				 SELECT
+				<include refid="sort_area_sql"/>
+				<include refid="road_area_sql"/>
+				
+				
+				
+				from R_DW_POOROBJ_COUNTRY_Y t1 
+				   
+				 <where>
+					
+					
+					<include refid="level_sql"/>
+					<include refid="year_sql"/>
+					<include refid="query_condition"/>
+				</where>
+				GROUP BY <include refid="group_sort_area_sql"/>
+				ORDER BY <include refid="group_sort_area_sql"/> DESC
+				) t1
+				
+				)
+				
+	</select>
+<!--道路硬底化   排序详细 -->
+	<select id="queryRoadSortDetail"  parameterType="hashmap" resultType="hashmap">
+	select
+          <include refid="detail_area_sql"/>
+          COUNT(COUNTRY_PAC)  A3--村数
+          ,SUM(IS_IMP_ROAD) A4--完全硬底化村数(个)
+          ,CASE WHEN (COUNT(COUNTRY_PAC))=0 THEN '0.00' ELSE to_char(TRUNC(nvl(SUM(NATURAL_NUM),0) /COUNT(COUNTRY_PAC)*100,2),'9999990.00') END ||'%' A5--完全硬底化村比例(%)
+          ,SUM(NO_ROAD_NATURAL_NUM)  as A6 --200人以上自然村到行政村未通沥青(水泥)村数(个)
+		  ,SUM(case when BY_CTY_TOWN_NO_ROAD_MILEAGE = 0 then 1 else 0 end) a7 --年初行政村到乡镇未通沥青(水泥)路里程(公里)
+		  ,SUM(case when BY_NAT_CTY_NO_ROAD_MILEAGE = 0 then 1 else 0 end) a8 --年初自然村到行政村未通沥青(水泥)路里程(公里)
+          ,SUM(BY_CTY_TOWN_NO_ROAD_MILEAGE+BY_NAT_CTY_NO_ROAD_MILEAGE) a9 --年初帮扶村未通里程数合计(公里)
+          ,SUM(ROAD_COMPLETE_MILEAGE) a10 --改造完成里程(公里)
+          ,CASE WHEN (SUM(CTY_TOWN_NO_ROAD_MILEAGE+BY_NAT_CTY_NO_ROAD_MILEAGE))=0 THEN '0.00' ELSE  to_char(TRUNC(nvl(SUM(ROAD_COMPLETE_MILEAGE),0)  / SUM(CTY_TOWN_NO_ROAD_MILEAGE+BY_NAT_CTY_NO_ROAD_MILEAGE)*100,2),'9999990.00') END ||'%'  a11 --改造完成率(%)
+    
+          from
+          
+          R_DW_POOROBJ_COUNTRY_Y
+			
+			<where>
+				<include refid="level_sql"/>
+				<include refid="year_sql"/>
+				
+			</where>
+			GROUP BY  <include refid="count_group_by_sql"/>
+		
+		
+	</select>
+	
+		
+<!--安全饮水落实趋势 柱形-->
+	<select id="queryWaterImplementManagement"  parameterType="hashmap" resultType="hashmap">
+
+		SELECT * FROM (SELECT
+		ACC_YEAR || '年'  S_NAME
+		,sum(NO_SAFE_DRINK_FAM) 
+  S_VALUE -- 未实现饮水安全户数
+		,'未实现饮水安全户数' S_GROUP
+		FROM
+		R_DW_POOROBJ_COUNTRY_Y
+		<where>
+			<include refid="level_sql"/>
+			<include refid="acc_year_sql"/>
+			 <include refid="query_condition"/>
+		</where>
+		GROUP BY ACC_YEAR,1
+		ORDER BY ACC_YEAR)
+		union all
+		
+		SELECT * FROM (SELECT
+		ACC_YEAR || '年'  S_NAME
+		,sum(SAFE_DRINK_COMPLETE_FAM)  S_VALUE -- 饮水安全改造户数
+		,' 饮水安全改造户数' S_GROUP
+		FROM
+		R_DW_POOROBJ_COUNTRY_Y
+		<where>
+			<include refid="level_sql"/>
+			<include refid="acc_year_sql"/>
+			 <include refid="query_condition"/>
+		</where>
+		GROUP BY ACC_YEAR,1
+		ORDER BY ACC_YEAR)
+	</select>
+<!--安全饮水落实趋势 柱形2-->
+	<select id="queryWaterImplementManagement2"  parameterType="hashmap" resultType="hashmap">
+
+		SELECT * FROM (SELECT
+		to_char(to_date(ACC_MONTH,'yyyymm'),'yyyy.mm')  S_NAME
+		,sum(NO_SAFE_DRINK_FAM) 
+  S_VALUE -- 未实现饮水安全户数
+		,'未实现饮水安全户数' S_GROUP
+		FROM
+		R_DW_POOROBJ_COUNTRY_M
+		<where>
+			<include refid="level_sql"/>
+			<include refid="year_sql"/>
+			 <include refid="query_condition"/>
+		</where>
+		GROUP BY acc_month
+		ORDER BY acc_month)
+		union all
+		
+		SELECT * FROM (SELECT
+		to_char(to_date(ACC_MONTH,'yyyymm'),'yyyy.mm')  S_NAME
+		,sum(SAFE_DRINK_COMPLETE_FAM)  S_VALUE -- 饮水安全改造户数
+		,' 饮水安全改造户数' S_GROUP
+		FROM
+		R_DW_POOROBJ_COUNTRY_M
+		<where>
+			<include refid="level_sql"/>
+			<include refid="year_sql"/>
+			 <include refid="query_condition"/>
+		</where>
+		GROUP BY acc_month
+		ORDER BY acc_month)
+	</select>
+<!--安全饮水落实分析合计 -->
+	<select id="queryWaterImplementManagementTableC"  parameterType="hashmap" resultType="hashmap">
+			select
+		    	<include refid="count_area_sql"/>
+		      COUNT(COUNTRY_PAC)  A3--村数
+		      ,SUM(CASE WHEN IS_IMP_SAFE_DRINK=1 THEN 1 ELSE 0 END) A4--全实现安全饮水村数(个)
+		      ,CASE WHEN COUNT(COUNTRY_PAC)=0 THEN '0.00' ELSE to_char(trunc(nvl(SUM(CASE WHEN IS_IMP_SAFE_DRINK=1 THEN 1 ELSE 0 END) ,0) /  COUNT(COUNTRY_PAC) * 100, 2), '9999990.00') END || '%' A5 --全实现安全饮水村比例(%)
+		      ,SUM(CASE WHEN IS_IMP_SAFE_DRINK=0 THEN 1 ELSE 0 END)  as A6 --未全实现安全饮水的村数 （个)
+		      ,SUM(BY_NO_SAFE_DRINK_FAM ) a7 --年初未实现饮水安全户数(户)	
+		      ,SUM(SAFE_DRINK_COMPLETE_FAM) a8 --完成改造户数(户) 
+		      ,CASE WHEN (SUM(BY_NO_SAFE_DRINK_FAM))=0 THEN '0.00' ELSE to_char(trunc(nvl(SUM(SAFE_DRINK_COMPLETE_FAM),0)  / SUM(BY_NO_SAFE_DRINK_FAM)* 100, 2), '9999990.00') END ||'%'  a9 --改造完成率(%)
+		      from
+		      
+		      R_DW_POOROBJ_COUNTRY_Y
+			
+			<where>
+				<include refid="level_sql"/>
+				<include refid="year_sql"/>
+				<include refid="query_condition"/>
+				
+			</where>
+			GROUP BY  <include refid="count_group_by_sql"/>
+		
+		
+	</select>
+	<!-- 安全饮水落实分析 -->
+	<select id="queryWaterImplementManagementTable"  parameterType="hashmap" resultType="hashmap">
+	SELECT A.*,B.SORT FROM
+		(select
+         		<include refid="level_area_sql"/>
+	     	   COUNT(COUNTRY_PAC)  A3--村数
+		      ,SUM(CASE WHEN IS_IMP_SAFE_DRINK=1 THEN 1 ELSE 0 END) A4--全实现安全饮水村数(个)
+		      ,CASE WHEN COUNT(COUNTRY_PAC)=0 THEN '0.00' ELSE to_char(trunc(nvl(SUM(CASE WHEN IS_IMP_SAFE_DRINK=1 THEN 1 ELSE 0 END) ,0) /  COUNT(COUNTRY_PAC) * 100, 2), '9999990.00') END || '%' A5 --全实现安全饮水村比例(%)
+		      ,SUM(CASE WHEN IS_IMP_SAFE_DRINK=0 THEN 1 ELSE 0 END)  as A6 --未全实现安全饮水的村数 （个)
+		      ,SUM(BY_NO_SAFE_DRINK_FAM ) a7 --年初未实现饮水安全户数(户)	
+		      ,SUM(SAFE_DRINK_COMPLETE_FAM) a8 --完成改造户数(户) 
+		      ,CASE WHEN (SUM(BY_NO_SAFE_DRINK_FAM))=0 THEN '0.00' ELSE to_char(trunc(nvl(SUM(SAFE_DRINK_COMPLETE_FAM),0)  / SUM(BY_NO_SAFE_DRINK_FAM)* 100, 2), '9999990.00') END ||'%'  a9 --改造完成率(%)
+		      from
+		      
+		      R_DW_POOROBJ_COUNTRY_Y
+			
+			<where>
+				<include refid="level_sql"/>
+				
+				<include refid="year_sql"/>
+				<include refid="query_condition"/>
+			</where>
+			GROUP BY  <include refid="group_by_sql"/>) A
+		<include refid="dim_area_sql"/>
+		
+	</select>
+<!-- 安全饮水 落实分析明细细 -->
+	<select id="queryWaterSortImplementAnalysisDetail"  parameterType="hashmap" resultType="hashmap">
+		select 
+
+				*
+				
+				from
+				(
+				select t1.*,ROWNUM RM
+				from
+				(
+				 
+				SELECT
+       				 COUNTRY_PAC B1
+			         ,t1.CITY_NAME A2
+			        ,t1.COUNTY_NAME A3
+			        ,t1.TOWN_NAME A4
+			        ,t1.COUNTRY_NAME A5
+			        ,CASE IS_IMP_SAFE_DRINK 
+					WHEN 1 THEN '是' 
+					WHEN 0 THEN '否'
+					END as A6 --是否实现安全饮水
+			        ,BY_NO_SAFE_DRINK_FAM a7 --年初未实现饮水安全户数(户)  
+			        ,SAFE_DRINK_COMPLETE_FAM a8 --完成改造户数(户) 
+			        ,CASE BY_NO_SAFE_DRINK_FAM 
+          WHEN 0 THEN '-' 
+        else (CASE WHEN (BY_NO_SAFE_DRINK_FAM)=0 THEN '0.00' ELSE to_char(trunc(nvl(SAFE_DRINK_COMPLETE_FAM,0)/ BY_NO_SAFE_DRINK_FAM * 100, 2), '9999990.00') END ||'%') 
+        END 
+        AS a9 --改造完成率(%)
+		        from R_DW_POOROBJ_COUNTRY_Y t1 
+			
+				 <where>
+					<include refid="level_sql"/>
+					<include refid="query_condition"/>
+					<include refid="query_water"/>
+					<include refid="year_sql"/>
+					
+				</where>
+				) t1
+				
+				)
+				
+				<if test="page !=null">
+						WHERE RM BETWEEN #{pageSize}*(#{page}-1)+1 AND #{pageSize}  * #{page}
+				</if>
+				</select>
+<!-- 安全饮水明细总数  -->
+	<select id="queryWaterSortDetailCount"  parameterType="hashmap" resultType="long">
+	
+			select 
+
+				count(*)
+				
+				from
+				(
+				select t1.*,ROWNUM RM
+				from
+				(
+				SELECT
+         				COUNTRY_PAC B1
+			         , t1.CITY_NAME A2
+			        ,t1.COUNTY_NAME A3
+			        ,t1.TOWN_NAME A4
+			        ,t1.COUNTRY_NAME A5
+			       ,CASE IS_IMP_SAFE_DRINK 
+					WHEN 1 THEN '是' 
+					WHEN 0 THEN '否'
+					END as A6 --是否实现安全饮水
+			        ,BY_NO_SAFE_DRINK_FAM a7 --年初未实现饮水安全户数(户)  
+			        ,SAFE_DRINK_COMPLETE_FAM a8 --完成改造户数(户) 
+			        ,CASE BY_NO_SAFE_DRINK_FAM 
+          WHEN 0 THEN '-' 
+        else (CASE WHEN (BY_NO_SAFE_DRINK_FAM)=0 THEN '0.00' ELSE to_char(trunc(nvl(SAFE_DRINK_COMPLETE_FAM,0)/ BY_NO_SAFE_DRINK_FAM * 100, 2), '9999990.00') END ||'%') 
+        END 
+        AS a9 --改造完成率(%)
+		        from R_DW_POOROBJ_COUNTRY_Y t1 
+				   
+				 <where>
+					<include refid="level_sql"/>
+					<include refid="query_condition"/>
+					<include refid="query_water"/>
+					<include refid="year_sql"/>
+				</where>
+				) t1
+				
+				)
+				
+	</select>
+<!-- 安全饮水 排序 -->
+	<select id="queryWaterSortImplementAnalysisSort"  parameterType="hashmap" resultType="hashmap">
+		select 
+
+				*
+				
+				from
+				(
+				select t1.*,ROWNUM RM
+				from
+				(
+				 SELECT
+				<include refid="sort_area_sql"/>
+				<include refid="wate_area_sql"/>
+				from R_DW_POOROBJ_COUNTRY_Y t1 
+				   
+				 <where>
+					
+					<include refid="level_sql"/>
+					<include refid="year_sql"/>
+					<include refid="query_condition"/>
+				</where>	
+				GROUP BY <include refid="group_sort_area_sql"/>
+				ORDER BY <include refid="group_sort_area_sql"/> DESC
+				) t1
+				
+				)
+				
+				<if test="page !=null">
+						WHERE RM BETWEEN #{pageSize}*(#{page}-1)+1 AND #{pageSize}  * #{page}
+				</if>
+				</select>
+<!-- 安全饮水排序总数  -->
+	<select id="queryWaterSortImplementAnalysisSortCount"  parameterType="hashmap" resultType="long">
+	
+			select 
+
+				count(*)
+				
+				from
+				(
+				select t1.*,ROWNUM RM
+				from
+				(
+				 SELECT
+				<include refid="sort_area_sql"/>
+				<include refid="wate_area_sql"/>
+				
+				
+				
+				
+				from R_DW_POOROBJ_COUNTRY_Y t1 
+				   
+				 <where>
+					<include refid="level_sql"/>
+					
+					<include refid="query_condition"/>
+					<include refid="year_sql"/>
+				</where>
+				GROUP BY <include refid="group_sort_area_sql"/>
+				ORDER BY <include refid="group_sort_area_sql"/> DESC
+				) t1
+				
+				)
+				
+	</select>
+<!--  安全饮水   排序详细 -->
+	<select id="queryWaterSortSortDetail"  parameterType="hashmap" resultType="hashmap">
+	select
+          <include refid="detail_area_sql"/>
+           COUNT(COUNTRY_PAC)  A3--村数
+		  ,SUM(CASE WHEN IS_IMP_SAFE_DRINK=1 THEN 1 ELSE 0 END) A4--全实现安全饮水村数(个)
+		 ,CASE WHEN COUNT(COUNTRY_PAC)=0 THEN '0.00' ELSE to_char(trunc(nvl(SUM(CASE WHEN IS_IMP_SAFE_DRINK=1 THEN 1 ELSE 0 END),0) /  COUNT(COUNTRY_PAC) * 100, 2), '9999990.00') END || '%' A5
+  --全实现安全饮水村比例(%)
+		  ,SUM(CASE WHEN IS_IMP_SAFE_DRINK=0 THEN 1 ELSE 0 END) as A6 --未全实现安全饮水的村数 （个)
+		      ,SUM(BY_NO_SAFE_DRINK_FAM ) a7 --年初未实现饮水安全户数(户)	
+		      ,SUM(SAFE_DRINK_COMPLETE_FAM) a8 --完成改造户数(户) 
+		      ,CASE WHEN (SUM(BY_NO_SAFE_DRINK_FAM))=0 THEN '0.00' ELSE to_char(trunc(nvl(SUM(SAFE_DRINK_COMPLETE_FAM),0) / SUM(BY_NO_SAFE_DRINK_FAM) * 100, 2), '9999990.00') END ||'%' a9 --改造完成率(%)
+    
+          from
+          
+          R_DW_POOROBJ_COUNTRY_Y
+			
+			<where>
+				<include refid="level_sql"/>
+				<include refid="year_sql"/>
+				
+			</where>
+			GROUP BY <include refid="count_group_by_sql"/>
+		
+		
+	</select>
+	
+<!--生活用电落实趋势 柱形-->
+	<select id="queryElectricityImplementManagement"  parameterType="hashmap" resultType="hashmap">
+
+		SELECT * FROM (SELECT
+		ACC_YEAR || '年'  S_NAME
+		,sum(case when IS_IMP_ELECTRICITY = 0 then 1 else 0 end)   S_VALUE -- 未通生活用电的村数
+		,'未通生活用电的村数' S_GROUP
+		FROM
+		R_DW_POOROBJ_COUNTRY_Y
+		<where>
+			<include refid="level_sql"/>
+			<include refid="acc_year_sql"/>
+			 <include refid="query_condition"/>
+		</where>
+		GROUP BY ACC_YEAR,1
+		ORDER BY ACC_YEAR)
+		union all
+		
+		SELECT * FROM (SELECT
+		ACC_YEAR || '年'  S_NAME
+		,sum(IS_COMPLETE_ELECTRICITY)  S_VALUE -- 完成改造村数
+		,' 完成改造村数' S_GROUP
+		FROM
+		R_DW_POOROBJ_COUNTRY_Y
+		<where>
+			<include refid="level_sql"/>
+			<include refid="acc_year_sql"/>
+			 <include refid="query_condition"/>
+		</where>
+		GROUP BY ACC_YEAR,1
+		ORDER BY ACC_YEAR)
+	</select>
+<!--生活用电落实趋势 柱形2-->
+	<select id="queryElectricityImplementManagement2"  parameterType="hashmap" resultType="hashmap">
+
+		SELECT * FROM (SELECT
+		to_char(to_date(ACC_MONTH,'yyyymm'),'yyyy.mm')  S_NAME
+		,sum(case when IS_IMP_ELECTRICITY = 0 then 1 else 0 end)   S_VALUE -- 未通生活用电的村数
+		,'未通生活用电的村数' S_GROUP
+		FROM
+		R_DW_POOROBJ_COUNTRY_M
+		<where>
+			<include refid="level_sql"/>
+			<include refid="year_sql"/>
+			 <include refid="query_condition"/>
+		</where>
+		GROUP BY acc_month
+		ORDER BY acc_month)
+		union all
+		
+		SELECT * FROM (SELECT
+		to_char(to_date(ACC_MONTH,'yyyymm'),'yyyy.mm')  S_NAME
+		,sum(IS_COMPLETE_ELECTRICITY)  S_VALUE -- 完成改造村数
+		,' 完成改造村数' S_GROUP
+		FROM
+		R_DW_POOROBJ_COUNTRY_M
+		<where>
+			<include refid="level_sql"/>
+			<include refid="year_sql"/>
+			 <include refid="query_condition"/>
+		</where>
+		GROUP BY acc_month
+		ORDER BY acc_month)
+	</select>
+	
+<!--生活用电落实分析合计 -->
+	<select id="queryElectricityImplementManagementTableC"  parameterType="hashmap" resultType="hashmap">
+		select
+		    	<include refid="count_area_sql"/>
+				 COUNT(COUNTRY_PAC)  A3--村数
+			      ,SUM(CASE WHEN IS_IMP_ELECTRICITY=1 THEN 1 ELSE 0 END) A4--全部通生活用电的村数(个)
+			      ,CASE WHEN COUNT(COUNTRY_PAC)=0 THEN '0.00' ELSE to_char(trunc(nvl(SUM(CASE WHEN IS_IMP_ELECTRICITY=1 THEN 1 ELSE 0 END),0) /  COUNT(COUNTRY_PAC) * 100, 2), '9999990.00') END || '%'  A5--全部通生活用电的比例(%)
+			      ,SUM(case when IS_BY_NO_ELECTRICITY = 0 then 1 else 0 end)  as A6 --年初未全部通生活用电 （个)
+			      ,SUM(CASE WHEN IS_COMPLETE_ELECTRICITY=1 THEN 1 ELSE 0 END) a7 --完成改造村数(户)
+			      ,CASE WHEN (SUM(case when IS_BY_NO_ELECTRICITY = 0 then 1 else 0 end) )=0 THEN '0.00' ELSE to_char(trunc(nvl(SUM(IS_COMPLETE_ELECTRICITY),0) /SUM(case when IS_BY_NO_ELECTRICITY = 0 then 1 else 0 end) * 100, 2), '9999990.00') END ||'%' a8 --改造完成率(%)
+			      from
+		      
+		      R_DW_POOROBJ_COUNTRY_Y
+			
+			<where>
+				<include refid="level_sql"/>
+				<include refid="year_sql"/>
+				<include refid="query_condition"/>
+				
+			</where>
+			GROUP BY  <include refid="count_group_by_sql"/>
+		
+		
+	</select>
+	<!-- 通生活用电落实分析 -->
+	<select id="queryElectricityImplementManagementTable"  parameterType="hashmap" resultType="hashmap">
+	SELECT A.*,B.SORT FROM
+		(select
+         		<include refid="level_area_sql"/>
+        	  	COUNT(COUNTRY_PAC)  A3--村数
+			      ,SUM(CASE WHEN IS_IMP_ELECTRICITY=1 THEN 1 ELSE 0 END) A4--全部通生活用电的村数(个)
+			      ,CASE WHEN COUNT(COUNTRY_PAC)=0 THEN '0.00' ELSE to_char(trunc(nvl(SUM(CASE WHEN IS_IMP_ELECTRICITY=1 THEN 1 ELSE 0 END),0) /  COUNT(COUNTRY_PAC) * 100, 2), '9999990.00') END || '%'  A5--全部通生活用电的比例(%)
+			      ,SUM(case when IS_BY_NO_ELECTRICITY = 0 then 1 else 0 end)  as A6 --年初未全部通生活用电 （个)
+			      ,SUM(CASE WHEN IS_COMPLETE_ELECTRICITY=1 THEN 1 ELSE 0 END) a7 --完成改造村数(户)
+			      ,CASE WHEN (SUM(case when IS_BY_NO_ELECTRICITY = 0 then 1 else 0 end) )=0 THEN '0.00' ELSE to_char(trunc(nvl(SUM(IS_COMPLETE_ELECTRICITY),0) /SUM(case when IS_BY_NO_ELECTRICITY = 0 then 1 else 0 end) * 100, 2), '9999990.00') END ||'%' a8 --改造完成率(%)
+			      from
+		      
+		      R_DW_POOROBJ_COUNTRY_Y
+			
+			<where>
+				<include refid="level_sql"/>
+				<include refid="year_sql"/>
+				<include refid="query_condition"/>
+				
+			</where>
+			GROUP BY  <include refid="group_by_sql"/>) A
+		<include refid="dim_area_sql"/>
+		
+	</select>
+	
+<!-- 生活用电 落实分析明细细 -->
+	<select id="queryElectricitySortDetail"  parameterType="hashmap" resultType="hashmap">
+		select 
+
+				*
+				
+				from
+				(
+				select t1.*,ROWNUM RM
+				from
+				(
+				 
+				SELECT
+         COUNTRY_PAC B1
+			         ,t1.CITY_NAME A2
+			        ,t1.COUNTY_NAME A3
+			        ,t1.TOWN_NAME A4
+			        ,t1.COUNTRY_NAME A5
+			        ,CASE IS_IMP_ELECTRICITY 
+					WHEN 1 THEN '是' 
+					WHEN 0 THEN '否'
+					END as A6  --是否全部通生活用电
+					,CASE IS_BY_NO_ELECTRICITY 
+					WHEN 1 THEN '是' 
+					WHEN 0 THEN '否'
+					END as a7 
+			        ,CASE IS_BY_NO_ELECTRICITY 
+          WHEN 1 THEN '-' 
+        else CASE IS_COMPLETE_ELECTRICITY 
+          WHEN 1 THEN '是' 
+          WHEN 0 THEN '否'
+          END  END  AS a8 --是否完成改造(户) 
+			        
+		        from R_DW_POOROBJ_COUNTRY_Y t1 
+				   
+				 <where>
+					<include refid="level_sql"/>
+						
+					<include refid="query_condition"/>
+					<include refid="query_electricity"/>
+					<include refid="year_sql"/>
+					
+				</where>	
+				) t1
+				
+				)
+				
+				<if test="page !=null">
+						WHERE RM BETWEEN #{pageSize}*(#{page}-1)+1 AND #{pageSize}  * #{page}
+				</if>
+				</select>
+<!-- 生活用电明细总数  -->
+	<select id="queryElectricitySortDetailCount"  parameterType="hashmap" resultType="long">
+	
+			select 
+
+				count(*)
+				
+				from
+				(
+				select t1.*,ROWNUM RM
+				from
+				(
+				SELECT
+         COUNTRY_PAC B1
+			         ,t1.CITY_NAME A2
+			        ,t1.COUNTY_NAME A3
+			        ,t1.TOWN_NAME A4
+			        ,t1.COUNTRY_NAME A5
+			        ,CASE IS_IMP_ELECTRICITY 
+					WHEN 1 THEN '是' 
+					WHEN 0 THEN '否'
+					END as A6  --是否全部通生活用电
+					,CASE IS_BY_NO_ELECTRICITY 
+					WHEN 1 THEN '是' 
+					WHEN 0 THEN '否'
+					END as a7 
+			        ,CASE IS_BY_NO_ELECTRICITY 
+          WHEN 1 THEN '-' 
+        else CASE IS_COMPLETE_ELECTRICITY 
+          WHEN 1 THEN '是' 
+          WHEN 0 THEN '否'
+          END  END  AS a8 --是否完成改造(户) 
+			        
+		        from R_DW_POOROBJ_COUNTRY_Y t1 
+				   
+				 <where>
+					<include refid="level_sql"/>
+					
+					<include refid="query_condition"/>
+					<include refid="query_electricity"/>
+					<include refid="year_sql"/>
+				</where>
+				) t1
+				
+				)
+				
+	</select>
+	
+<!-- 生活用电 排序 -->
+	<select id="queryElectricitySortImplementAnalysisSort"  parameterType="hashmap" resultType="hashmap">
+		select 
+
+				*
+				
+				from
+				(
+				select t1.*,ROWNUM RM
+				from
+				(
+				 SELECT
+				<include refid="sort_area_sql"/>
+				<include refid="electricity_area_sql"/>
+				from R_DW_POOROBJ_COUNTRY_Y t1 
+				   
+				 <where>
+				 <include refid="level_sql"/>
+					
+					<include refid="year_sql"/>
+					<include refid="query_condition"/>
+				</where>	
+				GROUP BY <include refid="group_sort_area_sql"/>
+				ORDER BY <include refid="group_sort_area_sql"/> DESC
+				) t1
+				
+				)
+				
+				<if test="page !=null">
+						WHERE RM BETWEEN #{pageSize}*(#{page}-1)+1 AND #{pageSize}  * #{page}
+				</if>
+				</select>
+<!-- 生活用电排序总数  -->
+	<select id="queryElectricitySortImplementAnalysisSortCount"  parameterType="hashmap" resultType="long">
+	
+			select 
+
+				count(*)
+				
+				from
+				(
+				select t1.*,ROWNUM RM
+				from
+				(
+				 SELECT
+				
+				<include refid="sort_area_sql"/>
+				<include refid="electricity_area_sql"/>
+				
+				
+				
+				
+				from R_DW_POOROBJ_COUNTRY_Y t1 
+				   
+				 <where>
+					<include refid="level_sql"/>
+					
+					<include refid="query_condition"/>
+					<include refid="year_sql"/>
+				</where>
+				GROUP BY <include refid="group_sort_area_sql"/>
+				ORDER BY <include refid="group_sort_area_sql"/> DESC
+				) t1
+				
+				)
+				
+	</select>
+<!-- 生活用电   排序详细 -->
+	<select id="queryElectricitySortAortDetail"  parameterType="hashmap" resultType="hashmap">
+	select
+           <include refid="detail_area_sql"/>
+          	COUNT(COUNTRY_PAC)  A3--村数
+		      ,SUM(CASE WHEN IS_IMP_ELECTRICITY=1 THEN 1 ELSE 0 END) A4--全部通生活用电的村数(个)
+		      ,CASE WHEN COUNT(COUNTRY_PAC)=0 THEN '0.00' ELSE to_char(trunc(nvl(SUM(CASE WHEN IS_IMP_ELECTRICITY=1 THEN 1 ELSE 0 END),0)  /  COUNT(COUNTRY_PAC) * 100, 2), '9999990.00') END || '%'  A5--全部通生活用电的比例(%)
+		      ,SUM(case when IS_BY_NO_ELECTRICITY = 0 then 1 else 0 end)  as A6 --年初未全部通生活用电 （个)
+		      ,SUM(CASE WHEN IS_COMPLETE_ELECTRICITY=1 THEN 1 ELSE 0 END) a7 --完成改造村数(户)
+		      ,CASE WHEN (SUM(case when IS_BY_NO_ELECTRICITY = 0 then 1 else 0 end))=0 THEN '0.00' ELSE to_char(trunc(nvl(SUM(IS_COMPLETE_ELECTRICITY),0)  /SUM(case when IS_BY_NO_ELECTRICITY = 0 then 1 else 0 end) * 100, 2), '9999990.00') END ||'%' a8 --改造完成率(%)
+		      from
+		      
+		      R_DW_POOROBJ_COUNTRY_Y
+
+			<where>
+				<include refid="level_sql"/>
+				<include refid="year_sql"/>
+				
+			</where>
+			GROUP BY  <include refid="count_group_by_sql"/>
+		
+		
+	</select>
+	<!--医疗设施落实趋势 柱形-->
+	<select id="queryMedicalFacilityImplementManagement"  parameterType="hashmap" resultType="hashmap">
+
+		SELECT * FROM (SELECT
+		ACC_YEAR || '年'  S_NAME
+		,sum(case when IS_IMP_HEALTH_STATION = 0 then 1 else 0 end)  S_VALUE -- 未有卫生站的村数
+		,'无卫生室的村数(个)' S_GROUP
+		FROM
+		R_DW_POOROBJ_COUNTRY_Y
+		<where>
+			<include refid="level_sql"/>
+			<include refid="acc_year_sql"/>
+			 <include refid="query_condition"/>
+		</where>
+		GROUP BY ACC_YEAR,1
+		ORDER BY ACC_YEAR)
+		union all
+		
+		SELECT * FROM (SELECT
+		ACC_YEAR || '年'  S_NAME
+		,sum(CASE WHEN NEW_HEALTH_STATION_NUM!=0 THEN 1 ELSE 0 END)  S_VALUE --新建卫生站的村数
+		,' 新建卫生站的村数' S_GROUP
+		FROM
+		R_DW_POOROBJ_COUNTRY_Y
+		<where>
+			<include refid="level_sql"/>
+			<include refid="acc_year_sql"/>
+			 <include refid="query_condition"/>
+		</where>
+		GROUP BY ACC_YEAR,1
+		ORDER BY ACC_YEAR)
+		
+	</select>
+		<!--医疗设施落实趋势 柱形2-->
+	<select id="queryMedicalImplementManagement"  parameterType="hashmap" resultType="hashmap">
+
+		SELECT * FROM (SELECT
+		ACC_YEAR || '年'  S_NAME
+		,sum(case when IS_IMP_DOCTOR = 0 then 1 else 0 end)  S_VALUE -- 未有执业医师的村数
+		,'未有执业医师的村数' S_GROUP
+		FROM
+		R_DW_POOROBJ_COUNTRY_Y
+		<where>
+			<include refid="level_sql"/>
+			<include refid="acc_year_sql"/>
+			 <include refid="query_condition"/>
+		</where>
+		GROUP BY ACC_YEAR,1
+		ORDER BY ACC_YEAR)
+		union all
+		
+		SELECT * FROM (SELECT
+		ACC_YEAR || '年'  S_NAME
+		,sum(CASE WHEN NEW_DOCTOR_NUM!=0 THEN 1 ELSE 0 END)  S_VALUE --新增执业医师的村数
+		,' 新增执业医师的村数' S_GROUP
+		FROM
+		R_DW_POOROBJ_COUNTRY_Y
+		<where>
+			<include refid="level_sql"/>
+			<include refid="acc_year_sql"/>
+			 <include refid="query_condition"/>
+		</where>
+		GROUP BY ACC_YEAR,1
+		ORDER BY ACC_YEAR)
+		
+	</select>	      
+		<!--医疗设施落实趋势 柱形3-->
+	<select id="queryMedicalImplementManagement3"  parameterType="hashmap" resultType="hashmap">
+
+		SELECT * FROM (SELECT
+		to_char(to_date(ACC_MONTH,'yyyymm'),'yyyy.mm')  S_NAME
+		,SUM(CASE WHEN IS_IMP_HEALTH_STATION=0 THEN 1 ELSE 0 END)  S_VALUE -- 有卫生室
+		,'无卫生站的村数' S_GROUP
+		FROM
+		R_DW_POOROBJ_COUNTRY_M
+		<where>
+			<include refid="level_sql"/>
+			<include refid="year_sql"/>
+			 <include refid="query_condition"/>
+		</where>
+		GROUP BY acc_month
+		ORDER BY acc_month)
+		union all
+		
+		SELECT * FROM (SELECT
+		to_char(to_date(ACC_MONTH,'yyyymm'),'yyyy.mm')  S_NAME
+		,SUM(CASE WHEN IS_NEW_HEALTH_STATION!=0 THEN 1 ELSE 0 END)  S_VALUE --当年新建卫生室个数
+		,' 新建卫生站的村数(个)' S_GROUP
+		FROM
+		R_DW_POOROBJ_COUNTRY_M
+		<where>
+			<include refid="level_sql"/>
+			<include refid="year_sql"/>
+			 <include refid="query_condition"/>
+		</where>
+		GROUP BY acc_month
+		ORDER BY acc_month)
+		
+	</select>
+		<!--医疗设施落实分析 柱形4-->
+	<select id="queryMedicalImplementManagement2"  parameterType="hashmap" resultType="hashmap">
+		SELECT * FROM (SELECT
+		to_char(to_date(ACC_MONTH,'yyyymm'),'yyyy.mm')  S_NAME
+		,sum(case when IS_IMP_DOCTOR = 0 then 1 else 0 end)  S_VALUE -- 未有执业医师的村数
+		,'未有执业医师的村数' S_GROUP
+		FROM
+		R_DW_POOROBJ_COUNTRY_M
+		<where>
+			<include refid="year_sql"/>
+			<include refid="level_sql"/>
+			 <include refid="query_condition"/>
+		</where>
+		GROUP BY acc_month
+		ORDER BY acc_month)
+		union all
+		
+		SELECT * FROM (SELECT
+		to_char(to_date(ACC_MONTH,'yyyymm'),'yyyy.mm')  S_NAME
+		,sum(case when IS_NEW_DOCTOR = 1 then 1 else 0 end )  S_VALUE --新增执业医师的村数
+		,' 新增执业医师的村数' S_GROUP
+		FROM
+		R_DW_POOROBJ_COUNTRY_M
+		<where>
+			<include refid="year_sql"/>
+			<include refid="level_sql"/>
+			 <include refid="query_condition"/>
+		</where>
+		GROUP BY acc_month
+		ORDER BY acc_month)
+		
+	</select>
+<!--医疗设施落实分析合计 -->
+	<select id="queryMedicalFacilityImplementManagementTableC"  parameterType="hashmap" resultType="hashmap">
+		select
+		    	<include refid="count_area_sql"/>
+				COUNT(COUNTRY_PAC)  A3--村数
+		      ,SUM(CASE WHEN IS_IMP_HEALTH_STATION=1 THEN 1 ELSE 0 END) A4--有卫生站的村数(个)
+		      ,CASE WHEN (COUNT(COUNTRY_PAC))=0 THEN '0.00' ELSE to_char(TRUNC(nvl(SUM(CASE WHEN IS_IMP_HEALTH_STATION=1 THEN 1 ELSE 0 END),0) /COUNT(COUNTRY_PAC)*100,2),'9999990.00') END ||'%' A5--有卫生站的村比例(个)
+		      ,SUM(CASE WHEN IS_IMP_HEALTH_STATION=0 THEN 1 ELSE 0 END) A6--无卫生站的村数(个)
+		      
+		      ,SUM(CASE WHEN NEW_HEALTH_STATION_NUM!=0 THEN 1 ELSE 0 END) as A7 
+		      
+		      ,SUM(case when IS_IMP_DOCTOR = 1 then 1 else 0 end) a8 --有执业医师的村数(户) 
+		      
+		      ,CASE WHEN (COUNT(COUNTRY_PAC))=0 THEN '0.00' ELSE to_char(TRUNC(nvl(SUM(IS_IMP_DOCTOR),0) / COUNT(COUNTRY_PAC)*100,2),'9999990.00') END ||'%' a9 --有执业医师的村比例(%)
+			  ,sum(case when IS_IMP_DOCTOR = 0 then 1 else 0 end) a10 --未有执业医师的村数(户)
+			  ,SUM(CASE WHEN NEW_DOCTOR_NUM!=0 THEN 1 ELSE 0 END) a11 --新增执业医师的村数(户)
+		      from
+		      
+		      R_DW_POOROBJ_COUNTRY_Y
+			
+			<where>
+				<include refid="level_sql"/>
+				<include refid="year_sql"/>
+				<include refid="query_condition"/>
+				
+			</where>
+			GROUP BY  <include refid="count_group_by_sql"/>
+		
+		
+	</select>
+
+	<!-- 医疗设施落实分析 -->
+	<select id="queryMedicalFacilityImplementManagementTable"  parameterType="hashmap" resultType="hashmap">
+	SELECT A.*,B.SORT FROM
+		(select
+         		<include refid="level_area_sql"/>
+			  COUNT(COUNTRY_PAC)  A3--村数
+		      ,SUM(CASE WHEN IS_IMP_HEALTH_STATION=1 THEN 1 ELSE 0 END) A4--有卫生站的村数(个)
+		      ,CASE WHEN (COUNT(COUNTRY_PAC))=0 THEN '0.00' ELSE to_char(TRUNC(nvl(SUM(CASE WHEN IS_IMP_HEALTH_STATION=1 THEN 1 ELSE 0 END),0) /COUNT(COUNTRY_PAC)*100,2),'9999990.00') END ||'%' A5--有卫生站的村比例(个)
+		      ,SUM(CASE WHEN IS_IMP_HEALTH_STATION=0 THEN 1 ELSE 0 END) A6--无卫生站的村数(个)		      
+		      ,SUM(CASE WHEN NEW_HEALTH_STATION_NUM!=0 THEN 1 ELSE 0 END) as A7 		      
+		      ,SUM(case when IS_IMP_DOCTOR = 1 then 1 else 0 end) a8 --有执业医师的村数(户) 
+		      ,CASE WHEN (COUNT(COUNTRY_PAC))=0 THEN '0.00' ELSE to_char(TRUNC(nvl(SUM(IS_IMP_DOCTOR),0) / COUNT(COUNTRY_PAC)*100,2),'9999990.00') END ||'%' a9 --有执业医师的村比例(%)
+			  ,sum(case when IS_IMP_DOCTOR = 0 then 1 else 0 end) a10 --未有执业医师的村数(户)
+			  ,SUM(CASE WHEN NEW_DOCTOR_NUM!=0 THEN 1 ELSE 0 END) a11 --新增执业医师的村数(户)
+		      from
+		      
+		      R_DW_POOROBJ_COUNTRY_Y
+			<where>
+				<include refid="level_sql"/>
+				<include refid="year_sql"/>
+				<include refid="query_condition"/>
+				
+			</where>
+			GROUP BY  <include refid="group_by_sql"/>) A
+		<include refid="dim_area_sql"/>
+		
+	</select>
+
+<!-- 医疗设施 落实分析明细细 -->
+	<select id="queryMedicalSortDetail"  parameterType="hashmap" resultType="hashmap">
+		select 
+
+				*
+				
+				from
+				(
+				select t1.*,ROWNUM RM
+				from
+				(
+				 
+				SELECT
+        COUNTRY_PAC B1
+			         ,t1.CITY_NAME A2
+			        ,t1.COUNTY_NAME A3
+			        ,t1.TOWN_NAME A4
+			        ,t1.COUNTRY_NAME A5
+			        ,HEALTH_STATION_NUM as A6 
+			        ,DOCTOR_NUM a7 
+			        ,NEW_HEALTH_STATION_NUM a8 
+			        ,NEW_DOCTOR_NUM  a9 
+			        
+		        from R_DW_POOROBJ_COUNTRY_Y t1 
+				   
+				 <where>
+					<include refid="level_sql"/>
+						
+					<include refid="query_condition"/>
+					<include refid="query_medical"/>
+					<include refid="year_sql"/>
+					
+				</where>	
+				) t1
+				
+				)
+				
+				<if test="page !=null">
+						WHERE RM BETWEEN #{pageSize}*(#{page}-1)+1 AND #{pageSize}  * #{page}
+				</if>
+				</select>
+<!-- 医疗设施 明细总数  -->
+	<select id="queryMedicalSortDetailCount"  parameterType="hashmap" resultType="long">
+	
+			select 
+
+				count(*)
+				
+				from
+				(
+				select t1.*,ROWNUM RM
+				from
+				(
+				SELECT
+        COUNTRY_PAC B1
+			         ,t1.CITY_NAME A2
+			        ,t1.COUNTY_NAME A3
+			        ,t1.TOWN_NAME A4
+			        ,t1.COUNTRY_NAME A5
+			        ,HEALTH_STATION_NUM as A6 
+			        ,DOCTOR_NUM a7 
+			        ,NEW_HEALTH_STATION_NUM a8 
+			        ,NEW_DOCTOR_NUM  a9   
+		         from R_DW_POOROBJ_COUNTRY_Y t1 
+				   
+				 <where>
+					<include refid="level_sql"/>
+					<include refid="query_condition"/>
+					<include refid="query_medical"/>
+					<include refid="year_sql"/>
+				</where>
+				) t1
+				
+				)
+				
+	</select>	
+	
+<!-- 医疗设施 排序 -->
+	<select id="queryMedicalSortImplementAnalysisSort"  parameterType="hashmap" resultType="hashmap">
+		select 
+
+				*
+				
+				from
+				(
+				select t1.*,ROWNUM RM
+				from
+				(
+				 SELECT
+				<include refid="sort_area_sql"/>
+				<include refid="medica_area_sql"/>
+				from R_DW_POOROBJ_COUNTRY_Y t1 
+				   
+				 <where>
+					 <include refid="level_sql"/>
+					
+					<include refid="year_sql"/>
+					<include refid="query_condition"/>
+				</where>	
+				GROUP BY <include refid="group_sort_area_sql"/>
+				ORDER BY <include refid="group_sort_area_sql"/> DESC
+				) t1
+				
+				)
+				<if test="page !=null">
+						WHERE RM BETWEEN #{pageSize}*(#{page}-1)+1 AND #{pageSize}  * #{page}
+				</if>
+				</select>
+<!-- 医疗设施 排序总数  -->
+	<select id="queryMedicalSortImplementAnalysisSortCount"  parameterType="hashmap" resultType="long">
+	
+			select 
+
+				count(*)
+				
+				from
+				(
+				select t1.*,ROWNUM RM
+				from
+				(
+				 SELECT
+				<include refid="sort_area_sql"/>
+				<include refid="medica_area_sql"/>
+				
+				
+				
+				
+				from R_DW_POOROBJ_COUNTRY_Y t1 
+				   
+				 <where>
+					<include refid="level_sql"/>
+					<include refid="query_condition"/>
+					<include refid="year_sql"/>
+				</where>
+				GROUP BY <include refid="group_sort_area_sql"/>
+				ORDER BY <include refid="group_sort_area_sql"/> DESC
+				) t1
+				
+				)
+				
+	</select>
+<!-- 医疗设施   排序详细 -->
+	<select id="queryMedicalSortAortDetail"  parameterType="hashmap" resultType="hashmap">
+	select
+          		<include refid="detail_area_sql"/>
+         	 COUNT(COUNTRY_PAC)  A3--村数
+		      ,SUM(CASE WHEN IS_IMP_HEALTH_STATION=1 THEN 1 ELSE 0 END) A4--有卫生站的村数(个)
+		      ,CASE WHEN (COUNT(COUNTRY_PAC))=0 THEN '0.00' ELSE to_char(TRUNC(nvl(SUM(CASE WHEN IS_IMP_HEALTH_STATION=1 THEN 1 ELSE 0 END),0) /COUNT(COUNTRY_PAC)*100,2),'9999990.00') END ||'%' A5--有卫生站的村比例(个)
+		      ,SUM(CASE WHEN IS_IMP_HEALTH_STATION=0 THEN 1 ELSE 0 END) A6--无卫生站的村数(个)
+		      
+		      ,SUM(CASE WHEN NEW_HEALTH_STATION_NUM!=0 THEN 1 ELSE 0 END) as A7 
+		      
+		      ,SUM(case when IS_IMP_DOCTOR = 1 then 1 else 0 end) a8 --有执业医师的村数(户) 
+		      
+		      ,CASE WHEN (COUNT(COUNTRY_PAC))=0 THEN '0.00' ELSE to_char(TRUNC(nvl(SUM(IS_IMP_DOCTOR),0) / COUNT(COUNTRY_PAC)*100,2),'9999990.00') END ||'%' a9 --有执业医师的村比例(%)
+			  ,sum(case when IS_IMP_DOCTOR = 0 then 1 else 0 end) a10 --未有执业医师的村数(户)
+			  ,SUM(CASE WHEN NEW_DOCTOR_NUM!=0 THEN 1 ELSE 0 END) a11 --新增执业医师的村数(户)
+		      from
+		      
+		      R_DW_POOROBJ_COUNTRY_Y
+			
+			<where>
+				<include refid="level_sql"/>
+				<include refid="year_sql"/>
+				
+			</where>
+			GROUP BY  <include refid="count_group_by_sql"/>
+		
+		
+	</select>
+	<!--通广播电视落实趋势 柱形-->
+	<select id="queryBroadcastImplementManagement"  parameterType="hashmap" resultType="hashmap">
+
+		SELECT * FROM (SELECT
+		ACC_YEAR || '年'  S_NAME
+		,sum(case when IS_IMP_BROADCAST = 0 then 1 else 0 end)  S_VALUE -- 未通广播电视的村数
+		,'未通广播电视的村数' S_GROUP
+		FROM
+		R_DW_POOROBJ_COUNTRY_Y
+		<where>
+			<include refid="level_sql"/>
+			<include refid="acc_year_sql"/>
+			 <include refid="query_condition"/>
+		</where>
+		GROUP BY ACC_YEAR,1
+		ORDER BY ACC_YEAR)
+		union all		
+		SELECT * FROM (SELECT
+		ACC_YEAR || '年'  S_NAME
+		,sum(case when IS_COMPLETE_BROADCAST = 1 then 1 else 0 end) S_VALUE --改造村数
+		,' 改造村数' S_GROUP
+		FROM
+		R_DW_POOROBJ_COUNTRY_Y
+		<where>
+			<include refid="level_sql"/>
+			<include refid="acc_year_sql"/>
+			 <include refid="query_condition"/>
+		</where>
+		GROUP BY ACC_YEAR,1
+		ORDER BY ACC_YEAR)
+		
+	</select>
+	<!--通广播电视落实趋势 柱形2-->
+	<select id="queryBroadcastImplementManagement2"  parameterType="hashmap" resultType="hashmap">
+
+		SELECT * FROM (SELECT
+		to_char(to_date(ACC_MONTH,'yyyymm'),'yyyy.mm')  S_NAME
+		,sum(case when IS_IMP_BROADCAST = 0 then 1 else 0 end)  S_VALUE -- 未通广播电视的村数
+		,'未通广播电视的村数' S_GROUP
+		FROM
+		R_DW_POOROBJ_COUNTRY_M
+		<where>
+			<include refid="level_sql"/>
+			<include refid="year_sql"/>
+			 <include refid="query_condition"/>
+		</where>
+		GROUP BY acc_month
+		ORDER BY acc_month)
+		union all
+		
+		SELECT * FROM (SELECT
+		to_char(to_date(ACC_MONTH,'yyyymm'),'yyyy.mm')  S_NAME
+		,sum(case when IS_COMPLETE_BROADCAST = 1 then 1 else 0 end)  S_VALUE --改造村数
+		,' 改造村数' S_GROUP
+		FROM
+		R_DW_POOROBJ_COUNTRY_M
+		<where>
+			<include refid="level_sql"/>
+			<include refid="year_sql"/>
+			 <include refid="query_condition"/>
+		</where>
+		GROUP BY acc_month
+		ORDER BY acc_month)
+		
+	</select>
+<!--通广播电视落实分析合计 -->
+	<select id="queryBroadcastImplementManagementTableC"  parameterType="hashmap" resultType="hashmap">
+		select
+		    	<include refid="count_area_sql"/>
+				COUNT(COUNTRY_PAC)  A3--村数
+		      ,SUM(CASE WHEN IS_IMP_BROADCAST=1 THEN 1 ELSE 0 END) A4--全通广播电视的村数(个)
+		      ,CASE WHEN COUNT(COUNTRY_PAC)=0 THEN '0.00' ELSE to_char(trunc(nvl(SUM(CASE WHEN IS_IMP_BROADCAST=1 THEN 1 ELSE 0 END),0) /  COUNT(COUNTRY_PAC) * 100, 2), '9999990.00') END || '%' A5--全通广播电视的村比例(%)
+		      ,SUM(case when IS_BY_NO_BROADCAST = 1 then 1 else 0 end)  as A6 --年初未全通广播电视的村数
+		      ,SUM(case when IS_COMPLETE_BROADCAST = 1 then 1 else 0 end) a7 --完成改造村数 
+		      ,CASE WHEN (SUM(case when IS_BY_NO_BROADCAST = 1 then 1 else 0 end))=0 THEN '0.00' ELSE to_char(trunc(nvl(SUM(case when IS_COMPLETE_BROADCAST = 1 then 1 else 0 end) ,0) /SUM(case when IS_BY_NO_BROADCAST = 1 then 1 else 0 end) * 100, 2), '9999990.00') END ||'%' a8 --完成改造的村比例(%)
+			  
+		      from
+		      
+		      R_DW_POOROBJ_COUNTRY_Y
+			
+			<where>
+				<include refid="level_sql"/>
+				<include refid="year_sql"/>
+				<include refid="query_condition"/>
+				
+			</where>
+			GROUP BY  <include refid="count_group_by_sql"/>
+		
+		
+	</select>
+	<!-- 通广播电视落实分析 -->
+	<select id="queryBroadcastImplementManagementTable"  parameterType="hashmap" resultType="hashmap">
+	  SELECT A.*,B.SORT FROM
+		(select
+           <include refid="level_area_sql"/>
+         	  COUNT(COUNTRY_PAC)  A3--村数
+		      ,SUM(CASE WHEN IS_IMP_BROADCAST=1 THEN 1 ELSE 0 END) A4--全通广播电视的村数(个)
+		      ,CASE WHEN COUNT(COUNTRY_PAC)=0 THEN '0.00' ELSE to_char(trunc(nvl(SUM(CASE WHEN IS_IMP_BROADCAST=1 THEN 1 ELSE 0 END),0) /  COUNT(COUNTRY_PAC) * 100, 2), '9999990.00') END || '%' A5--全通广播电视的村比例(%)
+		      ,SUM(case when IS_BY_NO_BROADCAST = 1 then 1 else 0 end)  as A6 --年初未全通广播电视的村数
+		      ,SUM(case when IS_COMPLETE_BROADCAST = 1 then 1 else 0 end) a7 --完成改造村数 
+		      ,CASE WHEN (SUM(case when IS_BY_NO_BROADCAST = 1 then 1 else 0 end))=0 THEN '0.00' ELSE to_char(trunc(nvl(SUM(case when IS_COMPLETE_BROADCAST = 1 then 1 else 0 end) ,0) /SUM(case when IS_BY_NO_BROADCAST = 1 then 1 else 0 end) * 100, 2), '9999990.00') END ||'%' a8 --完成改造的村比例(%)
+			  
+		      from
+		      
+		      R_DW_POOROBJ_COUNTRY_Y
+			<where>
+				<include refid="level_sql"/>
+				<include refid="year_sql"/>
+				<include refid="query_condition"/>
+				
+			</where>
+			GROUP BY  <include refid="group_by_sql"/>) A
+		<include refid="dim_area_sql"/>
+		
+	</select>
+	
+<!-- 通广播电视 落实分析明细细 -->
+	<select id="queryBroadcastSortDetail"  parameterType="hashmap" resultType="hashmap">
+		select 
+
+				*
+				
+				from
+				(
+				select t1.*,ROWNUM RM
+				from
+				(
+				 
+				SELECT
+        COUNTRY_PAC B1
+			        , t1.CITY_NAME A2
+			        ,t1.COUNTY_NAME A3
+			        ,t1.TOWN_NAME A4
+			        ,t1.COUNTRY_NAME A5
+			        ,CASE IS_IMP_BROADCAST 
+					WHEN 1 THEN '是' 
+					WHEN 0 THEN '否'
+					END as A6 
+			        ,NO_BROADCAST_FAM a7 
+			        ,CASE IS_IMP_BROADCAST 
+          WHEN 1 THEN '-' 
+        else CASE IS_COMPLETE_BROADCAST 
+          WHEN 1 THEN '是' 
+          WHEN 0 THEN '否'
+          END 
+        end
+        a8 
+		        
+		        from R_DW_POOROBJ_COUNTRY_Y t1 
+				   
+				 <where>
+					<include refid="level_sql"/>
+						
+					<include refid="query_condition"/>
+					<include refid="query_broad"/>
+					<include refid="year_sql"/>
+					
+				</where>	
+				) t1
+				
+				)
+				
+				<if test="page !=null">
+						WHERE RM BETWEEN #{pageSize}*(#{page}-1)+1 AND #{pageSize}  * #{page}
+				</if>
+				</select>
+<!-- 通广播电视 明细总数  -->
+	<select id="queryBroadcastSortDetailCount"  parameterType="hashmap" resultType="long">
+	
+			select 
+
+				count(*)
+				
+				from
+				(
+				select t1.*,ROWNUM RM
+				from
+				(
+				SELECT
+        COUNTRY_PAC B1
+			        , t1.CITY_NAME A2
+			        ,t1.COUNTY_NAME A3
+			        ,t1.TOWN_NAME A4
+			        ,t1.COUNTRY_NAME A5
+			        ,CASE IS_IMP_BROADCAST 
+					WHEN 1 THEN '是' 
+					WHEN 0 THEN '否'
+					END as A6 
+			        ,NO_BROADCAST_FAM a7 
+			        ,CASE IS_IMP_BROADCAST 
+          WHEN 1 THEN '-' 
+        else CASE IS_COMPLETE_BROADCAST 
+          WHEN 1 THEN '是' 
+          WHEN 0 THEN '否'
+          END 
+        end
+        a8
+					
+				   from R_DW_POOROBJ_COUNTRY_Y t1  
+				 <where>
+					<include refid="level_sql"/>
+					
+					<include refid="query_condition"/>
+					<include refid="query_broad"/>
+					<include refid="year_sql"/>
+				</where>
+				) t1
+				
+				)
+				
+	</select>	
+	
+<!-- 通广播电视 排序 -->
+	<select id="queryBroadcastSortImplementAnalysisSort"  parameterType="hashmap" resultType="hashmap">
+		select 
+
+				*
+				
+				from
+				(
+				select t1.*,ROWNUM RM
+				from
+				(
+				 SELECT
+				<include refid="sort_area_sql"/>
+				<include refid="broad_area_sql"/>
+				from R_DW_POOROBJ_COUNTRY_Y t1 
+				   
+				 <where>
+				 	<include refid="level_sql"/>
+					
+					<include refid="year_sql"/>
+					<include refid="query_condition"/>
+				</where>	
+				GROUP BY <include refid="group_sort_area_sql"/>
+				ORDER BY <include refid="group_sort_area_sql"/> DESC
+				) t1
+				
+				)
+				
+				<if test="page !=null">
+						WHERE RM BETWEEN #{pageSize}*(#{page}-1)+1 AND #{pageSize}  * #{page}
+				</if>
+				</select>
+<!-- 通广播电视 排序总数  -->
+	<select id="queryBroadcastSortImplementAnalysisSortCount"  parameterType="hashmap" resultType="long">
+	
+			select 
+
+				count(*)
+				
+				from
+				(
+				select t1.*,ROWNUM RM
+				from
+				(
+				 SELECT
+				<include refid="sort_area_sql"/>
+				<include refid="broad_area_sql"/>
+				
+				
+				
+				
+				from R_DW_POOROBJ_COUNTRY_Y t1 
+				   
+				 <where>
+					<include refid="level_sql"/>
+					
+					<include refid="query_condition"/>
+					<include refid="year_sql"/>
+				</where>
+				GROUP BY <include refid="group_sort_area_sql"/>
+				ORDER BY <include refid="group_sort_area_sql"/> DESC
+				) t1
+				
+				)
+				
+	</select>
+<!--通广播电视   排序详细 -->
+	<select id="queryBroadcastSortAortDetail"  parameterType="hashmap" resultType="hashmap">
+	select
+          		<include refid="detail_area_sql"/>
+         	   COUNT(COUNTRY_PAC)  A3--村数
+		      ,SUM(CASE WHEN IS_IMP_BROADCAST=1 THEN 1 ELSE 0 END) A4--全通广播电视的村数(个)
+		      ,CASE WHEN COUNT(COUNTRY_PAC)=0 THEN '0.00' ELSE to_char(trunc(nvl(SUM(CASE WHEN IS_IMP_BROADCAST=1 THEN 1 ELSE 0 END),0) /  COUNT(COUNTRY_PAC) * 100, 2), '9999990.00') END || '%' A5--全通广播电视的村比例(%)
+		      ,SUM(case when IS_BY_NO_BROADCAST = 1 then 1 else 0 end)  as A6 --年初未全通广播电视的村数
+		      ,SUM(case when IS_COMPLETE_BROADCAST = 1 then 1 else 0 end) a7 --完成改造村数 
+		      ,CASE WHEN (SUM(case when IS_BY_NO_BROADCAST = 1 then 1 else 0 end))=0 THEN '0.00' ELSE to_char(trunc(nvl(SUM(case when IS_COMPLETE_BROADCAST = 1 then 1 else 0 end) ,0) /SUM(case when IS_BY_NO_BROADCAST = 1 then 1 else 0 end) * 100, 2), '9999990.00') END ||'%' a8 --完成改造的村比例(%)
+			  
+        
+          from
+          
+          R_DW_POOROBJ_COUNTRY_Y
+			
+			<where>
+				<include refid="level_sql"/>
+				<include refid="year_sql"/>
+				
+			</where>
+			GROUP BY  <include refid="count_group_by_sql"/>
+		
+		
+	</select>		
+	
+	<!--网络覆盖落实趋势 柱形-->
+	<select id="queryNetImplementManagement"  parameterType="hashmap" resultType="hashmap">
+
+		SELECT * FROM (SELECT
+		ACC_YEAR || '年'  S_NAME
+		,sum(case when IS_IMP_NETWORK = 0 then 1 else 0 end) S_VALUE -- 网络未全覆盖的村数
+		,'网络未全覆盖的村数' S_GROUP
+		FROM
+		R_DW_POOROBJ_COUNTRY_Y
+		<where>
+			<include refid="level_sql"/>
+			<include refid="acc_year_sql"/>
+			 <include refid="query_condition"/>
+		</where>
+		GROUP BY ACC_YEAR,1
+		ORDER BY ACC_YEAR)
+		union all
+		
+		SELECT * FROM (SELECT
+		ACC_YEAR || '年'  S_NAME
+		,SUM(CASE WHEN IS_COMPLETE_NETWORK=1 THEN 1 ELSE 0 END) S_VALUE --网络覆盖改造的村数
+		,' 网络覆盖改造的村数' S_GROUP
+		FROM
+		R_DW_POOROBJ_COUNTRY_Y
+		<where>
+			<include refid="level_sql"/>
+			<include refid="acc_year_sql"/>
+			 <include refid="query_condition"/>
+		</where>
+		GROUP BY ACC_YEAR,1
+		ORDER BY ACC_YEAR)
+		
+	</select>
+
+	
+	<!--网络覆盖落实趋势 柱形2-->
+	<select id="queryNetImplementManagement2"  parameterType="hashmap" resultType="hashmap">
+
+		SELECT * FROM (SELECT
+		to_char(to_date(ACC_MONTH,'yyyymm'),'yyyy.mm')  S_NAME
+		,sum(case when IS_IMP_NETWORK = 0 then 1 else 0 end) S_VALUE -- 网络未全覆盖的村数
+		,'网络未全覆盖的村数' S_GROUP
+		FROM
+		R_DW_POOROBJ_COUNTRY_M
+		<where>
+			<include refid="level_sql"/>
+			<include refid="year_sql"/>
+			 <include refid="query_condition"/>
+		</where>
+		GROUP BY acc_month
+		ORDER BY acc_month)
+		union all
+		
+		SELECT * FROM (SELECT
+		to_char(to_date(ACC_MONTH,'yyyymm'),'yyyy.mm')  S_NAME
+		,SUM(CASE WHEN IS_COMPLETE_NETWORK=1 THEN 1 ELSE 0 END) S_VALUE --网络覆盖改造的村数
+		,' 网络覆盖改造的村数' S_GROUP
+		FROM
+		R_DW_POOROBJ_COUNTRY_M
+		<where>
+			<include refid="level_sql"/>
+			<include refid="year_sql"/>
+			 <include refid="query_condition"/>
+		</where>
+		GROUP BY acc_month
+		ORDER BY acc_month)
+		
+	</select>
+	
+<!--网络覆盖落实分析合计 -->
+	<select id="queryNetImplementManagementTableC"  parameterType="hashmap" resultType="hashmap">
+		select
+		    	<include refid="count_area_sql"/>
+				COUNT(COUNTRY_PAC)  A3--村数
+	          ,SUM(case when IS_IMP_NETWORK = 1 then 1 else 0 end) A4
+	          ,CASE WHEN COUNT(COUNTRY_PAC)=0 THEN '0.00' ELSE to_char(trunc(nvl(SUM(case when IS_IMP_NETWORK = 1 then 1 else 0 end),0)  /  COUNT(COUNTRY_PAC) * 100, 2), '9999990.00') END || '%' A5
+	          ,SUM(case when IS_BY_NO_NETWORK = 1 then 1 else 0 end)  as A6 
+	          ,SUM(CASE WHEN IS_COMPLETE_NETWORK=1 THEN 1 ELSE 0 END) a7 
+	          ,CASE WHEN (SUM(case when IS_BY_NO_NETWORK =1 then 1 else 0 end))=0 THEN '0.00' ELSE to_char(trunc(nvl(SUM(CASE WHEN IS_COMPLETE_NETWORK=1 THEN 1 ELSE 0 END),0)  /SUM(case when IS_BY_NO_NETWORK = 1 then 1 else 0 end)  * 100, 2), '9999990.00') END ||'%' A8 
+	        
+	          from
+	          
+	          R_DW_POOROBJ_COUNTRY_Y
+			
+			<where>
+				<include refid="level_sql"/>
+				<include refid="year_sql"/>
+				<include refid="query_condition"/>
+				
+			</where>
+			GROUP BY  <include refid="count_group_by_sql"/>
+		
+		
+	</select>
+	<!-- 网络覆盖落实分析 -->
+	<select id="queryNetImplementManagementTable"  parameterType="hashmap" resultType="hashmap">
+	SELECT A.*,B.SORT FROM
+		(select
+         		<include refid="level_area_sql"/>
+        	 COUNT(COUNTRY_PAC)  A3--村数
+	          ,SUM(case when IS_IMP_NETWORK = 1 then 1 else 0 end) A4
+	          ,CASE WHEN COUNT(COUNTRY_PAC)=0 THEN '0.00' ELSE to_char(trunc(nvl(SUM(case when IS_IMP_NETWORK = 1 then 1 else 0 end),0)  /  COUNT(COUNTRY_PAC) * 100, 2), '9999990.00') END || '%' A5
+	          ,SUM(case when IS_BY_NO_NETWORK = 1 then 1 else 0 end)  as A6 
+	          ,SUM(CASE WHEN IS_COMPLETE_NETWORK=1 THEN 1 ELSE 0 END) a7 
+	          ,CASE WHEN (SUM(case when IS_BY_NO_NETWORK =1 then 1 else 0 end))=0 THEN '0.00' ELSE to_char(trunc(nvl(SUM(CASE WHEN IS_COMPLETE_NETWORK=1 THEN 1 ELSE 0 END),0)  /SUM(case when IS_BY_NO_NETWORK = 1 then 1 else 0 end)  * 100, 2), '9999990.00') END ||'%' A8 
+	        
+	          from
+	          
+	          R_DW_POOROBJ_COUNTRY_Y
+
+			<where>
+				<include refid="level_sql"/>
+				<include refid="year_sql"/>
+				<include refid="query_condition"/>
+				
+			</where>
+			GROUP BY  <include refid="group_by_sql"/>) A
+		<include refid="dim_area_sql"/>
+		
+	</select>
+
+<!-- 网络覆盖 落实分析明细细 -->
+	<select id="queryNetcastSortDetail"  parameterType="hashmap" resultType="hashmap">
+		select 
+
+				*
+				
+				from
+				(
+				select t1.*,ROWNUM RM
+				from
+				(
+				 
+				SELECT
+        COUNTRY_PAC B1
+              , t1.CITY_NAME A2
+              ,t1.COUNTY_NAME A3
+              ,t1.TOWN_NAME A4
+              ,t1.COUNTRY_NAME A5
+              ,CASE IS_IMP_NETWORK 
+          WHEN 1 THEN '是' 
+          WHEN 0 THEN '否'
+          END as A6
+              ,CASE IS_BY_NO_NETWORK 
+          WHEN 0 THEN '是' 
+          WHEN 1 THEN '否'
+          END as  a7 
+            ,CASE IS_BY_NO_NETWORK 
+          WHEN 0 THEN '-' else CASE IS_COMPLETE_NETWORK 
+          WHEN 1 THEN '是' 
+          WHEN 0 THEN '否'
+           END
+          END as a8 
+              
+              
+            from R_DW_POOROBJ_COUNTRY_Y t1 
+				   
+				 <where>
+					<include refid="level_sql"/>
+						
+					<include refid="query_condition"/>
+					<include refid="query_net"/>
+					<include refid="year_sql"/>
+					
+				</where>	
+				) t1
+				
+				)
+				
+				<if test="page !=null">
+						WHERE RM BETWEEN #{pageSize}*(#{page}-1)+1 AND #{pageSize}  * #{page}
+				</if>
+				</select>
+<!-- 网络覆盖 明细总数  -->
+	<select id="queryNetSortDetailCount"   parameterType="hashmap" resultType="long">
+	
+			select 
+
+				count(*)
+				
+				from
+				(
+				select t1.*,ROWNUM RM
+				from
+				(
+				SELECT
+        COUNTRY_PAC B1
+              , t1.CITY_NAME A2
+              ,t1.COUNTY_NAME A3
+              ,t1.TOWN_NAME A4
+              ,t1.COUNTRY_NAME A5
+              ,CASE IS_IMP_NETWORK 
+          WHEN 1 THEN '是' 
+          WHEN 0 THEN '否'
+          END as A6
+              ,CASE IS_BY_NO_NETWORK 
+          WHEN 0 THEN '是' 
+          WHEN 1 THEN '否'
+          END as  a7 
+            ,CASE IS_BY_NO_NETWORK 
+          WHEN 0 THEN '-' else CASE IS_COMPLETE_NETWORK 
+          WHEN 1 THEN '是' 
+          WHEN 0 THEN '否'
+           END
+          END as a8 
+              
+              
+            from R_DW_POOROBJ_COUNTRY_Y t1  
+				 <where>
+					<include refid="level_sql"/>
+					
+					<include refid="query_condition"/>
+					<include refid="query_net"/>
+					<include refid="year_sql"/>
+				</where>
+				) t1
+				
+				)
+				
+	</select>		
+<!-- 网络覆盖 排序 -->
+	<select id="queryNetSortImplementAnalysisSort"  parameterType="hashmap" resultType="hashmap">
+		select 
+
+				*
+				
+				from
+				(
+				select t1.*,ROWNUM RM
+				from
+				(
+				 SELECT
+				<include refid="sort_area_sql"/>
+				<include refid="net_area_sql"/>
+				from R_DW_POOROBJ_COUNTRY_Y t1 
+				   
+				 <where>
+				 <include refid="level_sql"/>
+					
+					<include refid="year_sql"/>
+					<include refid="query_condition"/>
+				</where>	
+				GROUP BY <include refid="group_sort_area_sql"/>
+				ORDER BY <include refid="group_sort_area_sql"/> DESC
+				) t1
+				
+				)
+				
+				<if test="page !=null">
+						WHERE RM BETWEEN #{pageSize}*(#{page}-1)+1 AND #{pageSize}  * #{page}
+				</if>
+				</select>
+<!-- 网络覆盖 排序总数  -->
+	<select id="queryNetSortImplementAnalysisSortCount"  parameterType="hashmap" resultType="long">
+	
+			select 
+
+				count(*)
+				
+				from
+				(
+				select t1.*,ROWNUM RM
+				from
+				(
+				 SELECT
+				
+				
+				<include refid="sort_area_sql"/>
+				<include refid="net_area_sql"/>
+
+				from R_DW_POOROBJ_COUNTRY_Y t1 
+				   
+				 <where>
+					<include refid="level_sql"/>
+					
+					<include refid="query_condition"/>
+					<include refid="year_sql"/>
+				</where>
+				GROUP BY <include refid="group_sort_area_sql"/>
+				ORDER BY <include refid="group_sort_area_sql"/> DESC
+				) t1
+				
+				)
+				
+	</select>
+	<!--网络覆盖   排序详细 -->
+	<select id="queryNetSortAortDetail"  parameterType="hashmap" resultType="hashmap">
+	select
+			 <include refid="detail_area_sql"/>
+          		COUNT(COUNTRY_PAC)  A3--村数
+	          ,SUM(case when IS_IMP_NETWORK = 1 then 1 else 0 end) A4
+	          ,CASE WHEN COUNT(COUNTRY_PAC)=0 THEN '0.00' ELSE to_char(trunc(nvl(SUM(case when IS_IMP_NETWORK = 1 then 1 else 0 end),0)  /  COUNT(COUNTRY_PAC) * 100, 2), '9999990.00') END || '%' A5
+	          ,SUM(case when IS_BY_NO_NETWORK = 1 then 1 else 0 end)  as A6 
+	          ,SUM(CASE WHEN IS_COMPLETE_NETWORK=1 THEN 1 ELSE 0 END) a7 
+	          ,CASE WHEN (SUM(case when IS_BY_NO_NETWORK =1 then 1 else 0 end))=0 THEN '0.00' ELSE to_char(trunc(nvl(SUM(CASE WHEN IS_COMPLETE_NETWORK=1 THEN 1 ELSE 0 END),0)  /SUM(case when IS_BY_NO_NETWORK = 1 then 1 else 0 end)  * 100, 2), '9999990.00') END ||'%' A8 
+	        
+	          from
+	          
+	          R_DW_POOROBJ_COUNTRY_Y
+			
+			<where>
+				<include refid="level_sql"/>
+				<include refid="year_sql"/>
+				
+			</where>
+			GROUP BY  <include refid="count_group_by_sql"/>
+	
+	</select>
+	
+	
+
+	<sql id="count_group_by_sql">
+			<if test=" '' != level and null != level and 'province' == level  ">
+				 1
+			</if>
+			<if test=" '' != level and null != level and 'city' == level  ">
+				 CITY_PAC , CITY_NAME
+			</if>
+			
+			<if test=" '' != level and null != level and 'county' == level  ">
+				 COUNTY_PAC ,COUNTY_NAME  
+			</if>
+			
+			<if test=" '' != level and null != level and 'town' == level  ">
+				   TOWN_PAC ,TOWN_NAME 
+			</if>
+			
+			<if test=" '' != level and null != level and 'country' == level  ">
+				COUNTRY_PAC  ,COUNTRY_NAME
+			</if>
+	</sql>
+		<!-- 层级分组 -->
+	<sql id="group_by_sql">
+	
+			<if test=" '' != level and null != level and 'province' == level  ">
+				 CITY_PAC , CITY_NAME
+			</if>
+			<if test=" '' != level and null != level and 'city' == level  ">
+				 COUNTY_PAC ,COUNTY_NAME
+			</if>
+			
+			<if test=" '' != level and null != level and 'county' == level  ">
+				   TOWN_PAC ,TOWN_NAME 
+			</if>
+			
+			<if test=" '' != level and null != level and 'town' == level  ">
+				 COUNTRY_PAC  ,COUNTRY_NAME 
+			</if>
+			
+			<if test=" '' != level and null != level and 'country' == level  ">
+				COUNTRY_PAC  ,COUNTRY_NAME 
+			</if>
+			
+		
+	</sql>
+	<!--  -->
+	<sql id="level_area_sql">
+			
+			<if test=" '' != level and null != level and 'province' == level  ">
+				CITY_PAC S_ID, CITY_NAME A2, 
+			</if>
+			<if test=" '' != level and null != level and 'city' == level  ">
+				COUNTY_PAC S_ID,COUNTY_NAME A2,
+			</if>
+			
+			<if test=" '' != level and null != level and 'county' == level  ">
+				 TOWN_PAC S_ID ,TOWN_NAME A2, 
+			</if>
+			
+			<if test=" '' != level and null != level and 'town' == level  ">
+				COUNTRY_PAC S_ID ,COUNTRY_NAME  A2, 
+			</if>
+			
+			<if test=" '' != level and null != level and 'country' == level  ">
+				COUNTRY_PAC S_ID ,COUNTRY_NAME  A2, 
+			</if>
+	</sql>
+
+	<!-- count  -->
+	<sql id="count_area_sql">
+			<if test=" '' != level and null != level and 'province' == level  ">
+				'440000000000' S_ID , '合计' A2,
+			</if>
+			<if test=" '' != level and null != level and 'city' == level  ">
+				CITY_PAC S_ID, '合计' A2,
+			</if>
+			
+			<if test=" '' != level and null != level and 'county' == level  ">
+				COUNTY_PAC S_ID,'合计' A2,
+			</if>
+			
+			<if test=" '' != level and null != level and 'town' == level  ">
+				 TOWN_PAC S_ID ,'合计' A2,
+			</if>
+			
+			<if test=" '' != level and null != level and 'country' == level  ">
+				COUNTRY_PAC S_ID ,'合计'  A2,
+			</if>			
+	</sql>
+	<sql id="year_sql">
+	
+		<if test=" '' != year and null != year">
+			AND ACC_YEAR = 	#{year}		
+		</if>
+	
+	</sql>
+	<sql id="acc_year_sql">
+	
+		<if test=" '' != year and null != year">
+			AND (ACC_YEAR = #{year} or ACC_YEAR &lt; #{year})		
+		</if>
+	</sql>
+	<sql id="query_condition">
+		<if test=" '' != scope and null != scope">
+			<if test="2 == scope">AND IS_KEY_POVERTY=1</if><!-- 贫困村 -->
+			<if test="3 == scope">AND IS_KEY_POVERTY=0</if><!-- 分散村 -->
+			<if test="4 == scope">AND IS_OLD_REVOLUTIONARY=1</if><!-- 革命老区 -->
+			<if test="5 == scope">AND IS_CENTRAL_SOVIET=1</if><!-- 中央苏区 -->
+		</if>
+	</sql>	
+	<!-- 层级sql -->
+	<sql id="level_sql">
+			
+			<if test=" '' != level and null != level and 'province' == level  ">
+				
+			</if>
+			
+			<if test=" '' != level and null != level and 'city' == level  ">
+				AND CITY_PAC = #{id}
+			</if>
+			
+			<if test=" '' != level and null != level and 'county' == level  ">
+				AND COUNTY_PAC = #{id} 
+			</if>
+			
+			<if test=" '' != level and null != level and 'town' == level  ">
+				AND TOWN_PAC = #{id} 
+			</if>
+			
+			<if test=" '' != level and null != level and 'country' == level  ">
+				AND COUNTRY_PAC = #{id}
+			</if>
+	</sql>
+	<!-- 层级sql -->
+	<sql id="sort_area_sql">
+			
+			<if test=" '' != sort_area and null != sort_area and 1 == sort_area  ">
+				CITY_PAC S_ID, CITY_NAME A2,
+			</if>
+			<if test=" '' != sort_area and null != sort_area and 2 == sort_area  ">
+				COUNTY_PAC S_ID,CITY_NAME||'>'||COUNTY_NAME A2,
+			</if>
+			
+			<if test=" '' != sort_area and null != sort_area and 3 == sort_area  ">
+				 TOWN_PAC S_ID ,CITY_NAME||'>'||COUNTY_NAME||'>'||TOWN_NAME A2,
+			</if>
+			
+			<if test=" '' != sort_area and null != sort_area and 4 == sort_area  ">
+				COUNTRY_PAC S_ID ,CITY_NAME||'>'||COUNTY_NAME||'>'||TOWN_NAME||'>'||COUNTRY_NAME  A2,
+			</if>
+			
+	</sql>				
+	<sql id="group_sort_area_sql">
+			
+			<if test=" '' != sort_area and null != sort_area and 1 == sort_area  ">
+				CITY_PAC , CITY_NAME 
+			</if>
+			<if test=" '' != sort_area and null != sort_area and 2 == sort_area  ">
+				COUNTY_PAC ,CITY_NAME||'>'||COUNTY_NAME 
+			</if>
+			
+			<if test=" '' != sort_area and null != sort_area and 3 == sort_area  ">
+				 TOWN_PAC  ,CITY_NAME||'>'||COUNTY_NAME||'>'||TOWN_NAME
+			</if>
+			
+			<if test=" '' != sort_area and null != sort_area and 4 == sort_area  ">
+				COUNTRY_PAC  ,CITY_NAME||'>'||COUNTY_NAME||'>'||TOWN_NAME||'>'||COUNTRY_NAME 
+			</if>
+			
+	</sql>
+		<sql id="detail_area_sql">
+		
+			<if test=" '' != level and null != level and 'city' == level  ">
+				CITY_PAC S_ID, CITY_NAME A2,
+			</if>
+			
+			<if test=" '' != level and null != level and 'county' == level  ">
+				COUNTY_PAC S_ID,COUNTY_NAME A2,
+			</if>
+			
+			<if test=" '' != level and null != level and 'town' == level  ">
+				 TOWN_PAC S_ID ,TOWN_NAME A2,
+			</if>
+			
+			<if test=" '' != level and null != level and 'country' == level  ">
+				COUNTRY_PAC S_ID ,COUNTRY_NAME  A2,
+			</if>
+	</sql>
+	<sql id="query_road_detail">
+		
+		<if test=" '' != poor_attribute and null != poor_attribute">
+			<if test="2 == poor_attribute">AND IS_IMP_ROAD=1</if><!-- 完全硬底化村村 -->
+			<if test="3 == poor_attribute">AND IS_IMP_ROAD=0</if><!-- 未完全硬底化村 -->
+		</if>
+
+	</sql>
+	
+	<sql id="road_area_sql">
+			
+			<if test=" '' != taxis_indexes and null != taxis_indexes and 1 == taxis_indexes  ">
+				CASE WHEN COUNT(COUNTRY_PAC)=0 THEN '0.00' ELSE to_char(trunc(nvl(SUM(CASE WHEN IS_IMP_ROAD=1 THEN 1 ELSE 0 END),0) /  COUNT(COUNTRY_PAC) * 100, 2), '9999990.00') END || '%'  A3 <!-- 完全道路硬底化村比例 -->
+			</if>
+			<if test=" '' != taxis_indexes and null != taxis_indexes and 2 == taxis_indexes  ">
+				SUM(CTY_TOWN_NO_ROAD_MILEAGE+BY_NAT_CTY_NO_ROAD_MILEAGE)  A3 <!-- 帮扶村未通沥青(水泥)路里程数-->
+			</if>
+			<if test=" '' != taxis_indexes and null != taxis_indexes and 3 == taxis_indexes  ">
+				 SUM(ROAD_COMPLETE_MILEAGE) A3  <!-- 当年改造完成里程数 -->
+			</if>			
+	</sql>	
+
+
+	<sql id="query_water">
+		
+		<if test=" '' != poor_attribute and null != poor_attribute">
+			<if test="2 == poor_attribute">AND IS_IMP_SAFE_DRINK=1</if><!-- 全实现安全饮水的村 -->
+			<if test="3 == poor_attribute">AND IS_IMP_SAFE_DRINK=0</if><!-- 未全实现安全饮水的村-->
+		</if>
+
+	</sql>
+	<sql id="wate_area_sql">
+			<if test=" '' != taxis_indexes and null != taxis_indexes and 1 == taxis_indexes  ">
+				CASE WHEN COUNT(COUNTRY_PAC)=0 THEN '0.00' ELSE to_char(trunc(nvl(SUM(CASE WHEN IS_IMP_SAFE_DRINK=1 THEN 1 ELSE 0 END),0) /  COUNT(COUNTRY_PAC) * 100, 2), '9999990.00') END || '%'  A3 <!-- 完全实现安全饮水比例 -->
+			</if>
+			<if test=" '' != taxis_indexes and null != taxis_indexes and 2 == taxis_indexes  ">
+				SUM(CASE WHEN IS_IMP_SAFE_DRINK=0 THEN 1 ELSE 0 END)  A3 <!-- 未全实现安全饮水的村-->
+			</if>
+			<if test=" '' != taxis_indexes and null != taxis_indexes and 3 == taxis_indexes  ">
+				 SUM(SAFE_DRINK_COMPLETE_FAM) A3  <!-- 完成饮水改造户数 -->
+			</if>			
+	</sql>
+
+	<sql id="query_electricity">
+		
+		<if test=" '' != poor_attribute and null != poor_attribute">
+			<if test="2 == poor_attribute">AND IS_IMP_ELECTRICITY=1</if><!-- 全通生活用电的村 -->
+			<if test="3 == poor_attribute">AND IS_IMP_ELECTRICITY=0</if><!-- 未实现全通生活用电的村-->
+		</if>
+
+	</sql>
+	
+	<sql id="electricity_area_sql">
+			
+			<if test=" '' != taxis_indexes and null != taxis_indexes and 1 == taxis_indexes  ">
+				CASE WHEN COUNT(COUNTRY_PAC)=0 THEN '0.00' ELSE to_char(trunc(nvl(SUM(CASE WHEN IS_IMP_ELECTRICITY=1 THEN 1 ELSE 0 END) ,0)/  COUNT(COUNTRY_PAC) * 100, 2), '9999990.00') END || '%'  A3--全部通生活用电的比例(%)
+			</if>
+			<if test=" '' != taxis_indexes and null != taxis_indexes and 2 == taxis_indexes  ">
+				SUM(case when IS_BY_NO_ELECTRICITY = 0 then 1 else 0 end)  A3 --未全部通生活用电的村数(个)
+			</if>
+			<if test=" '' != taxis_indexes and null != taxis_indexes and 3 == taxis_indexes  ">
+				SUM(CASE WHEN IS_COMPLETE_ELECTRICITY=1 THEN 1 ELSE 0 END) a3 --完成改造村数(户)
+			</if>			
+	</sql>
+	
+
+
+	<sql id="query_medical">
+		<if test=" '' != poor_attribute and null != poor_attribute">
+			<if test="2 == poor_attribute">AND IS_IMP_HEALTH_STATION=1</if><!-- 有卫生站的村       无卫生站的村       新建卫生站的村 -->
+			<if test="3 == poor_attribute">AND IS_IMP_HEALTH_STATION=0</if>
+			<if test="4 == poor_attribute">AND NEW_HEALTH_STATION_NUM!=0</if>
+		</if>
+		<if test=" '' != labor_attribute and null != labor_attribute">
+			<if test="2 == labor_attribute">AND IS_IMP_DOCTOR=1</if><!--有职业医师的村       无执业医师的村       新增执业医师的村-->
+			<if test="3 == labor_attribute">AND IS_IMP_DOCTOR=0</if>
+			<if test="4 == labor_attribute">AND NEW_DOCTOR_NUM!=0</if>
+		</if>
+	</sql>
+	<sql id="medica_area_sql">
+			<if test=" '' != taxis_indexes and null != taxis_indexes and 1 == taxis_indexes  ">
+				CASE WHEN (COUNT(COUNTRY_PAC))=0 THEN '0.00' ELSE to_char(TRUNC(nvl(SUM(CASE WHEN IS_IMP_HEALTH_STATION=1 THEN 1 ELSE 0 END),0)/COUNT(COUNTRY_PAC)*100,2),'9999990.00') END ||'%' A3 
+			</if>
+			<if test=" '' != taxis_indexes and null != taxis_indexes and 2 == taxis_indexes  ">
+				SUM(CASE WHEN IS_IMP_HEALTH_STATION=0 THEN 1 ELSE 0 END)  A3 
+			</if>
+			<if test=" '' != taxis_indexes and null != taxis_indexes and 3 == taxis_indexes  ">
+				SUM(CASE WHEN NEW_HEALTH_STATION_NUM!=0 THEN 1 ELSE 0 END) a3 
+			</if>			
+			<if test=" '' != taxis_indexes and null != taxis_indexes and 4 == taxis_indexes  ">
+				SUM(case when IS_IMP_DOCTOR = 1 then 1 else 0 end) a3 
+			</if>
+			<if test=" '' != taxis_indexes and null != taxis_indexes and 5 == taxis_indexes  ">
+				SUM(case when IS_IMP_DOCTOR = 0 then 1 else 0 end) a3 
+			</if>			
+			<if test=" '' != taxis_indexes and null != taxis_indexes and 6 == taxis_indexes  ">
+				SUM(CASE WHEN NEW_DOCTOR_NUM!=0 THEN 1 ELSE 0 END)  a3 
+			</if>			
+	</sql>
+		
+		
+		
+	<sql id="query_broad">
+		<if test=" '' != poor_attribute and null != poor_attribute">
+			<if test="2 == poor_attribute">AND IS_IMP_BROADCAST=1</if><!--  完全通广播电视的村       未全通广播电视的村 -->
+			<if test="3 == poor_attribute">AND IS_IMP_BROADCAST=0</if>
+			
+		</if>
+	</sql>	
+		  
+	<sql id="broad_area_sql">
+			<if test=" '' != taxis_indexes and null != taxis_indexes and 1 == taxis_indexes  ">
+			    CASE WHEN COUNT(COUNTRY_PAC)=0 THEN '0.00' ELSE to_char(trunc(nvl(SUM(CASE WHEN IS_IMP_BROADCAST=1 THEN 1 ELSE 0 END),0) /  COUNT(COUNTRY_PAC) * 100, 2), '9999990.00') END || '%' A3
+			</if>
+			<if test=" '' != taxis_indexes and null != taxis_indexes and 2 == taxis_indexes  ">
+				SUM(case when IS_COMPLETE_BROADCAST = 1 then 1 else 0 end) A3 
+			</if>
+			<if test=" '' != taxis_indexes and null != taxis_indexes and 3 == taxis_indexes  ">
+				SUM(case when IS_COMPLETE_BROADCAST = 1 then 1 else 0 end) a3 
+			</if>			
+	</sql>
+	
+		
+	<sql id="query_net">
+		<if test=" '' != poor_attribute and null != poor_attribute">
+			<if test="2 == poor_attribute">AND IS_IMP_NETWORK=1</if><!--  全覆盖的村       未全覆盖的村-->
+			<if test="3 == poor_attribute">AND IS_IMP_NETWORK=0</if>
+			
+		</if>
+	</sql>
+	<sql id="net_area_sql">
+			<if test=" '' != taxis_indexes and null != taxis_indexes and 1 == taxis_indexes  ">
+				CASE WHEN COUNT(COUNTRY_PAC)=0 THEN '0.00' ELSE to_char(trunc(nvl(SUM(case when IS_IMP_NETWORK = 1 then 1 else 0 end) ,0)/  COUNT(COUNTRY_PAC) * 100, 2), '9999990.00') END || '%'  A3 
+			</if>
+			<if test=" '' != taxis_indexes and null != taxis_indexes and 2 == taxis_indexes  ">
+				SUM(case when IS_IMP_NETWORK = 1 then 1 else 0 end)  A3 
+			</if>
+			<if test=" '' != taxis_indexes and null != taxis_indexes and 3 == taxis_indexes  ">
+				SUM(case when IS_IMP_NETWORK = 0 then 1 else 0 end)   A3
+			</if>			
+	</sql>
+		
+</mapper>

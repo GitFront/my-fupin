@@ -1,0 +1,16 @@
+{
+  "code": 0,
+  "msg": "获取信息成功",
+  "data": {
+    "list":[
+      {
+        "id": 11,
+        "order": 1, //序号
+        "country_name": "帮扶村名称",
+        "contact_name": "村联联系人",
+        "contact_phone": "村委联系电话",
+        "amount": 111 //帮扶村个数
+      }
+    ]
+  }
+}

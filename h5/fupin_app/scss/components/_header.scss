@@ -1,0 +1,34 @@
+.c-app-header {
+	$h: inRem(96);
+	.banner {
+		.btn-back {
+			$imgW: inRem(20);
+			$imgH: inRem(36);
+			img {
+				width: $imgW;
+				height: $imgH;
+				vertical-align: middle;
+			}
+			padding: 0 inRem(30);
+			line-height: $h;
+			cursor: pointer;
+			position: absolute;
+		}
+		h1 {
+			font-size: inRem(36);
+			line-height: $h;
+			text-align: center;
+			background: #0a82f5;
+			color: #FFF;
+		}
+		height: $h;
+		position: fixed;
+		width: 100%;
+		left: 0;
+		top: 0;
+		z-index: 10;
+	}
+	.spacer {
+		height: $h;
+	}
+}

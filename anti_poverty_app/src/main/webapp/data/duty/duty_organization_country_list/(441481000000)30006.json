@@ -1,0 +1,16 @@
+{
+	"data":{
+		"belong_organization":"兴宁市广播电视台",
+		"list":[
+			{
+				"id":"441481111201",
+				"order":1,
+				"contact_phone":"3708345",
+				"contact_name":"廖庆文",
+				"country_name":"大村村委会"
+			}
+		]
+	},
+	"code":0,
+	"msg":"获取信息成功"
+}

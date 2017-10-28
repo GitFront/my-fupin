@@ -1,0 +1,17 @@
+{
+  "code": 0,
+  "msg": "获取信息成功",
+  "data": {
+    "belong_area":"梅州市",
+    "list":[
+      {
+        "id": 201,
+        "order": 1, 
+        "name": "单位名称",
+        "type": "单位类型",
+        "relation": "隶属关系",
+        "amount": 111 
+      }
+    ]
+  }
+}

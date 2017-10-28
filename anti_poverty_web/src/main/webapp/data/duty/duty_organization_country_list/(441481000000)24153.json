@@ -1,0 +1,16 @@
+{
+	"data":{
+		"belong_organization":"广州市天河区龙洞街道办事处",
+		"list":[
+			{
+				"id":"441481135230",
+				"order":1,
+				"contact_phone":"13690887769",
+				"contact_name":"温一鸣",
+				"country_name":"下径村委会"
+			}
+		]
+	},
+	"code":0,
+	"msg":"获取信息成功"
+}

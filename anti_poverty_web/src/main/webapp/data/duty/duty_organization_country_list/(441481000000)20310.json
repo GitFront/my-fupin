@@ -1,0 +1,16 @@
+{
+	"data":{
+		"belong_organization":"梅州市民政局",
+		"list":[
+			{
+				"id":"441481137207",
+				"order":1,
+				"contact_phone":"13450721730",
+				"contact_name":"马小梅",
+				"country_name":"新坪塘村委会"
+			}
+		]
+	},
+	"code":0,
+	"msg":"获取信息成功"
+}

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+        
+<mapper namespace="com.aspire.birp.modules.antiPoverty.dao.NewDateDao">
+
+ 	<!-- 各表最新日期统计时间 -->
+	<select id="queryNewDate"  parameterType="hashmap"
+       resultType="hashmap">
+ 		SELECT 
+ 		TAB_NAME TAB_NAME,STAT_TIME STAT_TIME,
+ 		MONTH_TAG MONTH_TAG,YEAR_TAG YEAR_TAG
+ 		FROM P_TAB_NEW_STATDATE
+ 		<if test="null != tabName and '' != tabName ">
+	 		WHERE TAB_NAME=#{tabName}
+ 		</if>
+	</select> 
+	
+	<select id="queryMapDate"  parameterType="hashmap"
+       resultType="int">
+ 		select max(stat_time) from R_MONITOR_HOME_PAGE_D 
+	</select> 
+	
+	<select id="queryEcMapDate"  parameterType="hashmap"
+       resultType="int">
+ 		select max(ACC_MONTH) from R_DW_POOROBJ_COUNTRY_M 
+	</select> 
+	
+</mapper>

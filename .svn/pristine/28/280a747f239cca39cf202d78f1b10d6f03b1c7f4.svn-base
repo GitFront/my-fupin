@@ -1,0 +1,4 @@
+//按设计稿的像素传入即可，与flexible.js组合使用
+@function inRem($v) {
+	@return ($v/72) * 1rem;
+}

@@ -1,0 +1,16 @@
+{
+	"data":{
+		"belong_organization":"广州市天河区卫生和计划生育局",
+		"list":[
+			{
+				"id":"441481130204",
+				"order":1,
+				"contact_phone":"13751985338",
+				"contact_name":"王庆东",
+				"country_name":"汤一村委会"
+			}
+		]
+	},
+	"code":0,
+	"msg":"获取信息成功"
+}

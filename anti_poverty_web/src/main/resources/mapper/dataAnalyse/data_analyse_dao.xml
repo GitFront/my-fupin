@@ -1,0 +1,720 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+        
+<mapper namespace="com.aspire.birp.modules.antiPoverty.dao.DataAnalyseDao">
+
+ 	<!-- 数据分析预警监控存在异常的贫困户    异常明细-->
+	<select id="queryFamilyAlarmed"  parameterType="hashmap"
+       resultType="hashmap">
+ 	SELECT *
+ 		FROM (
+ 			SELECT ROWNUM RN,AA.*
+ 			 FROM
+				(SELECT 
+					R.FAM_ID 			   S_FAMILY_ID,
+					R.COUNTRY_PAC 		   S_COUNTRY_ID,
+					R.COUNTRY_NAME 		   S_COUNTRY_NAME,
+					R.TOWN_NAME 		   S_TOWN_NAME,
+					R.COUNTY_NAME 		   S_COUNTY_NAME,
+					R.CITY_NAME 		   S_CITY_NAME,
+					R.FAM_NAME 			   S_HOUSE_HOLDER_NAME,
+					R.DIFF_MEMBER_NAME 	   S_MEMBER_NAME,
+					P.POOR_MARK_ALARM_NAME S_ALARMED_DESC,
+					R.DEPARTMENT 		   S_DEPARTMENT_NAME,
+					R.IF_FURTHER_POOR      IF_FURTHER_POOR
+					FROM R_ANALY_ALARM_DETAIL_D R,DIM_POOR_MARK_ALARM P
+					WHERE R.POOR_MARK_ALARM=P.POOR_MARK_ALARM
+					<if test=" 'city' == level  ">
+						AND R.CITY_PAC=#{PAC} 
+					</if>
+					<if test=" 'county' == level  ">
+						AND R.COUNTY_PAC=#{PAC} 
+					</if>
+					<if test=" 'town' == level  ">
+						AND R.TOWN_PAC=#{PAC} 
+					</if>
+					<if test=" 'country' == level  ">
+						AND R.COUNTRY_PAC=#{PAC} 
+					</if>
+					<if test=" 2 == SCOPE">
+						AND R.IF_FURTHER_POOR=1 
+					</if>
+					<if test=" 3 == SCOPE">
+						AND R.IF_FURTHER_POOR=0 
+					</if>
+					<if test=" 4 == SCOPE">
+						AND R.IF_SOVIET_AREA=1 
+					</if>
+					<if test=" 5 == SCOPE">
+						AND R.IF_REVOLUTION_AREA=1 
+					</if>
+					<if test=" '' != MONTH_TAG and null != MONTH_TAG  ">
+						AND R.MONTH_TAG=#{MONTH_TAG} 
+					</if>
+					<if test=" '' != keyword and null != keyword  ">
+						AND (R.FAM_NAME like '%'||#{keyword}||'%'  
+								or	R.DIFF_MEMBER_NAME like '%'||#{keyword}||'%')
+					</if>) AA WHERE ROWNUM &lt;= #{END} ) T WHERE T.RN &gt;=#{START}
+	</select> 
+	
+	<!--数据分析预警监控存在异常的贫困户总数 -->
+	<select id="queryFamilyChange"  parameterType="hashmap"
+       resultType="hashmap">
+       SELECT
+        NVL(SUM(AAC.ALARM_CNT),0) S_AMOUNT_CURRENT
+       <!-- #{month} AS S_LAST_MONTH, 
+       TO_CHAR(ADD_MONTHS(TO_DATE(#{month_cur},'YYYY-MM-DD'),-1),'MM') AS S_LAST_MONTH,
+       CASE WHEN SUM(S_ALARM_CNT) IS NULL THEN 0 ELSE SUM(S_ALARM_CNT) END S_AMOUNT_CHANGED  -->
+	   FROM R_ANALY_ALARM_CALC_D AAC
+		WHERE
+			AAC.PAC=#{PAC}
+		<if test=" '' != R_ANALY_ALARM_CALC_D and null != R_ANALY_ALARM_CALC_D  ">
+			AND AAC.STAT_TIME=#{R_ANALY_ALARM_CALC_D}
+		</if>
+		<if test=" '' != SCOPE and null != SCOPE  ">
+			AND AREA_TYPE=${SCOPE} 
+		</if>
+		GROUP BY AAC.STAT_TIME
+	</select>
+		<!--数据分析预警监控存在异常的贫困户    统计图-->
+	<select id="queryFamilyCount"  parameterType="hashmap"
+       resultType="hashmap">
+			SELECT 
+			'异常贫困户数' AS S_GROUP,
+			SUM(AAC.ALARM_CNT) AS S_VALUE,
+			TO_CHAR(TO_DATE(AAC.MONTH_TAG,'YYYY-MM-DD') ,'YYYY.MM' ) AS S_NAME
+			FROM R_ANALY_ALARM_CALC_D AAC
+			WHERE 
+			AAC.PAC=#{PAC}
+		<if test=" '' != SCOPE and null != SCOPE  ">
+			AND AAC.AREA_TYPE=${SCOPE} 
+		</if>
+		<if test=" '' != R_ANALY_ALARM_CALC_DY and null != R_ANALY_ALARM_CALC_DY  ">
+			AND AAC.YEAR_TAG=#{R_ANALY_ALARM_CALC_DY} 
+		</if>
+		GROUP BY MONTH_TAG
+	</select>
+	 
+	<!-- 人均可支配收入分析统计表 明细data_analyse_average_income_table-->
+	<select id="queryAverageTable"  parameterType="hashmap"
+       resultType="hashmap">
+ 		SELECT 
+ 		TR.SHORTNAME_CN 			 S_AREA_NAME, 
+ 		SUM(AI.DPI) 				 S_AVERAGE_DISPOSABLE_INCOME, 
+ 		SUM(AI.INCOME) 				 S_TOTAL_INCOME, 
+ 		SUM(AI.SALARY_INCOME) 		 S_SALARY_INCOME, 
+ 		SUM(AI.OPERATE_INCOME) 		 S_PRODUCTION_INCOME, 
+ 		SUM(AI.PROPERTY_INCOME) 	 S_PROPERTY_INCOME, 
+ 		SUM(AI.FAMILY_PLANNING_INCOME) S_BIRTH_SUBSIDY, 
+ 		SUM(AI.BASIC_LIVING_INCOME)  S_LOW_SUBSIDY, 
+ 		SUM(AI.FIVE_GURANTEE_IMCOME) S_FIVE_SUBSIDY, 
+ 		SUM(AI.PENSON_INS_INCOME) 	 S_PENSION, 
+ 		SUM(AI.ECOLOGY_COMP_INCOME)  S_ENV_SUBSIDY, 
+ 		SUM(AI.BASIC_MED_INCOME) 	 S_MEDICAL_INSURANCE, 
+ 		SUM(AI.MED_SALVAGE_INCOME)   S_MEDICAL_SUBSIDY, 
+ 		SUM(AI.OTHER_TRANS_INCOME)   S_OTHER_TRANSFERRED_INCOME, 
+ 		SUM(AI.PAY) 				 S_TOTAL_PAYMENT, 
+ 		SUM(AI.OPERATE_EXPENSES) 	 S_PRODUCTION_PAYMENT, 
+ 		SUM(AI.INCOME_TAX) 			 S_INDIVIDUAL_INCOME_TAX, 
+ 		SUM(AI.SOCIAL_EXPENSES)      S_SOCIAL_SECURITY_PAYMENT, 
+ 		SUM(AI.SUPPORT_EXPENSES)     S_ALIMONY, 
+ 		SUM(AI.OTHER_TRANS_EXPENSES) S_OTHER_TRANSFERRED_PAYMENT, 
+ 		SUM(AI.OVERLOAN_AMOUNT)      S_UNPAID_LOAN, 
+ 		SUM(AI.FAMILY_AVG_INCOME)    S_FAMILY_DISPOSABLE_INCOME 
+		FROM R_ANALY_INCOME_D AI,TR_POLITICS_DISTRICT_D TR 
+		WHERE 
+		AI.PAC=TR.DISTRICT_ID 
+		<choose>  
+	        <when test=" 'country' == level  ">  
+	            AND AI.PAC=#{PAC} 
+	        </when>  
+	        <otherwise>
+	           AND AI.PPAC=#{PAC}
+	        </otherwise>  
+    	</choose> 
+		<if test=" '' != SCOPE and null != SCOPE  ">
+			AND AI.AREA_TYPE=${SCOPE} 
+		</if>
+		<if test=" '' != poor_type and null != poor_type  ">
+			AND AI.POOR_PROPERTY=${poor_type} 
+		</if> 
+		<if test=" '' != month and null != month  ">
+			<![CDATA[ AND AI.STAT_TIME <=#{month} ]]>
+		</if>
+		<if test=" '' != year and null != year  ">
+			AND AI.YEAR_TAG=#{year} 
+		</if>
+		GROUP BY TR.SHORTNAME_CN
+		ORDER BY SUM(AI.DPI) DESC
+ 		
+	</select>
+	<select id="queryAverageTotal"  parameterType="hashmap"
+       resultType="hashmap">
+ 		SELECT 
+ 		SUM(AI.DPI) 				 S_AVERAGE_DISPOSABLE_INCOME, 
+ 		SUM(AI.INCOME) 				 S_TOTAL_INCOME, 
+ 		SUM(AI.SALARY_INCOME) 		 S_SALARY_INCOME, 
+ 		SUM(AI.OPERATE_INCOME) 		 S_PRODUCTION_INCOME, 
+ 		SUM(AI.PROPERTY_INCOME) 	 S_PROPERTY_INCOME, 
+ 		SUM(AI.FAMILY_PLANNING_INCOME) S_BIRTH_SUBSIDY, 
+ 		SUM(AI.BASIC_LIVING_INCOME)  S_LOW_SUBSIDY, 
+ 		SUM(AI.FIVE_GURANTEE_IMCOME) S_FIVE_SUBSIDY, 
+ 		SUM(AI.PENSON_INS_INCOME) 	 S_PENSION, 
+ 		SUM(AI.ECOLOGY_COMP_INCOME)  S_ENV_SUBSIDY, 
+ 		SUM(AI.BASIC_MED_INCOME) 	 S_MEDICAL_INSURANCE, 
+ 		SUM(AI.MED_SALVAGE_INCOME) 	 S_MEDICAL_SUBSIDY, 
+ 		SUM(AI.OTHER_TRANS_INCOME) 	 S_OTHER_TRANSFERRED_INCOME, 
+ 		SUM(AI.PAY) 				 S_TOTAL_PAYMENT, 
+ 		SUM(AI.OPERATE_EXPENSES) 	 S_PRODUCTION_PAYMENT, 
+ 		SUM(AI.INCOME_TAX) 			 S_INDIVIDUAL_INCOME_TAX, 
+ 		SUM(AI.SOCIAL_EXPENSES) 	 S_SOCIAL_SECURITY_PAYMENT, 
+ 		SUM(AI.SUPPORT_EXPENSES) 	 S_ALIMONY, 
+ 		SUM(AI.OTHER_TRANS_EXPENSES) S_OTHER_TRANSFERRED_PAYMENT, 
+ 		SUM(AI.OVERLOAN_AMOUNT) 	 S_UNPAID_LOAN, 
+ 		SUM(AI.FAMILY_AVG_INCOME) 	 S_FAMILY_DISPOSABLE_INCOME 
+		FROM R_ANALY_INCOME_D AI
+		WHERE 1=1
+		<choose>  
+	        <when test=" 'country' == level  ">  
+	            AND AI.PAC=#{PAC} 
+	        </when>  
+	        <otherwise>
+	           AND AI.PPAC=#{PAC}
+	        </otherwise>  
+    	</choose> 
+		<if test=" '' != SCOPE and null != SCOPE  ">
+			AND AI.AREA_TYPE=#{SCOPE} 
+		</if>
+		<if test=" '' != poor_type and null != poor_type  ">
+			AND AI.POOR_PROPERTY=#{poor_type} 
+		</if> 
+		<if test=" '' != month and null != month  ">
+			<![CDATA[ AND AI.STAT_TIME <=#{month} ]]>
+		</if>
+		<if test=" '' != year and null != year  ">
+			AND AI.YEAR_TAG=#{year} 
+		</if>
+		<choose>  
+	        <when test=" 'country' == level  ">  
+	            GROUP BY AI.PAC
+	        </when>  
+	        <otherwise>
+	           GROUP BY AI.PPAC
+	        </otherwise>  
+    	</choose> 
+		ORDER BY SUM(AI.DPI) DESC
+	</select>
+	<!-- 数据分析人均可支配收入分析 data_analyse_average_income-->
+	<!--人均可支配收入分析 总数 -->
+ 	<select id="queryAverageIncomeCount" parameterType="hashmap" resultType="hashmap">
+	 	SELECT 
+	 	ROUND(SUM (AI.INCOME)/10000,2)	   S_TOTAL_INCOME,
+		ROUND(SUM (AI.PAY)/10000,2)    	   S_TOTAL_PAYMENT,
+		ROUND(SUM (AI.DIS_INCOME)/10000,2) S_DISPOSABLE_INCOME,
+		SUM (AI.DPI) 	         		   S_AVERAGE_DISPOSABLE_INCOME
+		FROM R_ANALY_INCOME_D AI 
+		WHERE AI.PAC=#{PAC}  
+		<if test=" '' != poor_type and null != poor_type  ">
+			AND AI.POOR_PROPERTY=${poor_type} 
+		</if>
+		<if test=" '' != SCOPE and null != SCOPE ">
+			AND AI.AREA_TYPE=${SCOPE} 
+		</if>
+			AND AI.MONTH_TAG IS NOT NULL 
+		<if test="'' != R_ANALY_INCOME_DY and null != R_ANALY_INCOME_DY">
+			AND AI.YEAR_TAG=#{R_ANALY_INCOME_DY}
+		</if>
+		<if test="'' != R_ANALY_INCOME_D and null != R_ANALY_INCOME_D">
+			AND AI.STAT_TIME=#{R_ANALY_INCOME_D}
+		</if>
+		GROUP BY AI.PAC
+ 	</select> 
+ 	<!--人均可支配收入分析 各类人口数 -->
+ 	<select id="queryAveragePopCnt" parameterType="hashmap" resultType="hashmap">
+	 	SELECT
+		<if test=" 0 == poor_type">
+	 		FAM 	   S_POOR_FAMILY,
+			NOR_FAM    S_COMMON_POOR_FAMILY,
+			WB_LOW_FAM S_HAVE_LABOR_LOW_FAMILY,
+			UW_LOW_FAM S_NO_LABOR_LOW_FAMILY,
+			FIV_FAM    S_FIVE_FAMILY,
+			POP 	   S_POOR_PEOPLE,
+			NOR_POP    S_COMMON_POOR_PEOPLE,
+			WB_LOW_POP S_HAVE_LABOR_LOW_PEOPLE,
+			UW_LOW_POP S_NO_LABOR_LOW_PEOPLE,
+			FIV_POP    S_FIVE_PEOPLE
+ 		</if>
+ 		<if test=" 1 == poor_type">
+	 		WB_FAM     S_POOR_FAMILY,
+			NOR_WB_FAM S_COMMON_POOR_FAMILY,
+			WB_LOW_FAM S_HAVE_LABOR_LOW_FAMILY,
+			'0' 	   S_NO_LABOR_LOW_FAMILY,
+			WB_FIV_FAM S_FIVE_FAMILY,
+			WB_POP 	   S_POOR_PEOPLE,
+			NOR_WB_POP S_COMMON_POOR_PEOPLE,
+			WB_LOW_POP S_HAVE_LABOR_LOW_PEOPLE,
+			'0' 	   S_NO_LABOR_LOW_PEOPLE,
+			WB_FIV_POP S_FIVE_PEOPLE
+ 		</if>
+ 		<if test=" 2 == poor_type">
+	 		UW_FAM     S_POOR_FAMILY,
+			NOR_UW_FAM S_COMMON_POOR_FAMILY,
+			'0' 	   S_HAVE_LABOR_LOW_FAMILY,
+			UW_LOW_FAM S_NO_LABOR_LOW_FAMILY,
+			UW_FIV_FAM S_FIVE_FAMILY,
+			UW_POP 	   S_POOR_PEOPLE,
+			NOR_UW_POP S_COMMON_POOR_PEOPLE,
+			'0' 	   S_HAVE_LABOR_LOW_PEOPLE,
+			UW_LOW_POP S_NO_LABOR_LOW_PEOPLE,
+			UW_FIV_POP S_FIVE_PEOPLE
+ 		</if>
+		FROM R_ANALY_POOR_FAM_PROPERTY_D 
+		WHERE PAC=#{PAC}
+		<if test=" '' != SCOPE and null != SCOPE  ">
+			AND AREA_TYPE=${SCOPE} 
+		</if>
+		<if test="'' != R_ANALY_POOR_FAM_PROPERTY_D and null != R_ANALY_POOR_FAM_PROPERTY_D">
+			AND STAT_TIME=#{R_ANALY_POOR_FAM_PROPERTY_D}
+		</if>
+ 	</select> 
+ 	<!--人均可支配收入分析 统计图 -->
+ 	<select id="queryAverageCount" parameterType="hashmap" resultType="hashmap">
+ 		SELECT TO_CHAR(TO_DATE(MONTH_TAG,'YYYY-MM-DD') ,'YYYY.MM' ) AS S_NAME, 
+ 		'可支配收入数' AS S_GROUP, 
+ 		SUM(DPI) OVER(PARTITION BY YEAR_TAG ORDER BY STAT_TIME) AS S_VALUE 
+		FROM R_ANALY_INCOME_D 
+		WHERE PAC=#{PAC} 
+		<if test=" '' != SCOPE and null != SCOPE  ">
+			AND AREA_TYPE=${SCOPE} 
+		</if>
+		<if test=" '' != poor_type and null != poor_type  ">
+			AND POOR_PROPERTY=${poor_type} 
+		</if>
+		AND YEAR_TAG=#{R_ANALY_INCOME_DY}
+		ORDER BY STAT_TIME 
+ 	</select>
+ 	<!-- 贫困分析 致贫原因分析 -->
+ 	<select id="queryPoorReason" parameterType="hashmap" resultType="hashmap">
+ 		SELECT 
+ 		APMR.POOR_MAIN_REASON_NAME S_NAME,
+ 		APMR.POP S_VALUE
+		FROM 
+		R_ANALY_POOR_MAIN_REASON_D APMR
+ 		WHERE 
+ 		 	APMR.PAC=#{PAC}
+ 		<if test=" '' != SCOPE and null != SCOPE  ">
+			AND APMR.AREA_TYPE=${SCOPE} 
+		</if>
+		<if test=" '' != R_ANALY_POOR_MAIN_REASON_D and null != R_ANALY_POOR_MAIN_REASON_D  ">
+			AND APMR.STAT_TIME=#{R_ANALY_POOR_MAIN_REASON_D}
+		</if>
+ 	</select> 
+ 	<!-- 贫困分析 致贫原因分析 上面两个总数-->
+ 	<select id="queryPoorReasonCount" parameterType="hashmap" resultType="hashmap">
+ 		SELECT 
+ 		SUM(T.FAM) S_FAMILY_AMOUNT,
+ 		SUM(T.POP) S_PEOPLE_AMOUNT
+		FROM R_ANALY_POOR_MAIN_REASON_D T
+		WHERE T.PAC=#{PAC} 
+ 		<if test=" '' != SCOPE and null != SCOPE  ">
+			AND T.AREA_TYPE=${SCOPE} 
+		</if>
+		<if test=" '' != R_ANALY_POOR_MAIN_REASON_D and null != R_ANALY_POOR_MAIN_REASON_D  ">
+			AND T.STAT_TIME=#{R_ANALY_POOR_MAIN_REASON_D}
+		</if>
+		GROUP BY T.PAC
+ 	</select> 
+ 	<!-- 贫困分析 贫困户属性分析-->
+ 	<select id="queryPoorAttribute" parameterType="hashmap" resultType="hashmap">
+ 		SELECT 
+ 		'户数'     	 S_F_GROUP,
+ 		'人数'     	 S_P_GROUP,
+ 		'一般贫困户'     S_N_NAME,
+ 		APFP.NOR_FAM S_N_F_VALUE,/*一般户数*/
+ 		APFP.NOR_POP S_N_P_VALUE,
+ 		'低保贫困户'     S_W_NAME,
+ 		APFP.LOW_FAM S_L_F_VALUE,
+ 		APFP.LOW_POP S_L_P_VALUE,
+ 		'五保贫困户'     S_F_NAME,
+ 		APFP.FIV_FAM S_F_F_VALUE,/*五保*/
+ 		APFP.FIV_POP S_F_P_VALUE,
+ 		'有劳动能力贫困户'  S_YOU_NAME,
+ 		APFP.WB_FAM  S_W_F_VALUE,
+ 		APFP.WB_POP  S_W_P_VALUE,
+ 		'无劳动能力贫困户'  S_WU_NAME,
+ 		APFP.UW_FAM  S_U_F_VALUE,
+ 		APFP.UW_POP  S_U_P_VALUE
+		FROM 
+		R_ANALY_POOR_FAM_PROPERTY_D APFP
+ 		WHERE 
+			APFP.PAC=#{PAC}
+ 		<if test=" '' != SCOPE and null != SCOPE  ">
+			AND APFP.AREA_TYPE=${SCOPE} 
+		</if>
+		<if test=" '' != R_ANALY_POOR_FAM_PROPERTY_D and null != R_ANALY_POOR_FAM_PROPERTY_D  ">
+			AND APFP.STAT_TIME=#{R_ANALY_POOR_FAM_PROPERTY_D}
+		</if>
+ 	</select> 
+ 	<!-- 贫困分析 贫困户属性分析 总数 比例-->
+ 	<select id="queryPoorAttributeCount" parameterType="hashmap" resultType="hashmap">
+ 		SELECT 
+ 		APFP.FAM S_FAM,
+ 		APFP.DISABLED_FAM S_DISABLED_AMOUNT,
+ 		CASE WHEN APFP.FAM !=0 THEN TRUNC((APFP.DISABLED_FAM/APFP.FAM)*100,1) ELSE 0 END S_DISABLED_PERCENT,
+ 		APFP.RESERVOIR_FAM S_MIGRATOR_AMOUNT,
+ 		CASE WHEN APFP.FAM !=0 THEN TRUNC((APFP.RESERVOIR_FAM/APFP.FAM)*100,1) ELSE 0 END S_MIGRATOR_PERCENT
+		FROM 
+		R_ANALY_POOR_FAM_PROPERTY_D APFP
+ 		WHERE 
+			APFP.PAC=#{PAC}
+ 		<if test=" '' != SCOPE and null != SCOPE  ">
+			AND APFP.AREA_TYPE=${SCOPE} 
+		</if>
+		<if test=" '' != R_ANALY_POOR_FAM_PROPERTY_D and null != R_ANALY_POOR_FAM_PROPERTY_D  ">
+			AND APFP.STAT_TIME=#{R_ANALY_POOR_FAM_PROPERTY_D}
+		</if>
+ 	</select> 
+ 	<!-- 危房级别 -->
+ 	<select id="queryDangerHouseLevel" parameterType="hashmap" resultType="hashmap">
+ 		SELECT 
+ 		APDL.HD_LEVEL||'-'||APDL.HD_LEVEL_NAME  S_L_NAME,
+ 		APDL.FAM S_L_VALUE
+ 		FROM R_ANALY_POOR_DANGER_LVL_D APDL
+ 		WHERE  
+			APDL.PAC=#{PAC}
+ 		<if test=" '' != SCOPE and null != SCOPE  ">
+			AND APDL.AREA_TYPE=${SCOPE} 
+		</if>
+		<if test=" '' != R_ANALY_POOR_DANGER_LVL_D and null != R_ANALY_POOR_DANGER_LVL_D  ">
+			AND APDL.STAT_TIME=#{R_ANALY_POOR_DANGER_LVL_D}
+		</if>
+ 	</select>
+ 	<!-- 危房级别 总数-->
+ 	<select id="queryDangerHouseLevelCount" parameterType="hashmap" resultType="hashmap">
+ 		SELECT 
+ 		T.FAM_C S_DANGER_HOUSE_AMOUNT,
+ 		CASE WHEN T2.FAM !=0 THEN TRUNC((T.FAM_C/T2.FAM)*100,1) ELSE 0 END S_DANGER_HOUSE_PERCENT
+ 		FROM 
+ 		(SELECT SUM(FAM) FAM_C FROM R_ANALY_POOR_DANGER_LVL_D WHERE PAC=#{PAC} AND AREA_TYPE=${SCOPE}
+ 					AND STAT_TIME=#{R_ANALY_POOR_DANGER_LVL_D}) T,
+ 		(SELECT FAM FROM R_ANALY_POOR_FAM_PROPERTY_D WHERE PAC=#{PAC} AND AREA_TYPE=${SCOPE} 
+ 					AND STAT_TIME=#{R_ANALY_POOR_FAM_PROPERTY_D}) T2
+ 	
+ 	</select>
+ 	<!-- 危房结构 -->	
+ 	<select id="queryDangerHouseStructure" parameterType="hashmap" resultType="hashmap">
+ 		SELECT 
+ 		HD_STRUCT_NAME S_S_NAME,
+ 		FAM 		   S_S_VALUE
+ 		FROM R_ANALY_POOR_DANGER_STRUCT_D
+ 		WHERE PAC=#{PAC}
+ 		<if test=" '' != SCOPE and null != SCOPE  ">
+			AND AREA_TYPE=${SCOPE} 
+		</if>
+		<if test=" '' != R_ANALY_POOR_DANGER_STRUCT_D and null != R_ANALY_POOR_DANGER_STRUCT_D  ">
+			AND STAT_TIME=#{R_ANALY_POOR_DANGER_STRUCT_D}
+		</if>
+ 	</select>
+ 	<!-- 贫困人口务工状况分析 劳动能力人口务工状况-->
+ 	<select id="queryPoorLabor" parameterType="hashmap" resultType="hashmap">
+ 		SELECT 
+ 		APJ.WORK_STATUS_NAME S_S_NAME,
+ 		APJ.POP 			 S_S_VALUE
+ 		FROM R_ANALY_POOR_JOB_D APJ
+ 		WHERE 
+ 			 APJ.PAC=#{PAC}
+ 		<if test=" '' != SCOPE and null != SCOPE  ">
+			AND APJ.AREA_TYPE=${SCOPE} 
+		</if>
+		<if test=" '' != R_ANALY_POOR_JOB_D and null != R_ANALY_POOR_JOB_D  ">
+			AND APJ.STAT_TIME=#{R_ANALY_POOR_JOB_D}
+		</if>
+ 	</select>
+ 	<!-- 贫困人口务工状况分析 在家务工人口总数、 比例 -->
+ 	<select id="queryPoorLaborCount" parameterType="hashmap" resultType="hashmap">
+ 		SELECT 
+ 		AP.POP S_TOTAL_AMOUNT,
+ 		ZJ.ZJ_P S_WORK_AT_HOME_AMOUNT,
+ 		CASE WHEN AP.POP !=0 THEN TRUNC((ZJ.ZJ_P/AP.POP)*100,1) ELSE 0 END S_WORK_AT_HOME_PERCENT
+ 		FROM 
+ 		(SELECT POP ZJ_P FROM R_ANALY_POOR_JOB_D WHERE  PAC=#{PAC} AND WORK_STATUS=1 AND AREA_TYPE=${SCOPE}
+ 				AND STAT_TIME=#{R_ANALY_POOR_JOB_D}) ZJ,
+ 		R_ANALY_POOR_FAM_PROPERTY_D AP
+ 		WHERE PAC=#{PAC} AND AREA_TYPE=#{SCOPE}
+ 		<if test=" '' != R_ANALY_POOR_FAM_PROPERTY_D and null != R_ANALY_POOR_FAM_PROPERTY_D  ">
+	 		AND AP.STAT_TIME=#{R_ANALY_POOR_FAM_PROPERTY_D}
+		</if>
+ 		
+ 	</select>
+ 	<!-- 在家务工 -->
+ 	<select id="queryPoorLaborZJ" parameterType="hashmap" resultType="hashmap">
+ 		SELECT 
+ 		'劳动力'    S_W_NAME,
+ 		WB_POP   S_WB_VALUE,
+ 		'丧失劳动力' S_U_NAME,
+ 		UW_POP   S_UW_VALUE,
+ 	    '无劳动力'  S_N_NAME,
+ 		NW_POP   S_NW_VALUE
+ 		FROM R_ANALY_POOR_JOB_D 
+ 		WHERE  PAC=#{PAC} 
+ 		AND WORK_STATUS=1 
+ 		AND AREA_TYPE=${SCOPE}
+ 		<if test=" '' != R_ANALY_POOR_JOB_D and null != R_ANALY_POOR_JOB_D  ">
+	 		AND STAT_TIME=#{R_ANALY_POOR_JOB_D}
+		</if>
+ 	</select>
+ 	<!-- 教育分析 -->
+ 	<select  id="queryPoorEdu" parameterType="hashmap" resultType="hashmap">
+ 		SELECT 
+ 		APE.EDUCATION_NAME S_NAME,
+ 		APE.POP 		   S_Q_VALUE,
+ 		APE.SCHOOL_POP     S_A_VALUE
+ 		FROM R_ANALY_POOR_EDUCATION_D APE
+ 		WHERE 
+			 APE.PAC=#{PAC}
+ 		<if test=" '' != SCOPE and null != SCOPE  ">
+			AND APE.AREA_TYPE=${SCOPE} 
+		</if>
+		<if test=" '' != R_ANALY_POOR_EDUCATION_D and null != R_ANALY_POOR_EDUCATION_D  ">
+			AND APE.STAT_TIME=#{R_ANALY_POOR_EDUCATION_D}
+		</if>
+ 	</select>
+ 	<!-- 在校生总数 -->
+ 	<select  id="queryPoorEduCount" parameterType="hashmap" resultType="hashmap">
+ 		SELECT 
+ 		CNT.CNT_P S_TOTAL_AMOUNT,
+ 		CNT.ZX_P  S_AT_SCHOOL_AMOUNT,
+ 		CASE WHEN CNT.CNT_P !=0 THEN TRUNC((CNT.ZX_P/CNT.CNT_P)*100,1) ELSE 0 END S_AT_SCHOOL_PERCENT
+ 		FROM 
+ 		(SELECT SUM(SCHOOL_POP) ZX_P,SUM(POP) CNT_P FROM R_ANALY_POOR_EDUCATION_D WHERE  PAC=#{PAC} AND AREA_TYPE=#{SCOPE}
+ 				AND STAT_TIME=#{R_ANALY_POOR_EDUCATION_D} GROUP BY PAC) CNT
+ 		
+ 	</select>
+ 	<!-- 健康状况 健康状况分布 -->
+ 	<select  id="queryPoorHealth" parameterType="hashmap" resultType="hashmap">
+ 	 	SELECT 
+ 		APH.HEALTH_STATUS_NAME S_P_NAME,
+ 		APH.POP 			   S_P_VALUE
+ 		FROM R_ANALY_POOR_HEALTH_D APH
+ 		WHERE 
+			 APH.PAC=#{PAC}
+ 		<if test=" '' != SCOPE and null != SCOPE  ">
+			AND APH.AREA_TYPE=${SCOPE} 
+		</if>
+		<if test=" '' != R_ANALY_POOR_HEALTH_D and null != R_ANALY_POOR_HEALTH_D  ">
+			AND APH.STAT_TIME=#{R_ANALY_POOR_HEALTH_D}
+		</if>
+ 	</select>
+ 	<!-- 健康状况 非健康人口 -->
+ 	<select  id="queryPoorHealthCount" parameterType="hashmap" resultType="hashmap">
+ 	 	SELECT 
+		CNTP.C_P  S_POP,
+ 		CNT.FJK_P S_TOTAL_AMOUNT,
+ 		CASE WHEN CNTP.C_P !=0 THEN TRUNC((CNT.FJK_P/CNTP.C_P)*100,1) ELSE 0 END S_TOTAL_PERCENT
+ 		FROM 
+ 		(SELECT SUM(POP) FJK_P FROM R_ANALY_POOR_HEALTH_D WHERE  PAC=#{PAC} AND HEALTH_STATUS IN (2,3,4,5) AND AREA_TYPE=#{SCOPE}
+ 					AND STAT_TIME=#{R_ANALY_POOR_HEALTH_D} GROUP BY PAC) CNT,
+ 		(SELECT SUM(POP) C_P FROM R_ANALY_POOR_HEALTH_D WHERE  PAC=#{PAC} AND AREA_TYPE=#{SCOPE}
+ 					AND STAT_TIME=#{R_ANALY_POOR_HEALTH_D} GROUP BY PAC) CNTP
+ 	</select>
+ 	<!-- TOP10 疾病 -->
+ 	<select id="queryPoorHealthTOP" parameterType="hashmap" resultType="hashmap">
+ 		SELECT 
+ 		DISEASE_NAME S_T_NAME,
+ 		POP 		 S_T_VALUE,
+ 		'TOP5疾病' 	 S_T_GROUP
+ 		FROM R_ANALY_POOR_DISEASE_RANK_D
+ 		WHERE  PAC=#{PAC}
+ 		<if test=" '' != SCOPE and null != SCOPE  ">
+			AND AREA_TYPE=${SCOPE} 
+		</if>
+		<if test=" '' != R_ANALY_POOR_DISEASE_RANK_D and null != R_ANALY_POOR_DISEASE_RANK_D  ">
+			AND STAT_TIME=#{R_ANALY_POOR_DISEASE_RANK_D}
+		</if>
+ 	</select>
+ 	<!-- 社会性兜底差异统计表-->
+ 	<select id="querySocialPolicyTable" parameterType="hashmap" resultType="hashmap">
+ 		<!-- SELECT * FROM ( 
+ 		SELECT 
+ 		ABC.PAC S_AREA_ID,
+ 		TR.SHORTNAME_CN S_AREA_NAME,
+ 		ABC.BOTTOM_FAM+ABC.DIFF_FAM S_FAMILY_AMOUNT_TOTAL,
+ 		ABC.BOTTOM_POP+ABC.DIFF_POP S_PEOPLE_AMOUNT_TOTAL,
+ 		ABC.DIFF_FAM S_FAMILY_AMOUNT_DIFF,
+ 		ABC.DIFF_POP S_PEOPLE_AMOUNT_DIFF,
+ 		CASE WHEN ABC.BOTTOM_POP+ABC.DIFF_POP !=0 THEN TRUNC((ABC.DIFF_POP/(ABC.BOTTOM_POP+ABC.DIFF_POP))*100,1) ELSE 0 END S_PEOPLE_PERCENT
+ 		FROM
+ 		R_ANALY_BOTTOM_CALC_D ABC,TR_POLITICS_DISTRICT_D TR
+ 		WHERE ABC.PAC=TR.DISTRICT_ID
+		<choose>  
+	        <when test=" '' != level and null != level and 'country' == level  ">  
+	            AND ABC.PAC=#{PAC}
+	        </when>  
+	        <otherwise>
+	           AND ABC.PPAC=#{PAC}
+	        </otherwise>  
+    	</choose> 
+ 		<if test=" '' != poor_attribute and null != poor_attribute ">
+			AND ABC.BOTTOM_TYPE=${poor_attribute}
+ 		</if>
+ 		<if test=" '' != SCOPE and null != SCOPE  ">
+			AND ABC.AREA_TYPE=${SCOPE} 
+		</if>
+		<if test=" '' != month and null != month  ">
+			AND ABC.MONTH_TAG=#{month} 
+		</if>) T
+			ORDER BY T.S_PEOPLE_PERCENT DESC -->
+			
+			SELECT
+			TR.DISTRICT_ID 						  S_AREA_ID,
+			TR.SHORTNAME_CN 					  S_AREA_NAME,
+			NVL(ABC.BOTTOM_FAM + ABC.DIFF_FAM,0)  S_FAMILY_AMOUNT_TOTAL,
+			NVL(ABC.BOTTOM_POP + ABC.DIFF_POP ,0) S_PEOPLE_AMOUNT_TOTAL,
+			NVL(ABC.DIFF_FAM,0) 				  S_FAMILY_AMOUNT_DIFF,
+			NVL(ABC.DIFF_POP,0) 				  S_PEOPLE_AMOUNT_DIFF,
+			CASE
+			WHEN ABC.BOTTOM_POP + ABC.DIFF_POP != 0 THEN
+			TRUNC ((ABC.DIFF_POP / (ABC.BOTTOM_POP + ABC.DIFF_POP)) * 100,1)ELSE 0 END S_PEOPLE_PERCENT
+			FROM
+			TR_POLITICS_DISTRICT_D TR LEFT JOIN R_ANALY_BOTTOM_CALC_D ABC 
+			on ABC.PAC = TR.DISTRICT_ID
+			
+			
+			
+			<if test=" '' != poor_attribute and null != poor_attribute ">
+			AND ABC.BOTTOM_TYPE=${poor_attribute}
+ 			</if>
+			<if test=" '' != SCOPE and null != SCOPE  ">
+			AND ABC.AREA_TYPE=${SCOPE} 
+			</if>
+			<if test=" '' != month and null != month  ">
+			AND ABC.MONTH_TAG=#{month} 
+			</if>
+			
+			LEFT JOIN (
+			SELECT COUNTRY_ID PAC FROM DIM_AREA_5LVL WHERE CITY_ID IN ('441900000000','440300000000','440700000000','440400000000','440100000000','442000000000','440600000000')
+			UNION
+			SELECT TOWN_ID PAC FROM	DIM_AREA_5LVL	WHERE	CITY_ID IN ('441900000000','440300000000','440700000000','440400000000','440100000000','442000000000','440600000000')
+			UNION
+			SELECT COUNTY_ID PAC	FROM	DIM_AREA_5LVL	WHERE CITY_ID IN (	'441900000000',	'440300000000',	'440700000000',	'440400000000',	'440100000000',	'442000000000',	'440600000000')
+			UNION 
+			SELECT	CITY_ID PAC	FROM	DIM_AREA_5LVL	WHERE CITY_ID IN ('441900000000','440300000000','440700000000','440400000000','440100000000','442000000000','440600000000')
+			) R ON TR.DISTRICT_ID = R.PAC
+			
+			WHERE R.PAC IS NULL	
+			<choose>  
+		        <when test=" 'country' == level  ">  
+		            AND TR.DISTRICT_ID=#{PAC}
+		        </when>  
+		        <otherwise>
+		         	AND TR.PARENT_ID =#{PAC}
+		        </otherwise>  
+    		</choose> 
+	
+			ORDER BY S_PEOPLE_PERCENT DESC
+			
+			
+			
+			
+			
+ 	</select>
+ 	
+ 	<!--兜底 差异统计表 合计与最上面 两个 -->
+ 	<select id="querySocialPolicyAmount" parameterType="hashmap" resultType="hashmap">
+ 		SELECT
+ 		ABC.BOTTOM_FAM+ABC.DIFF_FAM S_TOTAL_AMOUNT_POOR_FAMILY,
+		ABC.BOTTOM_POP+ABC.DIFF_POP S_TOTAL_AMOUNT_POOR_PEOPLE,
+ 		ABC.DIFF_FAM 				S_TOTAL_AMOUNT_DIFF_FAMILY,	 		
+ 		ABC.DIFF_POP 				S_TOTAL_AMOUNT_DIFF_PEOPLE,
+		CASE WHEN (ABC.BOTTOM_FAM+ABC.DIFF_FAM) !=0 THEN TRUNC((ABC.DIFF_FAM/(ABC.BOTTOM_FAM+ABC.DIFF_FAM))*100,1) ELSE 0 END S_TOTAL_RATIO_DIFF_FAMILY,
+ 		CASE WHEN (ABC.BOTTOM_POP+ABC.DIFF_POP) !=0 THEN TRUNC((ABC.DIFF_POP/(ABC.BOTTOM_POP+ABC.DIFF_POP))*100,1) ELSE 0 END S_TOTAL_RATIO_DIFF_PEOPLE
+ 		FROM R_ANALY_BOTTOM_CALC_D ABC
+ 		WHERE ABC.PAC=#{PAC} 
+ 		<if test=" '' != poor_attribute and null != poor_attribute ">
+			AND ABC.BOTTOM_TYPE=${poor_attribute}
+ 		</if>
+ 		<if test=" '' != SCOPE and null != SCOPE  ">
+			AND ABC.AREA_TYPE=${SCOPE} 
+		</if>
+		<if test=" '' != month and null != month  ">
+			AND ABC.MONTH_TAG=#{month} 
+		</if>
+ 	</select>
+ 	<!-- 社会性兜底有差异的家庭明细 -->
+ 	<select id="querySocialPolicyDetail" parameterType="hashmap" resultType="hashmap">
+ 	SELECT * FROM (SELECT ROWNUM RN,AA.* FROM
+ 		(SELECT 
+ 		R.CITY_NAME    S_CITY_NAME,
+ 		R.COUNTY_NAME  S_COUNTY_NAME,
+ 		R.TOWN_NAME    S_TOWN_NAME,
+ 		R.COUNTRY_PAC  S_COUNTRY_ID,
+ 		R.COUNTRY_NAME S_COUNTRY_NAME,
+ 		R.FAM_ID       S_FAMILY_ID,
+ 		R.FAM_NAME     S_HOUSE_HOLDER_NAME,
+ 		CASE WHEN R.FAM_POOR_PROPERTY=1 THEN '低保户' 
+		     WHEN R.FAM_POOR_PROPERTY=2 THEN '五保户' 
+		     WHEN R.FAM_POOR_PROPERTY=3 THEN '无劳动能力的一般贫困户' ELSE '其他' END S_POOR_ATTRIBUTES,
+ 		R.FAM_MEMBER_POP      S_AMOUNT_FAMILY_MEMBERS,
+ 		R.DIFF_FAM_MEMBER_POP S_AMOUNT_DIFF_FAMILY_MEMBERS,
+ 		R.DIFF_MEMBER_NAME    S_LIST_DIFF_FAMILY_MEMBERS
+ 		FROM
+ 		R_ANALY_BOTTOM_DIFF_D R
+ 		WHERE 1=1
+		<if test=" 'country' == level  ">
+			 AND R.COUNTRY_PAC=#{PAC}
+		</if>
+		<if test=" '' == level and null != level ">
+			 AND R.COUNTRY_PAC=#{PAC}
+		</if>
+		<if test="'county' == level  ">
+			AND R.COUNTY_PAC=#{PAC} 
+		</if>
+		<if test=" 'town' == level  ">
+			AND R.TOWN_PAC=#{PAC} 
+		</if>
+		<if test=" 'city' == level  ">
+			AND R.CITY_PAC=#{PAC}
+		</if>
+		<if test=" 0 !=poor_attribute ">
+			 AND R.FAM_POOR_PROPERTY=${poor_attribute}
+		</if>
+		<if test=" 2 == SCOPE">
+			AND R.IF_FURTHER_POOR=1 
+		</if>
+		<if test=" 3 == SCOPE">
+			AND R.IF_FURTHER_POOR=0 
+		</if>
+		<if test=" 4 == SCOPE">
+			AND R.IF_SOVIET_AREA=1 
+		</if>
+		<if test=" 5 == SCOPE">
+			AND R.IF_REVOLUTION_AREA=1 
+		</if>
+		<if test=" '' != keyword and null != keyword  ">
+			AND R.FAM_NAME like '%'||#{keyword}||'%' 
+		</if> ) AA WHERE ROWNUM &lt;= #{END} ) WHERE RN &gt;=#{START}
+ 	</select>
+ 	
+ 	<!-- 社会性兜底统计图-->
+ 	<select id="querySocialPolicyCount" parameterType="hashmap" resultType="hashmap">
+		SELECT 
+			TO_CHAR(TO_DATE(ABC.MONTH_TAG,'YYYY-MM-DD') ,'YYYY.MM' ) AS S_NAME,
+			ABC.DIFF_POP S_BAR_VALUE,
+			'差异人数'      S_BAR_GOURP,
+			CASE WHEN ABC.BOTTOM_POP+ABC.DIFF_POP !=0 THEN TRUNC((ABC.DIFF_POP/(ABC.BOTTOM_POP+ABC.DIFF_POP))*100,1) ELSE 0 END S_LINE_VALUE,
+			'差异比例'      S_LINE_GROUP
+			FROM R_ANALY_BOTTOM_CALC_D ABC 
+			WHERE ABC.PAC=#{PAC}
+ 		<if test=" '' != poor_attribute and null != poor_attribute ">
+			AND ABC.BOTTOM_TYPE=${poor_attribute}
+ 		</if>
+ 		<if test=" '' != SCOPE and null != SCOPE  ">
+			AND ABC.AREA_TYPE=#{SCOPE} 
+		</if>
+		<if test=" '' != R_ANALY_BOTTOM_CALC_D and null != R_ANALY_BOTTOM_CALC_D  ">
+			AND ABC.YEAR_TAG=#{R_ANALY_BOTTOM_CALC_DY}
+		</if>
+		
+ 	</select>
+</mapper>

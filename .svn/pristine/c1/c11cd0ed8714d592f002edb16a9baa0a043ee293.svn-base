@@ -1,0 +1,101 @@
+全局常量：
+```
+	$.poorFile.FAMILY_TARGETS = {
+        //贫困户档案家庭成员
+        MEMBERS: 'members',
+        //贫困户档案生产生活条件
+        CONDITION: 'condition',
+        //贫困户档案帮扶计划
+        PLAN: 'plan',
+        //贫困户档案帮扶施策
+        IMPLEMENT: 'implement',
+        //贫困户档案帮扶动态
+        NEWS: 'news',
+        //贫困户档案脱贫轨迹
+        ELIMINATE_PATH: 'eliminate_path',
+        //贫困户档案资金投入
+        INVESTED: 'invested',
+        //贫困户档案数据轨迹
+        DATA_PATH: 'data_path',
+        //贫困户档案业务办理
+        BUSINESS: 'business'
+    };
+
+
+	$.poorFile.COUNTRY_TARGETS = {
+        //村档案基本情况
+        STATUS: 'status',
+        //村档案发展现状
+        DEVELOPMENT_STATUS: 'development_status',
+        //村档案帮扶计划
+        PLAN: 'plan',
+        //村档案帮扶施策
+        IMPLEMENT: 'implement',
+        //村档案驻村动态
+        NEWS: 'news',
+        //村档案会议动态
+        MEETING_NEWS: 'meeting_news',
+        //村档案脱贫轨迹
+        ELIMINATE_PATH: 'eliminate_path',
+        //村档案资金投入
+        INVESTED: 'invested',
+        //村档案数据轨迹
+        DATA_PATH: 'data_path',
+        //村档案业务办理
+        BUSINESS: 'business'
+    };
+```
+
+
+1. changeDataDistrict(level, id, opts) //数据监控地图区域切换更新界面
+    参数：  
+    level：见层级取值  
+    id：查找对应行政区域的ID  
+    opts：可选参数，Object  
+        hasCountryFile：是否有村档案，boolean
+
+1. changeDataMapDataType(type) //数据监控地图数据显示类型切换更新地图
+    参数：  
+    type:  
+    1. 贫困户数
+    2. 贫困人口数
+    3. 脱贫户数
+    4. 脱贫人口数
+    5. 脱贫户比例
+    6. 脱贫率
+
+1. changeDataMapDataScope(scope) //数据监控地图数据显示区域类型切换更新地图
+    参数：  
+    scope: 区域类型范围取值
+
+1. changeStrategyMapDataScope(scope) //战略地图地图数据显示区域类型切换更新地图
+    参数：  
+    scope: 区域类型范围取值
+
+1. dataMapBack() //数据监控地图数据返回更新界面
+
+1. $.poorFile.showCountryFile(id, target) //显示村档案  
+    参数：  
+    id：查找对应行政区域的ID  
+    target: 见$.poorFile.COUNTRY_TARGETS  
+
+1. $.poorFile.showFamilyFile(id, target) //显示户档案  
+    参数：  
+    id：查找对应户的ID  
+    target: 见$.poorFile.FAMILY_TARGETS  
+
+1. $.poorFile.showFileDetail(id,fileName) //显示文件号详情
+    参数：  
+    id：查找对文件号的ID  
+    fileName: 文件名称
+
+1. $.poorFile.showCountryPhoto(id) //示范村显示村相册（固定模式）
+    参数：  
+    id：查找对应村的ID  
+
+
+1. $.poorFile.showCountryPhoto(id,"pop") //示范村显示村相册（弹窗模式）
+    参数：  
+    id：查找对应村的ID  
+    "pop": 固定参数
+

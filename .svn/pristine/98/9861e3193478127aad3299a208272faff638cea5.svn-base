@@ -1,0 +1,70 @@
+//下拉
+.select-row {
+    margin-bottom: 8px;
+    label {
+        display: inline-block;
+        width: 70px;
+        text-align: right;
+    }
+    .selected {
+        border: 1px solid #87E5F9;
+    }
+}
+
+.select-box {
+    width: 70px;
+    padding: 7px 10px;
+    border: 1px solid #C2C2CB;
+    display: inline-block;
+    position: relative;
+    cursor: pointer;
+    .arrow {
+        width: 11px;
+        height: 7px;
+        display: inline-block;
+        float: right;
+        position: relative;
+        top: 4px;
+        background: url('#{$img-monitor-path}arrow_down.png') no-repeat 0 0;
+    }
+    .arrow-on {
+        background: url('#{$img-monitor-path}arrow_up.png') no-repeat 0 0;
+    }
+    span {
+        @extend %forbid-select-text;
+        width: 54px;
+        overflow: hidden;
+        height: 13px;
+        display: inline-block;
+    }
+    .select-list {
+        background-color: #353553;
+        position: absolute;
+        padding: 10px;
+        min-width: 75px;
+        //max-width: 150px;
+        max-height: 320px;
+        left: -2px;
+        top: 34px;
+        z-index: 100;
+        text-align: left;
+        display: none;
+        .jspHorizontalBar {
+            display: none;
+        }
+        li {
+            padding: 12px 10px;
+            border: 1px solid #353553;
+            cursor: pointer;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            font-size: 12px;
+            &:hover,
+            &.active {
+                border: 1px solid #6E76A4;
+                background-color: #4A4A6F;
+            }
+        }
+    }
+}

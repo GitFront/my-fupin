@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+	<script type="text/javascript" src="../../js/libs/flexible.js"></script>
+	<title>广东扶贫</title>
+	<link type="text/css" rel="stylesheet" href="../../css/all.css">
+</head>
+
+<body>
+
+<div id="app" class="p-wrap p-family-file-index">
+	<app-header ref="appHeader" title="广东扶贫"></app-header>
+	<section class="poor-card clearfix" v-cloak>
+		<header class="p-title">贫困户名片</header>
+		<div class="poor-card-container">
+			<img :src="poor_business_card.avatar" alt="" class="avatar">
+			<dl class="poor-card-info">
+				<dt>{{poor_business_card.name}} <span class="poor-attr">{{poor_business_card.poor_attribute}}</span></dt>
+				<dd>致贫原因：{{poor_business_card.poor_reason}}</dd>
+				<dd>帮扶接口人：{{poor_business_card.help_people}}</dd>
+				<dd>联系电话：{{poor_business_card.contact_tel}}</dd>
+			</dl>
+			<a :href="poor_business_card.detail_url">
+				<button class="btn-blue">查看详情</button>
+			</a>
+		</div>
+	</section>
+	<section class="help-policy clearfix" v-cloak>
+		<header class="p-title">帮扶政策</header>
+		<div class="help-policy-container">
+			<ul>
+				<li v-for="(hp,index) in help_policy">
+					<span class="num">{{index+1}}、</span>{{hp.title}}
+				</li>
+			</ul>
+		</div>
+	</section>
+	<section class="project-do clearfix"  v-cloak>
+		<header class="p-title">可办项目</header>
+		<div class="project-do-container">
+			<ul>
+				<li class="project-item">
+					<a href="http://wap.gdbs.gov.cn/gdbsWX/mobileH/jsp/itemGuide/ig_itemDetail.jsp?serviceCode=10485400000718435914445381">
+						<div class="icons icon-edu"></div>
+						教育项目
+					</a>
+				</li>
+				<li class="project-item">
+					<a href="http://wap.gdbs.gov.cn/gdbsWX/mobileH/jsp/itemGuide/ig_itemDetail.jsp?serviceCode=30946000074706621914445381">
+						<div class="icons icon-medical"></div>
+						医疗项目
+					</a>
+				</li>
+				<li class="project-item">
+					<a href="http://wap.gdbs.gov.cn/gdbsWX/mobileH/jsp/itemGuide/ig_itemDetail.jsp?serviceCode=30647000000718412114445381">
+						<div class="icons icon-book"></div>
+						住房项目
+					</a>
+				</li>
+				<li class="project-item">
+					<a href="http://wsbs.luoding.gov.cn:8001/govbusi/hall/mobile/busiitems_guide.ptl?busiitemId=30006385">
+						<div class="icons icon-more"></div>
+						 更多
+					</a>
+				</li>
+			</ul>
+		</div>
+	</section>
+	<section class="project-doing clearfix" v-cloak>
+		<header class="p-title">在办项目</header>
+		<div class="project-doing-container">
+			您有{{project_working.amount}}个项目正在办理中。
+			<a href="javascript:void(0);" @click="creating">点击查看</a>
+		</div>
+	</section>
+	<app-dialog ref="dialog" dialog-content="该功能正在建设中！"></app-dialog>
+</div>
+
+<script type="text/javascript" src="../../js/libs/vue.min.js"></script>
+<script type="text/javascript" src="../../js/libs/vue-resource.min.js"></script>
+
+<script type="text/javascript" src="../../js/urls_mock.js"></script>
+<script type="text/javascript" src="../../js/common.js"></script>
+<script type="text/javascript" src="../../js/components.js"></script>
+
+<script type="text/javascript" src="../../js/pages/family_file/index.js"></script>
+</body>
+</html>

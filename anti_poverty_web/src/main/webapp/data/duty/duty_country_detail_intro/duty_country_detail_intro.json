@@ -1,0 +1,12 @@
+{
+  "code": 0,
+  "msg": "获取信息成功",
+  "data": {
+    //带HTML标签
+    "intro":"贫困现状",
+    //致贫原因的highcharts config
+    "chart_config":[
+
+    ]
+  }
+}

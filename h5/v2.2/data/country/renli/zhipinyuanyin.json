@@ -1,0 +1,46 @@
+{
+  "code": 0,
+  "msg": "获取信息成功",
+  "data": {
+    "chart_config_tab": [{
+      "tooltip" : {
+        "formatter": "{a} <br/>{b} : {c} ({d}%)"
+      },
+      "series" : [
+        {
+          "name": "致贫原因",
+          "type": "pie",
+          "radius": ["50%", "70%"],
+          "label": {
+            "normal": {
+              "show": true
+            }
+          },
+          "data":[
+            {"value":23, "name":"因残"},
+            {"value":13, "name":"因病"},
+            {"value":11, "name":"缺劳力"},
+            {"value":6, "name":"因学"},
+            {"value":1, "name":"自身发展动力不足"},
+            {"value":0, "name":"缺资金"},
+            {"value":0, "name":"缺技术"},
+            {"value":0, "name":"其他"},
+            {"value":0, "name":"未填写"},
+            {"value":0, "name":"因灾"},
+            {"value":0, "name":"缺土地"},
+            {"value":0, "name":"交通条件落后"},
+            {"value":0, "name":"缺水"}
+          ],
+          "itemStyle": {
+            "emphasis": {
+              "shadowBlur": 50
+            }
+          }
+        }
+      ]
+
+    }]
+  }
+}
+
+

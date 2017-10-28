@@ -1,0 +1,28 @@
+{
+	"code": 0,
+	"msg": "获取信息成功",
+	"data": {
+		"next_id": 1,
+		"count_total": 100,
+		"tips": {
+			"amount_no_water_security": {
+				"source": "建档立卡、省民政厅",
+				"stat_method": "建档立卡是一般贫困的无劳动能力户/五保户/低保户应该享受兜底政策贫困人口、民政是低保户和五保户的人口,两者人口信息不能完全匹配时的贫困户数。"
+			}
+		},
+		"table": {
+			"list": [
+				{
+					"order": "1",
+					"city_name": "梅州市",
+					"county_name": "东海县",
+					"town_name": "北兴镇",
+					"country_id": 1,
+					"country_name": "三岔村",
+					"amount_no_water_security": 13
+				}
+			]
+		}
+	}
+}
+

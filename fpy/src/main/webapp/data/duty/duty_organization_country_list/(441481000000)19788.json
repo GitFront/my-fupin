@@ -1,0 +1,16 @@
+{
+	"data":{
+		"belong_organization":"广东省社会科学院",
+		"list":[
+			{
+				"id":"441481136204",
+				"order":1,
+				"contact_phone":"07533877393",
+				"contact_name":"石来香",
+				"country_name":"华新村委会"
+			}
+		]
+	},
+	"code":0,
+	"msg":"获取信息成功"
+}

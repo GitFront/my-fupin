@@ -1,0 +1,23 @@
+{
+	"data":{
+		"belong_organization":"兴宁市食品药品监督管理局",
+		"list":[
+			{
+				"id":"441481115218",
+				"order":1,
+				"contact_phone":"13670893968",
+				"contact_name":"巫丙祥",
+				"country_name":"瑶兴村委会"
+			},
+			{
+				"id":"441481115223",
+				"order":2,
+				"contact_phone":"3457101",
+				"contact_name":"张天助",
+				"country_name":"小佑村委会"
+			}
+		]
+	},
+	"code":0,
+	"msg":"获取信息成功"
+}

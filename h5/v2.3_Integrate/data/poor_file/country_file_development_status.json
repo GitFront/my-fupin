@@ -1,0 +1,78 @@
+{
+	"code": 0,
+	"msg": "获取信息成功",
+	"data": {
+		"income": {
+			"average": "7200元",
+			"collective": "8000万元"
+		},
+		"social_security": {
+			"rural_medical": "2926人",
+			"pension_insurance": "320人",
+			"medical_help": "15人次"
+		},
+		"danger_house": {
+			"amount": "39户"
+		},
+		"country_road": {
+			"distance_admin_to_town": "0公里",
+			"bus_available": "否",
+			"amount_natural_to_admin": "2个",
+			"distance_natural": "3公里"
+		},
+		"electricity": {
+			"not_enabled_living_country": "0个",
+			"not_enabled_production_country": "0个",
+			"not_enabled_living_family": "0户",
+			"enabled_country": "11个"
+		},
+		"water_safety": {
+			"unsafe": "0户",
+			"difficult": "0户"
+		},
+		"industry": {
+			"amount_fsc": "0个",
+			"amount_family_fsc": "0户"
+		},
+		"travel": {
+			"travel_family": "0户",
+			"travel_people": "0人",
+			"rural_inn_family": "0户",
+			"rural_inn_average": "0元"
+		},
+		"culture": {
+			"library": "0户",
+			"tv": "500户"
+		},
+		"health": {
+			"office": "1个",
+			"doctor": "1人",
+			"toilet": "0个",
+			"garbage": "0个"
+		},
+		"information": {
+			"broadband_family": "15户",
+			"mobile_family": "532户",
+			"broadband_natural": "11个",
+			"broadband_country": "1个",
+			"admin_staff": "1个"
+		},
+		"move": {
+			"amount": "0户/0人"
+		},
+		"rain": {
+			"middle_school": "7人",
+			"joined": "0人",
+			"high_school": "5人"
+		},
+		"loan": {
+			"allow": "0户",
+			"cur_year": "0户",
+			"due": "0户"
+		},
+		"party": {
+			"amount": "71人",
+			"ratio": "2.4%"
+		}
+	}
+}

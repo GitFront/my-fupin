@@ -1,0 +1,16 @@
+{
+	"data":{
+		"belong_organization":"广州工程技术职业学院",
+		"list":[
+			{
+				"id":"441481129220",
+				"order":1,
+				"contact_phone":"0753-3648172",
+				"contact_name":"王志彬 ",
+				"country_name":"宝山村委会"
+			}
+		]
+	},
+	"code":0,
+	"msg":"获取信息成功"
+}

@@ -1,0 +1,16 @@
+{
+	"data":{
+		"belong_organization":"广州市天河区人民法院",
+		"list":[
+			{
+				"id":"441481134203",
+				"order":1,
+				"contact_phone":"15916530238",
+				"contact_name":"丘梅星",
+				"country_name":"咨洞村委会"
+			}
+		]
+	},
+	"code":0,
+	"msg":"获取信息成功"
+}

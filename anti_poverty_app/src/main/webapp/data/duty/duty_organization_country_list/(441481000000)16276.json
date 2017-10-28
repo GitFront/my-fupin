@@ -1,0 +1,16 @@
+{
+	"data":{
+		"belong_organization":"梅州市卫生和计划生育局",
+		"list":[
+			{
+				"id":"441481132217",
+				"order":1,
+				"contact_phone":"0753-3505440",
+				"contact_name":"刘石泉",
+				"country_name":"黄石村委会"
+			}
+		]
+	},
+	"code":0,
+	"msg":"获取信息成功"
+}

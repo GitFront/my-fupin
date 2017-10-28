@@ -1,0 +1,1149 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+        
+<mapper namespace="com.aspire.birp.modules.antiPoverty.dao.DataAnalyseDao">
+
+
+	
+
+
+
+	<!-- PAC查区域名 -->
+	<select id="queryAreaNameByPac"  parameterType="hashmap"
+       resultType="hashmap">
+        SELECT 
+        SHORTNAME_CN AS S_AREA_NAME 
+        FROM TR_POLITICS_DISTRICT_D
+		WHERE DISTRICT_ID =#{PAC}
+    </select>
+	<!--判断这个村是否重点贫困村 1是 0不是  -->
+	<select id="IfFurtherPpoor"  parameterType="string"
+       resultType="int">
+		SELECT nvl(max(IF_FURTHER_POOR),0) IF_FURTHER_POOR  FROM DIM_AREA_5LVL
+		WHERE COUNTRY_ID=#{PAC}
+	</select>
+
+	<!-- 层级sql -->
+	<sql id="level_sql">
+			<if test="null != level and '' == level ">
+				 AND COUNTRY_PAC=#{PAC}
+			</if>
+			<if test=" '' != level and null != level and 'country' == level  ">
+				 AND COUNTRY_PAC=#{PAC}
+			</if>
+			<if test=" '' != level and null != level and 'county' == level  ">
+				AND COUNTY_PAC=#{PAC} 
+			</if>
+			<if test=" '' != level and null != level and 'town' == level  ">
+				AND TOWN_PAC=#{PAC} 
+			</if>
+			<if test=" '' != level and null != level and 'city' == level  ">
+				AND CITY_PAC=#{PAC}
+			</if>
+	</sql>
+	<!-- a3 top  -->
+	<sql id="a3_sql">
+		PD.DISTRICT_ID=A3.PAC
+		AND A3.PAC=#{PAC}
+		<if test=" '' != SCOPE and null != SCOPE">
+			AND A3.AREA_TYPE=#{SCOPE} 
+		</if>
+	</sql>
+	<!--a3详情   -->
+	<sql id="a3detail_sql">
+		ON	PD.DISTRICT_ID=A3.PAC
+		AND A3.MONTH_TAG=#{MONTH_TAG}
+		<if test=" '' != SCOPE and null != SCOPE">
+			AND A3.AREA_TYPE=#{SCOPE} 
+		</if>
+		LEFT JOIN (
+		SELECT COUNTRY_ID PAC FROM DIM_AREA_5LVL WHERE CITY_ID IN ('441900000000','440300000000','440700000000','440400000000','440100000000','442000000000','440600000000')
+		UNION
+		SELECT TOWN_ID PAC FROM	DIM_AREA_5LVL	WHERE	CITY_ID IN ('441900000000','440300000000','440700000000','440400000000','440100000000','442000000000','440600000000')
+		UNION
+		SELECT COUNTY_ID PAC	FROM	DIM_AREA_5LVL	WHERE CITY_ID IN (	'441900000000',	'440300000000',	'440700000000',	'440400000000',	'440100000000',	'442000000000',	'440600000000')
+		UNION 
+		SELECT	CITY_ID PAC	FROM	DIM_AREA_5LVL	WHERE CITY_ID IN ('441900000000','440300000000','440700000000','440400000000','440100000000','442000000000','440600000000')
+		) R ON PD.DISTRICT_ID = R.PAC
+		<where>
+			<if test=" '' != level and null != level and 'country' == level  ">
+				 	AND	PD.DISTRICT_ID=#{PAC}
+		    </if>
+			<if test=" '' != level and null != level and 'country' != level  ">
+					 AND	PD.PARENT_ID=#{PAC}
+		    </if>	
+				AND R.PAC IS NULL
+		
+		</where>
+			
+		
+
+		
+	</sql>
+	<!--a3 总记录  -->
+	<sql id="a3count_sql">
+		
+		ON	PD.DISTRICT_ID=A3.PAC
+		AND A3.MONTH_TAG=#{MONTH_TAG}
+		<if test=" '' != SCOPE and null != SCOPE">
+			AND A3.AREA_TYPE=#{SCOPE} 
+		</if>
+		LEFT JOIN (
+		SELECT COUNTRY_ID PAC FROM DIM_AREA_5LVL WHERE CITY_ID IN ('441900000000','440300000000','440700000000','440400000000','440100000000','442000000000','440600000000')
+		UNION
+		SELECT TOWN_ID PAC FROM	DIM_AREA_5LVL	WHERE	CITY_ID IN ('441900000000','440300000000','440700000000','440400000000','440100000000','442000000000','440600000000')
+		UNION
+		SELECT COUNTY_ID PAC	FROM	DIM_AREA_5LVL	WHERE CITY_ID IN (	'441900000000',	'440300000000',	'440700000000',	'440400000000',	'440100000000',	'442000000000',	'440600000000')
+		UNION 
+		SELECT	CITY_ID PAC	FROM	DIM_AREA_5LVL	WHERE CITY_ID IN ('441900000000','440300000000','440700000000','440400000000','440100000000','442000000000','440600000000')
+		) R ON PD.DISTRICT_ID = R.PAC
+		<where>
+			 AND R.PAC IS NULL
+			<if test=" '' != level and null != level and 'country' == level  ">
+				 	AND PD.DISTRICT_ID=#{PAC}
+		    </if>
+			<if test=" '' != level and null != level and 'country' != level  ">
+					AND PD.PARENT_ID=#{PAC}
+		    </if>	
+		
+		</where>
+		
+		
+	
+	
+	</sql>
+	<!-- a3障搜索-->
+	<sql id="a3search_sql">
+		<if test=" '' != KEYWORD and null != KEYWORD">
+			AND FAM_NAME LIKE concat('%',concat(#{KEYWORD},'%'))
+		</if>
+		<!--全部就不做限制 ， 相对贫困村就 14行=1 ， 分散村就是14行=0 ，其他不理会 苏区就15行=1， 老区16行=1  -->
+		<!--1全部、2相对贫困村、3分散村、4革命老区、5中央苏区   -->
+		<if test=" '' != SCOPE and null != SCOPE and SCOPE==2">
+			AND IF_FURTHER_POOR=1
+		</if>	
+		<if test=" '' != SCOPE and null != SCOPE and SCOPE==3">
+			AND IF_FURTHER_POOR=0
+		</if>	
+		<if test=" '' != SCOPE and null != SCOPE and SCOPE==4">
+			AND IF_REVOLUTION_AREA=1
+		</if>	
+		<if test=" '' != SCOPE and null != SCOPE and SCOPE==5">
+			AND IF_SOVIET_AREA=1
+		</if>
+		<if test=" '' != MONTH_TAG and null != MONTH_TAG">
+			AND A3.MONTH_TAG=#{MONTH_TAG}
+		</if>
+		 
+	</sql>
+	
+	<!-- 图表 -->
+	<sql id="a3chart_sql">
+		PAC =#{PAC}
+	
+		<if test=" '' != SCOPE and null != SCOPE">
+			AND AREA_TYPE=#{SCOPE} 
+		</if>
+	</sql>
+	
+	<!--where  -->
+	<sql id="where_rownum_sql">
+		<![CDATA[  	WHERE ROWNUM <= 20 ]]>
+	</sql>
+	
+	
+	<!-- start -->
+	<!--分析义务教育   -->
+	<select id="queryGuaranteeEdu"  parameterType="hashmap"
+       resultType="hashmap">
+			SELECT 
+			PD.SHORTNAME_CN AS S_AREA_NAME,
+			A3.SCHOOL_AGE_POP S_AMOUNT_SCHOOL_AGE,
+			A3.SCHOOL_REAL_POP S_AMOUNT_COMPULSORY_EDU,
+			A3.DIFF_POP S_AMOUNT_DIFF,
+			CASE  WHEN A3.SCHOOL_AGE_POP=0  THEN 0
+			ELSE TRUNC(A3.DIFF_POP / A3.SCHOOL_AGE_POP*100,1) END S_PERCENT
+			FROM 
+			R_ANALY_3ENSURE_EDUCATION_D A3
+			,TR_POLITICS_DISTRICT_D PD
+			<where>
+				<include refid="a3_sql"></include>
+			</where>
+			
+			
+			
+	</select> 
+	<!-- 分析义务教育统计表  -->
+	<select id="queryGuaranteeEduList"  parameterType="hashmap"
+       resultType="hashmap">
+						SELECT
+			PD.DISTRICT_ID AS AREA_ID,
+			PD.SHORTNAME_CN AS S_AREA_NAME,
+			NVL(A3.SCHOOL_AGE_POP,0) S_AMOUNT_AT_AGE,
+			NVL(A3.DIFF_POP,0) S_AMOUNT_DIFF,
+			NVL(
+			CASE  WHEN A3.SCHOOL_AGE_POP=0  THEN 0
+			ELSE TRUNC(A3.DIFF_POP / A3.SCHOOL_AGE_POP*100,1)END ,0)S_RATIO_DIFF_PEOPLE 
+			
+			FROM
+				TR_POLITICS_DISTRICT_D PD
+			LEFT JOIN R_ANALY_3ENSURE_EDUCATION_D A3
+			
+			
+				<include refid="a3detail_sql"></include>
+			
+			ORDER BY S_RATIO_DIFF_PEOPLE DESC
+			
+	</select> 
+
+	<!-- 分析义务教育统计表合计   -->
+	<select id="queryGuaranteeEduCount"  parameterType="hashmap"
+       resultType="hashmap">
+			SELECT
+			NVL(SUM(A3.SCHOOL_AGE_POP) ,0)S_AMOUNT_AT_AGE,
+			NVL(SUM(A3.DIFF_POP),0) S_AMOUNT_DIFF,
+			NVL(CASE
+			WHEN SUM (A3.SCHOOL_AGE_POP) = 0 THEN
+				0
+			ELSE
+				TRUNC (
+					SUM (A3.DIFF_POP)/ SUM (A3.SCHOOL_AGE_POP)* 100,
+					1
+				) 
+			END ,0)
+			S_RATIO_DIFF_PEOPLE
+			FROM TR_POLITICS_DISTRICT_D PD
+			LEFT JOIN R_ANALY_3ENSURE_EDUCATION_D A3 
+			
+			<include refid="a3count_sql"></include>
+		
+			
+	</select> 
+
+	<!-- 分析义务教育图表   -->
+	<select id="queryGuaranteeEducChart"  parameterType="hashmap"
+       resultType="hashmap">
+			SELECT
+			TO_CHAR(TO_DATE(MONTH_TAG,'YYYY-MM-DD') ,'YYYY.MM' ) AS S_LINE_NAME,
+			'差异人数比例 ' AS S_LINE_GROUP,
+			TRUNC(A3.DIFF_POP / A3.SCHOOL_AGE_POP*100,1)  AS S_LINE_VALUE,
+			
+			TO_CHAR(TO_DATE(MONTH_TAG,'YYYY-MM-DD') ,'YYYY.MM' ) AS S_BAR_NAME,
+			'差异人数 ' AS S_BAR_GOURP,
+			DIFF_POP AS S_BAR_VALUE
+			FROM
+			R_ANALY_3ENSURE_EDUCATION_D A3
+			<where>
+				<include refid="a3chart_sql"></include>
+				 AND MONTH_TAG  BETWEEN TO_CHAR(ADD_MONTHS(to_date(#{R_ANALY_3ENSURE_EDUCATION_DM},'yyyy-mm-dd'), -11),'YYYYMMDD') AND #{R_ANALY_3ENSURE_EDUCATION_DM}
+			</where>
+			
+	</select> 
+	
+	<!-- 分析义务教育详表  -->
+	<select id="queryGuaranteeEduSearch"  parameterType="hashmap"
+       resultType="hashmap">
+			SELECT 
+			B.*
+		
+			FROM
+			
+			(SELECT A.*, ROWNUM AS rowno FROM
+			(
+				SELECT 
+				A3.CITY_NAME AS S_CITY_NAME,
+				A3.COUNTY_NAME AS S_COUNTY_NAME,
+				A3.TOWN_NAME AS S_TOWN_NAME,
+				A3.COUNTRY_NAME AS S_COUNTRY_NAME,
+				A3.COUNTRY_PAC AS S_COUNTRY_ID,
+				A3.FAM_NAME AS S_HOUSE_HOLDER_NAME,
+				A3.FAM_ID AS S_FAMILY_ID,
+				A3.RECORD_INFO AS S_DOC_INFO,
+				A3.COMPARE_INFO AS S_EDU_DEPARTMENT_INFO,
+				A3.DIFF_MEMBER_NAME AS S_STUDENT_NAME,
+				NVL(A3.IF_FURTHER_POOR,0) AS IF_FURTHER_POOR
+				FROM
+				R_ANALY_3ENSURE_EDUCATION_DIFF A3
+				<where>
+					
+					<include refid="level_sql"></include>
+					<include refid="a3search_sql"></include>
+					
+				</where>
+				ORDER BY  STAT_TIME DESC
+			) A
+			<![CDATA[WHERE ROWNUM <=#{END}]]>) B
+			
+			<![CDATA[  	WHERE rowno >= #{START} ]]>
+			
+			
+			
+			
+			
+	</select> 
+	<!-- end -->
+	<!-- start -->
+	<!-- 分析医疗保障  -->
+	<select id="queryGuaranteeMedical"  parameterType="hashmap"
+       resultType="hashmap">
+			SELECT 
+			PD.SHORTNAME_CN AS S_AREA_NAME,
+			A3.POOR_POP S_AMOUNT_POOR_PEOPLE,
+			A3.MEDICAL_REAL_POP  AS S_AMOUNT_HAVE_MEDICAL_INSUR,
+			A3.DIFF_POP S_AMOUNT_DIFF,
+			CASE  WHEN A3.POOR_POP=0  THEN 0
+			ELSE TRUNC(A3.DIFF_POP / A3.POOR_POP*100,1) END S_PERCENT
+			FROM 
+			R_ANALY_3ENSURE_MEDICAL_D A3
+			,TR_POLITICS_DISTRICT_D PD
+			<where>
+				<include refid="a3_sql"></include>
+			</where>	
+			
+	</select> 
+	<!-- 分析医疗保障统计表   -->
+	<select id="queryGuaranteeMedicalList"  parameterType="hashmap"
+       resultType="hashmap">
+		SELECT 
+		PD.DISTRICT_ID AS AREA_ID,
+		PD.SHORTNAME_CN AS S_AREA_NAME,
+		NVL(A3.POOR_POP,0) S_AMOUNT_POOR_PEOPLE,
+		NVL(A3.DIFF_POP,0) S_AMOUNT_DIFF,
+		NVL(CASE  WHEN A3.POOR_POP=0  THEN 0
+		ELSE TRUNC(A3.DIFF_POP / A3.POOR_POP*100,1)  END ,0) S_RATIO_DIFF_PEOPLE 
+		FROM 
+	
+		TR_POLITICS_DISTRICT_D PD
+			LEFT JOIN R_ANALY_3ENSURE_MEDICAL_D A3
+		
+		
+			<include refid="a3detail_sql"></include>
+		
+		ORDER BY S_RATIO_DIFF_PEOPLE DESC
+			
+	</select> 
+	
+	<!-- 分析医疗保障统计表合计   -->
+	<select id="queryGuaranteeMedicalCount"  parameterType="hashmap"
+       resultType="hashmap">
+       		SELECT
+			NVL(SUM(A3.POOR_POP),0) S_AMOUNT_POOR_PEOPLE,
+			NVL(SUM(A3.DIFF_POP),0) S_AMOUNT_DIFF,
+			
+				
+			NVL(SUM(A3.DIFF_POP),0) S_AMOUNT_DIFF,
+			
+			NVL(CASE  WHEN SUM(A3.POOR_POP) =0  THEN 0
+			ELSE TRUNC(SUM(A3.DIFF_POP)/ SUM(A3.POOR_POP)*100  ,1) END,0) S_RATIO_DIFF_PEOPLE 
+		
+			
+			
+			FROM TR_POLITICS_DISTRICT_D PD
+			LEFT JOIN R_ANALY_3ENSURE_MEDICAL_D A3 
+				<include refid="a3count_sql"></include>
+			
+	</select> 
+	
+	<!-- 分析医疗图表   -->
+	<select id="queryGuaranteeMedicalChart"  parameterType="hashmap"
+       resultType="hashmap">
+			SELECT
+			TO_CHAR(TO_DATE(MONTH_TAG,'YYYY-MM-DD') ,'YYYY.MM' ) AS S_LINE_NAME,
+			'差异人数比例 ' AS S_LINE_GROUP,
+			TRUNC(A3.DIFF_POP / A3.POOR_POP*100 ,1) AS S_LINE_VALUE,
+			
+			TO_CHAR(TO_DATE(MONTH_TAG,'YYYY-MM-DD') ,'YYYY.MM' ) AS S_BAR_NAME,
+			'差异人数 ' AS S_BAR_GOURP,
+			DIFF_POP AS S_BAR_VALUE
+			FROM
+			R_ANALY_3ENSURE_MEDICAL_D A3
+			<where>
+				<include refid="a3chart_sql"></include>
+				 AND MONTH_TAG  BETWEEN TO_CHAR(ADD_MONTHS(to_date(#{R_ANALY_3ENSURE_MEDICAL_DM},'yyyy-mm-dd'), -11),'YYYYMMDD') AND #{R_ANALY_3ENSURE_MEDICAL_DM}
+			</where>
+	</select> 
+	
+	<!-- 分析医疗保障详表   -->
+	<select id="queryGuaranteeMedicalSearch"  parameterType="hashmap"
+       resultType="hashmap">
+       	SELECT
+		B.*
+		
+		FROM
+		(SELECT a.*, ROWNUM AS rowno FROM
+
+				(SELECT 
+				A3.CITY_NAME AS S_CITY_NAME,
+				A3.COUNTY_NAME AS S_COUNTY_NAME,
+				A3.TOWN_NAME AS S_TOWN_NAME,
+				A3.COUNTRY_NAME AS S_COUNTRY_NAME,
+				A3.COUNTRY_PAC AS S_COUNTRY_ID,
+				A3.FAM_NAME AS S_HOUSE_HOLDER_NAME,
+				A3.FAM_ID AS  S_FAMILY_ID,
+				A3.RECORD_INFO AS S_DOC_INFO,
+				A3.COMPARE_INFO AS S_SOCIAL_INSURANCE_DEPAR_INFO,
+				A3.DIFF_MEMBER_NAME AS S_MEMBER_NAME,
+				NVL(A3.IF_FURTHER_POOR,0) AS IF_FURTHER_POOR
+				FROM
+				R_ANALY_3ENSURE_MEDICAL_DIFF_D A3
+				<where>
+					<include refid="level_sql"></include>
+					<include refid="a3search_sql"></include>
+					
+				</where>
+				ORDER BY  STAT_TIME DESC) A
+			<![CDATA[WHERE ROWNUM <=#{END}]]>) B
+			
+			<![CDATA[  	WHERE rowno >= #{START} ]]>
+			
+	</select> 
+	<!-- end -->
+	
+	<!-- start -->
+	<!-- 分析住房保障  -->
+	<select id="queryGuaranteeHouse"  parameterType="hashmap"
+       resultType="hashmap">
+			SELECT 
+			PD.SHORTNAME_CN AS S_AREA_NAME,
+			A3.HOUSE_DANGER_FAM S_AMOUNT_DANGER_HOUSE,
+			A3.REMAKE_FAM  AS S_AMOUNT_RETROFIT,
+			A3.DIFF_FAM S_AMOUNT_DIFF,
+			CASE  WHEN A3.HOUSE_DANGER_FAM=0  THEN 0
+			ELSE TRUNC(A3.DIFF_FAM / A3.HOUSE_DANGER_FAM*100,1) END S_PERCENT
+			FROM 
+			R_ANALY_3ENSURE_HOUSE_D A3
+			,TR_POLITICS_DISTRICT_D PD
+			<where>
+				<include refid="a3_sql"></include>
+			</where>
+	</select> 
+	<!-- 分析住房保障统计表   -->
+	<select id="queryGuaranteeHouseList"  parameterType="hashmap"
+       resultType="hashmap">
+		SELECT 
+		PD.DISTRICT_ID AS AREA_ID,
+		PD.SHORTNAME_CN AS S_AREA_NAME,
+		NVL(A3.HOUSE_DANGER_FAM,0) S_AMOUNT_DANGER_HOUSE,
+		NVL(A3.DIFF_FAM,0) S_AMOUNT_DIFF ,
+		NVL(CASE  WHEN A3.HOUSE_DANGER_FAM=0  THEN 0
+		ELSE TRUNC(A3.DIFF_FAM / A3.HOUSE_DANGER_FAM*100,1) END,0)  S_RATIO_DIFF_PEOPLE
+
+		FROM 
+		TR_POLITICS_DISTRICT_D PD
+		LEFT JOIN 
+		R_ANALY_3ENSURE_HOUSE_D A3
+	
+			<include refid="a3detail_sql"></include>
+	
+	
+		ORDER BY S_RATIO_DIFF_PEOPLE DESC
+					
+	</select> 
+	
+	<!-- 分析住房保障统计表合计   -->
+	<select id="queryGuaranteeHouseCount"  parameterType="hashmap"
+       resultType="hashmap">
+		SELECT 
+		NVL(SUM(A3.HOUSE_DANGER_FAM),0) S_AMOUNT_DANGER_HOUSE,
+		NVL(SUM(A3.DIFF_FAM),0) S_AMOUNT_DIFF,
+		NVL(CASE  WHEN SUM(A3.HOUSE_DANGER_FAM)=0  THEN 0
+		ELSE TRUNC(SUM(A3.DIFF_FAM) / SUM(A3.HOUSE_DANGER_FAM) *100,1) END,0)
+		S_RATIO_DIFF_PEOPLE 
+		FROM 
+		TR_POLITICS_DISTRICT_D PD
+		LEFT JOIN R_ANALY_3ENSURE_HOUSE_D A3
+		<include refid="a3count_sql"></include>
+		
+	</select> 
+	
+	<!-- 分析住房图表   -->
+	<select id="queryGuaranteeHouseChart"  parameterType="hashmap"
+       resultType="hashmap">
+			SELECT
+			TO_CHAR(TO_DATE(MONTH_TAG,'YYYY-MM-DD') ,'YYYY.MM' ) AS S_LINE_NAME,
+			'差异户数比例' AS S_LINE_GROUP,
+			TRUNC(A3.DIFF_FAM / A3.HOUSE_DANGER_FAM*100,1)  AS S_LINE_VALUE,
+			
+			TO_CHAR(TO_DATE(MONTH_TAG,'YYYY-MM-DD') ,'YYYY.MM' ) AS S_BAR_NAME,
+			'差异户数' AS S_BAR_GOURP,
+			DIFF_FAM AS S_BAR_VALUE
+			FROM
+			R_ANALY_3ENSURE_HOUSE_D A3
+			<where>
+				<include refid="a3chart_sql"></include>
+				 AND MONTH_TAG  BETWEEN TO_CHAR(ADD_MONTHS(to_date(#{R_ANALY_3ENSURE_HOUSE_DM},'yyyy-mm-dd'), -11),'YYYYMMDD') AND #{R_ANALY_3ENSURE_HOUSE_DM}
+			</where>
+	</select> 
+	
+	<!-- 分析住房保障详表   -->
+	<select id="queryGuaranteeHouseSearch"  parameterType="hashmap"
+       resultType="hashmap">
+       SELECT
+		B.*
+	
+		FROM
+		(SELECT a.*, ROWNUM AS rowno FROM(
+				
+				SELECT 
+				A3.FAM_ID AS S_FAMILY_ID,
+				A3.CITY_NAME AS S_CITY_NAME,
+				A3.COUNTY_NAME AS S_COUNTY_NAME,
+				A3.TOWN_NAME AS S_TOWN_NAME,
+				A3.COUNTRY_NAME AS S_COUNTRY_NAME,
+				A3.COUNTRY_PAC AS S_COUNTRY_ID,
+				A3.FAM_NAME AS S_HOUSE_HOLDER_NAME,
+				A3.RECORD_INFO AS S_DOC_INFO,
+				A3.COMPARE_INFO AS S_HOUSE_DEPARTMENT_INFO,
+				NVL(A3.IF_FURTHER_POOR,0) AS IF_FURTHER_POOR
+				FROM
+				R_ANALY_3ENSURE_HOUSE_DIFF_D A3
+				<where>
+					<include refid="level_sql"></include>
+					<include refid="a3search_sql"></include>
+					
+				</where>
+				ORDER BY  STAT_TIME DESC
+				) A
+			<![CDATA[WHERE ROWNUM <=#{END}]]>) B
+			
+			<![CDATA[  	WHERE rowno >= #{START} ]]>
+			
+	</select> 
+	<!-- end -->
+	
+	
+	<!-- 一相当sql -->
+	
+	<!--A1统计表  -->
+	<sql id="a1detail_sql">
+				
+		TR_POLITICS_DISTRICT_D PD LEFT JOIN R_ANALY_1MATCH_CALC_D A1 
+			ON	PD.DISTRICT_ID = A1.PAC 
+			AND A1.MONTH_TAG=#{MONTH_TAG}
+			<if test=" '' != SCOPE and null != SCOPE">
+						AND A1.AREA_TYPE=#{SCOPE} 
+			</if>
+	
+			LEFT JOIN (
+			SELECT COUNTRY_ID PAC FROM DIM_AREA_5LVL WHERE CITY_ID IN ('441900000000','440300000000','440700000000','440400000000','440100000000','442000000000','440600000000')
+			 UNION 
+			SELECT TOWN_ID    PAC FROM DIM_AREA_5LVL WHERE CITY_ID IN ('441900000000','440300000000','440700000000','440400000000','440100000000','442000000000','440600000000')
+			 UNION 
+			SELECT COUNTY_ID  PAC FROM DIM_AREA_5LVL WHERE CITY_ID IN ('441900000000','440300000000','440700000000','440400000000','440100000000','442000000000','440600000000')
+			 UNION 
+			SELECT CITY_ID    PAC FROM DIM_AREA_5LVL WHERE CITY_ID IN ('441900000000','440300000000','440700000000','440400000000','440100000000','442000000000','440600000000')
+			) R ON PD.DISTRICT_ID=R.PAC
+			WHERE 
+		
+			
+			<if test=" '' != level and null != level and 'country' == level  ">
+				 
+				 		PD.DISTRICT_ID=#{PAC}
+		    </if>
+			<if test=" '' != level and null != level and 'country' != level  ">
+					 	
+					 	PD.PARENT_ID=#{PAC}
+		   </if>
+			
+			AND R.PAC IS NULL
+			
+			
+		
+	
+	
+	</sql>
+	<!-- a1合计 -->
+	<sql id="a1count_sql">
+		TR_POLITICS_DISTRICT_D PD
+		LEFT JOIN R_ANALY_1MATCH_CALC_D A1 
+		
+		ON	PD.DISTRICT_ID = A1.PAC 
+		AND A1.MONTH_TAG=#{MONTH_TAG}
+		<if test=" '' != SCOPE and null != SCOPE">
+					AND A1.AREA_TYPE=#{SCOPE} 
+		</if>
+		LEFT JOIN (
+		SELECT COUNTRY_ID PAC FROM DIM_AREA_5LVL WHERE CITY_ID IN ('441900000000','440300000000','440700000000','440400000000','440100000000','442000000000','440600000000')
+		UNION
+		SELECT TOWN_ID PAC FROM	DIM_AREA_5LVL	WHERE	CITY_ID IN ('441900000000','440300000000','440700000000','440400000000','440100000000','442000000000','440600000000')
+		UNION
+		SELECT COUNTY_ID PAC	FROM	DIM_AREA_5LVL	WHERE CITY_ID IN ('441900000000',	'440300000000',	'440700000000',	'440400000000',	'440100000000',	'442000000000',	'440600000000')
+		UNION 
+		SELECT	CITY_ID PAC	FROM	DIM_AREA_5LVL	WHERE CITY_ID IN ('441900000000','440300000000','440700000000','440400000000','440100000000','442000000000','440600000000')
+		) R ON PD.DISTRICT_ID = R.PAC
+		
+		<where>
+			<if test=" '' != level and null != level and 'country' == level  ">
+			 	AND	PD.DISTRICT_ID=#{PAC}
+	   		 </if>
+			<if test=" '' != level and null != level and 'country' != level  ">
+				AND PD.PARENT_ID=#{PAC}
+		    </if>
+				AND R.PAC IS NULL
+		</where>
+	
+		GROUP BY R.PAC 
+		
+	</sql>
+	<!-- 图表 -->
+	<sql id="a1chart_sql">
+		AND PAC =#{PAC}
+		
+		AND MONTH_TAG  BETWEEN TO_CHAR(ADD_MONTHS(TO_DATE(#{R_ANALY_1MATCH_CALC_DM},'yyyy-mm-dd'), -11),'YYYYMMDD') AND #{R_ANALY_1MATCH_CALC_DM}
+		<if test=" '' != SCOPE and null != SCOPE">
+			AND AREA_TYPE=#{SCOPE} 
+		</if>
+	</sql>
+	<sql id="a1search_sql">
+		
+		<if test=" '' != MONTH_TAG and null != MONTH_TAG">
+			AND MONTH_TAG=#{MONTH_TAG}
+		</if>
+		
+		<if test=" '' != KEYWORD and null != KEYWORD">
+			AND COUNTRY_NAME LIKE concat('%',concat(#{KEYWORD},'%'))
+		</if>
+		<!--全部就不做限制 ， 相对贫困村就 14行=1 ， 分散村就是14行=0 ，其他不理会 苏区就15行=1， 老区16行=1  -->
+		<!--1全部、2相对贫困村、3分散村、4革命老区、5中央苏区   -->
+		<if test=" '' != SCOPE and null != SCOPE and SCOPE==2">
+			AND IF_FURTHER_POOR=1
+		</if>	
+		<if test=" '' != SCOPE and null != SCOPE and SCOPE==3">
+			AND IF_FURTHER_POOR=0
+		</if>	
+		<if test=" '' != SCOPE and null != SCOPE and SCOPE==4">
+			AND IF_REVOLUTION_AREA=1
+		</if>	
+		<if test=" '' != SCOPE and null != SCOPE and SCOPE==5">
+			AND IF_SOVIET_AREA=1
+		</if>
+		<!-- AND STAT_TIME=(SELECT STAT_TIME FROM P_TAB_NEW_STATDATE WHERE TAB_NAME='R_ANALY_1MATCH_DIFF_D') -->
+	</sql>
+	
+	
+	
+	<!-- 道路硬化统计表   -->
+	<select id="queryConditionRoadList"  parameterType="hashmap"
+       resultType="hashmap">
+		
+			SELECT
+			PD.DISTRICT_ID AS AREA_ID,
+			PD.SHORTNAME_CN AS S_AREA_NAME,
+			NVL(A1.FURTER_POOR_COUNTRY_CNT,0) AS S_AMOUNT_COUNTRY,
+			NVL(A1.ROAD_COUNTRY_CNT,0) AS S_AMOUNT_COUNTRY_HAVE_ROAD,
+			NVL(A1.FURTER_POOR_COUNTRY_CNT - A1.ROAD_COUNTRY_CNT,0)AS S_AMOUNT_COUNTRY_NO_ROAD,
+			TRUNC((FURTER_POOR_COUNTRY_CNT - A1.ROAD_COUNTRY_CNT) /FURTER_POOR_COUNTRY_CNT*100,1) AS S_RATE_COUNTRY_NO_ROAD
+			FROM
+			<include refid="a1detail_sql"></include>
+			
+			ORDER BY
+			S_RATE_COUNTRY_NO_ROAD DESC
+		
+					
+	</select> 
+	
+	<!-- 道路硬化统计表合计   -->
+	<select id="queryConditionRoadCount"  parameterType="hashmap"
+       resultType="hashmap">
+		SELECT
+			NVL (SUM (FURTER_POOR_COUNTRY_CNT),0) AS S_AMOUNT_COUNTRY,
+			NVL (SUM(ROAD_COUNTRY_CNT), 0) AS S_AMOUNT_COUNTRY_HAVE_ROAD,
+			NVL (SUM (FURTER_POOR_COUNTRY_CNT) - SUM (ROAD_COUNTRY_CNT),0) AS AMOUNT_COUNTRY_NO_ROAD,
+			TRUNC ((SUM (A1.FURTER_POOR_COUNTRY_CNT) - SUM (ROAD_COUNTRY_CNT)) / SUM (A1.FURTER_POOR_COUNTRY_CNT) * 100,1) AS S_RATE_COUNTRY_NO_ROAD
+		FROM
+		<include refid="a1count_sql"></include>
+		
+	</select> 
+	
+	<!-- 道路硬化图表   -->
+	<select id="queryConditionRoadChart"  parameterType="hashmap"
+       resultType="hashmap">
+			SELECT		
+			TO_CHAR(TO_DATE(MONTH_TAG,'YYYY-MM-DD') ,'YYYY.MM') AS S_BAR_NAME,
+			'村数 ' AS S_BAR_GOURP,
+			(FURTER_POOR_COUNTRY_CNT-ROAD_COUNTRY_CNT)  AS S_BAR_VALUE
+			FROM
+			R_ANALY_1MATCH_CALC_D 
+			<where>
+				<include refid="a1chart_sql"></include>
+			</where>
+	</select> 
+	
+	<!-- 道路硬化详表   -->
+	<select id="queryConditionRoadSearch"  parameterType="hashmap"
+       resultType="hashmap">
+       
+       		SELECT 
+			B.*
+			
+			
+			FROM
+			
+			(SELECT A.*, ROWNUM AS rowno FROM(
+				SELECT 
+				A1.CITY_NAME AS S_CITY_NAME,
+				A1.COUNTY_NAME AS S_COUNTY_NAME,
+				A1.TOWN_NAME AS S_TOWN_NAME,
+				A1.COUNTRY_NAME AS S_COUNTRY_NAME,
+				A1.COUNTRY_PAC AS S_COUNTRY_ID,
+				A1.NO_ROAD_LENGTH AS S_DISTANCE,
+				NVL(A1.IF_FURTHER_POOR,0) AS IF_FURTHER_POOR
+				FROM
+				R_ANALY_1MATCH_DIFF_D A1
+				<where>
+					AND NO_ROAD_LENGTH>0
+					<include refid="level_sql"></include>
+					<include refid="a1search_sql"></include>
+					
+				</where>
+				ORDER BY  STAT_TIME DESC
+				) A
+			<![CDATA[WHERE ROWNUM <=#{END}]]>) B
+			
+			<![CDATA[  	WHERE rowno >= #{START} ]]>
+				
+				
+			
+	</select> 
+	
+	
+	
+	
+	
+	<!-- 安全饮水统计表   -->
+	<select id="queryConditionWaterList"  parameterType="hashmap"
+       resultType="hashmap">
+		SELECT 
+		PD.DISTRICT_ID AS AREA_ID,
+		PD.SHORTNAME_CN AS S_AREA_NAME,
+		
+		NVL(A1.FURTER_POOR_COUNTRY_CNT,0) AS S_AMOUNT_FAMILY,
+		NVL(A1.WATER_COUNTRY_CNT,0)  AS S_AMOUNT_COUN_HAVE_WATER_SECUR,
+		NVL(A1.FURTER_POOR_COUNTRY_CNT-A1.WATER_COUNTRY_CNT,0) AS S_AMOUNT_COUN_NO_WATER_SECUR,
+		TRUNC((FURTER_POOR_COUNTRY_CNT - A1.WATER_COUNTRY_CNT) /FURTER_POOR_COUNTRY_CNT*100,1) AS S_RATE_NO_WATER_SECURITY
+		FROM
+		<include refid="a1detail_sql"></include>
+		
+		
+		
+		
+		ORDER BY S_RATE_NO_WATER_SECURITY DESC
+					
+	</select> 
+	
+	<!-- 安全饮水统计表合计   -->
+	<select id="queryConditionWaterCount"  parameterType="hashmap"
+       resultType="hashmap">
+		SELECT
+		NVL(SUM(A1.FURTER_POOR_COUNTRY_CNT ),0)AS S_AMOUNT_FAMILY,
+		NVL(SUM(WATER_COUNTRY_CNT),0) AS S_AMOUNT_COUN_HAVE_WATER_SECUR,
+		NVL(SUM(A1.FURTER_POOR_COUNTRY_CNT )-SUM(WATER_COUNTRY_CNT),0) AS S_AMOUNT_COUN_NO_WATER_SECUR,
+		TRUNC ((SUM (A1.FURTER_POOR_COUNTRY_CNT) - SUM (WATER_COUNTRY_CNT)) / SUM (A1.FURTER_POOR_COUNTRY_CNT) * 100,1) AS S_RATE_NO_WATER_SECURITY
+		FROM 
+		<include refid="a1count_sql"></include>
+	
+	</select> 
+	
+	<!-- 安全饮水图表   -->
+	<select id="queryConditionWaterChart"  parameterType="hashmap"
+       resultType="hashmap">
+			SELECT		
+			TO_CHAR(TO_DATE(MONTH_TAG,'YYYY-MM-DD') ,'YYYY.MM' ) AS S_BAR_NAME,
+			'村数 ' AS S_BAR_GOURP,
+			(FURTER_POOR_COUNTRY_CNT-WATER_COUNTRY_CNT)  AS S_BAR_VALUE
+			FROM
+			R_ANALY_1MATCH_CALC_D 
+			<where>
+				<include refid="a1chart_sql"></include>
+			</where>
+	</select> 
+	
+	<!-- 安全饮水详表   -->
+	<select id="queryConditionWaterSearch"  parameterType="hashmap"
+       resultType="hashmap">
+			SELECT 
+			B.*
+			
+			
+			FROM
+			
+			(SELECT A.*, ROWNUM AS rowno FROM(
+				
+				SELECT 
+				A1.CITY_NAME AS S_CITY_NAME,
+				A1.COUNTY_NAME AS S_COUNTY_NAME,
+				A1.TOWN_NAME AS S_TOWN_NAME,
+				A1.COUNTRY_NAME AS S_COUNTRY_NAME,
+				A1.COUNTRY_PAC AS S_COUNTRY_ID,
+				A1.NO_WATER_FAM AS S_AMOUNT_NO_WATER_SECURITY,
+				NVL(A1.IF_FURTHER_POOR,0) AS IF_FURTHER_POOR
+				FROM
+				R_ANALY_1MATCH_DIFF_D A1
+				
+				<where>
+					AND NO_WATER_FAM>0
+					<include refid="level_sql"></include>
+					<include refid="a1search_sql"></include>
+				</where>
+				ORDER BY  STAT_TIME DESC
+				) A
+			<![CDATA[WHERE ROWNUM <=#{END}]]>) B
+			
+			<![CDATA[  	WHERE rowno >= #{START} ]]>
+				
+
+	</select> 
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	<!-- 卫生间统计表   -->
+	<select id="queryConditionHealthList"  parameterType="hashmap"
+       resultType="hashmap">
+		SELECT 
+		PD.DISTRICT_ID AS AREA_ID,
+		PD.SHORTNAME_CN AS S_AREA_NAME,
+		NVL(A1.FURTER_POOR_COUNTRY_CNT,0)  AS S_AMOUNT_COUNTRY,
+		NVL(A1.HEALTH_COUNTRY_CNT,0) AS S_AMOUNT_COUN_HAVE_HEA_STATION,
+		NVL(A1.FURTER_POOR_COUNTRY_CNT-A1.HEALTH_COUNTRY_CNT,0) AS S_AMOUNT_COUNTRY_NO_DOCTOR,
+		TRUNC((FURTER_POOR_COUNTRY_CNT - A1.HEALTH_COUNTRY_CNT) /FURTER_POOR_COUNTRY_CNT*100,1) AS S_RATE_NO_HEALTH_CARE
+		FROM 
+		<include refid="a1detail_sql"></include>
+		ORDER BY S_RATE_NO_HEALTH_CARE DESC
+					
+	</select> 
+	
+	<!-- 卫生间统计表合计   -->
+	<select id="queryConditionHealthCount"  parameterType="hashmap"
+       resultType="hashmap">
+		SELECT 
+		NVL(SUM(A1.FURTER_POOR_COUNTRY_CNT),0)  AS S_AMOUNT_COUNTRY,
+		NVL(SUM(A1.HEALTH_COUNTRY_CNT),0) AS S_AMOUNT_COUN_HAVE_HEA_STATION,
+		NVL(SUM(A1.FURTER_POOR_COUNTRY_CNT) -SUM(A1.HEALTH_COUNTRY_CNT),0) AS S_AMOUNT_COUNTRY_NO_DOCTOR,
+		TRUNC ((SUM (A1.FURTER_POOR_COUNTRY_CNT) - SUM (HEALTH_COUNTRY_CNT)) / SUM (A1.FURTER_POOR_COUNTRY_CNT) * 100,1) AS S_RATE_NO_HEALTH_CARE
+		
+		FROM 
+		<include refid="a1count_sql"></include>
+		
+	</select> 
+	
+	<!-- 卫生间图表   -->
+	<select id="queryConditionHealthChart"  parameterType="hashmap"
+       resultType="hashmap">
+			SELECT		
+			TO_CHAR(TO_DATE(MONTH_TAG,'YYYY-MM-DD') ,'YYYY.MM' ) AS S_BAR_NAME,
+			'村数 ' AS S_BAR_GOURP,
+			(FURTER_POOR_COUNTRY_CNT-HEALTH_COUNTRY_CNT)  AS S_BAR_VALUE
+			FROM
+			R_ANALY_1MATCH_CALC_D 
+			<where>
+				<include refid="a1chart_sql"></include>
+			</where>
+	</select> 
+	
+	<!-- 卫生间详表   -->
+	<select id="queryConditionHealthSearch"  parameterType="hashmap"
+       resultType="hashmap">
+			SELECT 
+			B.*
+			
+			FROM
+			
+			(SELECT A.*, ROWNUM AS rowno FROM(
+				SELECT 
+				A1.CITY_NAME AS S_CITY_NAME,
+				A1.COUNTY_NAME AS S_COUNTY_NAME,
+				A1.TOWN_NAME AS S_TOWN_NAME,
+				A1.COUNTRY_NAME AS S_COUNTRY_NAME,
+				A1.COUNTRY_PAC AS S_COUNTRY_ID,
+				A1.HEALTH_CNT AS S_HEALTH_CNT,
+				NVL(A1.IF_FURTHER_POOR,0) AS IF_FURTHER_POOR
+				FROM
+				R_ANALY_1MATCH_DIFF_D A1
+				<where>
+					AND HEALTH_CNT=0
+					<include refid="level_sql"></include>
+					<include refid="a1search_sql"></include>
+				</where>
+				ORDER BY  STAT_TIME DESC
+				)A
+			<![CDATA[WHERE ROWNUM <=#{END}]]>) B
+			
+			<![CDATA[  	WHERE rowno >= #{START} ]]>
+				
+
+				
+			
+	</select> 
+	
+	
+	
+	
+	
+	<!-- 通电统计表   -->
+	<select id="queryConditionElectricityList"  parameterType="hashmap"
+       resultType="hashmap">
+		SELECT 
+		PD.DISTRICT_ID AS AREA_ID,
+		PD.SHORTNAME_CN AS S_AREA_NAME,
+		
+		NVL(A1.FURTER_POOR_COUNTRY_CNT,0)  AS S_AMOUNT_COUNTRY,
+		NVL(A1.ELECTRIFY_COUNTRY_CNT,0) AS S_AMOUNT_COUN_HAVE_ELECTRICITY,
+		NVL(A1.FURTER_POOR_COUNTRY_CNT-A1.ELECTRIFY_COUNTRY_CNT,0) AS S_AMOUNT_COUN_NO_ELECTRICITY,
+		
+		TRUNC((FURTER_POOR_COUNTRY_CNT - A1.ELECTRIFY_COUNTRY_CNT) /FURTER_POOR_COUNTRY_CNT*100,1) AS S_RATE_NO_ELECTRICITY
+		FROM 
+		<include refid="a1detail_sql"></include>
+		
+		ORDER BY S_RATE_NO_ELECTRICITY DESC
+					
+	</select> 
+	
+	<!-- 通电统计表合计   -->
+	<select id="queryConditionElectricityCount"  parameterType="hashmap"
+       resultType="hashmap">
+		SELECT 
+		NVL(SUM(A1.FURTER_POOR_COUNTRY_CNT),0) AS S_AMOUNT_COUNTRY,
+		NVL(SUM(A1.ELECTRIFY_COUNTRY_CNT),0)  AS S_AMOUNT_COUN_HAVE_ELECTRICITY,
+		NVL(SUM(A1.FURTER_POOR_COUNTRY_CNT )-SUM(A1.ELECTRIFY_COUNTRY_CNT),0) AS S_AMOUNT_COUN_NO_ELECTRICITY,
+		
+		TRUNC ((SUM (A1.FURTER_POOR_COUNTRY_CNT) - SUM (ELECTRIFY_COUNTRY_CNT)) / SUM (A1.FURTER_POOR_COUNTRY_CNT) * 100,1) AS S_RATE_NO_ELECTRICITY
+		FROM 
+		<include refid="a1count_sql"></include>
+		
+	</select> 
+	
+	<!-- 通电图表   -->
+	<select id="queryConditionElectricityChart"  parameterType="hashmap"
+       resultType="hashmap">
+			SELECT		
+			TO_CHAR(TO_DATE(MONTH_TAG,'YYYY-MM-DD') ,'YYYY.MM' ) AS S_BAR_NAME,
+			'村数 ' AS S_BAR_GOURP,
+			(FURTER_POOR_COUNTRY_CNT-ELECTRIFY_COUNTRY_CNT)  AS S_BAR_VALUE
+			FROM
+			R_ANALY_1MATCH_CALC_D 
+			<where>
+				<include refid="a1chart_sql"></include>
+			</where>
+			
+	</select> 
+	
+	<!-- 通电详表   -->
+	<select id="queryConditionElectricitySearch"  parameterType="hashmap"
+       resultType="hashmap">
+			SELECT 
+			B.*
+			
+			
+			FROM
+			
+			(SELECT A.*, ROWNUM AS rowno FROM(
+			SELECT 
+			A1.CITY_NAME AS S_CITY_NAME,
+			A1.COUNTY_NAME AS S_COUNTY_NAME,
+			A1.TOWN_NAME AS S_TOWN_NAME,
+			A1.COUNTRY_NAME AS S_COUNTRY_NAME,
+			A1.COUNTRY_PAC AS S_COUNTRY_ID,
+			A1.NO_ELECTRIFY_FAM AS S_AMOUNT_NO_ELECTRICITY,
+			NVL(A1.IF_FURTHER_POOR,0) AS IF_FURTHER_POOR
+			FROM
+			R_ANALY_1MATCH_DIFF_D A1
+			<where>	
+			AND NO_ELECTRIFY_FAM>0
+					<include refid="level_sql"></include>
+					<include refid="a1search_sql"></include>
+			</where>
+			
+			ORDER BY  STAT_TIME DESC
+			)A
+			<![CDATA[WHERE ROWNUM <=#{END}]]>) B
+			
+			<![CDATA[  	WHERE rowno >= #{START} ]]>
+			
+			
+						
+	</select> 
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	<!-- 广播电视统计表   -->
+	<select id="queryConditionBroadcastList"  parameterType="hashmap"
+       resultType="hashmap">
+		SELECT 
+		PD.DISTRICT_ID AS AREA_ID,
+		PD.SHORTNAME_CN AS S_AREA_NAME,
+		
+		NVL(A1.FURTER_POOR_COUNTRY_CNT,0) AS S_AMOUNT_FAMILY,
+		NVL(A1.TV_COUNTRY_CNT,0) AS S_AMOUNT_COUN_HAVE_BROADCAST,
+		NVL(A1.FURTER_POOR_COUNTRY_CNT-A1.TV_COUNTRY_CNT,0) AS S_AMOUNT_COUN_NO_BROADCAST,
+		TRUNC((FURTER_POOR_COUNTRY_CNT - A1.TV_COUNTRY_CNT) /FURTER_POOR_COUNTRY_CNT*100,1) AS S_RATE_COUNTRY_NO_BROADCAST
+		
+		FROM 
+		<include refid="a1detail_sql"></include>
+		ORDER BY S_RATE_COUNTRY_NO_BROADCAST DESC
+					
+	</select> 
+	
+	<!-- 广播电视统计表合计   -->
+	<select id="queryConditionBroadcastCount"  parameterType="hashmap"
+       resultType="hashmap">
+		SELECT
+		NVL(SUM(FURTER_POOR_COUNTRY_CNT ),0)AS S_AMOUNT_FAMILY,
+		NVL(SUM(TV_COUNTRY_CNT),0) AS S_AMOUNT_COUN_HAVE_BROADCAST,
+		NVL(SUM(FURTER_POOR_COUNTRY_CNT )-SUM(TV_COUNTRY_CNT),0) AS S_AMOUNT_COUN_NO_BROADCAST,
+		TRUNC ((SUM (A1.FURTER_POOR_COUNTRY_CNT) - SUM (TV_COUNTRY_CNT)) / SUM (A1.FURTER_POOR_COUNTRY_CNT) * 100,1) AS S_RATE_COUNTRY_NO_BROADCAST
+		FROM 
+		<include refid="a1count_sql"></include>
+	</select> 
+	
+	<!-- 广播电视图表   -->
+	<select id="queryConditionBroadcastChart"  parameterType="hashmap"
+       resultType="hashmap">
+			SELECT		
+			TO_CHAR(TO_DATE(MONTH_TAG,'YYYY-MM-DD') ,'YYYY.MM' ) AS S_BAR_NAME,
+			'村数 ' AS S_BAR_GOURP,
+			(FURTER_POOR_COUNTRY_CNT-TV_COUNTRY_CNT)  AS S_BAR_VALUE
+			FROM
+			R_ANALY_1MATCH_CALC_D 
+			<where>
+				<include refid="a1chart_sql"></include>
+			</where>
+	</select> 
+	
+	<!-- 广播电视详表   -->
+	<select id="queryConditionBroadcastSearch"  parameterType="hashmap"
+       resultType="hashmap">
+			SELECT 
+			B.*
+			FROM
+			
+			(SELECT A.*, ROWNUM AS rowno FROM(
+			
+			SELECT 
+			A1.CITY_NAME AS S_CITY_NAME,
+			A1.COUNTY_NAME AS S_COUNTY_NAME,
+			A1.TOWN_NAME AS S_TOWN_NAME,
+			A1.COUNTRY_NAME AS S_COUNTRY_NAME,
+			A1.COUNTRY_PAC AS S_COUNTRY_ID,
+			A1.NO_TV_FAM AS S_AMOUNT_NO_BROADCAST,
+			NVL(A1.IF_FURTHER_POOR,0) AS IF_FURTHER_POOR
+			FROM
+			R_ANALY_1MATCH_DIFF_D A1
+			
+			<where>
+				AND NO_TV_FAM>0
+				<include refid="level_sql"></include>
+				<include refid="a1search_sql"></include>
+			</where>
+			ORDER BY  STAT_TIME DESC
+			)A
+			<![CDATA[WHERE ROWNUM <=#{END}]]>) B
+			
+			<![CDATA[  	WHERE rowno >= #{START} ]]>
+			
+
+			
+	</select> 
+	
+	
+	<!-- 宽带统计表   -->
+	<select id="queryConditionNetList"  parameterType="hashmap"
+       resultType="hashmap">
+		SELECT 
+		PD.DISTRICT_ID AS AREA_ID,
+		PD.SHORTNAME_CN AS S_AREA_NAME,
+		NVL(A1.FURTER_POOR_COUNTRY_CNT,0)  AS S_AMOUNT_COUNTRY,
+		NVL(A1.NET_COUNTRY_CNT,0) AS S_AMOUNT_COUNTRY_HAVE_NET,
+		NVL(A1.FURTER_POOR_COUNTRY_CNT-A1.NET_COUNTRY_CNT,0) AS S_AMOUNT_COUNTRY_NO_NET,
+		TRUNC((FURTER_POOR_COUNTRY_CNT - A1.NET_COUNTRY_CNT) /FURTER_POOR_COUNTRY_CNT*100,1) AS S_RATE_COUNTRY_NO_NET
+		FROM 
+		<include refid="a1detail_sql"></include>
+		ORDER BY S_RATE_COUNTRY_NO_NET DESC
+					
+	</select> 
+	
+	<!-- 宽带统计表合计   -->
+	<select id="queryConditionNetCount"  parameterType="hashmap"
+       resultType="hashmap">
+		SELECT 
+		NVL(SUM(A1.FURTER_POOR_COUNTRY_CNT),0) AS S_AMOUNT_COUNTRY,
+		NVL(SUM(A1.NET_COUNTRY_CNT),0) AS S_AMOUNT_COUNTRY_HAVE_NET,
+		NVL(SUM(A1.FURTER_POOR_COUNTRY_CNT)-SUM(A1.NET_COUNTRY_CNT),0) AS S_AMOUNT_COUNTRY_NO_NET,
+		TRUNC ((SUM (A1.FURTER_POOR_COUNTRY_CNT) - SUM (NET_COUNTRY_CNT)) / SUM (A1.FURTER_POOR_COUNTRY_CNT) * 100,1) AS S_RATE_COUNTRY_NO_NET
+		FROM 
+
+		<include refid="a1count_sql"></include>
+	</select> 
+	
+	<!-- 宽带图表   -->
+	<select id="queryConditionNetChart"  parameterType="hashmap"
+       resultType="hashmap">
+			SELECT		
+			TO_CHAR(TO_DATE(MONTH_TAG,'YYYY-MM-DD') ,'YYYY.MM' ) AS S_BAR_NAME,
+			'村数 ' AS S_BAR_GOURP,
+			(FURTER_POOR_COUNTRY_CNT-NET_COUNTRY_CNT)  AS S_BAR_VALUE
+			FROM
+			R_ANALY_1MATCH_CALC_D 
+			<where>
+				<include refid="a1chart_sql"></include>
+			</where>
+	</select> 
+	
+	<!-- 宽带详表   -->
+	<select id="queryConditionNetSearch"  parameterType="hashmap"
+       resultType="hashmap">
+			SELECT 
+			B.*
+			
+			FROM
+			
+			(SELECT A.*, ROWNUM AS rowno FROM(
+			SELECT 
+			A1.CITY_NAME AS S_CITY_NAME,
+			A1.COUNTY_NAME AS S_COUNTY_NAME,
+			A1.TOWN_NAME AS S_TOWN_NAME,
+			A1.COUNTRY_NAME AS S_COUNTRY_NAME,
+			A1.COUNTRY_PAC AS S_COUNTRY_ID,
+			A1.NO_NET_FAM AS S_AMOUNT_NO_NET,
+			NVL(A1.IF_FURTHER_POOR,0) AS IF_FURTHER_POOR
+			FROM
+			R_ANALY_1MATCH_DIFF_D A1
+			<where>
+				AND A1.NO_NET_FAM>0
+				<include refid="level_sql"></include>
+				<include refid="a1search_sql"></include>
+			</where>	
+			
+			ORDER BY  STAT_TIME DESC
+			)A
+			<![CDATA[WHERE ROWNUM <=#{END}]]>) B
+			
+			<![CDATA[  	WHERE rowno >= #{START} ]]>
+			
+			
+			
+	</select> 
+	
+	
+	
+	
+	
+</mapper>

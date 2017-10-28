@@ -1,0 +1,22 @@
+{
+	"code": 0,
+	"msg": "获取信息成功",
+	"data": {
+		"area_level": "country",
+		"top_indexes": {
+			"poor_family_amount": "8888888",
+			"success_family_amount": "8888888",
+			"success_family_rate": 24.5,
+			"poor_people_amount": "8888888",
+			"success_people_amount": "8888888",
+			"success_people_rate": 24.5,
+			"score": 70
+		},
+		"stat": {
+			"amount_org": 22177,
+			"amount_responsible": 3466,
+			"amount_leader": 38597,
+			"amount_interview": 135878
+		}
+	}
+}

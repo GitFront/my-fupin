@@ -1,0 +1,33 @@
+{
+	"code": 0,
+	"msg": "获取信息成功",
+	"data": {
+		"scores": [
+			{
+				//指标名
+				"index_name": "家庭人均收入",
+				//权重
+				"weight": 30,
+				//得分
+				"score": 18.33,
+				//值名称
+				"value_name": "实际人均收入",
+				//实际值
+				"value_actual": "4500",
+				//考核目标值
+				"value_target": "<2%",
+				//是否已达标
+				"has_achieved": false,
+				//提示帮助
+				"tips": {
+					//指标描述
+					"desc": "有安全稳固住房",
+					//数据来源
+					"source": "住建部门",
+					//计算方法
+					"calculation": "住建部门数据/建档立卡数据"
+				}
+			}
+		]
+	}
+}

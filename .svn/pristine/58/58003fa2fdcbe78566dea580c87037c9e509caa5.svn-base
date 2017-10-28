@@ -1,0 +1,140 @@
+{
+	"code": 0,
+	"msg": "获取信息成功",
+	"data": {
+		"params": [
+			{
+				"key": "order_type",
+				"label": "排序类型",
+				"type": "radio",
+				"selected_value": "county",
+				"values": [
+					{
+						"label": "地级市",
+						"value": "city",
+						"disabled": false
+					},
+					{
+						"label": "县（市）",
+						"value": "county",
+						"disabled": false
+					},
+					{
+						"label": " 镇（乡）",
+						"value": "town",
+						"disabled": false
+					},
+					{
+						"label": "村",
+						"value": "country",
+						"disabled": false
+					}
+				]
+			},
+			{
+				"key": "scope",
+				"label": "区域类型",
+				"type": "radio",
+				"selected_value": "1",
+				"values": [
+					{
+						"label": "全部",
+						"value": "1",
+						"disabled": false
+					},
+					{
+						"label": "相对贫困村",
+						"value": "2",
+						"disabled": true
+					},
+					{
+						"label": "分散村",
+						"value": "3",
+						"disabled": false
+					},
+					{
+						"label": "革命老区",
+						"value": "4",
+						"disabled": false
+					},
+					{
+						"label": "中央苏区",
+						"value": "5",
+						"disabled": true
+					}
+				]
+			},
+			{
+				"key": "order_index",
+				"label": "排序指标",
+				"type": "radio",
+				"selected_value": "A2",
+				"values": [
+					{
+						"label": "准确率",
+						"value": "A1",
+						"disabled": false
+					},
+					{
+						"label": "贫困户总数",
+						"value": "A2",
+						"disabled": false
+					},
+					{
+						"label": "贫困人口总数",
+						"value": "A3",
+						"disabled": false
+					},
+					{
+						"label": "新增贫困户数",
+						"value": "A4",
+						"disabled": false
+					},
+					{
+						"label": "终止贫困户数",
+						"value": "A5",
+						"disabled": false
+					},
+					{
+						"label": "贫困人口总数",
+						"value": "A6",
+						"disabled": false
+					},
+					{
+						"label": "新增贫困户数",
+						"value": "A7",
+						"disabled": false
+					}
+				]
+			},
+			{
+				"key": "check_order_index",
+				"label": "多选指标长长",
+				"type": "check",
+				"has_check_all": true,
+				"selected_value": [
+					"A1",
+					"A2",
+					"A3"
+				],
+				"values": [
+					{
+						"label": "准确率",
+						"value": "A1",
+						"disabled": false
+					},
+					{
+						"label": "贫困户总数",
+						"value": "A2",
+						"disabled": false
+					},
+					{
+						"label": "贫困人口总数",
+						"value": "A3",
+						"disabled": false
+					}
+				]
+			}
+		]
+	}
+}

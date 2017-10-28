@@ -1,0 +1,435 @@
+#example-country-wrap {
+    $block-w: 328px;
+    $padding-l: 18px;
+    color: $blue;
+    .data {
+        display: inline-block;
+        color: $yellow;
+        font-size: 20px;
+    }
+    //百分比条
+    .percent-bar-wrap {
+        padding-top: 14px;
+        width: 292px;
+        height: 32px;
+        .percent-bar {
+            margin-bottom: 7px;
+            width: 100%;
+            height: 14px;
+            border: 1px solid #5d95a6;
+            p {
+                box-sizing: border-box;
+                position: relative;
+                float: left;
+                display: inline-block;
+                height: 100%;
+                &.finish {
+                    background: linear-gradient(to bottom, #72ea21, #56ae1b);
+                }
+                &.building {
+                    border-left: 1px solid #1d1a27;
+                    background: linear-gradient(to bottom, #83b2ff, #5e87f4);
+                }
+            }
+            .tips {
+                display: none;
+                position: absolute;
+                z-index: 10;
+                top: 18px;
+                left: 50%;
+                margin-left: -48px;
+                width: 96px;
+                height: 28px;
+                padding-right: 5px;
+                text-align: center;
+                line-height: 28px;
+                border-radius: 5px;
+                color: #fff;
+                background: rgba(50, 50, 50, .85);
+                em {
+                    margin-left: 5px;
+                    display: inline-block;
+                }
+            }
+        }
+        .bttm-tips {
+            color: #88e7fb;
+            font-size: 12px;
+            .left {
+                float: left;
+            }
+            .right {
+                float: right;
+            }
+        }
+    }
+    //图例
+    .cutline {
+        position: absolute;
+        bottom: 11px;
+        left: 2px;
+        width: 280px;
+        height: 14px;
+        span {
+            margin-right: 30px;
+        }
+        i {
+            margin-right: 5px;
+            width: 11px;
+            height: 11px;
+            display: inline-block;
+        }
+        .green {
+            background: linear-gradient(to bottom, #72ea21, #56ae1b);
+        }
+        .blue {
+            background: linear-gradient(to bottom, #83b2ff, #5e87f4);
+        }
+        .empty {
+            vertical-align: -2px;
+            border: 1px solid #5d95a6;
+        }
+    }
+    .area-wrap {
+        top: 28px;
+        strong {
+            color: $blue;
+            font-size: 32px;
+            padding-left: 10px;
+        }
+    }
+    .block.block-top {
+        left: 49%;
+        width: 580px;
+        li {
+            position: relative;
+            margin-right: 20px;
+            width: 264px;
+            height: 102px;
+            background-size: 264px 102px;
+
+            .country-state{
+                color: $yellow;
+                font-size: 20px;
+                padding-top: 0;
+                padding-bottom: 5px;
+            }
+            .country-tips{
+                padding-top: 0;
+                line-height: 1.5;
+            }
+            p {
+                padding-top: 6px;
+                font-size: 14px;
+                line-height: 1.4;
+                strong,
+                span {
+                    display: inline-block;
+                    color: $yellow;
+                    padding-right: 4px;
+                    font-size: 20px;
+                }
+                strong {
+                    font-weight: bold;
+                    cursor: pointer;
+                }
+                strong:after {
+                    content: "";
+                    display: block;
+                    width: 100%;
+                    height: 1px;
+                    position: relative;
+                    left: 1px;
+                    top: -1px;
+                    background-color: $yellow;
+                }
+            }
+            .top-chart {
+                position: absolute;
+                right: 20px;
+                top: 14px;
+                width: 75px;
+                height: 75px;
+            }
+        }
+    }
+    .block {
+        width: $block-w;
+        .block-title {
+            color: $yellow;
+            font-size: 16px;
+        }
+    }
+    //左一
+    .block-side-top {
+        &.right {
+            top: 108px;
+        }
+        top: 77px;
+        height: 120px;
+        padding-left: $padding-l;
+        padding-top: 14px;
+    }
+    //左二
+    .block-side-center {
+        height: 184px;
+        top: 218px;
+        padding-top: 16px;
+        padding-left: $padding-l;
+        &.right {
+            top: 250px;
+        }
+        .chart-wrap {
+            float: left;
+            width: 50%;
+            line-height: 1.4;
+            .center-chart {
+                position: absolute;
+                top: 50px;
+                width: 130px;
+                height: 80px;
+            }
+        }
+    }
+    //左三
+    .block-side-bttm {
+        top: 423px;
+        height: 275px;
+        padding-top: 16px;
+        padding-left: $padding-l;
+        .bttm-chart-wrap {
+            float: left;
+            margin: 10px 30px 0px;
+
+            width: 90px;
+            height: 105px;
+
+            .bttm-chart{
+                width: 84px;
+                height: 84px;
+            }
+
+            .tips{
+                width: 84px;
+                margin-top: 6px;
+                text-align: center;
+                font-size: 12px;
+            }
+        }
+    }
+    .block-bottom {
+        left: 51%;
+        background: none;
+        .blue-select {
+            position: relative;
+            top: 21px;
+
+            .select-list{
+                top: -321px;
+                left:-2px;
+            }
+            .btn{
+                position: relative;
+                .icon-arrow{
+                    position: absolute;
+                    right: 10px;
+                    top: 14px;
+                }
+            }
+
+        }
+        ul {
+            height: auto;
+            left: auto;
+        }
+        .block-map-data-types {
+            display: none;
+            width: 342px;
+            bottom: 0;
+            left: 203px;
+            table {
+                left: 20px;
+            }
+        }
+    }
+    .block-side-bttm.right {
+        top: 455px;
+        height: 245px;
+        border: none;
+        box-shadow: none;
+        @include bgPng("example_country_right_bttm");
+    }
+}
+
+.blue-select {
+    $w: 186px;
+    .btn {
+        $h: 40px;
+        padding-left: 10px;
+        line-height: $h - 4px;
+        text-align: left;
+        width: $w;
+        height: $h;
+        box-sizing: border-box;
+        font-size: 12px;
+        border: 1px solid $light-blue;
+        color: $light-blue;
+        cursor: pointer;
+    }
+    .icon-arrow {
+        right: 20px;
+        width: 12px;
+        height: 8px;
+        display: inline-block;
+        margin-left: 66px;
+        transition: all .15s;
+        @include bgPng("arrow-up-blue");
+        &.on {
+            transform: rotate(180deg);
+        }
+    }
+    .select-list {
+        &.show {
+            display: block;
+        }
+        li {
+            &.active {
+                cursor: default;
+            }
+            &.active,
+            &:hover {
+                background-color: #4a4a6f;
+                box-shadow: 0 8px 8px rgba(29, 33, 45, .38), inset 0 1px rgba(220, 236, 251, .23), inset 0 0 3px rgba(139, 171, 255, .55);
+            }
+            cursor: pointer;
+            $h: 27px;
+            padding:0;
+            padding-left: 22px;
+            height: $h;
+            line-height: $h;
+            box-sizing: border-box;
+            text-align: left;
+            color: #FFF;
+            font-size: 12px;
+            width: $w - 20px;
+        }
+        li+li{
+            margin-top: 4px;
+        }
+        width: $w;
+        height: 285px;
+        padding: 7px 10px;
+        box-sizing: border-box;
+        background-color: #373755;
+        box-shadow: 0 12px 38px rgba(29, 33, 45, .39);
+        margin-left: 2px;
+        display: none;
+        position: absolute;
+        left: -2px;
+    }
+}
+#exampleCountryBuildingRenovateStandardChartTable .chart{
+    padding-top: 45px;
+}
+//示范村弹窗
+.example-country-photo-pop-wrap {
+    .example-country-photo{
+       width: 1104px;
+       height: 418px;
+       margin-top: -245px;
+       margin-left: -552px;
+       background: #373755;
+   }
+}
+
+
+//示范村固定
+//.example-country-photo-wrap{
+//    position: absolute;
+//    top: 200px;
+//}
+
+
+
+.example-country-photo {
+    box-sizing: border-box;
+    padding: 8px 34px 25px;
+    width: 618px;
+    height: 418px;
+    background: #373755;
+    box-shadow:$div-shadow;
+    &.fixed{
+        display: none;
+        position: absolute;
+        top: 253px;
+        left: 50%;
+        margin-left: -307px;
+        .photo-switch{
+            padding:22px 31px;
+        }
+    }
+    .title {
+        height:34px;
+         .title-p{
+                line-height: 34px;
+                font-size: 20px;
+                text-align: center;
+            }
+
+            .btn-select-country {
+                position: absolute;
+                right: 35px;
+                top: 9px;
+                padding: 0;
+                float: right;
+                width: 138px;
+                height: 32px;
+                line-height: 30px;
+                font-size: 12px;
+
+                border-color:$light-blue;
+                span{
+                    height: auto;
+                    width: 100px;
+                    padding-left: 10px;
+                    overflow: hidden;
+                      text-overflow:ellipsis;
+                      white-space: nowrap;
+                      color: $light-blue;
+                }
+                .icon-arrow {
+                    position: absolute;
+                    right: 7px;
+                    top: 12px;
+                    transform: rotate(180deg);
+                    transition: all .15s;
+                    @include bgPng("arrow-up-blue");
+                    &.on {
+                        transform: rotate(180deg);
+                    }
+                    &.arrow-on {
+                        transform: rotate(0deg);
+                    }
+                }
+            }
+            .select-list {
+                position: absolute;
+                left: -76px;
+                width: 195px;
+                li+li{
+                    margin-top: 4px;
+                }
+                li {
+                    padding:0;
+                    color: #fff;
+                    width: 190px;
+                    padding-left: 0;
+                    text-align: center;
+                    &:hover,
+                    &.active {
+                        color: $light-blue;
+                    }
+                }
+            }
+    }
+}

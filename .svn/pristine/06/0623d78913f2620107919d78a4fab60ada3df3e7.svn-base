@@ -1,0 +1,139 @@
+.p-family-file-status {
+	nav {
+		ul {
+			li {
+				img {
+					$s: inRem(80);
+					width: $s;
+					height: $s;
+					margin: 0 auto inRem(16);
+					display: block;
+					object-fit: cover;
+				}
+				text-align: center;
+				float: left;
+				width: 20%;
+			}
+			a {
+				padding: inRem(30) 0;
+				color: #333333;
+				display: block;
+				text-decoration: none;
+			}
+			@extend .clearfix;
+		}
+	}
+	.family-pics {
+		.swiper {
+			.swiper-pagination {
+				.swiper-pagination-bullet {
+					&.active {
+						opacity: 1;
+					}
+					$s: inRem(14);
+					width: $s;
+					height: $s;
+					background: #FFF;
+					border-radius: 100%;
+					opacity: .5;
+					margin: 0 inRem(5);
+				}
+				bottom: inRem(12);
+			}
+			height: inRem(340);
+		}
+		a, img {
+			display: block;
+			height: 100%;
+			width: 100%;
+		}
+		margin-bottom: inRem(30);
+	}
+	.pbd {
+		section {
+			&.tel {
+				.title {
+					float: left;
+				}
+				a {
+					&:before {
+						$w: inRem(28);
+						$h: inRem(28);
+						content: " ";
+						width: $w;
+						height: $h;
+						display: inline-block;
+						background: url(../images/family_file/icon_tel.png) center no-repeat;
+						background-size: $w $h;
+						margin-right: inRem(15);
+						position: relative;
+						bottom: inRem(-5);
+					}
+					display: block;
+					text-align: right;
+					font-size: inRem(26);
+					color: #0a82f5;
+				}
+				line-height: inRem(32);
+				@extend .clearfix;
+			}
+			&.status {
+				.content {
+					font-size: inRem(30);
+					line-height: inRem(50);
+					color: #8E8E8E;
+					margin-bottom: inRem(22);
+				}
+			}
+			&.reason {
+				.tags {
+					li {
+						float: left;
+						padding: 0 inRem(40);
+						font-size: inRem(32);
+						margin: 0 inRem(10) inRem(20);
+						line-height: inRem(60);
+						border-radius: inRem(30);
+						color: #FFF;
+					}
+					@extend .clearfix;
+				}
+				padding-bottom: inRem(10);
+			}
+			&.other {
+				.title {
+					margin-bottom: inRem(60);
+				}
+				li {
+					&:last-child {
+						border: none;
+						margin: 0;
+					}
+					border-bottom: inRem(1) solid #C8C8C8;
+					margin-bottom: inRem(40);
+					padding-bottom: inRem(15);
+					@extend .clearfix;
+				}
+				.label {
+					margin-right: inRem(60);
+					float: left;
+				}
+				.value {
+					text-align: right;
+					color: #646464;
+					line-height: inRem(40);
+				}
+				font-size: inRem(30);
+			}
+			.title {
+				font-size: inRem(32);
+				color: #000;
+				margin-bottom: inRem(22);
+			}
+			border-bottom: inRem(1) solid #C8C8C8;
+			margin-bottom: inRem(30);
+		}
+		width: inRem(661);
+		margin: 0 auto;
+	}
+}

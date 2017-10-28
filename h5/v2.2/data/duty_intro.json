@@ -1,0 +1,31 @@
+{
+  "code": 0,
+  "msg": "获取信息成功",
+  "data": {
+    "gross":{
+      //帮扶单位数
+      "amount_organizations": 12,
+      //帮扶责任人个数
+      "amount_responsible_people": 12,
+      //申报贫困户数
+      "amount_apply": 12,
+      //脱贫计划人数
+      "amount_plan": 12
+    },
+    "list":[
+      {
+        "id":11,
+        //地区
+        "district_name":"汕头市",
+        //相对贫困人口数
+        "amount_poor":11,
+        //减贫计划人数
+        "amount_plan":11,
+        //帮扶单位数
+        "amount_organizations": 12,
+        //帮扶责任人个数
+        "amount_responsible_people": 12
+      }
+    ]
+  }
+}

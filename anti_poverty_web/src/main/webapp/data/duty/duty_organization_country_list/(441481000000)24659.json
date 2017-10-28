@@ -1,0 +1,16 @@
+{
+	"data":{
+		"belong_organization":"广州市天河区市场和质量监督管理局",
+		"list":[
+			{
+				"id":"441481128213",
+				"order":1,
+				"contact_phone":"18320225267",
+				"contact_name":"李佛煌",
+				"country_name":"石岭村委会"
+			}
+		]
+	},
+	"code":0,
+	"msg":"获取信息成功"
+}

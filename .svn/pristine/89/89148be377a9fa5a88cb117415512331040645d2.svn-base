@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>项目监控-广东省扶贫云</title>
+	<link rel="stylesheet" href="../../../static/themes/css/fupin/main_strategy.css">
+</head>
+
+<body>
+<div class="main-wrap project-wrap">
+	<div id="dataWrap">
+		<header>
+			<div class="logo"></div>
+			<ul class="nav-ul nav-country">
+				<li><a href="data.html">战略地图</a></li>
+				<li><a href="">数据监控</a></li>
+				<li><a href="">责任监控</a></li>
+				<li class="on"><a href="javascript:void(0);">项目监控</a></li>
+				<li><a href="">绩效考核</a></li>
+				<li><a href="">东西部扶贫</a></li>
+				<li><a href="">扶贫服务</a></li>
+				<li id="navSearch" class="ico-btn search">
+					<div class="presearch-wrapper" id="presearchWrapper">
+						<div class="presearch-form">
+							<div class="select-wrapper">
+								<select id="selectPresearchTypes">
+									<option value="family" selected>贫困户</option>
+									<option value="country">相对贫困村</option>
+								</select>
+							</div>
+							<div class="input-wrapper">
+								<input type="text" id="inputPresearchField" class="input-presearch-field"
+								       placeholder="请输入搜索关键词">
+								<div id="btnClearPresearch" class="btn-clear-presearch"></div>
+							</div>
+						</div>
+						<div class="presearch-suggest" id="searchsSuggest">
+							<ul></ul>
+						</div>
+					</div>
+				</li>
+				<li class="ico-btn logout"><a class="not-text" href="logout.do"></a></li>
+			</ul>
+		</header>
+	</div>
+</div>
+<script src="../../../static/js/modules/fupin/libs/jquery.min.js"></script>
+<script src="../../../static/js/modules/fupin/libs/echarts.min.js"></script>
+<script src="../../../static/js/modules/fupin/libs/template-native.js"></script>
+<script src="../../../static/js/modules/fupin/libs/jquery.selectbox-0.2.js"></script>
+<script src="../../../static/js/modules/fupin/libs/jquery.mousewheel.js"></script>
+<script src="../../../static/js/modules/fupin/libs/jquery.jscrollpane.min.js"></script>
+<script src="../../../static/js/modules/fupin/libs/tipso.min.js"></script>
+<script src="../../../static/js/modules/fupin/libs/owl.carousel.min.js"></script>
+<script src="../../../static/js/modules/fupin/libs/jquery.ztree.min.js"></script>
+<script src="../../../static/js/modules/fupin_strategy/common/urls_mock.js"></script>
+<script src="../../../static/js/modules/fupin_strategy/common/common.js"></script>
+<script src="../../../static/js/modules/fupin_strategy/common/components.js"></script>
+<script src="../../../static/js/modules/fupin_strategy/common/monitor.js"></script>
+<script src="../../../static/js/modules/fupin/controllers/poor_country_detail_ctrl.js"></script>
+<script src="../../../static/js/modules/fupin_strategy/search_common.js"></script>
+<script src="../../../static/js/modules/fupin_strategy/project.js"></script>
+
+<script src="../../../static/js/common/jquery-namespace.js"></script>
+<script src="../../../static/js/common/charts/common-echarts.js"></script>
+<script src="../../../static/js/common/charts/common-utils.js"></script>
+<script src="../../../static/js/common/charts/common-echarts-config.js"></script>
+
+</body>
+</html>

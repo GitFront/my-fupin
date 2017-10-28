@@ -1,0 +1,1 @@
+$.toggleSlide=function(){$(this).parents(".selector-div").focus(),$(this).next().show()};

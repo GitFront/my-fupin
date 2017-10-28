@@ -1,0 +1,8 @@
+{
+	"code": 0,
+	"msg": "获取信息成功",
+	"data": {
+		//同data_monitor_params_info.json的定义
+		"params": []
+	}
+}

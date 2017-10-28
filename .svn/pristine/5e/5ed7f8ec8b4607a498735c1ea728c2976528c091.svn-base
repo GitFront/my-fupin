@@ -1,0 +1,32 @@
+{
+  "code": 0,
+  "msg": "获取信息成功",
+  "data": {
+    "stat": {
+      //贫困村数
+      "amount_poor_households": "2277",
+      //贫困户数
+      "amount_poor_families": "2277",
+      //贫困人口数
+      "amount_poor_people": "65.5万",
+      //贫困发生率
+      "rate_poor": "4.6%",
+      //计划脱贫人口数
+      "amount_plan": "50万"
+    },
+    //当前行政区域的贫困户数排行
+    "chart_config_top_poor": {
+      "count": 10,
+      "list": [
+        {
+          //比例
+          "percent": "100.00%",
+          //显示在条形图里的标签
+          "name": "湛江市(83991户)",
+          //区域名
+          "district_name": "湛江市"
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>责任监控-广东省扶贫办大数据平台</title>
+    <link rel="stylesheet" href="../css/main.css">
+    <link rel="stylesheet" href="../css/rank.css">
+</head>
+<style>
+  #map{
+    width: 880px;
+    height: 654px;
+    margin-top: 50px;
+    margin-right: 480px;
+  }
+  .map-back-btn{
+    top: 120px;
+    left: 30px;
+  }
+</style>
+<body>
+    <div class="main-wrap">
+          <!--公共地图部分-->
+        <section id="mapWrap">
+            <div id="map" ></div>
+        </section>
+     <!--责任监控html结构-->
+    <div id="dutyWrap" data-root="duty_ctrl">
+        <header>
+            <h1></h1>
+            <ul class="nav-ul countryHide ">
+                <li ><a  href="./index.html">贫困分析</a><i></i></li>
+                <li  class="on"><a href="./duty.html">责任监控</a><i></i></li>
+                <li><a href="./protectObser.html">项目监控</a><i></i></li>
+                <li ><a href="./success.html">脱贫成效</a><i></i></li>
+                <li ><a href="./assess.html">绩效考核</a><i></i></li>
+                <li><a href="./apply.html">应用云</a><i class="word2"></i></li>
+            </ul>
+        </header>
+
+        <section class="main-right">
+            <div id="dutyRightInner" class="inner">
+                <div id="areaLevel1"><a href=""></a></div>
+                <div id="areaLevel2"></div>
+            </div> <!--  end 右侧内部 -->
+         </section>  <!-- end main-right -->
+
+             <!-- 底部左侧操作按钮 -->
+
+          <section class="bttm-left-action">
+           <p id="mapBtn" class="map-back-btn hide">返回 <span class="up-area"> 广东省</span></p>
+             <p class="map-shrink">
+                <strong>地图缩放</strong>
+                <i id="mapBigger" class="map-bigger"></i>
+                <i id="mapSmaller" class="map-smaller"></i>
+             </p>
+         </section> <!--end 底部左侧操作按钮 -->
+    </div>
+
+    <!--村档案详情-->
+
+    <!--户档案详情-->
+
+     <!-- 加载 -->
+<div id="loadingDiv" class="hide">
+
+    <div class="spinner">
+
+  <div class="spinner-container container1">
+
+    <div class="circle1"></div>
+
+    <div class="circle2"></div>
+
+    <div class="circle3"></div>
+
+    <div class="circle4"></div>
+
+  </div>
+
+  <div class="spinner-container container2">
+
+    <div class="circle1"></div>
+
+    <div class="circle2"></div>
+
+    <div class="circle3"></div>
+
+    <div class="circle4"></div>
+
+  </div>
+
+  <div class="spinner-container container3">
+
+    <div class="circle1"></div>
+
+    <div class="circle2"></div>
+
+    <div class="circle3"></div>
+
+    <div class="circle4"></div>
+
+  </div>
+
+</div>
+</div>
+<!--end 加载 -->
+
+
+</div> <!-- end main-wrap -->
+
+<!-- 弹出窗口 -->
+<div class="pop-window-wrap hide">
+    <div id="bangfuDetail" class="pop-window pop-bangfu-detail">
+
+    </div>
+</div>
+<!-- end弹出窗口 -->
+
+<!-- 右侧选择区域模板 -->
+<script id="tplCheckAreaLevel1" type="text/html">
+                   <div class="title">
+                    <p><%=title.name%></p>
+                    <p>责任人：<%=title.responsible_person%></p>
+                    <p>帮扶单位：<%=title.organization%></p>
+                </div>
+                 <p class="arrow-down"><i></i></p>
+             <div class="scroll_duty_right_province_top">
+
+                <%if(level!="town"){%>
+                 <div class="area-level clearfix">
+
+                 <a class="duty-area check" data-id="<%=list[0].district_id%>"><%=list[0].district_name%></a>
+                  <%for(var i=1;i < list.length;i++){%>
+                    <%var item=list[i]%>
+                 <a class="duty-area" data-id="<%=item.district_id%>"><%=item.district_name%></a>
+                    <%}%>
+                 </div>
+                 <%}else{%>
+                    <div class="area-level area-level-county clearfix">
+                    <%for(var i=0;i < list.length;i++){%>
+                    <%var item=list[i]%>
+                    <p class="duty-area-3line"><%=item.district_name%><br>
+                        <%=item.responsible_person%><br>
+                        <%=item.organization%>
+                    </p>
+
+                    <%}%>
+
+                  </div>
+                 <%}%>
+                </div>
+                 </div> <!--  end 滚动条 -->
+
+
+                 <%if(level!="province"){%>
+                        <a data-id="<%=id%>" class="bangfuDetail-btn">帮扶详情</a>
+                  <%}%>
+
+</script>
+<script id="tplCheckAreaLevel2" type="text/html">
+ <p class="arrow-down"><i></i></p>
+ <div class="scroll_duty_right_province">
+                   <div class="area-level area-level-county clearfix">
+                    <%for(var i=0;i < list.length;i++){%>
+                    <%var item=list[i]%>
+                    <p class="duty-area-3line"><%=item.district_name%><br>
+                        <%=item.responsible_person%><br>
+                        <%=item.organization%>
+                    </p>
+
+                    <%}%>
+
+                  </div>
+                  </div> <!--  end 滚动条 -->
+
+
+</script>
+<script id="tplCheckAreaCommon" type="text/html">
+
+</script>
+<!-- 帮扶详情模板 -->
+<script id="tplBangFuDetail" type="text/html">
+  <i class="close-btn"></i>
+        <strong class="pop-bg-title">帮扶详情</strong>
+         <div class="inner">
+             <%if(table=="jianpinPlan"){%>
+             <p class="pop-title">帮扶概况</p>
+             <div class="top-amount clearfix">
+                 <p><%=gross.amount_apply%><br><label>申报贫困户</label></p>
+                 <p><%=gross.amount_plan%><br><label>脱贫计划人数</label></p>
+                  <p><%=gross.amount_organizations%><br><label>帮扶单位数</label></p>
+                 <p><%=gross.amount_responsible_people%><br><label>帮扶责任人</label></p>
+             </div>
+             <p class="table-title">减贫计划与帮扶</p>
+
+            <div class="scroll_box jianpinPlan_scroll_box">
+                <table id="jianPinPlanTable" class="normal-table has-bar jianpinPlan-table">
+                  <thead>
+                    <th class="col1">地区</th>
+                    <th class="col2">相对贫困人口</th>
+                    <th class="col3">减贫计划人数</th>
+                    <th class="col4">帮扶单位数</th>
+                    <th class="col5">帮扶责任人数</th>
+                  </thead>
+                   <%for(var i=0;i < list.length;i++){%>
+                    <%var item=list[i]%>
+                  <tr>
+                      <td><%=item.district_name%></td>
+                      <td><%=item.amount_poor%></td>
+                      <td><%=item.amount_plan%></td>
+                      <td><a class="link-btn btn-amount-organization" data-id="<%=item.id%>"><%=item.amount_organizations%></a></td>
+                      <td><a class="link-btn btn-amount-people" data-id="<%=item.id%>"><%=item.amount_responsible_people%></a></td>
+                  </tr>
+                    <%}%>
+                      </table>
+                     </div> <!-- end scroll_box 减贫计划 -->
+                  <%}else if(table=="bangFuOrganization"){%>
+                 <p class="pop-title"><%=belong_area%>帮扶单位列表<a class="back-btn to-jianpinPlan-btn" id="">返回</a></p>
+
+
+            <div class="scroll_box jianpinPlan_scroll_box">
+                <table id="jianPinPlanTable" class="normal-table has-bar bangFuOrganization-table">
+                  <thead>
+                    <th class="col1">序号</th>
+                    <th class="col2">单位名称</th>
+                    <th class="col3">单位类型</th>
+                    <th class="col4">隶属关系</th>
+                    <th class="col5">帮扶村个数</th>
+                  </thead>
+                   <%for(var i=0;i < list.length;i++){%>
+                    <%var item=list[i]%>
+                  <tr>
+                      <td><%=item.order%></td>
+                      <td><%=item.name%></td>
+                      <td><%=item.type%></td>
+                      <td><%=item.relation%></td>
+                      <td><a class="link-btn btn-amount-country" data-id="<%=item.id%>"><%=item.amount%></a></td>
+
+                  </tr>
+                    <%}%>
+                 </table>
+                     </div> <!-- end scroll_box 帮扶单位 -->
+
+                   <%}else if(table=="bangFuPeople"){%>
+                 <p class="pop-title"><%=belong_area%>帮扶责任人列表<a class="back-btn to-jianpinPlan-btn" id="">返回</a></p>
+            <div class="scroll_box jianpinPlan_scroll_box">
+                <table id="jianPinPlanTable" class="normal-table has-bar bangFuOrganization-table">
+                  <thead>
+                    <th class="col1">序号</th>
+                    <th class="col2">帮扶人姓名</th>
+                    <th class="col3">帮扶人单位名称</th>
+                    <th class="col4">职务</th>
+                    <th class="col5">帮扶户数</th>
+                  </thead>
+                   <%for(var i=0;i < list.length;i++){%>
+                    <%var item=list[i]%>
+                  <tr>
+                      <td><%=item.order%></td>
+                      <td><%=item.name%></td>
+                      <td><%=item.organization%></td>
+                      <td><%=item.duty%></td>
+                      <td><%=item.amount%></td>
+
+                  </tr>
+                    <%}%>
+                 </table>
+                     </div> <!-- end scroll_box 帮扶责任人 -->
+
+                     <%}else if(table=="bangFuCountry"){%>
+            <p class="pop-title"><%=belong_organization%>所帮扶村的列表<a class="back-btn to-bangfuDanwei-btn" id="">返回</a></p>
+            <div class="scroll_box jianpinPlan_scroll_box">
+                <table id="jianPinPlanTable" class="normal-table has-bar bangFuOrganization-table">
+                  <thead>
+                    <th class="col1">序号</th>
+                    <th class="col2">帮扶村名称</th>
+                    <th class="col3">村委联系人</th>
+                    <th class="col4">村委联系电话</th>
+                  </thead>
+                   <%for(var i=0;i < list.length;i++){%>
+                    <%var item=list[i]%>
+                  <tr>
+                      <td><%=item.order%></td>
+                      <td><%=item.country_name%></td>
+                      <td><%=item.contact_name%></td>
+                      <td><%=item.contact_phone%></td>
+                  </tr>
+                    <%}%>
+                 </table>
+                     </div> <!-- end scroll_box 单位帮扶村 -->
+                   <%}%>  <!-- end 单位帮扶村 -->
+         </div>
+</script>
+
+
+<script src="../js/libs/jquery.min.js"></script>
+<script src="../js/libs/echarts.min.js"></script>
+<script src="../js/libs/template-native.js"></script>
+<script src="../js/libs/plugin.slimscroll.min.js"></script>
+<script src="../js/controllers/render.js"></script>
+<!-- <script src="../js/controllers/poor_ctrl.js"></script> -->
+<script src="../js/controllers/duty_ctrl.js"></script>
+<script src="../js/common/button.js"></script>
+<script src="../js/tabArea.js"></script>
+<script src="../js/tabIndexChart.js"></script>
+</body>
+
+<!-- map -->
+    <script type="text/javascript" src="../script/common/jquery-namespace.js"></script>
+  <script type="text/javascript" src="../script/highcharts/Highcharts-4.1.5/highcharts.js"></script>
+  <script type="text/javascript" src="../script/highcharts/Highcharts-4.1.5/highcharts-more.js"></script>
+  <script type="text/javascript" src="../script/highcharts/Highcharts-4.1.5/modules/exporting.js"></script>
+  <script type="text/javascript" src="../script/highcharts/Highcharts-4.1.5/highcharts-zh_CN.js"></script>
+  <script type="text/javascript" src="../script/highcharts/Highcharts-4.1.5/modules/solid-gauge.js"></script>
+  <script type="text/javascript" src="../script/highcharts/Highmaps-1.1.7/modules/map.js"></script>
+  <script type="text/javascript" src="../script/highcharts/Highmaps-1.1.7/modules/data.js"></script>
+  <script type="text/javascript" src="../script/highcharts/Highmaps-1.1.7/modules/drilldown.js"></script>
+ <script type="text/javascript" src="../script/highcharts/Highmaps-1.1.7/themes/dark-unica.js"></script>
+
+  <script type="text/javascript" src="../script/common/common.js"></script>
+  <script type="text/javascript" src="../script/common/layer/layer.js"></script>
+  <script type="text/javascript" src="../script/common/common-utils.js"></script>
+  <script type="text/javascript" src="../script/common/common-map.js"></script>
+
+  <script type="text/javascript" src="../script/charts/common-highcharts.js"></script>
+  <script type="text/javascript" src="../script/charts/common-highmaps.js"></script>
+  <script type="text/javascript" src="../script/charts/common-report-page.js"></script>
+  <script type="text/javascript" src="../script/charts/Highcharts.js"></script>
+  <script type="text/javascript" src="../script/charts/common-highcharts-map.js"></script>
+  <script type="text/javascript" src="../script/maps/cn-guangdong.js"></script>
+  <script type="text/javascript" src="../script/data3.js"></script>
+  <script type="text/javascript" src="../script/duty_map.js"></script>
+
+
+
+

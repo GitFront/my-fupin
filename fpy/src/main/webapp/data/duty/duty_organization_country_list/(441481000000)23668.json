@@ -1,0 +1,16 @@
+{
+	"data":{
+		"belong_organization":"广州市商务委",
+		"list":[
+			{
+				"id":"441481135215",
+				"order":1,
+				"contact_phone":"13536710059",
+				"contact_name":"吴荣华",
+				"country_name":"龙塘村委会"
+			}
+		]
+	},
+	"code":0,
+	"msg":"获取信息成功"
+}

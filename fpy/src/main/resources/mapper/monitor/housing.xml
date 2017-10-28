@@ -1,0 +1,845 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+        
+<mapper namespace="com.aspire.birp.modules.antiPoverty.dao.HousingDao">
+	
+    <sql id="dim_area_sql">
+		INNER JOIN
+		(SELECT 
+		  PAC,
+		  SORT
+		  FROM
+		  DIM_AREA_INFO
+		  WHERE 1=1
+		  <include refid="p_area_sql"/>
+		  ) B ON(A.S_ID=B.PAC)
+		ORDER BY B.SORT 
+	</sql>
+	
+	<sql id="p_area_sql">
+		 <if test=" '' != level and null != level and 'province' == level  ">
+				AND PPAC = #{id}
+			</if>
+			
+			<if test=" '' != level and null != level and 'city' == level  ">
+				AND PPAC = #{id}
+			</if>
+			
+			<if test=" '' != level and null != level and 'county' == level  ">
+				AND PPAC = #{id} 
+			</if>
+			
+			<if test=" '' != level and null != level and 'town' == level  ">
+				AND PPAC = #{id} 
+			</if>
+			
+			<if test=" '' != level and null != level and 'country' == level  ">
+				AND PAC = #{id}
+			</if>
+	</sql>
+	<!-- 排序详细#    -->
+	<select id="querySortDetail"  parameterType="hashmap" resultType="hashmap">
+			
+			select 
+			  S_ID,A2,A3,A4,A5,A6,A7,A8,A9,A10,A11,A12,A13,A14,A15,A16,A17,A18,A19,A20,A21,A22,
+			  case when A3 = 0 then '0.00%' else  TO_CHAR(trunc(A8 / A3 * 100,2),'9999990.00') || '%' END A23,
+			  case when A4 = 0 then '0.00%' else  TO_CHAR(trunc(A9 / A4 * 100,2),'9999990.00') || '%' END A24,
+			  case when A5 = 0 then '0.00%' else  TO_CHAR(trunc(A10 / A5 * 100,2),'9999990.00') || '%' END A25,
+			  case when A6 = 0 then '0.00%' else  TO_CHAR(trunc(A11 / A6 * 100,2),'9999990.00') || '%' END A26,
+			  case when A7 = 0 then '0.00%' else  TO_CHAR(trunc(A12 / A7 * 100,2),'9999990.00') || '%' END A27
+			 FROM (select 
+			  <include refid="detail_area_sql"/>
+			  COUNT(FAM_ID) A3,
+			  SUM(CASE WHEN DANGEROUS_LEVEL='D' THEN 1 ELSE 0 END) A4,
+			  SUM(CASE WHEN DANGEROUS_LEVEL='C' THEN 1 ELSE 0 END) A5,
+			  SUM(CASE WHEN DANGEROUS_LEVEL='B' THEN 1 ELSE 0 END) A6,
+			  SUM(CASE WHEN DANGEROUS_LEVEL='A' THEN 1 ELSE 0 END) A7,
+			  SUM(CASE WHEN REPAIR_STATUS=2 THEN 1 ELSE 0 END) A8,
+			  SUM(CASE WHEN REPAIR_STATUS=2 AND DANGEROUS_LEVEL='D' THEN 1 ELSE 0 END) A9,
+			  SUM(CASE WHEN REPAIR_STATUS=2 AND DANGEROUS_LEVEL='C' THEN 1 ELSE 0 END) A10,
+			  SUM(CASE WHEN REPAIR_STATUS=2 AND DANGEROUS_LEVEL='B' THEN 1 ELSE 0 END) A11,
+			  SUM(CASE WHEN REPAIR_STATUS=2 AND DANGEROUS_LEVEL='A' THEN 1 ELSE 0 END) A12,
+			  SUM(CASE WHEN REPAIR_STATUS=1 THEN 1 ELSE 0 END) A13,
+			  SUM(CASE WHEN REPAIR_STATUS=1 AND DANGEROUS_LEVEL='D' THEN 1 ELSE 0 END) A14,
+			  SUM(CASE WHEN REPAIR_STATUS=1 AND DANGEROUS_LEVEL='C' THEN 1 ELSE 0 END) A15,
+			  SUM(CASE WHEN REPAIR_STATUS=1 AND DANGEROUS_LEVEL='B' THEN 1 ELSE 0 END) A16,
+			  SUM(CASE WHEN REPAIR_STATUS=1 AND DANGEROUS_LEVEL='A' THEN 1 ELSE 0 END) A17,
+			  SUM(CASE WHEN REPAIR_STATUS=0 THEN 1 ELSE 0 END) A18,
+			  SUM(CASE WHEN REPAIR_STATUS=0 AND DANGEROUS_LEVEL='D' THEN 1 ELSE 0 END) A19,
+			  SUM(CASE WHEN REPAIR_STATUS=0 AND DANGEROUS_LEVEL='C' THEN 1 ELSE 0 END) A20,
+			  SUM(CASE WHEN REPAIR_STATUS=0 AND DANGEROUS_LEVEL='B' THEN 1 ELSE 0 END) A21,
+			  SUM(CASE WHEN REPAIR_STATUS=0 AND DANGEROUS_LEVEL='A' THEN 1 ELSE 0 END) A22
+			 FROM (SELECT * from r_dw_poorobj_fam_y  
+			 where 1=1 
+			   and IS_CURRENT=1
+			   and DANGEROUS_LEVEL in  ('A','B','C','D') 
+			   <include refid="level_sql"/>
+			   <include refid="stat_year_sql"/>
+			   <include refid="year_sql"/>
+			   <include refid="query_condition_sql"/>) t1
+				INNER JOIN (
+				 select
+				 COUNTRY_ID 
+				 from DIM_HELP_AREA_MAP  
+				 WHERE help_p_pac=#{helppac} 
+				 ) t2 ON (t1.country_pac=t2.COUNTRY_ID)		
+			 GROUP BY <include refid="count_group_by_sql"/>)
+			
+	</select>
+	<!-- 分析右 -->
+	<select id="queryHousingChart4"  parameterType="hashmap" resultType="hashmap">
+			
+			 SELECT 
+			   CASE WHEN DANGEROUS_LEVEL='A' THEN 'A级'
+			        WHEN DANGEROUS_LEVEL='B' THEN 'B级'
+			        WHEN DANGEROUS_LEVEL='C' THEN 'C级'
+			        WHEN DANGEROUS_LEVEL='D' THEN 'D级'
+			     ELSE '其它' END as S_NAME,
+			   CASE WHEN u_type='A_PLAN' THEN '计划'
+			        WHEN u_type='B_IMP' THEN '完成数'
+			     ELSE '其它' END S_GROUP,
+			   u_value as S_VALUE
+			  FROM (select 
+			     DANGEROUS_LEVEL,
+			     COUNT(FAM_ID) A_PLAN,
+			     SUM(CASE WHEN REPAIR_STATUS=2 THEN 1 ELSE 0 END) B_IMP
+			  FROM (SELECT * from r_dw_poorobj_fam_y 
+			  where 1=1
+			   and IS_CURRENT=1
+			   and IS_DANGEROUS_HOUSE=1
+			   <include refid="level_sql"/>
+			   <include refid="stat_year_sql"/>
+			   <include refid="year_sql"/>
+			   <include refid="query_condition_sql"/>) t1
+				INNER JOIN (
+				 select
+				 COUNTRY_ID 
+				 from DIM_HELP_AREA_MAP  
+				 WHERE help_p_pac=#{helppac} 
+				 ) t2 ON (t1.country_pac=t2.COUNTRY_ID)		
+			  GROUP BY DANGEROUS_LEVEL) 
+			  unpivot (u_value for u_type in (A_PLAN, B_IMP))
+			  ORDER BY S_NAME desc,u_type
+			
+	</select>
+	<!-- 分析左 -->
+	<select id="queryHousingChart3"  parameterType="hashmap" resultType="hashmap">
+			SELECT t1.* FROM (
+			SELECT 
+				 TO_CHAR(TO_DATE( STAT_MONTH,'YYYYMM'),'YYYY.MM') S_NAME,
+				 CASE WHEN u_type='POP_1' THEN '应该数'
+				      WHEN u_type='POP_2' THEN '完成数' END S_GROUP,
+				 u_value as S_VALUE
+				FROM (select 
+				   STAT_MONTH,
+				   SUM(PLAN_HOUSE_FAM_NUM) POP_1,
+				   SUM(IMP_HOUSE_FAM_NUM) POP_2
+				from R2_DM_POOROBJ_POORTYPE_M
+				where 1=1
+				<include refid="level_sql"/>
+			    <include refid="stat_month_sql"/>
+			    <include refid="query_condition_sql"/>
+			    AND HELP_P_PAC = #{helppac}
+				GROUP BY STAT_MONTH ) 
+				unpivot (u_value for u_type in (POP_1, POP_2))
+				ORDER BY STAT_MONTH,U_TYPE ) t1 
+			WHERE ROWNUM &lt;= 6
+			ORDER BY t1.S_NAME
+	</select>
+	<!-- 管理右 -->
+	<select id="queryHousingChart2"  parameterType="hashmap" resultType="hashmap">
+			
+			SELECT 
+			   CASE WHEN u_type='A_PLAN' THEN '计划数'
+			          WHEN u_type='B_IMP' THEN '已完成'
+			          WHEN u_type='C_NO_IMP' THEN '已动工'
+			          WHEN u_type='D_NO_START' THEN '未动工'
+			     ELSE '其它' END S_NAME,
+			   u_value as S_VALUE,
+			   '建档立卡数' as S_GROUP 
+			  FROM (select 
+			     COUNT(FAM_ID) A_PLAN,
+			     SUM(CASE WHEN REPAIR_STATUS=2 THEN 1 ELSE 0 END) B_IMP,
+			     SUM(CASE WHEN REPAIR_STATUS=1 THEN 1 ELSE 0 END) C_NO_IMP,
+			     SUM(CASE WHEN REPAIR_STATUS=0 THEN 1 ELSE 0 END) D_NO_START
+			  FROM (SELECT * from r_dw_poorobj_fam_y 
+			  where 1=1
+			   and IS_CURRENT=1
+			   and IS_DANGEROUS_HOUSE=1
+			   and DANGEROUS_LEVEL in  ('C','D') 
+			   <include refid="level_sql"/>
+			   <include refid="stat_year_sql"/>
+			   <include refid="year_sql"/>) t1
+				INNER JOIN (
+				 select
+				 COUNTRY_ID 
+				 from DIM_HELP_AREA_MAP  
+				 WHERE help_p_pac=#{helppac} 
+				 ) t2 ON (t1.country_pac=t2.COUNTRY_ID)	
+			   GROUP BY <include refid="count_group_by_sql"/>  ) 
+			  unpivot (u_value for u_type in (A_PLAN, B_IMP,C_NO_IMP,D_NO_START))
+			 UNION ALL
+			 SELECT 
+			   CASE WHEN u_type='A_PLAN' THEN '计划数'
+			          WHEN u_type='B_IMP' THEN '已完成'
+			          WHEN u_type='C_NO_IMP' THEN '已动工'
+			          WHEN u_type='D_NO_START' THEN '未动工'
+			     ELSE '其它' END S_NAME,
+			   u_value as S_VALUE,
+			   '行业重合数' as S_GROUP 
+			  FROM (select 
+			     SUM(CASE WHEN REPAIR_PLAN_YEAR_COINCIDE=1 THEN 1 ELSE 0 END) A_PLAN,
+			     SUM(CASE WHEN REPAIR_STATUS=2 AND REPAIR_STATUS_COINCIDE=1 THEN 1 ELSE 0 END) B_IMP,
+			     SUM(CASE WHEN REPAIR_STATUS=1 AND REPAIR_STATUS_COINCIDE=1 THEN 1 ELSE 0 END) C_NO_IMP,
+			     SUM(CASE WHEN REPAIR_STATUS=0 AND REPAIR_STATUS_COINCIDE=1 THEN 1 ELSE 0 END) D_NO_START
+			  FROM (SELECT * from R_DW_POOROBJ_FAM_Y 
+			  where 1=1
+			   and IS_CURRENT=1
+			   and IS_DANGEROUS_HOUSE=1
+			   and DANGEROUS_LEVEL in  ('C','D') 
+			   <include refid="level_sql"/>
+			   <include refid="stat_year_sql"/>
+			   <include refid="year_sql"/>) t1
+				INNER JOIN (
+				 select
+				 COUNTRY_ID 
+				 from DIM_HELP_AREA_MAP  
+				 WHERE help_p_pac=#{helppac} 
+				 ) t2 ON (t1.country_pac=t2.COUNTRY_ID)		
+			   GROUP BY <include refid="count_group_by_sql"/>  ) 
+			  unpivot (u_value for u_type in (A_PLAN, B_IMP,C_NO_IMP,D_NO_START))
+			
+	</select>
+
+
+
+	<!-- 管理左 -->
+	<select id="queryHousingChart1"  parameterType="hashmap" resultType="hashmap">
+		
+			SELECT 
+			   STAT_YEAR as S_NAME,
+			   CASE WHEN u_type='A_PLAN' THEN '计划'
+			          WHEN u_type='B_IMP' THEN '完成数'
+			     ELSE '其它' END S_GROUP,
+			   u_value as S_VALUE
+			  FROM (select 
+			     STAT_YEAR,
+			     COUNT(FAM_ID) A_PLAN,
+			     SUM(CASE WHEN REPAIR_STATUS=2 THEN 1 ELSE 0 END) B_IMP
+			  FROM (SELECT * from r_dw_poorobj_fam_y 
+			  where 1=1
+			  	<include refid="level_sql"/>
+			  	<include refid="acc_year_sql"/>			  	
+			   and IS_CURRENT=1
+			   and IS_DANGEROUS_HOUSE=1
+			   and DANGEROUS_LEVEL in  ('C','D') ) t1
+				INNER JOIN (
+				 select
+				 COUNTRY_ID 
+				 from DIM_HELP_AREA_MAP  
+				 WHERE help_p_pac=#{helppac} 
+				 ) t2 ON (t1.country_pac=t2.COUNTRY_ID)		
+			  GROUP BY STAT_YEAR  ) 
+			  unpivot (u_value for u_type in (A_PLAN, B_IMP))
+			  ORDER BY S_NAME,u_type
+			
+	</select>
+	
+	<!-- 排序总记录 -->
+	<select id="queryHousingSortCount"  parameterType="hashmap" resultType="long">
+			
+		SELECT <include refid="count_sort_area_sql"/> 
+			FROM (SELECT * from R_DW_POOROBJ_FAM_Y
+			<where>
+				<include refid="level_sql"/>
+				<include refid="stat_year_sql"/>
+				<include refid="year_sql"/>
+				<include refid="query_condition_sql"/>
+				and IS_CURRENT = 1
+			</where>) t1
+				INNER JOIN (
+				 select
+				 COUNTRY_ID 
+				 from DIM_HELP_AREA_MAP  
+				 WHERE help_p_pac=#{helppac} 
+				 ) t2 ON (t1.country_pac=t2.COUNTRY_ID)	
+		
+	</select>
+	<!-- 排序  -->
+	<select id="queryHousingSort"  parameterType="hashmap" resultType="hashmap">
+			
+			SELECT * FROM  (
+			 SELECT A1.*,ROWNUM RM FROM (
+			SELECT
+			<include refid="sort_area_sql"/>
+			<if test=" '' != taxis_indexes and null != taxis_indexes">
+				<if test="1 == taxis_indexes and '3' == schedule">'0.00%'  A3</if>
+				<if test="1 == taxis_indexes and '4' == schedule">'0.00%'  A3</if>
+			
+				<if test="1 == taxis_indexes"> case when count(FAM_ID) = 0 then '0.00%' else TO_CHAR(trunc(sum(case when IS_IMP_HOUSE = 1 then 1 ELSE 0 END) / count(FAM_ID) * 100,2),'9999990.00') || '%' END A3 </if>
+				<if test="2 == taxis_indexes"> sum(1) A3 </if>
+			
+			</if>
+			
+			FROM (SELECT * from R_DW_POOROBJ_FAM_Y
+			<where>
+				<include refid="level_sql"/>
+				<include refid="stat_year_sql"/>
+				<include refid="year_sql"/>
+				<include refid="query_condition_sql"/>
+				and IS_CURRENT = 1
+			</where>) t1
+				INNER JOIN (
+				 select
+				 COUNTRY_ID 
+				 from DIM_HELP_AREA_MAP  
+				 WHERE help_p_pac=#{helppac} 
+				 ) t2 ON (t1.country_pac=t2.COUNTRY_ID)		
+			GROUP BY <include refid="group_sort_area_sql"/>
+			ORDER BY A3 DESC
+			) A1
+			)
+			<if test="page !=null">
+					WHERE RM BETWEEN #{pageSize}*(#{page}-1)+1 AND #{pageSize}  * #{page}
+			</if>
+	</select>
+
+	<!-- 住房明细总数  -->
+	<select id="queryHousingDetailCount"  parameterType="hashmap" resultType="long">
+	
+			select  count(FAM_ID) 
+				 FROM (SELECT * from r_dw_poorobj_fam_y 
+				 where 1=1 
+				   and IS_CURRENT=1
+				   <include refid="level_sql"/>
+				   <include refid="stat_year_sql"/>
+				   <include refid="year_sql"/>
+				   <include refid="query_condition_sql"/>) t1
+				INNER JOIN (
+				 select CITY_NAME_S A2 
+				 ,COUNTY_NAME_S A3 
+				 ,TOWN_NAME_S A4 
+				 ,COUNTRY_NAME_S A5
+				 ,COUNTRY_ID 
+				 from DIM_HELP_AREA_MAP  
+				 WHERE help_p_pac=#{helppac} 
+				 ) t2 ON (t1.country_pac=t2.COUNTRY_ID) 
+				
+	</select>
+	<!-- 住房明细 -->
+	<select id="queryHousingDetail"  parameterType="hashmap" resultType="hashmap">
+			select * from (
+				select t1.*,t2.*,ROWNUM RM from (
+				 SELECT FAM_ID as S_ID
+				 	   ,country_pac
+				       ,FAM_CODE A6 --户码 
+				       ,FAM_NAME A7 --户主姓名 
+				       ,DANGEROUS_LEVEL A8 --危房级别 
+				       ,case REPAIR_STATUS when 0 then '未动工' when 1 then '已动工' when 2 then '已完成' end A9 --改造进度 
+				       ,case REPAIR_PLAN_YEAR_COINCIDE when 1 then '是'
+				                                       when 0 THEN '否'
+				        end A10 -- 是否列入行业计划  
+				 from r_dw_poorobj_fam_y t 
+				 where 1=1 
+				   and IS_CURRENT=1
+				   <include refid="level_sql"/>
+				   <include refid="stat_year_sql"/>
+				   <include refid="year_sql"/>
+				   <include refid="query_condition_sql"/>
+				) t1
+				INNER JOIN (
+				 select CITY_NAME_S A2 
+				 ,COUNTY_NAME_S A3 
+				 ,TOWN_NAME_S A4 
+				 ,COUNTRY_NAME_S A5
+				 ,COUNTRY_ID 
+				 from DIM_HELP_AREA_MAP  
+				 WHERE help_p_pac=#{helppac} 
+				 ) t2 ON (t1.country_pac=t2.COUNTRY_ID) 
+				)
+				<if test="page !=null">
+						WHERE RM BETWEEN #{pageSize}*(#{page}-1)+1 AND #{pageSize}  * #{page}
+				</if>
+	</select>
+	
+	
+	<!-- 住房分析合计 -->
+	<select id="queryHousingAnalyzeTableC"  parameterType="hashmap" resultType="hashmap">
+			
+			select 
+			  S_ID,A2,A3,A4,A5,A6,A7,A8,A9,A10,A11,A12,A13,A14,A15,A16,A17,A18,A19,A20,A21,A22,
+			  case when A3 = 0 then '0.00%' else  TO_CHAR(trunc(A8 / A3 * 100,2),'9999990.00') || '%' END A23,
+			  case when A4 = 0 then '0.00%' else  TO_CHAR(trunc(A9 / A4 * 100,2),'9999990.00') || '%' END A24,
+			  case when A5 = 0 then '0.00%' else  TO_CHAR(trunc(A10 / A5 * 100,2),'9999990.00') || '%' END A25,
+			  case when A6 = 0 then '0.00%' else  TO_CHAR(trunc(A11 / A6 * 100,2),'9999990.00') || '%' END A26,
+			  case when A7 = 0 then '0.00%' else  TO_CHAR(trunc(A12 / A7 * 100,2),'9999990.00') || '%' END A27
+			 FROM (select 
+			  <include refid="count_area_sql"/>
+			  COUNT(FAM_ID) A3,
+			  SUM(CASE WHEN DANGEROUS_LEVEL='D' THEN 1 ELSE 0 END) A4,
+			  SUM(CASE WHEN DANGEROUS_LEVEL='C' THEN 1 ELSE 0 END) A5,
+			  SUM(CASE WHEN DANGEROUS_LEVEL='B' THEN 1 ELSE 0 END) A6,
+			  SUM(CASE WHEN DANGEROUS_LEVEL='A' THEN 1 ELSE 0 END) A7,
+			  SUM(CASE WHEN REPAIR_STATUS=2 THEN 1 ELSE 0 END) A8,
+			  SUM(CASE WHEN REPAIR_STATUS=2 AND DANGEROUS_LEVEL='D' THEN 1 ELSE 0 END) A9,
+			  SUM(CASE WHEN REPAIR_STATUS=2 AND DANGEROUS_LEVEL='C' THEN 1 ELSE 0 END) A10,
+			  SUM(CASE WHEN REPAIR_STATUS=2 AND DANGEROUS_LEVEL='B' THEN 1 ELSE 0 END) A11,
+			  SUM(CASE WHEN REPAIR_STATUS=2 AND DANGEROUS_LEVEL='A' THEN 1 ELSE 0 END) A12,
+			  SUM(CASE WHEN REPAIR_STATUS=1 THEN 1 ELSE 0 END) A13,
+			  SUM(CASE WHEN REPAIR_STATUS=1 AND DANGEROUS_LEVEL='D' THEN 1 ELSE 0 END) A14,
+			  SUM(CASE WHEN REPAIR_STATUS=1 AND DANGEROUS_LEVEL='C' THEN 1 ELSE 0 END) A15,
+			  SUM(CASE WHEN REPAIR_STATUS=1 AND DANGEROUS_LEVEL='B' THEN 1 ELSE 0 END) A16,
+			  SUM(CASE WHEN REPAIR_STATUS=1 AND DANGEROUS_LEVEL='A' THEN 1 ELSE 0 END) A17,
+			  SUM(CASE WHEN REPAIR_STATUS=0 THEN 1 ELSE 0 END) A18,
+			  SUM(CASE WHEN REPAIR_STATUS=0 AND DANGEROUS_LEVEL='D' THEN 1 ELSE 0 END) A19,
+			  SUM(CASE WHEN REPAIR_STATUS=0 AND DANGEROUS_LEVEL='C' THEN 1 ELSE 0 END) A20,
+			  SUM(CASE WHEN REPAIR_STATUS=0 AND DANGEROUS_LEVEL='B' THEN 1 ELSE 0 END) A21,
+			  SUM(CASE WHEN REPAIR_STATUS=0 AND DANGEROUS_LEVEL='A' THEN 1 ELSE 0 END) A22
+			 FROM (SELECT * from r_dw_poorobj_fam_y  
+			 where 1=1 
+			   and IS_CURRENT=1
+			   and DANGEROUS_LEVEL in  ('A','B','C','D') 
+			   <include refid="level_sql"/>
+			   <include refid="stat_year_sql"/>
+			   <include refid="year_sql"/>
+			   <include refid="query_condition_sql"/>) t1
+				INNER JOIN (
+				 select
+				 COUNTRY_ID 
+				 from DIM_HELP_AREA_MAP  
+				 WHERE help_p_pac=#{helppac} 
+				 ) t2 ON (t1.country_pac=t2.COUNTRY_ID)	
+			 GROUP BY <include refid="count_group_by_sql"/>)
+			
+	</select>
+	
+	
+	<!-- 住房分析 -->
+	<select id="queryHousingAnalyzeTable"  parameterType="hashmap" resultType="hashmap">
+			
+			select 
+			  S_ID,A2,A3,A4,A5,A6,A7,A8,A9,A10,A11,A12,A13,A14,A15,A16,A17,A18,A19,A20,A21,A22,
+			  case when A3 = 0 then '0.00%' else  TO_CHAR(trunc(A8 / A3 * 100,2),'9999990.00') || '%' END A23,
+			  case when A4 = 0 then '0.00%' else  TO_CHAR(trunc(A9 / A4 * 100,2),'9999990.00') || '%' END A24,
+			  case when A5 = 0 then '0.00%' else  TO_CHAR(trunc(A10 / A5 * 100,2),'9999990.00') || '%' END A25,
+			  case when A6 = 0 then '0.00%' else  TO_CHAR(trunc(A11 / A6 * 100,2),'9999990.00') || '%' END A26,
+			  case when A7 = 0 then '0.00%' else  TO_CHAR(trunc(A12 / A7 * 100,2),'9999990.00') || '%' END A27
+			 FROM (select 
+			  <include refid="level_area_sql"/>
+			  COUNT(FAM_ID) A3,
+			  SUM(CASE WHEN DANGEROUS_LEVEL='D' THEN 1 ELSE 0 END) A4,
+			  SUM(CASE WHEN DANGEROUS_LEVEL='C' THEN 1 ELSE 0 END) A5,
+			  SUM(CASE WHEN DANGEROUS_LEVEL='B' THEN 1 ELSE 0 END) A6,
+			  SUM(CASE WHEN DANGEROUS_LEVEL='A' THEN 1 ELSE 0 END) A7,
+			  SUM(CASE WHEN REPAIR_STATUS=2 THEN 1 ELSE 0 END) A8,
+			  SUM(CASE WHEN REPAIR_STATUS=2 AND DANGEROUS_LEVEL='D' THEN 1 ELSE 0 END) A9,
+			  SUM(CASE WHEN REPAIR_STATUS=2 AND DANGEROUS_LEVEL='C' THEN 1 ELSE 0 END) A10,
+			  SUM(CASE WHEN REPAIR_STATUS=2 AND DANGEROUS_LEVEL='B' THEN 1 ELSE 0 END) A11,
+			  SUM(CASE WHEN REPAIR_STATUS=2 AND DANGEROUS_LEVEL='A' THEN 1 ELSE 0 END) A12,
+			  SUM(CASE WHEN REPAIR_STATUS=1 THEN 1 ELSE 0 END) A13,
+			  SUM(CASE WHEN REPAIR_STATUS=1 AND DANGEROUS_LEVEL='D' THEN 1 ELSE 0 END) A14,
+			  SUM(CASE WHEN REPAIR_STATUS=1 AND DANGEROUS_LEVEL='C' THEN 1 ELSE 0 END) A15,
+			  SUM(CASE WHEN REPAIR_STATUS=1 AND DANGEROUS_LEVEL='B' THEN 1 ELSE 0 END) A16,
+			  SUM(CASE WHEN REPAIR_STATUS=1 AND DANGEROUS_LEVEL='A' THEN 1 ELSE 0 END) A17,
+			  SUM(CASE WHEN REPAIR_STATUS=0 THEN 1 ELSE 0 END) A18,
+			  SUM(CASE WHEN REPAIR_STATUS=0 AND DANGEROUS_LEVEL='D' THEN 1 ELSE 0 END) A19,
+			  SUM(CASE WHEN REPAIR_STATUS=0 AND DANGEROUS_LEVEL='C' THEN 1 ELSE 0 END) A20,
+			  SUM(CASE WHEN REPAIR_STATUS=0 AND DANGEROUS_LEVEL='B' THEN 1 ELSE 0 END) A21,
+			  SUM(CASE WHEN REPAIR_STATUS=0 AND DANGEROUS_LEVEL='A' THEN 1 ELSE 0 END) A22
+			 FROM (SELECT * from r_dw_poorobj_fam_y  
+			 where 1=1 
+			   and IS_CURRENT=1
+			   and DANGEROUS_LEVEL in  ('A','B','C','D') 
+			   <include refid="level_sql"/>
+			   <include refid="stat_year_sql"/>
+			   <include refid="year_sql"/>
+			   <include refid="query_condition_sql"/>) t1
+				INNER JOIN (
+				 select
+				 COUNTRY_ID 
+				 from DIM_HELP_AREA_MAP  
+				 WHERE help_p_pac=#{helppac} 
+				 ) t2 ON (t1.country_pac=t2.COUNTRY_ID)	
+			   group by <include refid="group_by_sql"/>) A
+			 <include refid="dim_area_sql"/>
+			
+	</select>
+	
+	
+	
+	<!-- 住房管理合计 -->
+	<select id="queryHousingManageTableC"  parameterType="hashmap" resultType="hashmap">
+			
+			SELECT 
+			 S_ID,A2,A3,A4,A5,A6,
+			 case when A3 = 0 then '0.00%' else  to_char(trunc(A5 / A3 * 100,2), '9999990.00') || '%' END A7,
+			 case when A4 = 0 then '0.00%' else  to_char(trunc(A6 / A4 * 100,2), '9999990.00') || '%' END A8,
+			 case when A3 = 0 then '0.00%' else  to_char(trunc(A4 / A3 * 100,2), '9999990.00') || '%' END A9
+			FROM( select 
+			  <include refid="count_area_sql"/>
+			  COUNT(FAM_ID) A3,
+			  SUM(CASE WHEN REPAIR_PLAN_YEAR_COINCIDE=1 THEN 1 ELSE 0 END) A4,
+			  SUM(CASE WHEN REPAIR_STATUS=2 THEN 1 ELSE 0 END) A5,
+			  SUM(CASE WHEN REPAIR_STATUS=2 AND IS_IMP_HOUSE_COINCIDE=1 THEN 1 ELSE 0 END) A6  
+			 FROM (SELECT * from r_dw_poorobj_fam_y 
+			  where 1=1 
+			   and IS_CURRENT=1
+			   and DANGEROUS_LEVEL in  ('C','D') 
+			   <include refid="level_sql"/>
+			   <include refid="stat_year_sql"/>
+			   <include refid="year_sql"/>) t1
+				INNER JOIN (
+				 select
+				 COUNTRY_ID 
+				 from DIM_HELP_AREA_MAP  
+				 WHERE help_p_pac=#{helppac} 
+				 ) t2 ON (t1.country_pac=t2.COUNTRY_ID)		
+			 GROUP BY <include refid="count_group_by_sql"/>)
+			
+	</select>
+	
+	
+
+	<!-- 住房管理 -->
+	<select id="queryHousingManageTable"  parameterType="hashmap" resultType="hashmap">
+			
+			SELECT 
+			 S_ID,A2,A3,A4,A5,A6,
+			 case when A3 = 0 then '0.00%' else  to_char(trunc(A5 / A3 * 100,2), '9999990.00') || '%' END A7,
+			 case when A4 = 0 then '0.00%' else  to_char(trunc(A6 / A4 * 100,2), '9999990.00') || '%' END A8,
+			 case when A3 = 0 then '0.00%' else  to_char(trunc(A4 / A3 * 100,2), '9999990.00') || '%' END A9
+			FROM ( select 
+			  <include refid="level_area_sql"/>
+			  COUNT(FAM_ID) A3,
+			  SUM(CASE WHEN REPAIR_PLAN_YEAR_COINCIDE=1 THEN 1 ELSE 0 END) A4,
+			  SUM(CASE WHEN REPAIR_STATUS=2 THEN 1 ELSE 0 END) A5,
+			  SUM(CASE WHEN REPAIR_STATUS=2 AND IS_IMP_HOUSE_COINCIDE=1 THEN 1 ELSE 0 END) A6  
+			 FROM (SELECT * from r_dw_poorobj_fam_y 
+			  where 1=1 
+			   and IS_CURRENT=1
+			   and DANGEROUS_LEVEL in  ('C','D') 
+			   <include refid="level_sql"/>
+			   <include refid="stat_year_sql"/>
+			   <include refid="year_sql"/>) t1
+				INNER JOIN (
+				 select
+				 COUNTRY_ID 
+				 from DIM_HELP_AREA_MAP  
+				 WHERE help_p_pac=#{helppac} 
+				 ) t2 ON (t1.country_pac=t2.COUNTRY_ID)	
+			   group by <include refid="group_by_sql"/>) A
+			 <include refid="dim_area_sql"/>
+			
+	</select>
+
+	<sql id="count_group_by_sql">
+	
+			<if test=" '' != level and null != level and 'province' == level  ">
+				 1
+			</if>
+			<if test=" '' != level and null != level and 'city' == level  ">
+				 CITY_PAC , CITY_NAME
+			</if>
+			
+			<if test=" '' != level and null != level and 'county' == level  ">
+				 COUNTY_PAC ,COUNTY_NAME  
+			</if>
+			
+			<if test=" '' != level and null != level and 'town' == level  ">
+				   TOWN_PAC ,TOWN_NAME 
+			</if>
+			
+			<if test=" '' != level and null != level and 'country' == level  ">
+				COUNTRY_PAC  ,COUNTRY_NAME 
+			</if>
+	</sql>
+
+
+	<!-- 层级sql -->
+	<sql id="level_sql">
+			
+			<if test=" '' != level and null != level and 'province' == level  ">
+				
+			</if>
+			
+			<if test=" '' != level and null != level and 'city' == level  ">
+				AND CITY_PAC = #{id}
+			</if>
+			
+			<if test=" '' != level and null != level and 'county' == level  ">
+				AND COUNTY_PAC = #{id} 
+			</if>
+			
+			<if test=" '' != level and null != level and 'town' == level  ">
+				AND TOWN_PAC = #{id} 
+			</if>
+			
+			<if test=" '' != level and null != level and 'country' == level  ">
+				AND COUNTRY_PAC = #{id}
+			</if>
+	</sql>
+	<!-- 层级分组 -->
+	<sql id="">
+	
+			<if test=" '' != level and null != level and 'province' == level  ">
+				 CITY_PAC , CITY_NAME 
+			</if>
+			<if test=" '' != level and null != level and 'city' == level  ">
+				 COUNTY_PAC ,COUNTY_NAME 
+			</if>
+			
+			<if test=" '' != level and null != level and 'county' == level  ">
+				   TOWN_PAC ,TOWN_NAME 
+			</if>
+			
+			<if test=" '' != level and null != level and 'town' == level  ">
+				 COUNTRY_PAC  ,COUNTRY_NAME 
+			</if>
+			
+			<if test=" '' != level and null != level and 'country' == level  ">
+				COUNTRY_PAC  ,COUNTRY_NAME 
+			</if>
+			
+		
+	</sql>
+	<!-- 年份统计  -->
+	<sql id="year_sql">
+		<if test=" '' != year and null != year">
+			AND ACC_YEAR = #{year}
+		</if>
+	</sql>
+	
+	<sql id="stat_year_sql">
+			<if test=" '' != year and null != year ">
+				 AND STAT_YEAR =  #{year}
+			</if>
+	</sql>
+	
+	<sql id="stat_month_sql">
+			<if test=" '' != year and null != year ">
+				 AND STAT_MONTH BETWEEN to_number(#{year} || '01')  AND to_number(#{year} || '12')
+			</if>
+	</sql>
+	
+	<!-- 累计统计年份 -->
+	<sql id="acc_year_sql">
+			<if test=" '' != year and null != year ">
+				AND STAT_YEAR BETWEEN 0 AND to_number(#{year})
+				 AND ACC_YEAR BETWEEN 0 AND to_number(#{year})
+			</if>
+	</sql>
+	
+	<sql id="query_condition_sql">
+	
+		<if test=" '' != scope and null != scope">
+			<if test="2 == scope">AND IS_KEY_POVERTY=1</if><!-- 贫困村 -->
+			<if test="3 == scope">AND IS_KEY_POVERTY=0</if><!-- 分散村 -->
+			<if test="4 == scope">AND IS_OLD_REVOLUTIONARY=1</if><!-- 革命老区 -->
+			<if test="5 == scope">AND IS_CENTRAL_SOVIET=1</if><!-- 中央苏区 -->
+		</if>
+				
+		<if test=" '' != poor_attribute and null != poor_attribute">
+			<if test="'normal' == poor_attribute">AND POOR_TYPE=1</if><!-- 一般贫困户 -->
+			<if test="'low' == poor_attribute">AND POOR_TYPE=2</if><!-- 低保户 -->
+			<if test="'five' == poor_attribute">AND POOR_TYPE=3</if><!-- 五保户 -->
+		</if>
+				
+		<if test=" '' != labor_attribute and null != labor_attribute">
+			<if test="'have_labor' == labor_attribute">AND LABOR_TYPE=1</if><!-- 有劳 -->
+			<if test="'no_labor' == labor_attribute">AND LABOR_TYPE=0</if><!-- 无劳 -->
+		</if>
+		
+		<if test=" '' != house_level and null != house_level">
+			<if test="1 == house_level">AND DANGEROUS_LEVEL IN('A','B','C','D')</if>
+			<if test="2 == house_level">AND DANGEROUS_LEVEL='D'</if>
+			<if test="3 == house_level">AND DANGEROUS_LEVEL='C'</if>
+			<if test="4 == house_level">AND DANGEROUS_LEVEL='B'</if>
+			<if test="5 == house_level">AND DANGEROUS_LEVEL='A'</if>
+			<if test="6 == house_level">AND DANGEROUS_LEVEL IN('C','D')</if>
+		</if>
+		
+		<if test=" '' != schedule and null != schedule">
+			<if test="2 == schedule">AND REPAIR_STATUS=2</if>
+			<if test="3 == schedule">AND REPAIR_STATUS=1</if>
+			<if test="4 == schedule">AND REPAIR_STATUS=0</if>
+		</if>
+		
+		<if test=" '' != industry and null != industry">
+			<if test="1 == industry"></if>
+			<if test="2 == industry">AND REPAIR_PLAN_YEAR_COINCIDE=1</if>
+			<if test="3 == industry">AND REPAIR_PLAN_YEAR_COINCIDE=0</if>
+		</if>
+	</sql>
+	
+	
+	<!--  -->
+	<sql id="level_area_sql">
+			
+			<if test=" '' != level and null != level and 'province' == level  ">
+				CITY_PAC S_ID, CITY_NAME A2, 
+			</if>
+			<if test=" '' != level and null != level and 'city' == level  ">
+				COUNTY_PAC S_ID,COUNTY_NAME A2,
+			</if>
+			
+			<if test=" '' != level and null != level and 'county' == level  ">
+				 TOWN_PAC S_ID ,TOWN_NAME A2, 
+			</if>
+			
+			<if test=" '' != level and null != level and 'town' == level  ">
+				COUNTRY_PAC S_ID ,COUNTRY_NAME  A2, 
+			</if>
+			
+			<if test=" '' != level and null != level and 'country' == level  ">
+				COUNTRY_PAC S_ID ,COUNTRY_NAME  A2, 
+			</if>
+	</sql>
+	
+	<!--  -->
+	<sql id="level_return_sql">
+			
+			<if test=" '' != level and null != level and 'province' == level  ">
+				'city' s_level,
+			</if>
+			<if test=" '' != level and null != level and 'city' == level  ">
+				 'county' s_level,
+			</if>
+			
+			<if test=" '' != level and null != level and 'county' == level  ">
+				  'town' s_level,
+			</if>
+			
+			<if test=" '' != level and null != level and 'town' == level  ">
+				 'country' s_level,
+			</if>
+			
+			<if test=" '' != level and null != level and 'country' == level  ">
+				'country' s_level,
+			</if>
+	</sql>
+	
+	
+	<!-- count  -->
+	<sql id="count_area_sql">
+			<if test=" '' != level and null != level and 'province' == level  ">
+				'440000000000' S_ID , '合计' A2,
+			</if>
+			<if test=" '' != level and null != level and 'city' == level  ">
+				CITY_PAC S_ID, '合计' A2,
+			</if>
+			
+			<if test=" '' != level and null != level and 'county' == level  ">
+				COUNTY_PAC S_ID,'合计' A2,
+			</if>
+			
+			<if test=" '' != level and null != level and 'town' == level  ">
+				 TOWN_PAC S_ID ,'合计' A2,
+			</if>
+			
+			<if test=" '' != level and null != level and 'country' == level  ">
+				COUNTRY_PAC S_ID ,'合计'  A2,
+			</if>
+	</sql>
+	
+	
+	<!--  -->
+	<sql id="sort_area_sql">
+			
+			<if test=" '' != sort_area and null != sort_area and 1 == sort_area  ">
+				CITY_PAC S_ID, CITY_NAME A2,
+			</if>
+			<if test=" '' != sort_area and null != sort_area and 2 == sort_area  ">
+				COUNTY_PAC S_ID,CITY_NAME||'>'||COUNTY_NAME A2,
+			</if>
+			
+			<if test=" '' != sort_area and null != sort_area and 3 == sort_area  ">
+				 TOWN_PAC S_ID ,CITY_NAME||'>'||COUNTY_NAME||'>'||TOWN_NAME A2,
+			</if>
+			
+			<if test=" '' != sort_area and null != sort_area and 4 == sort_area  ">
+				COUNTRY_PAC S_ID ,CITY_NAME||'>'||COUNTY_NAME||'>'||TOWN_NAME||'>'||COUNTRY_NAME  A2,
+			</if>
+			
+	</sql>
+	<!--  -->
+	<sql id="group_sort_area_sql">
+			
+			<if test=" '' != sort_area and null != sort_area and 1 == sort_area  ">
+				CITY_PAC , CITY_NAME 
+			</if>
+			<if test=" '' != sort_area and null != sort_area and 2 == sort_area  ">
+				COUNTY_PAC ,CITY_NAME||'>'||COUNTY_NAME 
+			</if>
+			
+			<if test=" '' != sort_area and null != sort_area and 3 == sort_area  ">
+				 TOWN_PAC  ,CITY_NAME||'>'||COUNTY_NAME||'>'||TOWN_NAME 
+			</if>
+			
+			<if test=" '' != sort_area and null != sort_area and 4 == sort_area  ">
+				COUNTRY_PAC  ,CITY_NAME||'>'||COUNTY_NAME||'>'||TOWN_NAME||'>'||COUNTRY_NAME  
+			</if>
+			
+	</sql>
+	
+	<!-- 层级分组 -->
+	<sql id="group_by_sql">
+	
+			<if test=" '' != level and null != level and 'province' == level  ">
+				 CITY_PAC , CITY_NAME 
+			</if>
+			<if test=" '' != level and null != level and 'city' == level  ">
+				 COUNTY_PAC ,COUNTY_NAME 
+			</if>
+			
+			<if test=" '' != level and null != level and 'county' == level  ">
+				   TOWN_PAC ,TOWN_NAME 
+			</if>
+			
+			<if test=" '' != level and null != level and 'town' == level  ">
+				 COUNTRY_PAC  ,COUNTRY_NAME 
+			</if>
+			
+			<if test=" '' != level and null != level and 'country' == level  ">
+				COUNTRY_PAC  ,COUNTRY_NAME 
+			</if>
+	</sql>
+	
+	<!-- detail_area_sql  -->
+	<sql id="detail_area_sql">
+		
+			<if test=" '' != level and null != level and 'city' == level  ">
+				CITY_PAC S_ID, CITY_NAME A2,
+			</if>
+			
+			<if test=" '' != level and null != level and 'county' == level  ">
+				COUNTY_PAC S_ID,COUNTY_NAME A2,
+			</if>
+			
+			<if test=" '' != level and null != level and 'town' == level  ">
+				 TOWN_PAC S_ID ,TOWN_NAME A2,
+			</if>
+			
+			<if test=" '' != level and null != level and 'country' == level  ">
+				COUNTRY_PAC S_ID ,COUNTRY_NAME  A2,
+			</if>
+	</sql>
+	
+	<sql id="count_sort_area_sql">
+		<if test=" '' != sort_area and null != sort_area and 1 == sort_area  ">
+		 	COUNT(DISTINCT CITY_PAC)  
+		</if>
+		<if test=" '' != sort_area and null != sort_area and 2 == sort_area  ">
+			COUNT(DISTINCT COUNTY_PAC)  
+		</if>
+			
+		<if test=" '' != sort_area and null != sort_area and 3 == sort_area  ">
+			COUNT(DISTINCT TOWN_PAC) 
+		</if>
+		<if test=" '' != sort_area and null != sort_area and 4 == sort_area  ">
+			COUNT(DISTINCT COUNTRY_PAC) 
+		</if>
+		
+	</sql>
+	
+</mapper>

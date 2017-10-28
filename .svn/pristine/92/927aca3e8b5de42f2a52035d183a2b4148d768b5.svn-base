@@ -1,0 +1,76 @@
+{
+	"code": 0,
+	"msg": "获取信息成功",
+	"data": {
+		"chart_config_renovate_standard_rate": {
+			"convert_method":"genChartLegendBarsConfig",
+			"config":[
+			{
+				"name":"比例",
+				"group":"户数",
+				"value":1870
+			},
+			{
+				"name":"一般贫困户",
+				"group":"人数",
+				"value":2000
+			},
+			{
+				"name":"五保户贫困户",
+				"group":"户数",
+				"value":480
+			},
+			{
+				"name":"五保户贫困户",
+				"group":"人数",
+				"value":580
+			},
+			{
+				"name":"低保贫困户",
+				"group":"户数",
+				"value":540
+			},
+			{
+				"name":"低保贫困户",
+				"group":"人数",
+				"value":640
+			}
+			]
+		},
+		"chart_config_renovate_standard_count": {
+			"convert_method":"genChartLegendBarsConfig",
+			"config":[
+			{
+				"name":"数量",
+				"group":"户数",
+				"value":1870
+			},
+			{
+				"name":"一般贫困户",
+				"group":"人数",
+				"value":2000
+			},
+			{
+				"name":"五保户贫困户",
+				"group":"户数",
+				"value":480
+			},
+			{
+				"name":"五保户贫困户",
+				"group":"人数",
+				"value":580
+			},
+			{
+				"name":"低保贫困户",
+				"group":"户数",
+				"value":540
+			},
+			{
+				"name":"低保贫困户",
+				"group":"人数",
+				"value":640
+			}
+			]
+		}
+	}
+}

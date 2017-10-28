@@ -1,0 +1,43 @@
+{
+	"code": 0,
+	"msg": "获取信息成功",
+	"data": {
+		//同area_path.json的定义
+		"area_path": [],
+		//最后更新时间
+		"time_update": "2017-1-11",
+		//个人事项
+		"personal": {
+			//在办事项图表
+			"chart_config_doing": {},
+			//已办事项图表
+			"chart_config_done": {}
+		},
+		//法人事项
+		"legal_person": {
+			//在办事项图表
+			"chart_config_doing": {},
+			//已办事项图表
+			"chart_config_done": {}
+		},
+		//电商扶贫
+		"business": {
+			//岭南优品
+			"lingnan": {
+				//选中值名
+				"selected_name": "2017年01月",
+				//选中值
+				"selected_value": "2017.1",
+				//可选时间列表
+				"list": [
+					{
+						//值名
+						"name": "2017年01月",
+						//值
+						"value": "2017.1"
+					}
+				]
+			}
+		}
+	}
+}

@@ -1,0 +1,16 @@
+{
+	"data":{
+		"belong_organization":"广州市天河区人民政府员村街道办事处",
+		"list":[
+			{
+				"id":"441481124226",
+				"order":1,
+				"contact_phone":"13923000185",
+				"contact_name":"何群超",
+				"country_name":"向前村委会"
+			}
+		]
+	},
+	"code":0,
+	"msg":"获取信息成功"
+}

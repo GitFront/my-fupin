@@ -1,0 +1,35 @@
+{
+	"code": 0,
+	"msg": "获取信息成功",
+	"data": {
+		"area_name": "广东省",
+		"family": {
+			"amount": 5851
+		},
+		"people": {
+			"amount": 5851
+		},
+		"chart_config": [
+			{
+				"name":"致贫原因一",
+				"value":1870
+			},
+			{
+				"name":"致贫原因二",
+				"value":4890
+			},
+			{
+				"name":"致贫原因三",
+				"value":2390
+			},
+			{
+				"name":"致贫原因四",
+				"value":1200
+			},
+			{
+				"name":"致贫原因五",
+				"value":780
+			}
+		]
+	}
+}

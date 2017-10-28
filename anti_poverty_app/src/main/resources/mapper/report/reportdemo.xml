@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="aspire.bi.common.report">
+    <cache />
+<!--<resultMap id="pieResultMap" type="com.aspire.birp.modules.common.vo.PieDataVo">
+		<id property="id" column="id" />
+		<result property="name" column="name" />
+		<result property="value" column="yvalue" />
+	</resultMap>  -->
+ 
+ 
+    <select id="selectReport" parameterType="java.util.HashMap"
+       resultType="java.util.HashMap">
+       SELECT * FROM do_report_demo t WHERE t.rtype = #{type}
+       	<if test="space != null and space != ''">
+       		AND  Instr(t.rspace,#{space})>0
+       	</if>
+    </select>
+    <select id="selectTable" parameterType="java.util.HashMap"
+       resultType="java.util.HashMap">
+       SELECT 
+       		STAT_TIME AS STAT_TIME,
+		  	ONE_LVL_CHANNEL_NAME AS ONE_LVL_CHANNEL_NAME,
+		  	TWO_LVL_CHANNEL_NAME AS TWO_LVL_CHANNEL_NAME,
+		  	APP_NAME AS APP_NAME,
+		  	AP_NAME AS AP_NAME,
+		  	NEW_USER_CNT AS NEW_USER_CNT, 
+		  	ACT_USER_CNT AS ACT_USER_CNT,
+		  	FEE_USER_CNT AS FEE_USER_CNT,
+		  	FEE_CNT AS FEE_CNT 
+		  	FROM DO_TABLE_DEMO  
+       	<include refid="filter_selectTable"/> 
+    </select>
+    <select id="selectTable_count"  parameterType="java.util.HashMap"
+       resultType="java.util.HashMap">
+ 		SELECT 
+ 			count(*) as TOTAL 
+		FROM DO_TABLE_DEMO 
+		<include refid="filter_selectTable"/> 
+	</select>
+	
+	
+       	<sql id="filter_selectTable">
+    	<where>
+    		1 = 1 
+    		<if test="null != from and '' != from">
+				and  STAT_TIME &gt;= #{from}
+			</if>
+			<if test="null != to and '' != to">
+				and  STAT_TIME &lt;= #{to}
+			</if>
+	        <if test="null != appId and '' != appId and '全部' !=appId">  
+	            and  APP_ID =#{appId}  
+	        </if>  
+	        
+	        <if test="null != apId and '' != apId and '全部' !=apId">  
+	            and  AP_ID =#{apId}  
+	        </if>  
+			
+			<if test="null != oneLvlChannelID and '' != oneLvlChannelID">
+				and  ONE_LVL_CHANNEL_ID = #{oneLvlChannelID}
+			</if>
+	        <if test="null != twoLvlChannelID_array">  
+		         and  TWO_LVL_CHANNEL_ID IN 
+				<foreach item="twoLvlChannelID_array" index="index" collection="twoLvlChannelID_array" 
+                         open="(" separator="," close=")">
+                        #{twoLvlChannelID_array} 
+                </foreach> 
+	        </if>  
+			<if test="null != channelName and '' != channelName">
+				and  (ONE_LVL_CHANNEL_NAME like CONCAT('%',#{channelName},'%' ) 
+					or	TWO_LVL_CHANNEL_NAME like CONCAT('%',#{channelName},'%' ))
+			</if>
+			<if test="null != channelId and '' != channelId">
+				and  (ONE_LVL_CHANNEL_ID like CONCAT(#{channelId},'%' ) 
+					or	TWO_LVL_CHANNEL_ID like CONCAT(#{channelId},'%' ))
+			</if>			
+		</where>
+    </sql>
+</mapper>

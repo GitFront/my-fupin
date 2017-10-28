@@ -1,0 +1,137 @@
+{
+  "code": 0,
+  "msg": "获取信息成功",
+  "data": {
+    "chart_config_tab": [{
+      "xAxis": [
+        {
+          "type": "category",
+          "data": ["完全无劳动能力户","有劳动能力户"],
+          "axisLine":{
+            "lineStyle":{
+              "color":"#fff"
+            }
+          }
+        }
+      ],
+      "title": {
+        "text": "贫困户有无劳动能力分布",
+        "left": "center",
+        "textStyle":{
+          "color": "#fff",
+          "fontSize":15
+        }
+      },
+      "grid":{
+        "width":280,
+        "right":20
+      },
+      "yAxis" : {
+        "splitLine":{
+          "show":false
+        },
+        "axisLine":{
+          "lineStyle":{
+            "color":"#fff"
+          }
+        }
+      },
+      "legend":{
+        "data":["贫困户","贫困人口"],
+        "x" : "center",
+        "y" : "bottom",
+        "textStyle" : {
+          "color" : "#fff"
+        }
+      },
+      "series": [
+        {
+          "name":"贫困户",
+          "type":"bar",
+          "data":[152,221],
+          "itemStyle": {
+            "normal": {
+              "barBorderRadius": 8
+            },
+            "emphasis": {
+              "barBorderRadius": 8
+            }
+          },
+          "markPoint": {
+            "data": [
+              {"type": "max", "name": "最大值"},
+              {"type": "min", "name": "最小值"}
+            ]
+          }
+        },
+        {
+          "name":"贫困人口",
+          "type":"bar",
+          "data":[120,478],
+          "itemStyle": {
+            "normal": {
+              "barBorderRadius": 8
+            },
+            "emphasis": {
+              "barBorderRadius": 8
+            }
+          },
+          "markPoint": {
+            "data": [
+              {"type": "max", "name": "最大值"},
+              {"type": "min", "name": "最小值"}
+            ]
+          }
+
+        }
+      ]
+    },{
+      "tooltip" : {
+        "formatter": "{b} : {c} ({d}%)"
+      },
+      "title": {
+        "text": "有劳动能力户的劳动力人口分布",
+        "left": "center",
+        "top":20,
+        "textStyle":{
+          "color": "#fff",
+          "fontSize":15
+        }
+      },
+      "series" : [
+        {
+          "name": "劳动力分析",
+          "type": "pie",
+          "radius": ["37%", "70%"],
+          "center":["50%", "60%"],
+          "label": {
+            "normal": {
+              "show": false
+            }
+          },
+          "data":[
+            {"value":67164, "name":"劳动力人数"},
+            {"value":55744, "name":"无劳动力人数"},
+            {"value":12977, "name":"丧失劳动力人数"}
+
+          ],
+          "itemStyle": {
+            "emphasis": {
+              "shadowBlur": 50
+            }
+          }
+        }
+      ]
+    }]
+  }
+}
+
+
+
+
+
+
+
+
+
+

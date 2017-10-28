@@ -1,0 +1,13 @@
+{
+	"code": 0,
+	"msg": "获取信息成功",
+	"data": {
+		//卫生室落实趋势
+		"chart_config_trend_station": {},
+		//执业医师落实趋势
+		"chart_config_trend_doctor": {},
+		//统计表，同data_monitor_table.json定义
+		"table": {}
+	}
+}
+

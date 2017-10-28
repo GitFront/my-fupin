@@ -1,0 +1,23 @@
+{
+    "code": 0,
+    "msg": "获取信息成功",
+    "data": {
+        "download_list": {
+            "title": "贫困人口统计表",
+            "list": [
+            	{
+                "name": "表1：贫困人口类型表",
+				"export_url":  "/anti_poverty_web/antiPoverty/dataMonitor/beforeExport.do?export_task_id=projectAnalysisToCountry"
+           		},
+                {
+                "name": "表2：贫困人口类型表",
+                "export_url": "/anti_poverty_web/antiPoverty/dataMonitor/beforeExport.do?export_task_id=projectAnalysisToCountry"
+                },
+                {
+                "name": "表3：贫贫困人贫困人s困人口类型表",
+                "export_url":  "/anti_poverty_web/antiPoverty/dataMonitor/beforeExport.do?export_task_id=projectAnalysisToCountry"
+                }
+            ]
+        }
+    }
+}

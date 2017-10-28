@@ -1,0 +1,100 @@
+{
+  "code": 0,
+  "msg": "获取信息成功",
+  "data": {
+    "chart_config_tab": [{
+      "tooltip": {
+      },
+      "legend": {
+        "x": "center",
+        "y": "bottom",
+        "data": ["脱贫指数","贫困指数"],
+        "itemGap": 20,
+        "textStyle": {
+          "color": "#fff",
+          "fontSize": 14
+        },
+        "selectedMode":"single"
+      },
+      "radar": {
+        "center":["48%","46%"],
+        "indicator": [
+          { "name": "住房条件", "max": 4},
+          { "name": "人均住房面积", "max": 4},
+          { "name": "出行条件", "max": 4},
+          { "name": "生产条件", "max": 4},
+          { "name": "年收入", "max": 4},
+          { "name": "帮扶计划", "max": 4},
+          { "name": "劳动力人口数", "max": 4},
+          { "name": "健康状况", "max": 4},
+          { "name": "劳动力素质", "max": 4},
+          { "name": "帮扶责任人", "max": 4},
+          { "name": "教育回报", "max": 4}
+        ],
+        "shape": "circle",
+        "splitNumber": 5,
+        "name": {
+          "textStyle": {
+            "color": "#fff"
+          }
+        },
+        "splitLine": {
+          "lineStyle": {
+            "color": "rgba(238, 197, 102, 0.1)"
+          }
+        },
+        "splitArea": {
+          "show": false
+        },
+        "axisLine": {
+          "lineStyle": {
+            "color": "rgba(238, 197, 102, 0.16)"
+          }
+        }
+      },
+      "series": [
+        {
+          "name": "脱贫指数",
+          "type": "radar",
+          "data": [[2,2,1,1,1,2.5,1,1,1.2,3,4]],
+          "symbol": "none",
+          "lineStyle": {
+            "normal": {
+              "width": 1,
+              "opacity": 0.8
+            }
+          },
+          "areaStyle": {
+            "normal": {
+              "opacity": 0.3
+            }
+          }
+        },
+        {
+          "name": "贫困指数",
+          "type": "radar",
+          "lineStyle": {
+            "normal": {
+              "width": 1,
+              "opacity": 0.8
+            }
+          },
+          "data": [[0.4,2,1,0.56,0.44,2,0.98,0.98,1.2,3,3]],
+          "symbol": "none",
+          "itemStyle": {
+            "normal": {
+              "color": "#B3E4A1"
+            }
+          },
+          "areaStyle": {
+            "normal": {
+              "opacity": 0.3
+            }
+          }
+        }
+
+      ]
+    }
+    ]
+  }
+}

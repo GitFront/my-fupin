@@ -1,0 +1,72 @@
+{
+	"code": 0,
+	"msg": "获取信息成功",
+	"data": {
+		"area_name": "广东省",
+		"total": {
+			"amount": 5851
+		},
+		"ill_health": {
+			"amount": 5851,
+			"percent":25
+		},
+		"chart_config_pie": [
+			{
+				"name":"大专以上",
+				"value":1870
+			},
+			{
+				"name":"高中",
+				"value":4890
+			},
+			{
+				"name":"中专",
+				"value":2390
+			},
+			{
+				"name":"初中",
+				"value":1200
+			},
+			{
+				"name":"小学",
+				"value":780
+			},
+			{
+				"name":"学龄儿童",
+				"value":780
+			},
+			{
+				"name":"未选择",
+				"value":780
+			}
+		],
+		"chart_config_top":[
+			{
+				"name":"恶性肿瘤",
+				"group":"数值",
+				"value":7000
+			},
+			{
+				"name":"脑血管",
+				"group":"数值",
+				"value":6000
+			},
+			{
+				"name":"意外",
+				"group":"数值",
+				"value":6500
+			},
+			{
+				"name":"心脏病",
+				"group":"数值",
+				"value":5800
+			},
+			{
+				"name":"糖尿病",
+				"group":"数值",
+				"value":4500
+			}
+		]
+	}
+}
+

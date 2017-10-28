@@ -1,0 +1,51 @@
+{
+	"code": 0,
+	"msg": "获取信息成功",
+	"data": {
+		//扶贫概况
+		"intro": {
+			//内容
+			"content": "内容"
+		},
+		//地图
+		"map": {
+			//贫困户数
+			"amount_poor_family": 111,
+			//图表
+			"chart_config_map": {}
+		},
+		//通知公告
+		"announcement": {
+			//更多链接
+			"link_more": "http://baidu.com",
+			//列表
+			"list": [
+				{
+					//条目链接，如无为null
+					"link": "http://baidu.com",
+					//条目标题
+					"title": "广东省卫生计生委等12部门关于印发广东长长长长长长长长"
+				}
+			]
+		},
+		//政策法规
+		"policy": {
+			//更多链接
+			"link_more": "http://baidu.com",
+			//列表
+			"list": [
+				{
+					//条目链接，如无为null
+					"link": "http://baidu.com",
+					//条目标题
+					"title": "广东省卫生计生委等12部门关于印发广东长长长长长长长长"
+				}
+			]
+		},
+		//扶贫交流
+		"communication": {
+			//内容
+			"content": "内容"
+		}
+	}
+}

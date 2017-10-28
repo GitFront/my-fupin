@@ -1,0 +1,12 @@
+{
+	"code": 0,
+	"msg": "获取信息成功",
+	"data": {
+		//贫困人口趋势（增加）
+		"chart_config_trend_add": {},
+		//贫困人口趋势（减少）
+		"chart_config_trend_cut": {},
+		//统计表，同data_monitor_table.json定义
+		"table": {}
+	}
+}

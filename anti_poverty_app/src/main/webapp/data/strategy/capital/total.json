@@ -1,0 +1,13 @@
+{
+	"code": 0,
+	"msg": "获取信息成功",
+	"data": {
+		"stat": {
+			"invested": "105亿",
+			"projects": "22380个",
+			"rate_completed": "62.5%"
+		},
+		"chart_config_pie": {},
+		"chart_config_histogram": {}
+	}
+}

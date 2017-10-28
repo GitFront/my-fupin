@@ -1,0 +1,30 @@
+{
+	"data":{
+		"belong_organization":"兴宁市卫计局",
+		"list":[
+			{
+				"id":"441481003213",
+				"order":1,
+				"contact_phone":"3231747",
+				"contact_name":"罗伟导",
+				"country_name":"水楼村委会"
+			},
+			{
+				"id":"441481003208",
+				"order":2,
+				"contact_phone":"3215612",
+				"contact_name":"罗德强",
+				"country_name":"高陂村委会"
+			},
+			{
+				"id":"441481003205",
+				"order":3,
+				"contact_phone":"3215731",
+				"contact_name":"薛光桓",
+				"country_name":"横湖村委会"
+			}
+		]
+	},
+	"code":0,
+	"msg":"获取信息成功"
+}

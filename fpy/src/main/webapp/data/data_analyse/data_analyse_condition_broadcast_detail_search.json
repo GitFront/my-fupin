@@ -1,0 +1,24 @@
+{
+	"code": 0,
+	"msg": "获取信息成功",
+	"data": {
+		"next_id": 1,
+		"count_total": 100,
+		"tips": {
+		},
+		"table": {
+			"list": [
+				{
+					"order": "1",
+					"city_name": "梅州市",
+					"county_name": "东海县",
+					"town_name": "北兴镇",
+					"country_id": 1,
+					"country_name": "三岔村",
+					"amount_no_broadcast": 13
+				}
+			]
+		}
+	}
+}
+

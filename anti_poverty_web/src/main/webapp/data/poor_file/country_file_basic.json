@@ -1,0 +1,29 @@
+{
+	"code": 0,
+	"msg": "获取信息成功",
+	"data": {
+		"country_name": "高车塘村",
+		"summary": {
+			"responsible_name": "陈远雄",
+			"responsible_avatar": "../../../data/images/poor_file/avatar1.jpg",
+			"responsible_phone": "13000000000",
+			"responsible_duty": "主任书记",
+			"country_leader_name": "吴昔中",
+			"country_leader_avatar": "../../../data/images/poor_file/avatar2.jpg",
+			"country_leader_phone": "15000000000",
+			"country_leader_org": "广东省农村信用合作社联合社",
+			"country_leader_start_time": "2016年4月23日"
+		},
+		"stat": {
+			"amount_total_family": 5699,
+			"amount_total_people": 29269,
+			"amount_poor_family": 82,
+			"amount_poor_people": 279,
+			"ratio_poor": 9.53,
+			"amount_success_family": 25,
+			"amount_success_people": 75,
+			"score": 70,
+			"has_achieved": false
+		}
+	}
+}

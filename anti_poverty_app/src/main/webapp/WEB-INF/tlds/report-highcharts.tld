@@ -1,0 +1,480 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<taglib xmlns="http://java.sun.com/xml/ns/j2ee"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-jsptaglibrary_2_0.xsd"
+  version="2.0">
+
+	<description>Highcharts 1.1 tlib library</description>
+  	<display-name>Highcharts layout</display-name>
+	<tlib-version>1.0</tlib-version>
+	<short-name>hc</short-name>
+	<tag>
+		<name>pie</name>
+		<tag-class>com.aspire.birp.modules.common.tags.report.HcPie</tag-class>
+		<body-content>EMPTY</body-content>
+		<attribute>
+			<name>id</name>
+		    <required>true</required>
+		    <rtexprvalue>true</rtexprvalue>
+		    <description>【必须】页面报表的ID值</description>
+		</attribute>
+		<attribute>
+		    <name>queryName</name>
+		    <required>true</required>
+		    <rtexprvalue>true</rtexprvalue>
+		    <description>【必须】mybatis的对应查询名称</description>
+	   </attribute>
+	   <attribute>
+		    <name>parameters</name>
+		    <required>false</required>
+		    <rtexprvalue>true</rtexprvalue>
+		    <description>【非必须】自定义查询参数。（格式为：参数1:值1;参数2:值2）</description>
+	   </attribute>
+	   <attribute>
+		    <name>mapper</name>
+		    <required>false</required>
+		    <rtexprvalue>true</rtexprvalue>
+		    <description>【非必须】数据字段对应信息，定义数据字段与name/value的对应名称。（格式为name:act_name;value:usr_count）</description>
+	   </attribute>
+	   <attribute>
+		    <name>rowsValue</name>
+		    <required>false</required>
+		    <rtexprvalue>true</rtexprvalue>
+		    <description>【非必须】行转列配置，针对同一行数据不同字段进行分维度显示。（格式为field_name1:维度名称1;field_name2:维度名称2）</description>
+	   </attribute>
+	   <attribute>
+		    <name>height</name>
+		    <required>false</required>
+		    <rtexprvalue>true</rtexprvalue>
+		    <description>【非必须】图表高度定义：eg.:300px</description>
+	   </attribute>
+	   <attribute>
+		    <name>option</name>
+		    <required>false</required>
+		    <rtexprvalue>true</rtexprvalue>
+		    <description>
+		    	【非必须】Highcharts的自定义配置项 *****注意：此处的值可以包括字符串、数字、数组等类型。所以如果是字符串的值时，需要加入''符号*****
+		    	{
+				    title:'', /*报表标题(默认为空)*/
+				    valueName:'数值', /*数据名称(默认为‘数值’)*/
+				    yName:'', /*y轴名称(默认为空)*/
+				    yUnit:'', /*y轴单位(默认为空)*/
+				    yDecimal:0, /*y轴数据精度(默认为不保留小数位){最高只支持4位小数}*/
+				    percentDecimal:2,/*显示百分比数据精度(默认为保留2位小数){最高只支持4位小数}*/
+				    legend:true, /*是否显示图例(默认为true)*/
+				    doClick:'',  /*传入方法名，可以在图表数据点点击时触发监听事件，附带参数为chart对象，eg: function testload(chart)*/
+				    doLoad:''  /*传入方法名，可以在图表加载之前触发监听事件，附带参数为（数据点名，x轴值，y轴值），eg:function testclick(name,x,y)*/    
+				 }
+		    </description>
+	   </attribute>
+	</tag>
+	<tag>
+		<name>bars</name>
+		<tag-class>com.aspire.birp.modules.common.tags.report.HcBar</tag-class>
+		<body-content>EMPTY</body-content>
+		<attribute>
+			<name>id</name>
+		    <required>true</required>
+		    <rtexprvalue>true</rtexprvalue>
+		    <description>【必须】页面报表的ID值</description>
+		</attribute>
+		<attribute>
+		    <name>queryName</name>
+		    <required>true</required>
+		    <rtexprvalue>true</rtexprvalue>
+		    <description>【必须】mybatis的对应查询名称</description>
+	   </attribute>
+	   <attribute>
+		    <name>parameters</name>
+		    <required>false</required>
+		    <rtexprvalue>true</rtexprvalue>
+		    <description>【非必须】自定义查询参数。（格式为：参数1:值1;参数2:值2）</description>
+	   </attribute>
+	   <attribute>
+		    <name>mapper</name>
+		    <required>false</required>
+		    <rtexprvalue>true</rtexprvalue>
+		    <description>【非必须】数据字段对应信息，定义数据字段与name/value/group的对应名称。（格式为name:act_name;group:group1;value:usr_count）</description>
+	   </attribute>
+	   <attribute>
+		    <name>hideGroup</name>
+		    <required>false</required>
+		    <rtexprvalue>true</rtexprvalue>
+		    <description>【非必须】隐藏分组设置。（格式为group1名称;group2名称;group3名称）</description>
+	   </attribute>
+	   <attribute>
+		    <name>rowsGroup</name>
+		    <required>false</required>
+		    <rtexprvalue>true</rtexprvalue>
+		    <description>【非必须】行转列配置，针对同一行数据不同字段进行分组显示。（格式为field_name1:分组名称1;field_name2:分组名称2）</description>
+	   </attribute>
+	   <attribute>
+		    <name>height</name>
+		    <required>false</required>
+		    <rtexprvalue>true</rtexprvalue>
+		    <description>【非必须】图表高度定义：eg.:300px</description>
+	   </attribute>
+	   <attribute>
+		    <name>option</name>
+		    <required>false</required>
+		    <rtexprvalue>true</rtexprvalue>
+		    <description>
+		    	【非必须】Highcharts的自定义配置项 *****注意：此处的值可以包括字符串、数字、数组等类型。所以如果是字符串的值时，需要加入''符号*****
+		    	{
+				    title:'', /*报表标题(默认为空)*/
+				  	horiz:false, /*柱形图是否需要横向显示*/
+				    xName:'', /*x轴名称(默认为空)*/
+				    xMin:0,   /*x轴最少值(默认为0)*/
+				    xUnit:'', /*x轴单位(默认为空)*/
+				    xDecimal:0, /*x轴数据精度(默认为不保留小数位){最高只支持4位小数}*/
+				    yName:'', /*y轴名称(默认为空)*/
+				    yMin:0,   /*y轴最少值(默认为0)*/
+				    yUnit:'', /*y轴单位(默认为空)*/
+				    yDecimal:0, /*y轴数据精度(默认为不保留小数位){最高只支持4位小数}*/
+				    legend:true, /*是否显示图例(默认为true)*/
+				    doClick:'',  /*传入方法名，可以在图表数据点点击时触发监听事件，附带参数为chart对象，eg: function testload(chart)*/
+				    doLoad:''  /*传入方法名，可以在图表加载之前触发监听事件，附带参数为（数据点名，x轴值，y轴值），eg:function testclick(name,x,y)*/    
+				};
+		    </description>
+	   </attribute>
+	</tag>
+	
+	<tag>
+		<name>stack-bars</name>
+		<tag-class>com.aspire.birp.modules.common.tags.report.HcStackBars</tag-class>
+		<body-content>EMPTY</body-content>
+		<attribute>
+			<name>id</name>
+		    <required>true</required>
+		    <rtexprvalue>true</rtexprvalue>
+		    <description>【必须】页面报表的ID值</description>
+		</attribute>
+		<attribute>
+		    <name>queryName</name>
+		    <required>true</required>
+		    <rtexprvalue>true</rtexprvalue>
+		    <description>【必须】mybatis的对应查询名称</description>
+	   </attribute>
+	   <attribute>
+		    <name>parameters</name>
+		    <required>false</required>
+		    <rtexprvalue>true</rtexprvalue>
+		    <description>【非必须】自定义查询参数。（格式为：参数1:值1;参数2:值2）</description>
+	   </attribute>
+	   <attribute>
+		    <name>mapper</name>
+		    <required>false</required>
+		    <rtexprvalue>true</rtexprvalue>
+		    <description>【非必须】数据字段对应信息，定义数据字段与name/value/group的对应名称。（格式为name:act_name;group:group1;value:usr_count）</description>
+	   </attribute>
+	   <attribute>
+		    <name>hideGroup</name>
+		    <required>false</required>
+		    <rtexprvalue>true</rtexprvalue>
+		    <description>【非必须】隐藏分组设置。（格式为group1名称;group2名称;group3名称）</description>
+	   </attribute>
+	   <attribute>
+		    <name>rowsGroup</name>
+		    <required>false</required>
+		    <rtexprvalue>true</rtexprvalue>
+		    <description>【非必须】行转列配置，针对同一行数据不同字段进行分组显示。（格式为field_name1:分组名称1;field_name2:分组名称2）</description>
+	   </attribute>
+	   <attribute>
+		    <name>height</name>
+		    <required>false</required>
+		    <rtexprvalue>true</rtexprvalue>
+		    <description>【非必须】图表高度定义：eg.:300px</description>
+	   </attribute>
+	   <attribute>
+		    <name>option</name>
+		    <required>false</required>
+		    <rtexprvalue>true</rtexprvalue>
+		    <description>
+		    	【非必须】Highcharts的自定义配置项 
+		    	 *****注意：此处的值可以包括字符串、数字、数组等类型。所以如果是字符串的值时，需要加入''符号*****
+		    	 {
+				    title:'', /*报表标题(默认为空)*/
+				  	horiz:false, /*柱形图是否需要横向显示*/
+				    xName:'', /*x轴名称(默认为空)*/
+				    xMin:0,   /*x轴最少值(默认为0)*/
+				    xUnit:'', /*x轴单位(默认为空)*/
+				    xDecimal:0, /*x轴数据精度(默认为不保留小数位){最高只支持4位小数}*/
+				    yName:'', /*y轴名称(默认为空)*/
+				    yMin:0,   /*y轴最少值(默认为0)*/
+				    yUnit:'', /*y轴单位(默认为空)*/
+				    yDecimal:0, /*y轴数据精度(默认为不保留小数位){最高只支持4位小数}*/
+				    isPercent:false, /*是否显示百分比数据(默认为false)-堆积图特有*/
+				    percentDecimal:2,/*显示百分比数据精度(默认为保留2位小数){最高只支持4位小数}*/
+				    legend:true, /*是否显示图例(默认为true)*/
+					doClick:'',  /*传入方法名，可以在图表数据点点击时触发监听事件，附带参数为chart对象，eg: function testload(chart)*/
+				    doLoad:''  /*传入方法名，可以在图表加载之前触发监听事件，附带参数为（数据点名，x轴值，y轴值），eg:function testclick(name,x,y)*/    
+				};
+		    </description>
+	   </attribute>
+	</tag>
+	<tag>
+		<name>line</name>
+		<tag-class>com.aspire.birp.modules.common.tags.report.HcLine</tag-class>
+		<body-content>EMPTY</body-content>
+		<attribute>
+			<name>id</name>
+		    <required>true</required>
+		    <rtexprvalue>true</rtexprvalue>
+		    <description>【必须】页面报表的ID值</description>
+		</attribute>
+		<attribute>
+		    <name>queryName</name>
+		    <required>true</required>
+		    <rtexprvalue>true</rtexprvalue>
+		    <description>【必须】mybatis的对应查询名称</description>
+	   </attribute>
+	   <attribute>
+		    <name>parameters</name>
+		    <required>false</required>
+		    <rtexprvalue>true</rtexprvalue>
+		    <description>【非必须】自定义查询参数。（格式为：参数1:值1;参数2:值2）</description>
+	   </attribute>
+	   <attribute>
+		    <name>mapper</name>
+		    <required>false</required>
+		    <rtexprvalue>true</rtexprvalue>
+		    <description>【非必须】数据字段对应信息，定义数据字段与name/value/group的对应名称。（格式为name:act_name;group:group1;value:usr_count）</description>
+	   </attribute>
+	   <attribute>
+		    <name>hideGroup</name>
+		    <required>false</required>
+		    <rtexprvalue>true</rtexprvalue>
+		    <description>【非必须】隐藏分组设置。（格式为group1名称;group2名称;group3名称）</description>
+	   </attribute>
+	   <attribute>
+		    <name>rowsGroup</name>
+		    <required>false</required>
+		    <rtexprvalue>true</rtexprvalue>
+		    <description>【非必须】行转列配置，针对同一行数据不同字段进行分组显示。（格式为field_name1:分组名称1;field_name2:分组名称2）</description>
+	   </attribute>
+	   <attribute>
+		    <name>height</name>
+		    <required>false</required>
+		    <rtexprvalue>true</rtexprvalue>
+		    <description>【非必须】图表高度定义：eg.:300px</description>
+	   </attribute>
+	   <attribute>
+		    <name>option</name>
+		    <required>false</required>
+		    <rtexprvalue>true</rtexprvalue>
+		    <description>
+		    	【非必须】Highcharts的自定义配置项 
+		    	 *****注意：此处的值可以包括字符串、数字、数组等类型。所以如果是字符串的值时，需要加入''符号*****
+		    	 {
+				    title:'', /*报表标题(默认为空)*/
+				    xName:'', /*x轴名称(默认为空)*/
+				    xMin:0,   /*x轴最少值(默认为0)*/
+				    xUnit:'', /*x轴单位(默认为空)*/
+				    xDecimal:0, /*x轴数据精度(默认为不保留小数位){最高只支持4位小数}*/
+				    yName:'', /*y轴名称(默认为空)*/
+				    yMin:0,   /*y轴最少值(默认为0)*/
+				    yUnit:'', /*y轴单位(默认为空)*/
+				    yDecimal:0, /*y轴数据精度(默认为不保留小数位){最高只支持4位小数}*/
+				    legend:true, /*是否显示图例(默认为true)*/
+				    zoomType:'', /*开启哪个轴的放大缩小功能'x'/'y'(默认不开启)*/
+				    doClick:'',  /*传入方法名，可以在图表数据点点击时触发监听事件，附带参数为chart对象，eg: function testload(chart)*/
+				    doLoad:''  /*传入方法名，可以在图表加载之前触发监听事件，附带参数为（数据点名，x轴值，y轴值），eg:function testclick(name,x,y)*/    
+				};
+		    </description>
+	   </attribute>
+	</tag>
+	<tag>
+		<name>inverted-line</name>
+		<tag-class>com.aspire.birp.modules.common.tags.report.HcInvertedLine</tag-class>
+		<body-content>EMPTY</body-content>
+		<attribute>
+			<name>id</name>
+		    <required>true</required>
+		    <rtexprvalue>true</rtexprvalue>
+		    <description>【必须】页面报表的ID值</description>
+		</attribute>
+		<attribute>
+		    <name>queryName</name>
+		    <required>true</required>
+		    <rtexprvalue>true</rtexprvalue>
+		    <description>【必须】mybatis的对应查询名称</description>
+	   </attribute>
+	   <attribute>
+		    <name>parameters</name>
+		    <required>false</required>
+		    <rtexprvalue>true</rtexprvalue>
+		    <description>【非必须】自定义查询参数。（格式为：参数1:值1;参数2:值2）</description>
+	   </attribute>
+	   <attribute>
+		    <name>mapper</name>
+		    <required>false</required>
+		    <rtexprvalue>true</rtexprvalue>
+		    <description>【非必须】数据字段对应信息，定义数据字段与x/y/group的对应名称。（格式为x:value1;group:group1;y:value2）</description>
+	   </attribute>
+	   <attribute>
+		    <name>hideGroup</name>
+		    <required>false</required>
+		    <rtexprvalue>true</rtexprvalue>
+		    <description>【非必须】隐藏分组设置。（格式为group1名称;group2名称;group3名称）</description>
+	   </attribute>
+	   <attribute>
+		    <name>height</name>
+		    <required>false</required>
+		    <rtexprvalue>true</rtexprvalue>
+		    <description>【非必须】图表高度定义：eg.:300px</description>
+	   </attribute>
+	   <attribute>
+		    <name>option</name>
+		    <required>false</required>
+		    <rtexprvalue>true</rtexprvalue>
+		    <description>
+		    	【非必须】Highcharts的自定义配置项 
+		    	 *****注意：此处的值可以包括字符串、数字、数组等类型。所以如果是字符串的值时，需要加入''符号*****
+		    	 {
+				    title:'', /*报表标题(默认为空)*/
+				    xName:'', /*x轴名称(默认为空)*/
+				    xMin:0,   /*x轴最少值(默认为0)*/
+				    xUnit:'', /*x轴单位(默认为空)*/
+				    xDecimal:0, /*x轴数据精度(默认为不保留小数位){最高只支持4位小数}*/
+				    yName:'', /*y轴名称(默认为空)*/
+				    yMin:0,   /*y轴最少值(默认为0)*/
+				    yUnit:'', /*y轴单位(默认为空)*/
+				    yDecimal:0, /*y轴数据精度(默认为不保留小数位){最高只支持4位小数}*/
+				    legend:true, /*是否显示图例(默认为true)*/
+				    zoomType:'', /*开启哪个轴的放大缩小功能'x'/'y'(默认不开启)*/
+				    doClick:'',  /*传入方法名，可以在图表数据点点击时触发监听事件，附带参数为chart对象，eg: function testload(chart)*/
+				    doLoad:''  /*传入方法名，可以在图表加载之前触发监听事件，附带参数为（数据点名，x轴值，y轴值），eg:function testclick(name,x,y)*/    
+				};
+		    </description>
+	   </attribute>
+	</tag>
+	<tag>
+		<name>time-series-line</name>
+		<tag-class>com.aspire.birp.modules.common.tags.report.HcTimeSeriesLine</tag-class>
+		<body-content>EMPTY</body-content>
+		<attribute>
+			<name>id</name>
+		    <required>true</required>
+		    <rtexprvalue>true</rtexprvalue>
+		    <description>【必须】页面报表的ID值</description>
+		</attribute>
+		<attribute>
+		    <name>queryName</name>
+		    <required>true</required>
+		    <rtexprvalue>true</rtexprvalue>
+		    <description>【必须】mybatis的对应查询名称</description>
+	   </attribute>
+	   <attribute>
+		    <name>parameters</name>
+		    <required>false</required>
+		    <rtexprvalue>true</rtexprvalue>
+		    <description>【非必须】自定义查询参数。（格式为：参数1:值1;参数2:值2）</description>
+	   </attribute>
+	   <attribute>
+		    <name>mapper</name>
+		    <required>false</required>
+		    <rtexprvalue>true</rtexprvalue>
+		    <description>【非必须】数据字段对应信息，定义数据字段与name/value/group的对应名称。（格式为name:act_name;group:group1;value:usr_count）</description>
+	   </attribute>
+	   <attribute>
+		    <name>hideGroup</name>
+		    <required>false</required>
+		    <rtexprvalue>true</rtexprvalue>
+		    <description>【非必须】隐藏分组设置。（格式为group1名称;group2名称;group3名称）</description>
+	   </attribute>
+	   <attribute>
+		    <name>rowsGroup</name>
+		    <required>false</required>
+		    <rtexprvalue>true</rtexprvalue>
+		    <description>【非必须】行转列配置，针对同一行数据不同字段进行分组显示。（格式为field_name1:分组名称1;field_name2:分组名称2）</description>
+	   </attribute>
+	   <attribute>
+		    <name>height</name>
+		    <required>false</required>
+		    <rtexprvalue>true</rtexprvalue>
+		    <description>【非必须】图表高度定义：eg.:300px</description>
+	   </attribute>
+	   <attribute>
+		    <name>option</name>
+		    <required>false</required>
+		    <rtexprvalue>true</rtexprvalue>
+		    <description>
+		    	【非必须】Highcharts的自定义配置项 
+		    	 *****注意：此处的值可以包括字符串、数字、数组等类型。所以如果是字符串的值时，需要加入''符号*****
+		    	 {
+				    title:'', /*报表标题(默认为空)*/
+				    xName:'', /*x轴名称(默认为空)*/
+				    yName:'', /*y轴名称(默认为空)*/
+				    yMin:0,   /*y轴最少值(默认为0)*/
+				    yUnit:'', /*y轴单位(默认为空)*/
+				    yDecimal:0, /*y轴数据精度(默认为不保留小数位){最高只支持4位小数}*/
+				    legend:true, /*是否显示图例(默认为true)*/
+				    minRange:14*24*3600000, /*时序图的x轴间隙时间为多少(默认为14天)，irregular属性为false时不需要定义*/
+				    pointInterval:24*3600*1000, /*时序图每个数据点的间隙时间为多少(默认为1天)，*/
+				    irregular:true, /*时序图数据点是否不连续(默认为不连续数据)，为true时，数据可以为断续数据；为false时，数据只能为连续数据*/
+				    doClick:'',  /*传入方法名，可以在图表数据点点击时触发监听事件，附带参数为chart对象，eg: function testload(chart)*/
+				    doLoad:''  /*传入方法名，可以在图表加载之前触发监听事件，附带参数为（数据点名，x轴值，y轴值），eg:function testclick(name,x,y)*/    
+				};
+		    </description>
+	   </attribute>
+	</tag>
+	<tag>
+		<name>gauge</name>
+		<tag-class>com.aspire.birp.modules.common.tags.report.HcGauge</tag-class>
+		<body-content>EMPTY</body-content>
+		<attribute>
+			<name>id</name>
+		    <required>true</required>
+		    <rtexprvalue>true</rtexprvalue>
+		    <description>【必须】页面报表的ID值</description>
+		</attribute>
+		<attribute>
+		    <name>queryName</name>
+		    <required>true</required>
+		    <rtexprvalue>true</rtexprvalue>
+		    <description>【必须】mybatis的对应查询名称</description>
+	   </attribute>
+	   <attribute>
+		    <name>parameters</name>
+		    <required>false</required>
+		    <rtexprvalue>true</rtexprvalue>
+		    <description>【非必须】自定义查询参数。（格式为：参数1:值1;参数2:值2）</description>
+	   </attribute>
+	   <attribute>
+		    <name>mapper</name>
+		    <required>false</required>
+		    <rtexprvalue>true</rtexprvalue>
+		    <description>【非必须】数据字段对应信息，定义数据字段与value的对应名称。（格式为value:usr_rate）</description>
+	   </attribute>
+	   <attribute>
+		    <name>decimal</name>
+		    <required>false</required>
+		    <rtexprvalue>true</rtexprvalue>
+		    <description>【非必须】数据显示精度，默认为2位小数</description>
+	   </attribute>	 
+	   <attribute>
+		    <name>height</name>
+		    <required>false</required>
+		    <rtexprvalue>true</rtexprvalue>
+		    <description>【非必须】图表高度定义：eg.:300px</description>
+	   </attribute>  
+	   <attribute>
+		    <name>option</name>
+		    <required>false</required>
+		    <rtexprvalue>true</rtexprvalue>
+		    <description>
+		    	【非必须】Highcharts的自定义配置项 
+		    	 *****注意：此处的值可以包括字符串、数字、数组等类型。所以如果是字符串的值时，需要加入''符号*****
+		    	 {
+				    valueName:'数值', /*数据名称(默认为‘数值’)-饼状图、仪表盘特有*/
+				    yUnit:'', /*单位显示(默认为空)*/
+				    gaugeMax:100,  /*仪表盘最大值(默认为100)*/
+				    gaugeMin:0,     /*仪表盘最小值(默认为0)*/
+				    stops:[0.4,0.6,0.8],  /*仪表盘颜色步长设置，输入数组，百分比数据(默认为[0.4,0.6,0.8])*/
+				    doLoad:''  /*传入方法名，可以在图表加载之前触发监听事件，附带参数为（数据点名，x轴值，y轴值），eg:function testclick(name,x,y)*/    
+				};
+		    </description>
+	   </attribute>
+	</tag>
+</taglib>

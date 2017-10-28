@@ -1,0 +1,30 @@
+{
+	"data":{
+		"belong_organization":"兴宁市地方税务局",
+		"list":[
+			{
+				"id":"441481003203",
+				"order":1,
+				"contact_phone":"3215806",
+				"contact_name":"罗爱新",
+				"country_name":"文星村委会"
+			},
+			{
+				"id":"441481003212",
+				"order":2,
+				"contact_phone":"3216729",
+				"contact_name":"吴彦辉",
+				"country_name":"寨仔村委会"
+			},
+			{
+				"id":"441481003200",
+				"order":3,
+				"contact_phone":"3231628",
+				"contact_name":"罗启中",
+				"country_name":"黄岭村委会"
+			}
+		]
+	},
+	"code":0,
+	"msg":"获取信息成功"
+}

@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+	<script type="text/javascript" src="../../js/libs/flexible.js"></script>
+	<title>广东扶贫</title>
+	<link type="text/css" rel="stylesheet" href="../../css/all.css">
+</head>
+
+<body>
+
+<div id="app" class="p-wrap p-family-file-track">
+	<app-header ref="appHeader" title="脱贫轨迹" show-back="true"></app-header>
+	<section class="month-trend clearfix" v-cloak>
+		<header class="p-title">综合得分月趋势</header>
+		<div class="score-chart">
+			<score-chart :score="track.total_score"></score-chart>
+		</div>
+		<ul class="trend-list">
+			<li :class="['trend-item', { 'reach': score.has_achieved, 'no-reach': !score.has_achieved }]"
+				v-for="(score, index) in track.scores">
+				<div class="trend-index">0{{index+1}}</div>
+				<dl class="trend-content">
+					<dt>{{score.index_name}}</dt>
+					<dd>
+						<div class="reality">
+							<h3>{{score.value_actual}}</h3>
+							<p class="target-name">实际</p>
+						</div>
+						<div class="line"></div>
+						<div class="target">
+							<h3>{{score.value_target}}</h3>
+							<p class="target-name">目标</p>
+						</div>
+						<p class="weight">权重{{score.weight}}%</p>
+					</dd>
+				</dl>
+				<div class="icon-target">
+					<span class="target-txt">{{score.has_achieved?"达标":"未达标"}}</span>
+				</div>
+			</li>
+		</ul>
+	</section>
+</div>
+
+<script type="text/javascript" src="../../js/libs/vue.min.js"></script>
+<script type="text/javascript" src="../../js/libs/vue-resource.min.js"></script>
+<script type="text/javascript" src="../../js/libs/d3.v3.min.js"></script>
+
+<script type="text/javascript" src="../../js/urls_mock.js"></script>
+<script type="text/javascript" src="../../js/common.js"></script>
+<script type="text/javascript" src="../../js/components.js"></script>
+
+<script type="text/javascript" src="../../js/pages/family_file/eliminate_path.js"></script>
+</body>
+</html>

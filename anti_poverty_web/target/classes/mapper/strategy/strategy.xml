@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+        
+<mapper namespace="com.aspire.birp.modules.antiPoverty.dao.StrategyDao">
+
+	<!-- 出列村数 -->
+	<select id="queryCount"  parameterType="hashmap"
+       resultType="hashmap">
+ 		SELECT R.PAC PAC,R.OUTLIST_COUNTRY_CNT SUCCESS_COUNTRY_A,
+ 		CASE WHEN R.FURTER_POOR_COUNTRY_CNT !=0 THEN TRUNC((R.OUTLIST_COUNTRY_CNT/R.FURTER_POOR_COUNTRY_CNT)*100,1) ELSE 0 END SUCCESS_COUNTRY_R,
+		R.AID_POOR_FAM SUCCESS_FAMILY_A,
+		CASE WHEN R.POOR_FAM !=0 THEN TRUNC((R.AID_POOR_FAM/R.POOR_FAM)*100,1) ELSE 0 END SUCCESS_FAMILY_R,
+		R.AID_POOR_POP SUCCESS_PEOPLE_A,
+		CASE WHEN R.POOR_POP !=0 THEN TRUNC((R.AID_POOR_POP/R.POOR_POP)*100,1) ELSE 0 END SUCCESS_PEOPLE_R,
+		R.HELP_UNIT_CNT AMOUNT_ORG,
+		R.HELP_PERSON_CNT AMOUNT_RESPONSIBLE,
+		R.HELP_CADRE_CNT AMOUNT_LEADER,
+		R.HELP_VISITS_CNT AMOUNT_INTERVIEW
+		FROM R_MONITOR_HOME_PAGE_D R
+		WHERE R.PAC=#{PAC}
+		<if test=" '' != scope and null != scope  ">
+			AND R.AREA_TYPE=#{scope} 
+		</if>
+		AND R.STAT_TIME=(SELECT "MAX"(STAT_TIME) FROM R_MONITOR_HOME_PAGE_D)
+	</select> 
+	<!-- 地图出列村数 -->
+	<select id="queryMapCun"  parameterType="hashmap"
+       resultType="hashmap">
+ 		SELECT  DL1.LSB_PAC PAC,DL2.LSB_PAC PPAC,
+ 		R.FURTER_POOR_COUNTRY_CNT OUTLIST_COUNTRY_CNT,
+ 		CASE WHEN R.FURTER_POOR_COUNTRY_CNT !=0 THEN TRUNC((R.OUTLIST_COUNTRY_CNT/R.FURTER_POOR_COUNTRY_CNT)*100,1) ELSE 0 END OUTLIST_COUNTRY_CNT_R,
+		R.POOR_FAM AID_POOR_FAM,
+ 		CASE WHEN POOR_FAM !=0 THEN TRUNC((R.AID_POOR_FAM/R.POOR_FAM)*100,1) ELSE 0 END AID_POOR_FAM_R,
+ 		R.POOR_POP AID_POOR_POP,
+ 		CASE WHEN POOR_POP !=0 THEN TRUNC((R.AID_POOR_POP/R.POOR_POP)*100,1) ELSE 0 END AID_POOR_POP_R
+		FROM R_MONITOR_HOME_PAGE_D R,DIM_LRB_PAC_MAP DL1,DIM_LRB_PAC_MAP DL2
+		WHERE 
+		R.PAC=DL1.PAC AND R.PPAC = DL2.PAC 
+		<if test=" '' != scope and null != scope  ">
+			AND R.AREA_TYPE=#{scope} 
+		</if>
+		AND R.STAT_TIME=(SELECT "MAX"(STAT_TIME) FROM R_MONITOR_HOME_PAGE_D)
+	</select>
+	<!-- 劳动能力人均可支配 -->
+ 	<select id="queryDis" parameterType="hashmap" resultType="hashmap">
+ 		SELECT 
+ 		TRUNC(SUM(DPI)) CHART_CONFIG_LABOR
+		FROM   R_ANALY_INCOME_D R
+		WHERE  R.PAC=#{PAC}
+		<if test=" '' != scope and null != scope  ">
+			AND R.AREA_TYPE=#{scope} 
+		</if>
+			AND R.POOR_PROPERTY=0
+			AND R.YEAR_TAG=(SELECT "MAX"(YEAR_TAG) FROM R_ANALY_INCOME_D) 
+ 	</select> 
+ 	<!-- 兜底 -->
+ 	<select id="queryBottom" parameterType="hashmap" resultType="hashmap">
+ 		SELECT 
+ 		CASE WHEN (R.BOTTOM_POP+R.DIFF_POP) !=0 THEN TRUNC((R.BOTTOM_POP/(R.BOTTOM_POP+R.DIFF_POP))*100,1) ELSE 0 END CHART_CONFIG_SOCIETY
+		FROM   R_ANALY_BOTTOM_CALC_D R
+		WHERE  R.PAC=#{PAC} AND BOTTOM_TYPE=0
+		<if test=" '' != scope and null != scope  ">
+			AND R.AREA_TYPE=#{scope} 
+		</if>
+		AND R.STAT_TIME=(SELECT "MAX"(STAT_TIME) FROM R_ANALY_BOTTOM_CALC_D)
+ 	</select> 	
+ 	<!-- 三保障-->
+ 	<!-- 义务教育 -->
+ 	<select id="queryYwjy" parameterType="hashmap" resultType="hashmap">
+ 		SELECT 
+ 		CASE WHEN SCHOOL_AGE_POP !=0 THEN TRUNC((SCHOOL_REAL_POP/SCHOOL_AGE_POP)*100,1) ELSE 0 END  YWJY
+ 		FROM R_ANALY_3ENSURE_EDUCATION_D 
+ 		WHERE PAC=#{PAC}
+ 		<if test=" '' != scope and null != scope  ">
+			AND AREA_TYPE=#{scope} 
+		</if>
+		AND STAT_TIME=(SELECT "MAX"(STAT_TIME) FROM R_ANALY_3ENSURE_EDUCATION_D)
+ 	</select>
+ 	<!-- 基本医疗 -->
+ 	<select id="queryJbyl" parameterType="hashmap" resultType="hashmap">
+ 		SELECT 
+ 		CASE WHEN POOR_POP !=0 THEN TRUNC((MEDICAL_REAL_POP/POOR_POP)*100,1) ELSE 0 END JBYL
+ 		FROM R_ANALY_3ENSURE_MEDICAL_D 
+ 		WHERE PAC=#{PAC}
+ 		<if test=" '' != scope and null != scope  ">
+			AND AREA_TYPE=#{scope} 
+		</if>
+		AND STAT_TIME=(SELECT "MAX"(STAT_TIME) FROM R_ANALY_3ENSURE_MEDICAL_D)
+ 	</select> 
+ 	<!-- 住房安全 -->
+ 	<select id="queryZfaq" parameterType="hashmap" resultType="hashmap">
+ 		SELECT 
+ 		CASE WHEN HOUSE_DANGER_FAM !=0 THEN TRUNC((REMAKE_FAM/HOUSE_DANGER_FAM)*100,1) ELSE 0 END ZFAQ
+ 		FROM R_ANALY_3ENSURE_HOUSE_D 
+ 		WHERE PAC=#{PAC}
+ 		<if test=" '' != scope and null != scope  ">
+			AND AREA_TYPE=#{scope} 
+		</if>
+		AND STAT_TIME=(SELECT "MAX"(STAT_TIME) FROM R_ANALY_3ENSURE_HOUSE_D)
+ 	</select>  
+ 	<!-- 一相当 -->
+ 	<select id="queryYxd" parameterType="hashmap" resultType="hashmap">
+		SELECT  
+		CASE WHEN FURTER_POOR_COUNTRY_CNT !=0 THEN TRUNC((ROAD_COUNTRY_CNT/FURTER_POOR_COUNTRY_CNT)*100,1) ELSE 0 END DLYH,
+		CASE WHEN FURTER_POOR_COUNTRY_CNT !=0 THEN TRUNC((WATER_COUNTRY_CNT/FURTER_POOR_COUNTRY_CNT)*100,1) ELSE 0 END AQYS,
+		CASE WHEN FURTER_POOR_COUNTRY_CNT !=0 THEN TRUNC((HEALTH_COUNTRY_CNT/FURTER_POOR_COUNTRY_CNT)*100,1) ELSE 0 END WSZ,
+		CASE WHEN FURTER_POOR_COUNTRY_CNT !=0 THEN TRUNC((ELECTRIFY_COUNTRY_CNT/FURTER_POOR_COUNTRY_CNT)*100,1) ELSE 0 END DWGZ,
+		CASE WHEN FURTER_POOR_COUNTRY_CNT !=0 THEN TRUNC((TV_COUNTRY_CNT/FURTER_POOR_COUNTRY_CNT)*100,1) ELSE 0 END GBDS,
+		CASE WHEN FURTER_POOR_COUNTRY_CNT !=0 THEN TRUNC((NET_COUNTRY_CNT/FURTER_POOR_COUNTRY_CNT)*100,1) ELSE 0 END KDWL
+		FROM R_ANALY_1MATCH_CALC_D
+		WHERE PAC=#{PAC}
+		<if test=" '' != scope and null != scope  ">
+			AND AREA_TYPE=#{scope} 
+		</if>
+		AND STAT_TIME=(SELECT "MAX"(STAT_TIME) FROM R_ANALY_1MATCH_CALC_D)
+ 	</select>
+ 	<!-- 贫困分析 -->
+ 	<select id="queryPkfx" parameterType="hashmap" resultType="hashmap">
+ 		SELECT POOR_MAIN_REASON_NAME S_NAME,FAM S_VALUE, HU.CON S_COUNT 
+		FROM (SELECT SUM(FAM) CON FROM R_ANALY_POOR_MAIN_REASON_D WHERE PAC=#{PAC} AND AREA_TYPE=#{scope}) HU,
+		R_ANALY_POOR_MAIN_REASON_D 
+ 		WHERE PAC=#{PAC}
+ 		<if test=" '' != scope and null != scope  ">
+			AND AREA_TYPE=#{scope} 
+		</if>
+		AND STAT_TIME=(SELECT "MAX"(STAT_TIME) FROM R_ANALY_POOR_MAIN_REASON_D)
+		ORDER BY FAM DESC
+ 	</select> 
+ 	
+ 	<!-- 项目资金 总数 -->
+ 	<select id="queryXmzjCount" parameterType="hashmap" resultType="hashmap">
+ 	SELECT 
+    TRUNC(SUM(PROJECT_CAPITAL)/10000,2) S_INVESTED,
+    SUM(PROJECT_CAPITAL) S_COUNT,
+    SUM(PROJECT_CNT) S_PROJECTS,
+    CASE WHEN SUM(PROJECT_CNT) !=0 THEN TRUNC((SUM(PROJECT_COMPLETE)/SUM(PROJECT_CNT))*100,1) ELSE 0 END S_RATE_COMPLETED
+    FROM R_MONITOR_PROJECT_CAPITAL_D GROUP BY PAC,STAT_TIME,AREA_TYPE HAVING PAC=#{PAC} AND AREA_TYPE=#{scope} 
+    AND STAT_TIME=(SELECT "MAX"(STAT_TIME) FROM R_MONITOR_PROJECT_CAPITAL_D)
+ 	</select>
+ 	<!-- 项目资金统计图 -->
+ 	<select id="queryXmzj" parameterType="hashmap" resultType="hashmap">
+ 		SELECT 
+       	MPC.PROJECT_CAPITAL ZJ,
+ 		MPC.PROJECT_CNT GS,
+		CASE WHEN MPC.PROJECT_CNT !=0 THEN TRUNC((MPC.PROJECT_COMPLETE/MPC.PROJECT_CNT)*100,1) ELSE 0 END WCL,
+		MPC.PROJECT_TYPE S_NAME
+		FROM R_MONITOR_PROJECT_CAPITAL_D MPC
+		WHERE MPC.PAC=#{PAC}
+		<if test=" '' != scope and null != scope  ">
+			AND MPC.AREA_TYPE=#{scope} 
+		</if>
+		AND MPC.STAT_TIME=(SELECT "MAX"(STAT_TIME) FROM R_MONITOR_PROJECT_CAPITAL_D)
+ 	</select>
+ 	
+ 	<!-- 预警监控-->
+ 	<select id="queryYjjk" parameterType="hashmap" resultType="hashmap">
+ 		SELECT CASE WHEN SUM(ALARM_CNT) IS NULL THEN 0 ELSE SUM(ALARM_CNT) END FAMILY, '0' PROJECT,'0' COUNTRY,'0' RESPONSIBLE
+ 		FROM R_ANALY_ALARM_CALC_D 
+ 		WHERE PAC=#{PAC}
+ 		<if test=" '' != scope and null != scope  ">
+			AND AREA_TYPE=#{scope} 
+		</if>
+		AND STAT_TIME=(SELECT "MAX"(STAT_TIME) FROM R_ANALY_ALARM_CALC_D)
+ 	</select>
+ 	
+</mapper>

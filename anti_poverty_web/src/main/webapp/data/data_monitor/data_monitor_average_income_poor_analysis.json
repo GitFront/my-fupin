@@ -1,0 +1,1052 @@
+{
+	"code": 0,
+	"msg": "获取信息成功",
+	"data": {
+		"chart_config_average_disposable_income": {
+			"convert_method": "genChartBarsConfig",
+			"config": [
+				{
+					"name": 201612,
+					"group": "元",
+					"value": 260930989.45
+				}
+			]
+		},
+		"chart_config_income_composition": {
+			"convert_method": "genChartPieConfig",
+			"config": [
+				{
+					"name": "工资性收入",
+					"value": 118655.05
+				},
+				{
+					"name": "生产经营性收入",
+					"value": 165186952.77
+				},
+				{
+					"name": "转移性收入",
+					"value": 411526358.88
+				}
+			]
+		},
+		"chart_config_income_distribution": {
+			"convert_method": "genChartPieConfig",
+			"config": [
+				{
+					"name": "0-6433",
+					"value": 269285
+				},
+				{
+					"name": "6433-10000",
+					"value": 26092
+				},
+				{
+					"name": "10000-15000",
+					"value": 6205
+				},
+				{
+					"name": ">15000",
+					"value": 1127
+				}
+			]
+		},
+		"chart_config_payment_composition": {
+			"convert_method": "genChartPieConfig",
+			"config": [
+				{
+					"name": "生产经营性支出",
+					"value": 18156.18
+				},
+				{
+					"name": "转移性支出",
+					"value": 17570.89
+				}
+			]
+		},
+		"table": {
+			"title": "统计表",
+			"export_url": "/anti_poverty_web/antiPoverty/dataMonitor/beforeExport.do?export_task_id=AverageIncomePoorAnalysis",
+			"head": [
+				[
+					{
+						"rowspan": 2,
+						"content": "序号"
+					},
+					{
+						"rowspan": 2,
+						"content": "行政区域"
+					},
+					{
+						"rowspan": 2,
+						"content": "总收入<br>(万元)"
+					},
+					{
+						"colspan": 2,
+						"content": "工资性收入"
+					},
+					{
+						"colspan": 2,
+						"content": "生产经营性收入"
+					},
+					{
+						"colspan": 2,
+						"content": "财产性收入"
+					},
+					{
+						"colspan": 2,
+						"content": "转移性收入"
+					},
+					{
+						"rowspan": 2,
+						"content": "总支出<br>(万元)"
+					},
+					{
+						"colspan": 2,
+						"content": "生产经营性支出"
+					},
+					{
+						"colspan": 2,
+						"content": "转移性支出"
+					},
+					{
+						"rowspan": 2,
+						"content": "未偿还<br>借(贷)款"
+					},
+					{
+						"rowspan": 2,
+						"content": "可支配收入(万元)"
+					},
+					{
+						"rowspan": 2,
+						"content": "人均可支配收入(元)"
+					}
+				],
+				[
+					{
+						"content": "金额"
+					},
+					{
+						"content": "比例"
+					},
+					{
+						"content": "金额"
+					},
+					{
+						"content": "比例"
+					},
+					{
+						"content": "金额"
+					},
+					{
+						"content": "比例"
+					},
+					{
+						"content": "金额"
+					},
+					{
+						"content": "比例"
+					},
+					{
+						"content": "金额"
+					},
+					{
+						"content": "比例"
+					},
+					{
+						"content": "金额"
+					},
+					{
+						"content": "比例"
+					}
+				]
+			],
+			"body": [
+				[
+					{
+						"content": "-"
+					},
+					{
+						"content": "合计"
+					},
+					{
+						"content": 202199.3
+					},
+					{
+						"content": 115314196.44
+					},
+					{
+						"content": "5.7%"
+					},
+					{
+						"content": 153599113.96
+					},
+					{
+						"content": "7.59%"
+					},
+					{
+						"content": 5103519.67
+					},
+					{
+						"content": ".25%"
+					},
+					{
+						"content": 226221766.5
+					},
+					{
+						"content": "11.18%"
+					},
+					{
+						"content": 30204.99
+					},
+					{
+						"content": 88770962.39
+					},
+					{
+						"content": "29.38%"
+					},
+					{
+						"content": 46094941.03
+					},
+					{
+						"content": "15.26%"
+					},
+					{
+						"content": 158700.2
+					},
+					{
+						"content": 171994.31
+					},
+					{
+						"content": 3343.54
+					}
+				],
+				[
+					{
+						"content": 1
+					},
+					{
+						"content": "河源市"
+					},
+					{
+						"content": 22582.01
+					},
+					{
+						"content": 11305119.27
+					},
+					{
+						"content": "5%"
+					},
+					{
+						"content": 26424732.65
+					},
+					{
+						"content": "11.7%"
+					},
+					{
+						"content": 1141262.91
+					},
+					{
+						"content": ".5%"
+					},
+					{
+						"content": 29783865.8
+					},
+					{
+						"content": "13.18%"
+					},
+					{
+						"content": 3770.36
+					},
+					{
+						"content": 15507195.04
+					},
+					{
+						"content": "41.12%"
+					},
+					{
+						"content": 4361544.91
+					},
+					{
+						"content": "11.56%"
+					},
+					{
+						"content": 0
+					},
+					{
+						"content": 18811.65
+					},
+					{
+						"content": 3439.62
+					}
+				],
+				[
+					{
+						"content": 2
+					},
+					{
+						"content": "潮州市"
+					},
+					{
+						"content": 9067.97
+					},
+					{
+						"content": 2202522.5
+					},
+					{
+						"content": "2.42%"
+					},
+					{
+						"content": 1893809.5
+					},
+					{
+						"content": "2.08%"
+					},
+					{
+						"content": 34001.5
+					},
+					{
+						"content": ".03%"
+					},
+					{
+						"content": 5799485.61
+					},
+					{
+						"content": "6.39%"
+					},
+					{
+						"content": 4459.42
+					},
+					{
+						"content": 181750
+					},
+					{
+						"content": ".4%"
+					},
+					{
+						"content": 1031115.33
+					},
+					{
+						"content": "2.31%"
+					},
+					{
+						"content": 0
+					},
+					{
+						"content": 4608.55
+					},
+					{
+						"content": 2750.06
+					}
+				],
+				[
+					{
+						"content": 3
+					},
+					{
+						"content": "梅州市"
+					},
+					{
+						"content": 24028.14
+					},
+					{
+						"content": 17733913.93
+					},
+					{
+						"content": "7.38%"
+					},
+					{
+						"content": 20795617.98
+					},
+					{
+						"content": "8.65%"
+					},
+					{
+						"content": 1955017.07
+					},
+					{
+						"content": ".81%"
+					},
+					{
+						"content": 33244639.35
+					},
+					{
+						"content": "13.83%"
+					},
+					{
+						"content": 3716.31
+					},
+					{
+						"content": 9694778.15
+					},
+					{
+						"content": "26.08%"
+					},
+					{
+						"content": 7676109.2
+					},
+					{
+						"content": "20.65%"
+					},
+					{
+						"content": 0
+					},
+					{
+						"content": 20311.82
+					},
+					{
+						"content": 3401.91
+					}
+				],
+				[
+					{
+						"content": 4
+					},
+					{
+						"content": "汕尾市"
+					},
+					{
+						"content": 8603.68
+					},
+					{
+						"content": 11587617.71
+					},
+					{
+						"content": "13.46%"
+					},
+					{
+						"content": 15588538
+					},
+					{
+						"content": "18.11%"
+					},
+					{
+						"content": 80000
+					},
+					{
+						"content": ".09%"
+					},
+					{
+						"content": 8552039.21
+					},
+					{
+						"content": "9.93%"
+					},
+					{
+						"content": 794.41
+					},
+					{
+						"content": 1046653.3
+					},
+					{
+						"content": "13.17%"
+					},
+					{
+						"content": 3941249.65
+					},
+					{
+						"content": "49.61%"
+					},
+					{
+						"content": 0
+					},
+					{
+						"content": 7809.26
+					},
+					{
+						"content": 2775.44
+					}
+				],
+				[
+					{
+						"content": 5
+					},
+					{
+						"content": "惠州市"
+					},
+					{
+						"content": 5302.78
+					},
+					{
+						"content": 962223.25
+					},
+					{
+						"content": "1.81%"
+					},
+					{
+						"content": 1167782.34
+					},
+					{
+						"content": "2.2%"
+					},
+					{
+						"content": 145903.93
+					},
+					{
+						"content": ".27%"
+					},
+					{
+						"content": 4612350.69
+					},
+					{
+						"content": "8.69%"
+					},
+					{
+						"content": 400.37
+					},
+					{
+						"content": 507554.5
+					},
+					{
+						"content": "12.67%"
+					},
+					{
+						"content": 329431.11
+					},
+					{
+						"content": "8.22%"
+					},
+					{
+						"content": 30000
+					},
+					{
+						"content": 4902.41
+					},
+					{
+						"content": 5239.85
+					}
+				],
+				[
+					{
+						"content": 6
+					},
+					{
+						"content": "揭阳市"
+					},
+					{
+						"content": 6265.8
+					},
+					{
+						"content": 2412867.8
+					},
+					{
+						"content": "3.85%"
+					},
+					{
+						"content": 2005621.61
+					},
+					{
+						"content": "3.2%"
+					},
+					{
+						"content": 32719.03
+					},
+					{
+						"content": ".05%"
+					},
+					{
+						"content": 6310237.36
+					},
+					{
+						"content": "10.07%"
+					},
+					{
+						"content": 229.66
+					},
+					{
+						"content": 47490.4
+					},
+					{
+						"content": "2.06%"
+					},
+					{
+						"content": 244767.46
+					},
+					{
+						"content": "10.65%"
+					},
+					{
+						"content": 0
+					},
+					{
+						"content": 6036.13
+					},
+					{
+						"content": 3508.15
+					}
+				],
+				[
+					{
+						"content": 7
+					},
+					{
+						"content": "阳江市"
+					},
+					{
+						"content": 11189.55
+					},
+					{
+						"content": 3290100.02
+					},
+					{
+						"content": "2.94%"
+					},
+					{
+						"content": 8031390
+					},
+					{
+						"content": "7.17%"
+					},
+					{
+						"content": 82500
+					},
+					{
+						"content": ".07%"
+					},
+					{
+						"content": 11165695.28
+					},
+					{
+						"content": "9.97%"
+					},
+					{
+						"content": 3612.92
+					},
+					{
+						"content": 24780636
+					},
+					{
+						"content": "68.58%"
+					},
+					{
+						"content": 2252144.58
+					},
+					{
+						"content": "6.23%"
+					},
+					{
+						"content": 0
+					},
+					{
+						"content": 7576.62
+					},
+					{
+						"content": 2425.68
+					}
+				],
+				[
+					{
+						"content": 8
+					},
+					{
+						"content": "茂名市"
+					},
+					{
+						"content": 10502.99
+					},
+					{
+						"content": 2373130.08
+					},
+					{
+						"content": "2.25%"
+					},
+					{
+						"content": 2168463.99
+					},
+					{
+						"content": "2.06%"
+					},
+					{
+						"content": 5500
+					},
+					{
+						"content": "0%"
+					},
+					{
+						"content": 10497503.23
+					},
+					{
+						"content": "9.99%"
+					},
+					{
+						"content": 1000.12
+					},
+					{
+						"content": 620574.15
+					},
+					{
+						"content": "6.2%"
+					},
+					{
+						"content": 2306338.03
+					},
+					{
+						"content": "23.06%"
+					},
+					{
+						"content": 0
+					},
+					{
+						"content": 9502.86
+					},
+					{
+						"content": 2581.95
+					}
+				],
+				[
+					{
+						"content": 9
+					},
+					{
+						"content": "湛江市"
+					},
+					{
+						"content": 23311.04
+					},
+					{
+						"content": 8056291.63
+					},
+					{
+						"content": "3.45%"
+					},
+					{
+						"content": 15830754.56
+					},
+					{
+						"content": "6.79%"
+					},
+					{
+						"content": 649599
+					},
+					{
+						"content": ".27%"
+					},
+					{
+						"content": 27386677.88
+					},
+					{
+						"content": "11.74%"
+					},
+					{
+						"content": 2619.94
+					},
+					{
+						"content": 10408222.1
+					},
+					{
+						"content": "39.72%"
+					},
+					{
+						"content": 4005339.22
+					},
+					{
+						"content": "15.28%"
+					},
+					{
+						"content": 0.2
+					},
+					{
+						"content": 20691.09
+					},
+					{
+						"content": 3315.88
+					}
+				],
+				[
+					{
+						"content": 10
+					},
+					{
+						"content": "清远市"
+					},
+					{
+						"content": 10875.06
+					},
+					{
+						"content": 8733289.29
+					},
+					{
+						"content": "8.03%"
+					},
+					{
+						"content": 5117135.5
+					},
+					{
+						"content": "4.7%"
+					},
+					{
+						"content": 288850
+					},
+					{
+						"content": ".26%"
+					},
+					{
+						"content": 12833233.5
+					},
+					{
+						"content": "11.8%"
+					},
+					{
+						"content": 891.71
+					},
+					{
+						"content": 1062340.12
+					},
+					{
+						"content": "11.91%"
+					},
+					{
+						"content": 1928839.46
+					},
+					{
+						"content": "21.63%"
+					},
+					{
+						"content": 0
+					},
+					{
+						"content": 9983.34
+					},
+					{
+						"content": 3240.81
+					}
+				],
+				[
+					{
+						"content": 11
+					},
+					{
+						"content": "肇庆市"
+					},
+					{
+						"content": 11615.25
+					},
+					{
+						"content": 4540839.88
+					},
+					{
+						"content": "3.9%"
+					},
+					{
+						"content": 4933364.68
+					},
+					{
+						"content": "4.24%"
+					},
+					{
+						"content": 125992.93
+					},
+					{
+						"content": ".1%"
+					},
+					{
+						"content": 16393822.71
+					},
+					{
+						"content": "14.11%"
+					},
+					{
+						"content": 1065.21
+					},
+					{
+						"content": 2590455.1
+					},
+					{
+						"content": "24.31%"
+					},
+					{
+						"content": 4184000.79
+					},
+					{
+						"content": "39.27%"
+					},
+					{
+						"content": 0
+					},
+					{
+						"content": 10550.03
+					},
+					{
+						"content": 3109.9
+					}
+				],
+				[
+					{
+						"content": 12
+					},
+					{
+						"content": "韶关市"
+					},
+					{
+						"content": 23943.82
+					},
+					{
+						"content": 25841705.87
+					},
+					{
+						"content": "10.79%"
+					},
+					{
+						"content": 31494249.7
+					},
+					{
+						"content": "13.15%"
+					},
+					{
+						"content": 267609.3
+					},
+					{
+						"content": ".11%"
+					},
+					{
+						"content": 30671384.44
+					},
+					{
+						"content": "12.8%"
+					},
+					{
+						"content": 3556.29
+					},
+					{
+						"content": 11921468.11
+					},
+					{
+						"content": "33.52%"
+					},
+					{
+						"content": 6153164.14
+					},
+					{
+						"content": "17.3%"
+					},
+					{
+						"content": 700
+					},
+					{
+						"content": 20387.52
+					},
+					{
+						"content": 4275.36
+					}
+				],
+				[
+					{
+						"content": 13
+					},
+					{
+						"content": "云浮市"
+					},
+					{
+						"content": 29436.51
+					},
+					{
+						"content": 13516948.98
+					},
+					{
+						"content": "4.59%"
+					},
+					{
+						"content": 16988047.45
+					},
+					{
+						"content": "5.77%"
+					},
+					{
+						"content": 146184
+					},
+					{
+						"content": ".04%"
+					},
+					{
+						"content": 24406593.86
+					},
+					{
+						"content": "8.29%"
+					},
+					{
+						"content": 3853.12
+					},
+					{
+						"content": 9394290.42
+					},
+					{
+						"content": "24.38%"
+					},
+					{
+						"content": 7122530.15
+					},
+					{
+						"content": "18.48%"
+					},
+					{
+						"content": 128000
+					},
+					{
+						"content": 25583.38
+					},
+					{
+						"content": 3551.52
+					}
+				],
+				[
+					{
+						"content": 14
+					},
+					{
+						"content": "汕头市"
+					},
+					{
+						"content": 5474.65
+					},
+					{
+						"content": 2757626.23
+					},
+					{
+						"content": "5.03%"
+					},
+					{
+						"content": 1159606
+					},
+					{
+						"content": "2.11%"
+					},
+					{
+						"content": 148380
+					},
+					{
+						"content": ".27%"
+					},
+					{
+						"content": 4564237.58
+					},
+					{
+						"content": "8.33%"
+					},
+					{
+						"content": 235.07
+					},
+					{
+						"content": 1007555
+					},
+					{
+						"content": "42.86%"
+					},
+					{
+						"content": 558367
+					},
+					{
+						"content": "23.75%"
+					},
+					{
+						"content": 0
+					},
+					{
+						"content": 5239.57
+					},
+					{
+						"content": 3835.14
+					}
+				]
+			]
+		}
+	}
+}

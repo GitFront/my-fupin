@@ -1,0 +1,1005 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+        
+<mapper namespace="com.aspire.birp.modules.antiPoverty.dao.PoorResultDao">
+
+    <sql id="dim_area_sql">
+		INNER JOIN
+		(SELECT 
+		  PAC,
+		  SORT
+		  FROM
+		  DIM_AREA_INFO
+		  WHERE 1=1
+		  <include refid="p_area_sql"/>
+		  ) B ON(A.S_ID=B.PAC)
+		ORDER BY B.SORT 
+	</sql>
+	
+	<sql id="p_area_sql">
+		 <if test=" '' != level and null != level and 'province' == level  ">
+				AND PPAC = #{id}
+			</if>
+			
+			<if test=" '' != level and null != level and 'city' == level  ">
+				AND PPAC = #{id}
+			</if>
+			
+			<if test=" '' != level and null != level and 'county' == level  ">
+				AND PPAC = #{id} 
+			</if>
+			
+			<if test=" '' != level and null != level and 'town' == level  ">
+				AND PPAC = #{id} 
+			</if>
+			
+			<if test=" '' != level and null != level and 'country' == level  ">
+				AND PAC = #{id}
+			</if>
+	</sql>
+	
+	<!-- detail_area_sql  -->
+	<sql id="detail_area_sql">
+		
+			<if test=" '' != level and null != level and 'city' == level  ">
+				CITY_PAC S_ID, CITY_NAME A2,
+			</if>
+			
+			<if test=" '' != level and null != level and 'county' == level  ">
+				COUNTY_PAC S_ID,COUNTY_NAME A2,
+			</if>
+			
+			<if test=" '' != level and null != level and 'town' == level  ">
+				 TOWN_PAC S_ID ,TOWN_NAME A2,
+			</if>
+			
+			<if test=" '' != level and null != level and 'country' == level  ">
+				COUNTRY_PAC S_ID ,COUNTRY_NAME  A2,
+			</if>
+	</sql>
+ 
+	
+	
+	<!-- 扶贫对象变动排序详细#    -->
+	<select id="querySortDetail"  parameterType="hashmap" resultType="hashmap">
+		SELECT  t.S_ID,t.A2,t.A3,t.A4,t.A5,t.A6,t.A7,t.A8,
+		CASE WHEN t.A5=0 THEN '0' 
+		ELSE TRUNC (t.A7 / t.A5 * 100,2) || '%' END A9,
+		CASE WHEN t.A6=0 THEN '0' 
+		ELSE TRUNC (t.A8 / t.A6 * 100,2) || '%' END A10,
+		A11,A12,
+		CASE WHEN t.B1=0 THEN '0' 
+		ELSE TRUNC (t.A11 / t.B1 * 100,2) || '%' END A13,
+		CASE WHEN t.B2=0 THEN '0' 
+		ELSE TRUNC (t.A12 / t.B2 * 100,2) || '%' END A14
+		FROM (SELECT
+		<include refid="detail_area_sql"/>
+		SUM(CASE WHEN IS_CURRENT=1 THEN 1 ELSE 0 END) A3,
+		SUM(CASE WHEN IS_CURRENT=1 THEN POP_NUMBER ELSE 0 END) A4,
+		SUM(CASE WHEN IS_CURRENT=1 AND PLAN_OUT_DATE=#{year} THEN 1 ELSE 0 END) A5,
+		SUM(CASE WHEN IS_CURRENT=1 AND PLAN_OUT_DATE=#{year} THEN POP_NUMBER ELSE 0 END) A6,
+		SUM(CASE WHEN IS_CURRENT=1 AND REACH_YEAR=#{year} THEN 1 ELSE 0 END) A7,
+		SUM(CASE WHEN IS_CURRENT=1 AND REACH_YEAR=#{year} THEN POP_NUMBER ELSE 0 END) A8,
+		SUM(CASE WHEN IS_OUT='1' THEN 1 ELSE 0 END) A11,
+		SUM(CASE WHEN IS_OUT='1' THEN POP_NUMBER ELSE 0 END) A12,
+		COUNT(FAM_ID) B1,
+		SUM(POP_NUMBER) B2
+		FROM (SELECT * from
+		R_DW_POOROBJ_FAM_Y
+		<where>
+			<include refid="stat_year_sql"/>
+			<include refid="year_sql"/>
+			<include refid="level_sql"/>
+		</where>) t1
+				INNER JOIN (
+				 select
+				 COUNTRY_ID 
+				 from DIM_HELP_AREA_MAP  
+				 WHERE help_p_pac=#{helppac} 
+				 ) t2 ON (t1.country_pac=t2.COUNTRY_ID)	
+		GROUP BY  <include refid="count_group_by_sql"/>) t
+	</select>
+	
+		
+	
+	<!-- 排序列表 -->
+	<select id="queryPoorResultSort"  parameterType="hashmap" resultType="hashmap">
+
+			SELECT * FROM
+			(
+			SELECT A1.A2,A1.S_ID,
+			<choose>
+				<when test="1 == taxis_indexes">
+					A1.A3 || '%' A3
+				</when>
+				<otherwise>A1.A3</otherwise>
+			</choose>
+			,ROWNUM RM
+			FROM
+			(			
+			SELECT
+			<include refid="sort_area_sql"/>
+			<if test=" '' != taxis_indexes and null != taxis_indexes">
+					<if test="1 == taxis_indexes">
+					CASE WHEN SUM(POP_NUMBER)=0 THEN '0.00' ELSE 
+					TO_CHAR(TRUNC(SUM(CASE WHEN IS_OUT='1' THEN POP_NUMBER ELSE 0 END)/SUM(POP_NUMBER)*100,2),'9999990.00')  END A3</if>
+					<if test="2 == taxis_indexes">SUM(CASE WHEN IS_OUT='1' THEN POP_NUMBER ELSE 0 END) A3</if>
+					<if test="3 == taxis_indexes">SUM(CASE WHEN IS_CURRENT=1 AND PLAN_OUT_DATE=#{year} THEN POP_NUMBER ELSE 0 END) A3</if>
+					<if test="4 == taxis_indexes">SUM(CASE WHEN IS_OUT='1' AND OUT_DATE=#{year} THEN POP_NUMBER ELSE 0 END) A3</if>
+					<if test="5 == taxis_indexes">SUM(CASE WHEN IS_CURRENT=1 AND REACH_YEAR=#{year} THEN POP_NUMBER ELSE 0 END) A3</if>
+					
+			</if>
+			FROM (SELECT * from R_DW_POOROBJ_FAM_Y
+			<where>
+				<include refid="stat_year_sql"/>
+				<include refid="level_sql"/>
+				<include refid="year_sql"/>
+				<include refid="query_condition_sql"/>
+			</where>) t1
+				INNER JOIN (
+				 select
+				 COUNTRY_ID 
+				 from DIM_HELP_AREA_MAP  
+				 WHERE help_p_pac=#{helppac} 
+				 ) t2 ON (t1.country_pac=t2.COUNTRY_ID)			
+		
+			GROUP BY <include refid="group_sort_area_sql"/>
+			ORDER BY A3 DESC
+			
+			) A1
+			)
+			<if test="page !=null">
+					WHERE RM BETWEEN #{pageSize}*(#{page}-1)+1 AND #{pageSize}  * #{page}
+			</if>
+					
+	</select>
+	<!-- 排序总数 -->
+	<select id="queryPoorResultSortCount"  parameterType="hashmap" resultType="long">
+
+			SELECT 
+				<include refid="count_sort_area_sql"/>
+			FROM (SELECT * from					
+			R_DW_POOROBJ_FAM_Y
+			<where>
+				<include refid="stat_year_sql"/>
+				<include refid="year_sql"/>
+				<include refid="level_sql"/>
+				<include refid="query_condition_sql"/>
+			</where>) t1
+				INNER JOIN (
+				 select
+				 COUNTRY_ID 
+				 from DIM_HELP_AREA_MAP  
+				 WHERE help_p_pac=#{helppac} 
+				 ) t2 ON (t1.country_pac=t2.COUNTRY_ID)		
+
+	</select>
+	
+	
+	<!-- 未脱贫分析统计表合计 -->
+	<select id="queryNotAnalysisTableC"  parameterType="hashmap" resultType="hashmap">
+	
+		SELECT 
+		       <include refid="count_area_sql"/>
+		       COUNT(fam_id) A3,
+		       SUM(pop_number) A4,
+		       COUNT(CASE WHEN fam_score &lt; 60 THEN FAM_ID END) A5,  
+		       COUNT(CASE WHEN fam_score &gt;= 60 AND fam_score &lt; 100 THEN FAM_ID END) A6,
+		       COUNT(CASE WHEN fam_score = 100 THEN FAM_ID END) A7,
+		       COUNT(CASE WHEN PER_INCOME &lt; 4000 THEN FAM_ID END) A8, 
+		       COUNT(CASE WHEN PER_INCOME &gt;= 4000 AND PER_INCOME &lt; 7365 THEN FAM_ID END) A9,
+		       COUNT(CASE WHEN PER_INCOME &gt;= 7365 THEN FAM_ID END) A10,
+		       SUM(NO_IMP_LOW_POP+NO_IMP_FIVE_POP) A11,
+		       SUM(NO_IMP_COMPULSORY_POP) A12,
+		       SUM(NO_IMP_MEDICAL_POP) A13,
+		       COUNT(CASE WHEN IS_IMP_HOUSE=0 AND DANGEROUS_LEVEL IN ('A','B','C','D') THEN FAM_ID END) A14
+		FROM (SELECT * from R_DW_POOROBJ_FAM_Y 
+		<where>
+			<!-- 当前贫困户 -->
+			IS_CURRENT=1 
+			<include refid="stat_year_sql"/>
+			<include refid="year_sql"/>
+			<include refid="level_sql"/>
+			<include refid="query_condition_sql"/>
+			<if test=" '' != score and null != score"><!--综合得分 -->
+				<if test="'domain_1' == score"><![CDATA[ AND FAM_SCORE<60 ]]> </if>
+				<if test="'domain_2' == score"><![CDATA[ AND FAM_SCORE>=60 AND FAM_SCORE<100 ]]> </if>
+				<if test="'domain_3' == score"><![CDATA[ AND FAM_SCORE=100 ]]> </if>
+			</if>
+			<if test=" '' != income and null != income"><!-- 脱贫成效监控未脱贫分析两不愁取值 -->
+				<if test="'domain_1' == income"><![CDATA[ AND PER_INCOME<4000]]> </if>
+				<if test="'domain_1' == income"><![CDATA[ AND PER_INCOME<4000]]> </if>
+				<if test="'domain_2' == income"><![CDATA[ AND PER_INCOME>=4000 AND PER_INCOME<7365 ]]> </if>
+				<if test="'domain_3' == income"><![CDATA[ AND PER_INCOME>=7365 ]]> </if>
+				<if test="'no_security' == income"><![CDATA[AND (IS_IMP_FIVE=0 or IS_IMP_LOW=0)]]>  </if>
+			</if>
+			<if test=" '' != guarantee and null != guarantee"><!-- 三保障取值 -->
+				<if test="'edu' == guarantee"><![CDATA[ AND IS_IMP_DEUCATION=0 ]]> </if>
+				<if test="'medical_security' == guarantee"><![CDATA[ AND IS_IMP_MEDICAL=0 ]]> </if>
+				<if test="'house' == guarantee"><![CDATA[AND IS_IMP_HOUSE=0 ]]> </if>
+			</if>
+		</where>) t1
+				INNER JOIN (
+				 select
+				 COUNTRY_ID 
+				 from DIM_HELP_AREA_MAP  
+				 WHERE help_p_pac=#{helppac} 
+				 ) t2 ON (t1.country_pac=t2.COUNTRY_ID)		
+		
+		
+		GROUP BY 	<include refid="count_group_by_sql"/>
+	</select>
+	
+	
+	
+	<!-- 未脱贫分析统计表 -->
+	<select id="queryNotAnalysisTable"  parameterType="hashmap" resultType="hashmap">
+		
+		SELECT A.*,B.SORT FROM
+			(SELECT 
+		       <include refid="level_area_sql"/>
+		       COUNT(fam_id) A3,
+		       SUM(pop_number) A4,
+		       COUNT(CASE WHEN fam_score &lt; 60 THEN FAM_ID END) A5,  
+		       COUNT(CASE WHEN fam_score &gt;= 60 AND fam_score &lt; 100 THEN FAM_ID END) A6,
+		       COUNT(CASE WHEN fam_score = 100 THEN FAM_ID END) A7,
+		       COUNT(CASE WHEN PER_INCOME &lt; 4000 THEN FAM_ID END) A8, 
+		       COUNT(CASE WHEN PER_INCOME &gt;= 4000 AND PER_INCOME &lt; 7365 THEN FAM_ID END) A9,
+		       COUNT(CASE WHEN PER_INCOME &gt;= 7365 THEN FAM_ID END) A10,
+		       SUM(NO_IMP_LOW_POP+NO_IMP_FIVE_POP) A11,
+		       SUM(NO_IMP_COMPULSORY_POP) A12,
+		       SUM(NO_IMP_MEDICAL_POP) A13,
+		       COUNT(CASE WHEN IS_IMP_HOUSE=0 AND DANGEROUS_LEVEL IN ('A','B','C','D') THEN FAM_ID END) A14
+		FROM (SELECT * from R_DW_POOROBJ_FAM_Y 
+		<where>
+			<!-- 当前贫困户 -->
+			IS_CURRENT=1 
+			<include refid="stat_year_sql"/>
+			<include refid="year_sql"/>
+			<include refid="level_sql"/>
+			<include refid="query_condition_sql"/>
+			<if test=" '' != score and null != score"><!--综合得分 -->
+				<if test="'domain_1' == score"><![CDATA[ AND FAM_SCORE<60 ]]> </if>
+				<if test="'domain_2' == score"><![CDATA[ AND FAM_SCORE>=60 AND FAM_SCORE<100 ]]> </if>
+				<if test="'domain_3' == score"><![CDATA[ AND FAM_SCORE=100 ]]> </if>
+			</if>
+			<if test=" '' != income and null != income"><!-- 脱贫成效监控未脱贫分析两不愁取值 -->
+				<if test="'domain_1' == income"><![CDATA[ AND PER_INCOME<4000]]> </if>
+				<if test="'domain_1' == income"><![CDATA[ AND PER_INCOME<4000]]> </if>
+				<if test="'domain_2' == income"><![CDATA[ AND PER_INCOME>=4000 AND PER_INCOME<7365 ]]> </if>
+				<if test="'domain_3' == income"><![CDATA[ AND PER_INCOME>=7365 ]]> </if>
+				<if test="'no_security' == income"><![CDATA[AND (IS_IMP_FIVE=0 or IS_IMP_LOW=0)]]>  </if>
+			</if>
+			<if test=" '' != guarantee and null != guarantee"><!-- 三保障取值 -->
+				<if test="'edu' == guarantee"><![CDATA[ AND IS_IMP_DEUCATION=0 ]]> </if>
+				<if test="'medical_security' == guarantee"><![CDATA[ AND IS_IMP_MEDICAL=0 ]]> </if>
+				<if test="'house' == guarantee"><![CDATA[AND IS_IMP_HOUSE=0 ]]> </if>
+			</if>
+		</where>) t1
+				INNER JOIN (
+				 select
+				 COUNTRY_ID 
+				 from DIM_HELP_AREA_MAP  
+				 WHERE help_p_pac=#{helppac} 
+				 ) t2 ON (t1.country_pac=t2.COUNTRY_ID)		
+		GROUP BY 	<include refid="group_by_sql"/>) A
+			<include refid="dim_area_sql"/>
+
+	</select>
+	
+	<!-- 未脱贫分析图 -->
+	<select id="queryNotAnalysisChart"  parameterType="hashmap" resultType="hashmap">
+		SELECT 
+		 TO_CHAR(TO_DATE( STAT_MONTH,'YYYYMM'),'YYYY.MM') S_NAME,
+		 CASE WHEN u_type='POP_1' THEN '未脱贫户数'
+		 			WHEN u_type='POP_2' THEN '未脱贫人数' END S_GROUP,
+		 u_value as S_VALUE
+		FROM (select 
+		   STAT_MONTH,
+		   <choose>
+		   		<when test="'edu' == guarantee">
+		   			SUM(NO_IMP_EDU_FAM_NUM) POP_1,
+		   			SUM(NO_IMP_EDU_POP_NUM) POP_2
+		   		</when>
+		   		<when test="'medical_security' == guarantee">
+		   			SUM(NO_IMP_MED_FAM_NUM) POP_1,
+		   			SUM(NO_IMP_MED_POP_NUM) POP_2
+		   		</when>
+		   		<when test="'house' == guarantee">
+		   			SUM(NO_IMP_HOUSE_FAM_NUM) POP_1,
+		   			SUM(NO_IMP_HOUSE_POP_NUM) POP_2
+		   		</when>
+		   		<otherwise>
+		   			SUM(CUR_FAM_NUM) POP_1,
+		   			SUM(CUR_POP_NUM) POP_2
+		   		</otherwise>
+		   </choose>
+		from R2_DM_POOROBJ_POORTYPE_M
+		<where>
+			 IS_OUT=0
+			 <include refid="stat_month_sql"/>
+			 <include refid="level_sql"/>
+			 <include refid="query_condition_sql"/>
+			<if test=" '' != score and null != score"><!--综合得分 -->
+				<if test="'domain_1' == score">AND FAM_SCORE_LEVEL=1</if>
+				<if test="'domain_2' == score">AND FAM_SCORE_LEVEL=2 </if>
+				<if test="'domain_3' == score">AND FAM_SCORE_LEVEL=3 </if>
+			</if>
+			<if test=" '' != income and null != income"><!-- 脱贫成效监控未脱贫分析两不愁取值 -->
+				<if test="'domain_1' == income">AND PER_INCOME_LEVEL=1 </if>
+				<if test="'domain_2' == income">AND PER_INCOME_LEVEL=2 </if>
+				<if test="'domain_3' == income">AND PER_INCOME_LEVEL=3 </if>
+				<if test="'no_security' == income">AND PER_INCOME_LEVEL=4 </if>
+			</if>
+			AND HELP_P_PAC = #{helppac}
+		</where>
+		GROUP BY STAT_MONTH ) 
+		unpivot (u_value for u_type in (POP_1, POP_2))
+		ORDER BY STAT_MONTH,U_TYPE
+	</select>
+	
+	
+	<!-- 脱贫明细总记录 -->
+	<select id="queryAnalysisOfEffectsDetailsCount"  parameterType="hashmap" resultType="long">
+	
+			SELECT 
+			COUNT(*) 
+			FROM (SELECT * from
+				R_DW_POOROBJ_FAM_Y
+				
+			<where>
+				<include refid="stat_year_sql"/>
+				<include refid="year_sql"/>
+				<include refid="level_sql"/>
+				<include refid="query_condition_sql"/>
+				 AND IS_OUT=1
+				 <!-- 计划脱贫年份 -->
+				<if test=" '' != plan_out_date and null != plan_out_date and 'all' != plan_out_date">
+					AND PLAN_OUT_DATE=#{plan_out_date} 
+				</if>
+				
+				<!-- 实际脱贫年份 -->
+				<if test=" '' != out_date and null != out_date and 'all' != out_date">
+					AND OUT_DATE=#{out_date} 
+				</if>
+			</where>) t1
+				INNER JOIN (
+				 select CITY_NAME_S A2 
+				 ,COUNTY_NAME_S A3 
+				 ,TOWN_NAME_S A4 
+				 ,COUNTRY_NAME_S A5
+				 ,COUNTRY_ID 
+				 from DIM_HELP_AREA_MAP  
+				 WHERE help_p_pac=#{helppac} 
+				 ) t2 ON (t1.country_pac=t2.COUNTRY_ID)
+			
+	
+	</select>
+	
+	
+	<!-- 脱贫明细  -->
+	<select id="queryAnalysisOfEffectsDetails"  parameterType="hashmap" resultType="hashmap">
+	
+			SELECT 
+			* FROM
+			(
+			select 
+			t1.* ,t2.*,ROWNUM RM
+			from
+			(
+			 SELECT
+				FAM_ID as S_ID,
+				country_pac,
+				FAM_CODE A6,
+				FAM_NAME A7,
+				CASE WHEN PLAN_OUT_DATE ='2999' THEN '-' else  PLAN_OUT_DATE || '年' end A8,
+				CASE WHEN OUT_DATE ='2999' THEN '-' else  OUT_DATE || '年' end A9
+			FROM
+				R_DW_POOROBJ_FAM_Y
+				
+			<where>
+					<include refid="stat_year_sql"/>
+					<include refid="year_sql"/>
+					<include refid="level_sql"/>
+					<include refid="query_condition_sql"/>
+					AND IS_OUT=1
+					<!-- 计划脱贫年份 -->
+					<if test=" '' != plan_out_date and null != plan_out_date and 'all' != plan_out_date">
+						AND PLAN_OUT_DATE=#{plan_out_date} 
+					</if>
+					
+					<!-- 实际脱贫年份 -->
+					<if test=" '' != out_date and null != out_date and 'all' != out_date">
+						AND OUT_DATE=#{out_date} 
+					</if>
+			</where>	
+			) t1
+				INNER JOIN (
+				 select CITY_NAME_S A2 
+				 ,COUNTY_NAME_S A3 
+				 ,TOWN_NAME_S A4 
+				 ,COUNTRY_NAME_S A5
+				 ,COUNTRY_ID 
+				 from DIM_HELP_AREA_MAP  
+				 WHERE help_p_pac=#{helppac} 
+				 ) t2 ON (t1.country_pac=t2.COUNTRY_ID)
+			
+			)
+			
+			
+			<if test="page !=null">
+					WHERE RM BETWEEN #{pageSize}*(#{page}-1)+1 AND #{pageSize}  * #{page}
+				
+			</if>
+	
+	</select>
+
+
+	<!--按村属性 -->
+	<select id="queryAnalysisOfEffectsChart1"  parameterType="hashmap" resultType="hashmap">
+			
+			select 
+			   case u_type when 'A_F_POVE' then '一般贫困村'
+			               when 'A_P_POVE' then '一般贫困村'
+			               when 'B_F_NPOV' then '分散村'  
+			               when 'B_P_NPOV' then '分散村'  
+			               when 'C_F_SOVI' then '中央苏区'  
+			               when 'C_P_SOVI' then '中央苏区'  
+			               when 'D_F_REVO' then '革命老区'  
+			               when 'D_P_REVO' then '革命老区'
+			               ELSE '其他' END S_NAME,
+			   u_value AS S_VALUE,
+			   case substr(u_type,3,1) when 'F' then '户数'
+			                           when 'P' then '人数'
+			                           ELSE 'OTHER' END S_GROUP
+			 from (select 
+			   SUM(case when IS_KEY_POVERTY=1 then 1 else 0 end) A_F_POVE,
+			   SUM(case when IS_KEY_POVERTY=1 then POP_NUMBER else 0 end) A_P_POVE,
+			   SUM(case when IS_KEY_POVERTY=0 then 1 else 0 end) B_F_NPOV,
+			   SUM(case when IS_KEY_POVERTY=0 then POP_NUMBER else 0 end) B_P_NPOV,
+			   SUM(case when IS_CENTRAL_SOVIET=1 then 1 else 0 end) C_F_SOVI,
+			   SUM(case when IS_CENTRAL_SOVIET=1 then POP_NUMBER else 0 end) C_P_SOVI,
+			   SUM(case when IS_OLD_REVOLUTIONARY=1 then 1 else 0 end) D_F_REVO,
+			   SUM(case when IS_OLD_REVOLUTIONARY=1 then POP_NUMBER else 0 end) D_P_REVO
+			 FROM (SELECT * from R_DW_POOROBJ_FAM_Y 
+			 WHERE 1=1 
+			 AND IS_OUT = 1
+			 <include refid="stat_year_sql"/>
+			 <include refid="year_sql"/>
+			 <include refid="level_sql"/>
+			 <include refid="query_condition_sql"/>) t1
+				INNER JOIN (
+				 select
+				 COUNTRY_ID 
+				 from DIM_HELP_AREA_MAP  
+				 WHERE help_p_pac=#{helppac} 
+				 ) t2 ON (t1.country_pac=t2.COUNTRY_ID)		
+			 GROUP BY <include refid="count_group_by_sql"/>)
+			 unpivot (u_value for u_type in (A_F_POVE,A_P_POVE, B_F_NPOV, B_P_NPOV,C_F_SOVI,C_P_SOVI,D_F_REVO,D_P_REVO))
+			 ORDER BY u_type
+			
+	</select>
+
+	<!--按贫困属性-->
+	<select id="queryAnalysisOfEffectsChart2"  parameterType="hashmap" resultType="hashmap">
+			select 
+			   case POOR_TYPE when 1 then '一般贫困户'
+			                   				  when 2 then '低保户'
+			               	   				  when 3 then '五保户'
+			                   				  ELSE '其他' END S_NAME,
+			   u_value AS S_VALUE,
+			   case u_type when 'A_POVR_F' then '户数'
+			               			 when 'B_POVE_P' then '人数'
+			               			 ELSE 'OTHER' END S_GROUP
+			 from (select 
+			   POOR_TYPE,
+			   COUNT(FAM_ID) A_POVR_F,
+			   SUM(POP_NUMBER) B_POVE_P
+			 FROM (SELECT * from  R_DW_POOROBJ_FAM_Y 
+			 WHERE 1=1 
+			 AND IS_OUT = 1
+			 <include refid="stat_year_sql"/>
+			 <include refid="year_sql"/>
+			 <include refid="level_sql"/>
+			 <include refid="query_condition_sql"/>) t1
+				INNER JOIN (
+				 select
+				 COUNTRY_ID 
+				 from DIM_HELP_AREA_MAP  
+				 WHERE help_p_pac=#{helppac} 
+				 ) t2 ON (t1.country_pac=t2.COUNTRY_ID)		
+			 GROUP BY POOR_TYPE,<include refid="count_group_by_sql"/>)
+			 unpivot (u_value for u_type in (A_POVR_F,B_POVE_P))
+			 ORDER BY POOR_TYPE,u_type
+			
+	</select>
+
+	<!--按劳动力属性 -->
+	<select id="queryAnalysisOfEffectsChart3"  parameterType="hashmap" resultType="hashmap">
+		select 
+		   case LABOR_TYPE when 1 then '有劳动能力'
+		                   when 0 then '无劳动能力'
+		                   ELSE '其他' END S_NAME,
+		   u_value AS S_VALUE,
+		   case u_type when 'A_POVR_F' then '户数'
+		               when 'B_POVE_P' then '人数'
+		               ELSE 'OTHER' END S_GROUP
+		 from (select 
+		   LABOR_TYPE,
+		   COUNT(FAM_ID) A_POVR_F,
+		   SUM(POP_NUMBER) B_POVE_P
+		 FROM (SELECT * from  R_DW_POOROBJ_FAM_Y 
+		 WHERE 1=1 
+		 AND IS_OUT = 1
+		 <include refid="stat_year_sql"/>
+		 <include refid="year_sql"/>
+		 <include refid="level_sql"/>
+		 <include refid="query_condition_sql"/>) t1
+				INNER JOIN (
+				 select
+				 COUNTRY_ID 
+				 from DIM_HELP_AREA_MAP  
+				 WHERE help_p_pac=#{helppac} 
+				 ) t2 ON (t1.country_pac=t2.COUNTRY_ID)		
+		 GROUP BY LABOR_TYPE,<include refid="count_group_by_sql"/>)
+		 unpivot (u_value for u_type in (A_POVR_F,B_POVE_P))
+		 ORDER BY LABOR_TYPE,u_type
+		
+	</select>
+	
+	
+	<!-- 成效分析统计表合计 -->
+	<select id="queryAnalysisOfEffectsTableC"  parameterType="hashmap" resultType="hashmap">
+			SELECT <include refid="count_area_sql"/>
+			       '合计' A2,
+			        SUM(CASE WHEN IS_OUT=1 THEN 1 ELSE 0 END) A3,
+			        SUM(CASE WHEN IS_OUT=1 THEN POP_NUMBER ELSE 0 END) A4,
+			        CASE WHEN COUNT(FAM_ID)=0 THEN '0.00%'
+			         ELSE TO_CHAR(TRUNC(SUM(CASE WHEN IS_OUT=1 THEN 1 ELSE 0 END) / COUNT(FAM_ID) * 100, 2),
+			                  '9999990.00') || '%' END A5,
+			        CASE WHEN SUM(POP_NUMBER)=0 THEN '0.00%'
+			         ELSE TO_CHAR(TRUNC(SUM(CASE WHEN IS_OUT=1 THEN POP_NUMBER ELSE 0 END) / SUM(POP_NUMBER) * 100, 2),
+			                  '9999990.00') || '%' END A6
+			 FROM (SELECT * from R_DW_POOROBJ_FAM_Y 
+			 WHERE 1=1
+			 <include refid="stat_year_sql"/>
+			 <include refid="year_sql"/>
+			 <include refid="level_sql"/>
+			 <include refid="query_condition_sql"/>) t1
+				INNER JOIN (
+				 select
+				 COUNTRY_ID 
+				 from DIM_HELP_AREA_MAP  
+				 WHERE help_p_pac=#{helppac} 
+				 ) t2 ON (t1.country_pac=t2.COUNTRY_ID)		
+			 GROUP BY  <include refid="count_group_by_sql"/>	
+	</select>
+	
+	<!-- 成效分析统计表 -->
+	<select id="queryAnalysisOfEffectsTable"  parameterType="hashmap" resultType="hashmap">
+	
+			SELECT A.*,B.SORT FROM
+			(SELECT <include refid="level_area_sql"/>
+			        SUM(CASE WHEN IS_OUT=1 THEN 1 ELSE 0 END) A3,
+			        SUM(CASE WHEN IS_OUT=1 THEN POP_NUMBER ELSE 0 END) A4,
+			        CASE WHEN COUNT(FAM_ID)=0 THEN '0.00%'
+			         ELSE TO_CHAR(TRUNC(SUM(CASE WHEN IS_OUT=1 THEN 1 ELSE 0 END) / COUNT(FAM_ID) * 100, 2),
+			                  '9999990.00') || '%' END A5,
+			        CASE WHEN SUM(POP_NUMBER)=0 THEN '0.00%'
+			         ELSE TO_CHAR(TRUNC(SUM(CASE WHEN IS_OUT=1 THEN POP_NUMBER ELSE 0 END) / SUM(POP_NUMBER) * 100, 2),
+			                  '9999990.00') || '%' END A6
+			 FROM (SELECT * from R_DW_POOROBJ_FAM_Y 
+			 WHERE 1=1
+			 <include refid="stat_year_sql"/>
+			 <include refid="year_sql"/>
+			 <include refid="level_sql"/>
+			 <include refid="query_condition_sql"/>) t1
+				INNER JOIN (
+				 select
+				 COUNTRY_ID 
+				 from DIM_HELP_AREA_MAP  
+				 WHERE help_p_pac=#{helppac} 
+				 ) t2 ON (t1.country_pac=t2.COUNTRY_ID)		
+			 GROUP BY  <include refid="group_by_sql"/>) A
+			<include refid="dim_area_sql"/>	
+			
+	</select>
+	
+	<!--脱贫计划管理累计数据左面图表 -->
+	<select id="queryPovertyResultsChartL"  parameterType="hashmap" resultType="hashmap">
+		SELECT * FROM 
+		(select PLAN_OUT_DATE S_NAME, sum(pop_number) S_VALUE , '预脱贫计划人数' S_GROUP
+		FROM (SELECT * from  R_DW_POOROBJ_FAM_Y 
+		where PLAN_OUT_DATE &lt; 2099 
+		<include refid="stat_year_sql"/>
+		<include refid="level_sql"/>
+		<include refid="year_sql"/>) t1
+				INNER JOIN (
+				 select
+				 COUNTRY_ID 
+				 from DIM_HELP_AREA_MAP  
+				 WHERE help_p_pac=#{helppac} 
+				 ) t2 ON (t1.country_pac=t2.COUNTRY_ID)		
+		group by PLAN_OUT_DATE
+		UNION ALL
+		select OUT_DATE S_NAME, sum(pop_number) S_VALUE , '预脱贫人数' S_GROUP
+		FROM (SELECT * from  R_DW_POOROBJ_FAM_Y 
+		where  OUT_DATE &lt; 2099 
+		<include refid="stat_year_sql"/>
+		<include refid="level_sql"/>
+		<include refid="year_sql"/>) t1
+				INNER JOIN (
+				 select
+				 COUNTRY_ID 
+				 from DIM_HELP_AREA_MAP  
+				 WHERE help_p_pac=#{helppac} 
+				 ) t2 ON (t1.country_pac=t2.COUNTRY_ID)	
+		group by OUT_DATE) 
+		ORDER BY S_NAME
+	</select>
+	
+	<!--脱贫计划管理右面图表 -->
+	<select id="queryPovertyResultsChartR"  parameterType="hashmap" resultType="hashmap">
+		
+		select 
+		   case u_type when 'A_CUR' then '未脱贫人数'
+		               when 'B_PLAN' then '预脱贫计划人数'
+		               when 'B_VIEW' then '监测达标人数'
+		               ELSE 'OTHER' END S_NAME,
+		   u_value AS S_VALUE,
+		   '人数' S_GROUP
+		 from (select
+		   SUM(pop_number) A_CUR,
+		   SUM(CASE WHEN plan_out_date = #{year} THEN pop_number ELSE 0 END) B_PLAN,
+		   SUM(CASE WHEN FAM_SCORE = 100 THEN pop_number ELSE 0 END) B_VIEW
+		 FROM (SELECT * from R_DW_POOROBJ_FAM_Y 
+		 WHERE 1=1 
+		 AND  IS_CURRENT=1
+		<include refid="stat_year_sql"/>
+		<include refid="level_sql"/>
+		<include refid="year_sql"/>) t1
+				INNER JOIN (
+				 select
+				 COUNTRY_ID 
+				 from DIM_HELP_AREA_MAP  
+				 WHERE help_p_pac=#{helppac} 
+				 ) t2 ON (t1.country_pac=t2.COUNTRY_ID)	)
+		 unpivot (u_value for u_type in (A_CUR,B_PLAN,B_VIEW))
+		 ORDER BY u_type
+	</select>
+
+	
+	<!-- 脱贫计划管理统计表合计-->
+	<select id="queryPovertyResultsTableC"  parameterType="hashmap" resultType="hashmap">
+		SELECT 
+			S_ID,A2,A3,A4,A5,A6,A7,A8,
+		     CASE WHEN A5 = 0 THEN
+		          '0.00%'
+		         ELSE
+		          TO_CHAR(TRUNC((A7 / A5) * 100, 2),
+		                  '9999990.00') || '%'
+		       END A9,
+		     CASE WHEN A6 = 0 THEN
+		          '0.00%'
+		         ELSE
+		          TO_CHAR(TRUNC((A8 / A6) * 100, 2),
+		                  '9999990.00') || '%'
+		       END A10,
+		     A11,
+		     A12,
+		     CASE WHEN B1 = 0 THEN
+		          '0.00%'
+		         ELSE
+		          TO_CHAR(TRUNC((A11 / B1) * 100, 2),
+		                  '9999990.00') || '%'
+		       END A13,
+		     CASE WHEN B2 = 0 THEN
+		          '0.00%'
+		         ELSE
+		          TO_CHAR(TRUNC((A12 / B2) * 100, 2),
+		                  '9999990.00') || '%'
+		       END A14
+		FROM (
+		SELECT 
+		<include refid="count_area_sql"/>
+		SUM(CASE WHEN IS_CURRENT=1 THEN 1 ELSE 0 END) A3,
+		SUM(CASE WHEN IS_CURRENT=1 THEN POP_NUMBER ELSE 0 END) A4,
+		SUM(CASE WHEN IS_CURRENT=1 AND PLAN_OUT_DATE=#{year} THEN 1 ELSE 0 END) A5,
+		SUM(CASE WHEN IS_CURRENT=1 AND PLAN_OUT_DATE=#{year} THEN POP_NUMBER ELSE 0 END) A6,
+		SUM(CASE WHEN IS_CURRENT=1 AND REACH_YEAR=#{year} THEN 1 ELSE 0 END) A7,
+		SUM(CASE WHEN IS_CURRENT=1 AND REACH_YEAR=#{year} THEN POP_NUMBER ELSE 0 END) A8,
+		SUM(CASE WHEN IS_OUT=1 THEN 1 ELSE 0 END) A11,
+		SUM(CASE WHEN IS_OUT=1 THEN POP_NUMBER ELSE 0 END) A12,
+		COUNT(FAM_ID) B1,
+		SUM(POP_NUMBER) B2
+		FROM (SELECT * from R_DW_POOROBJ_FAM_Y 
+		WHERE 1=1
+			<include refid="stat_year_sql"/>
+			<include refid="year_sql"/>
+			<include refid="level_sql"/>) t1
+				INNER JOIN (
+				 select
+				 COUNTRY_ID 
+				 from DIM_HELP_AREA_MAP  
+				 WHERE help_p_pac=#{helppac} 
+				 ) t2 ON (t1.country_pac=t2.COUNTRY_ID)		
+		GROUP BY  <include refid="count_group_by_sql"/>)	
+	
+	</select>
+
+	<!-- 脱贫计划管理统计表-->
+	<select id="queryPovertyResultsTable"  parameterType="hashmap" resultType="hashmap">
+		
+		SELECT 
+			 S_ID,A2,A3,A4,A5,A6,A7,A8,
+		     CASE WHEN A5 = 0 THEN
+		          '0.00%'
+		         ELSE
+		          TO_CHAR(TRUNC((A7 / A5) * 100, 2),
+		                  '9999990.00') || '%'
+		       END A9,
+		     CASE WHEN A6 = 0 THEN
+		          '0.00%'
+		         ELSE
+		          TO_CHAR(TRUNC((A8 / A6) * 100, 2),
+		                  '9999990.00') || '%'
+		       END A10,
+		     A11,
+		     A12,
+		     CASE WHEN B1 = 0 THEN
+		          '0.00%'
+		         ELSE
+		          TO_CHAR(TRUNC((A11 / B1) * 100, 2),
+		                  '9999990.00') || '%'
+		       END A13,
+		     CASE WHEN B2 = 0 THEN
+		          '0.00%'
+		         ELSE
+		          TO_CHAR(TRUNC((A12 / B2) * 100, 2),
+		                  '9999990.00') || '%'
+		       END A14
+		FROM (
+		SELECT 
+		<include refid="level_area_sql"/>
+		SUM(CASE WHEN IS_CURRENT=1 THEN 1 ELSE 0 END) A3,
+		SUM(CASE WHEN IS_CURRENT=1 THEN POP_NUMBER ELSE 0 END) A4,
+		SUM(CASE WHEN IS_CURRENT=1 AND PLAN_OUT_DATE=#{year} THEN 1 ELSE 0 END) A5,
+		SUM(CASE WHEN IS_CURRENT=1 AND PLAN_OUT_DATE=#{year} THEN POP_NUMBER ELSE 0 END) A6,
+		SUM(CASE WHEN IS_CURRENT=1 AND FAM_SCORE=100 THEN 1 ELSE 0 END) A7,
+		SUM(CASE WHEN IS_CURRENT=1 AND FAM_SCORE=100 THEN POP_NUMBER ELSE 0 END) A8,
+		SUM(CASE WHEN IS_OUT=1 THEN 1 ELSE 0 END) A11,
+		SUM(CASE WHEN IS_OUT=1 THEN POP_NUMBER ELSE 0 END) A12,
+		COUNT(FAM_ID) B1,
+		SUM(POP_NUMBER) B2
+		FROM (SELECT * from R_DW_POOROBJ_FAM_Y 
+		WHERE 1=1
+			<include refid="stat_year_sql"/>
+			<include refid="year_sql"/>
+			<include refid="level_sql"/>) t1
+				INNER JOIN (
+				 select
+				 COUNTRY_ID 
+				 from DIM_HELP_AREA_MAP  
+				 WHERE help_p_pac=#{helppac} 
+				 ) t2 ON (t1.country_pac=t2.COUNTRY_ID)	
+		GROUP BY  <include refid="group_by_sql"/>) A
+		<include refid="dim_area_sql"/>
+
+	</select>
+
+	<sql id="group_by_sql">
+	
+			<if test=" '' != level and null != level and 'province' == level  ">
+				 CITY_PAC , CITY_NAME 
+			</if>
+			<if test=" '' != level and null != level and 'city' == level  ">
+				 COUNTY_PAC ,COUNTY_NAME
+			</if>
+			
+			<if test=" '' != level and null != level and 'county' == level  ">
+				   TOWN_PAC ,TOWN_NAME 
+			</if>
+			
+			<if test=" '' != level and null != level and 'town' == level  ">
+				 COUNTRY_PAC  ,COUNTRY_NAME 
+			</if>
+			
+			<if test=" '' != level and null != level and 'country' == level  ">
+				COUNTRY_PAC  ,COUNTRY_NAME 
+			</if>
+			
+		
+	</sql>
+	<!--  -->
+	<sql id="level_area_sql">
+			
+			<if test=" '' != level and null != level and 'province' == level  ">
+				CITY_PAC S_ID, CITY_NAME A2,
+			</if>
+			<if test=" '' != level and null != level and 'city' == level  ">
+				COUNTY_PAC S_ID,COUNTY_NAME A2,
+			</if>
+			
+			<if test=" '' != level and null != level and 'county' == level  ">
+				 TOWN_PAC S_ID ,TOWN_NAME A2 ,
+			</if>
+			
+			<if test=" '' != level and null != level and 'town' == level  ">
+				COUNTRY_PAC S_ID ,COUNTRY_NAME A2,
+			</if>
+			
+			<if test=" '' != level and null != level and 'country' == level  ">
+				COUNTRY_PAC S_ID ,COUNTRY_NAME A2,
+			</if>
+	</sql>
+
+	<!-- 层级sql -->
+	<sql id="level_sql">
+			
+			<if test=" '' != level and null != level and 'province' == level  ">
+				
+			</if>
+			
+			<if test=" '' != level and null != level and 'city' == level  ">
+				AND CITY_PAC = #{id}
+			</if>
+			
+			<if test=" '' != level and null != level and 'county' == level  ">
+				AND COUNTY_PAC = #{id} 
+			</if>
+			
+			<if test=" '' != level and null != level and 'town' == level  ">
+				AND TOWN_PAC = #{id} 
+			</if>
+			
+			<if test=" '' != level and null != level and 'country' == level  ">
+				AND COUNTRY_PAC = #{id}
+			</if>
+			
+			
+	</sql>
+
+
+	
+
+
+	<sql id="query_condition_sql">
+	
+		<if test=" '' != scope and null != scope">
+			<if test="2 == scope">AND IS_KEY_POVERTY=1</if><!-- 贫困村 -->
+			<if test="3 == scope">AND IS_KEY_POVERTY=0</if><!-- 分散村 -->
+			<if test="4 == scope">AND IS_OLD_REVOLUTIONARY=1</if><!-- 革命老区 -->
+			<if test="5 == scope">AND IS_CENTRAL_SOVIET=1</if><!-- 中央苏区 -->
+		</if>
+		
+		<if test=" '' != labor_attribute and null != labor_attribute">
+			<if test="'have_labor' == labor_attribute">AND LABOR_TYPE=1</if><!-- 有劳 -->
+			<if test="'no_labor' == labor_attribute">AND LABOR_TYPE=0</if><!-- 无劳 -->
+		</if>
+	
+				
+		<if test=" '' != poor_attribute and null != poor_attribute">
+			<if test="'normal' == poor_attribute">AND POOR_TYPE=1</if><!-- 一般贫困户 -->
+			<if test="'low' == poor_attribute">AND POOR_TYPE=2</if><!-- 低保户 -->
+			<if test="'five' == poor_attribute">AND POOR_TYPE=3</if><!-- 五保户 -->
+		</if>		
+	</sql>
+	
+	<sql id="year_sql">
+		<if test="'' != year and null != year">
+			AND ACC_YEAR = #{year}
+		</if>
+	</sql>
+	<sql id="stat_year_sql">
+		<if test="'' != year and null != year">
+			AND STAT_YEAR = #{year}
+		</if>
+	</sql>
+	<sql id="stat_month_sql">
+			<if test=" '' != year and null != year ">
+				 AND STAT_MONTH BETWEEN to_number(#{year} || '01')  AND to_number(#{year} || '12')
+			</if>
+	</sql>
+
+	<!-- 排序类型 -->
+	<sql id="sort_area_sql">
+			
+			<if test=" '' != sort_area and null != sort_area and 1 == sort_area  ">
+				CITY_PAC S_ID, CITY_NAME A2,
+			</if>
+			<if test=" '' != sort_area and null != sort_area and 2 == sort_area  ">
+				COUNTY_PAC S_ID,CITY_NAME||'>'||COUNTY_NAME A2,
+			</if>
+			
+			<if test=" '' != sort_area and null != sort_area and 3 == sort_area  ">
+				 TOWN_PAC S_ID ,CITY_NAME||'>'||COUNTY_NAME||'>'||TOWN_NAME A2,
+			</if>
+			
+			<if test=" '' != sort_area and null != sort_area and 4 == sort_area  ">
+				COUNTRY_PAC S_ID ,CITY_NAME||'>'||COUNTY_NAME||'>'||TOWN_NAME||'>'||COUNTRY_NAME  A2,
+			</if>
+			
+	</sql>
+	
+	<sql id="count_sort_area_sql">
+		<if test=" '' != sort_area and null != sort_area and 1 == sort_area  ">
+		 	COUNT(DISTINCT CITY_PAC)  
+		</if>
+		<if test=" '' != sort_area and null != sort_area and 2 == sort_area  ">
+			COUNT(DISTINCT COUNTY_PAC)  
+		</if>
+			
+		<if test=" '' != sort_area and null != sort_area and 3 == sort_area  ">
+			COUNT(DISTINCT TOWN_PAC) 
+		</if>
+		<if test=" '' != sort_area and null != sort_area and 4 == sort_area  ">
+			COUNT(DISTINCT COUNTRY_PAC) 
+		</if>
+		
+	</sql>
+	
+	<sql id="group_sort_area_sql">
+			<if test=" '' != sort_area and null != sort_area and 1 == sort_area  ">
+				CITY_PAC , CITY_NAME
+			</if>
+			<if test=" '' != sort_area and null != sort_area and 2 == sort_area  ">
+				COUNTY_PAC ,CITY_NAME||'>'||COUNTY_NAME 
+			</if>
+			
+			<if test=" '' != sort_area and null != sort_area and 3 == sort_area  ">
+				 TOWN_PAC  ,CITY_NAME||'>'||COUNTY_NAME||'>'||TOWN_NAME 
+			</if>
+			
+			<if test=" '' != sort_area and null != sort_area and 4 == sort_area  ">
+				COUNTRY_PAC  ,CITY_NAME||'>'||COUNTY_NAME||'>'||TOWN_NAME||'>'||COUNTRY_NAME  
+			</if>
+			
+	</sql>
+	
+	
+	<!-- count  -->
+	<sql id="count_area_sql">
+			<if test=" '' != level and null != level and 'province' == level  ">
+				'440000000000' S_ID , '合计' A2,
+			</if>
+			<if test=" '' != level and null != level and 'city' == level  ">
+				CITY_PAC S_ID, '合计' A2,
+			</if>
+			
+			<if test=" '' != level and null != level and 'county' == level  ">
+				COUNTY_PAC S_ID,'合计' A2,
+			</if>
+			
+			<if test=" '' != level and null != level and 'town' == level  ">
+				 TOWN_PAC S_ID ,'合计' A2,
+			</if>
+			
+			<if test=" '' != level and null != level and 'country' == level  ">
+				COUNTRY_PAC S_ID ,'合计'  A2,
+			</if>
+	</sql>
+	
+	<sql id="count_group_by_sql">
+	
+			<if test=" '' != level and null != level and 'province' == level  ">
+				 1
+			</if>
+			<if test=" '' != level and null != level and 'city' == level  ">
+				 CITY_PAC , CITY_NAME
+			</if>
+			
+			<if test=" '' != level and null != level and 'county' == level  ">
+				 COUNTY_PAC ,COUNTY_NAME  
+			</if>
+			
+			<if test=" '' != level and null != level and 'town' == level  ">
+				   TOWN_PAC ,TOWN_NAME 
+			</if>
+			
+			<if test=" '' != level and null != level and 'country' == level  ">
+				COUNTRY_PAC  ,COUNTRY_NAME
+			</if>
+	</sql>
+	
+</mapper>

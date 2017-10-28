@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+	<script type="text/javascript" src="../../js/libs/flexible.js"></script>
+	<title>广东扶贫</title>
+	<link type="text/css" rel="stylesheet" href="../../css/all.css">
+</head>
+
+<body>
+
+<div id="app" class="p-wrap p-family-file-status" v-cloak>
+	<app-header ref="appHeader" title="基本情况" show-back="true"></app-header>
+	<nav>
+		<ul>
+			<li>
+				<a :href="'member.html' | linkParams">
+					<img src="../../images/family_file/icon_member.png">
+					<p>家庭成员</p>
+				</a>
+			</li>
+			<li>
+				<a :href="'plan.html' | linkParams">
+					<img src="../../images/family_file/icon_plan.png">
+					<p>帮扶计划</p>
+				</a>
+			</li>
+			<li>
+				<a :href="'implement.html' | linkParams">
+					<img src="../../images/family_file/icon_implement.png">
+					<p>帮扶施策</p>
+				</a>
+			</li>
+			<li>
+				<a :href="'eliminate_path.html' | linkParams">
+					<img src="../../images/family_file/icon_eliminate_path.png">
+					<p>脱贫轨迹</p>
+				</a>
+			</li>
+			<li>
+				<a :href="'invested.html' | linkParams">
+					<img src="../../images/family_file/icon_invested.png">
+					<p>资金投入</p>
+				</a>
+			</li>
+		</ul>
+	</nav>
+	<!--这里判断主要是因为组件有bug，更新数据后组件不会刷新，先暴力处理-->
+	<section class="family-pics" v-if="family_pics.length > 0">
+		<swiper ref="swiper" :loop="true" :pagination-visible="true"
+		        direction="horizontal">
+			<div v-for="(item, index) in family_pics" :key="index">
+				<a :href="item.url"><img :src="item.img_url"></a>
+			</div>
+		</swiper>
+	</section>
+	<div class="pbd">
+		<section class="tel">
+			<div class="title">联系电话</div>
+			<a :href="'tel:' + base_info.contact_tel">{{base_info.contact_tel}}</a>
+		</section>
+		<section class="status">
+			<div class="title">基本情况</div>
+			<div class="content">{{base_info.base_condition}}</div>
+		</section>
+		<section class="reason">
+			<div class="title">致贫原因</div>
+			<div class="tags">
+				<ul>
+					<li v-for="tag in poor_reason" :style="{background: tag.color}">{{tag.name}}</li>
+				</ul>
+			</div>
+		</section>
+		<section class="other">
+			<div class="title">其他信息</div>
+			<ul>
+				<li>
+					<div class="label">贫困户属性</div>
+					<div class="value">{{other_info.poor_attribute}}</div>
+				</li>
+				<li>
+					<div class="label">家庭可支配收入</div>
+					<div class="value">{{other_info.average_income}}</div>
+				</li>
+				<li>
+					<div class="label">家庭年人均可支配收入</div>
+					<div class="value">{{other_info.year_average_income}}</div>
+				</li>
+				<li>
+					<div class="label">危房级别</div>
+					<div class="value">{{other_info.danger_house_rank}}</div>
+				</li>
+				<li>
+					<div class="label">家庭地址</div>
+					<div class="value">{{other_info.family_address}}</div>
+				</li>
+				<li>
+					<div class="label">联系电话</div>
+					<div class="value">{{other_info.concat_tel}}</div>
+				</li>
+			</ul>
+		</section>
+	</div>
+</div>
+
+<script type="text/javascript" src="../../js/libs/vue.min.js"></script>
+<script type="text/javascript" src="../../js/libs/vue-resource.min.js"></script>
+<!--请勿直接使用官网的组件，此组件被我改过才能用-->
+<script type="text/javascript" src="../../js/libs/vue-swiper.js"></script>
+
+<script type="text/javascript" src="../../js/urls_mock.js"></script>
+<script type="text/javascript" src="../../js/common.js"></script>
+
+<script type="text/javascript" src="../../js/pages/family_file/status.js"></script>
+</body>
+</html>

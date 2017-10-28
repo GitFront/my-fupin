@@ -1,0 +1,51 @@
+{
+	"code": 0,
+	"msg": "获取信息成功",
+	"data": {
+		"summary": {
+			//累计到户资金，单位元
+			"total": 8,
+			//当年到户资金，单位元
+			"cur_year": 8
+		},
+		"table": {
+			//单位自筹资金
+			"organization": 0,
+			//帮扶市资金
+			"helper_city": {
+				//地级市财政
+				"city_finance": 0,
+				//区级和镇级财政
+				"district_town_finance": 0,
+				//社会资金
+				"social_money": 0
+			},
+			//中央和省资金
+			"central_province": {
+				//中央财政
+				"central_finance": 0,
+				//省级财政
+				"province_finance": 0,
+				//中央行业
+				"central_industry": 0,
+				//省级行业
+				"province_industry": 0,
+				//社会资金
+				"social_money": 0
+			},
+			//被帮扶市资金
+			"helped_city": {
+				//地级市财政
+				"city_finance": 0,
+				//县级和镇级财政
+				"county_town_finance": 0,
+				//地级市行业
+				"city_industry": 0,
+				//县级和镇级行业
+				"county_town_industry": 0,
+				//社会资金
+				"social_money": 0
+			}
+		}
+	}
+}

@@ -1,0 +1,158 @@
+{
+  "code": 0,
+  "msg": "获取信息成功",
+  "data": {
+    "chart_config_tab": [{
+      "tooltip" : {
+        "formatter": "{b} : {c} ({d}%)"
+      },
+      "title": {
+        "text": "致贫原因",
+        "left": "center",
+        "top":20,
+        "textStyle":{
+          "color": "#fff",
+          "fontSize":15
+        }
+      },
+      "series" : [
+        {
+          "name": "致贫原因",
+          "type": "pie",
+          "radius": ["37%", "70%"],
+          "center":["50%", "60%"],
+          "label": {
+            "normal": {
+              "show": false
+            }
+          },
+          "data":[
+            {"value":5372, "name":"因病"},
+            {"value":1365, "name":"缺劳力"},
+            {"value":4004, "name":"因残"},
+            {"value":546, "name":"因学"},
+            {"value":486, "name":"其他"},
+            {"value":474, "name":"缺资金"},
+            {"value":474, "name":"自身发展动力不足"}
+          ],
+          "itemStyle": {
+            "emphasis": {
+              "shadowBlur": 50
+            }
+          }
+        }
+      ]
+
+    },{
+      "tooltip": {
+      },
+      "legend": {
+        "data": ["贫困指数","脱贫指数"],
+        "itemGap": 20,
+        "x" : "center",
+        "y" : "bottom",
+        "textStyle": {
+          "color": "#fff"
+        }
+      },
+      "title": {
+        "text": "贫困指数与脱贫指数",
+        "left": "center",
+        "textStyle":{
+          "color": "#fff",
+          "fontSize":15
+        }
+      },
+      "radar": {
+        "center":["48%","53%"],
+        "radius":"65%",
+        "indicator": [
+          { "name": "住房", "max": 4},
+          { "name": "住房面积", "max": 4},
+          { "name": "出行", "max": 4},
+          { "name": "生产", "max": 4},
+          { "name": "年收入", "max": 4},
+          { "name": "帮扶计划", "max": 5},
+          { "name": "劳动人口", "max": 4},
+          { "name": "健康", "max": 4},
+          { "name": "劳动素质", "max": 4},
+          { "name": "帮扶人", "max": 5},
+          { "name": "教育回报", "max": 5}
+
+        ],
+        "shape": "circle",
+        "splitNumber": 5,
+        "name": {
+          "textStyle": {
+            "color": "#fff"
+          }
+        },
+        "splitLine": {
+          "lineStyle": {
+            "color": "rgba(238, 197, 102, 0.1)"
+          }
+        },
+        "splitArea": {
+          "show": false
+        },
+        "axisLine": {
+          "lineStyle": {
+            "color": "rgba(238, 197, 102, 0.16)"
+          }
+        }
+      },
+      "series": [
+        {
+          "name": "脱贫指数",
+          "type": "radar",
+          "data": [[4,4,3,3,4,5,2,2,2.2,5,5]],
+          "symbol": "none",
+          "lineStyle": {
+            "normal": {
+              "width": 1,
+              "color": "#a8e7d6"
+            }
+          },
+          "itemStyle": {
+            "normal": {
+              "color": "#a8e7d6",
+              "opacity": 0.7
+            }
+          },
+          "areaStyle": {
+            "normal": {
+              "color": "#a8e7d6",
+              "opacity": 0.7
+            }
+          }
+        },
+        {
+          "name": "贫困指数",
+          "type": "radar",
+          "data": [[1.4,4,2,1.56,1.44,3,1.98,1.98,2.2,5,4]],
+          "symbol": "none",
+          "lineStyle": {
+            "normal": {
+              "width": 1,
+              "color": "#bc3430"
+            }
+          },
+          "itemStyle": {
+            "normal": {
+              "color": "#bc3430",
+              "opacity": 0.7
+            }
+          },
+          "areaStyle": {
+            "normal": {
+              "color": "#bc3430",
+              "opacity": 0.7
+            }
+          }
+        }
+
+      ]
+    }
+    ]
+  }
+}

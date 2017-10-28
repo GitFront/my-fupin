@@ -1,0 +1,51 @@
+{
+	"code": 0,
+	"msg": "获取信息成功",
+	"data": {
+		"create": {
+			"date": "2017-01-10",
+			"time": "14:55:22",
+			"publisher_organization": "新寨村村委会",
+			"publisher_name": "张三"
+		},
+		"update": [
+			{
+				"date": "2017-01-10",
+				"time": "14:55:22",
+				"publisher_organization": "新寨村村委会",
+				"publisher_name": "张三",
+				"list": [
+					{
+						"name": "家庭年人均收入",
+						"old": "3295",
+						"new": "3340"
+					}
+				]
+			},
+			{
+				"date": "2017-01-10",
+				"time": "14:55:22",
+				"publisher_organization": "新寨村村委会",
+				"publisher_name": "张三",
+				"list": [
+					{
+						"name": "家庭年人均收入",
+						"old": "3295",
+						"new": "3340"
+					},
+					{
+						"name": "家庭年人均收入",
+						"old": "3295",
+						"new": "3340"
+					},
+					{
+						"name": "家庭年人均收入",
+						"old": "3295",
+						"new": "3340"
+					}
+				]
+			}
+		]
+	}
+}
+

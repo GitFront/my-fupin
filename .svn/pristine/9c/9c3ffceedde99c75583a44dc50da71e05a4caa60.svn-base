@@ -1,0 +1,688 @@
+package com.aspire.birp.modules.antiPoverty.service;
+
+import java.math.BigDecimal;
+import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.aspire.bi.common.config.Global;
+import com.aspire.birp.modules.antiPoverty.dao.DataMonDao;
+import com.aspire.birp.modules.antiPoverty.dao.ExampleCountryDao;
+import com.aspire.birp.modules.antiPoverty.utils.Constants;
+import com.aspire.birp.modules.antiPoverty.utils.CountryMapTemplate;
+import com.aspire.birp.modules.antiPoverty.utils.JsonFormatUtils;
+import com.aspire.birp.modules.sys.utils.UserUtils;
+
+import net.sf.json.JSONObject;
+
+/**
+ * 示范村service
+ * @author zhudiyuan
+ *
+ */
+@Service
+public class ExampleCountryService  extends DataMonitorService{
+	private static Logger log = LoggerFactory.getLogger(ExampleCountryService.class);
+	
+	@Autowired
+	private ExampleCountryDao exampleCountryDao;
+	@Autowired
+	private DataMonDao dao;
+	/**
+	 * 示范村基础信息
+	 * @return
+	 */
+	public String queryCountryIndexStaticData(Integer scope,String id,String level) {
+		log.info("查询示范村基础信息=====");
+		JSONObject json = new JSONObject();
+		try{
+			//查询数据
+			Long userPac = Long.parseLong(UserUtils.getAreaList().iterator().next().toString());
+			//System.out.println("id==== "+id+"  ===userPac==="+userPac);
+			if(userPac>Long.parseLong(id))  {
+				Map<String, Object> params =new HashMap<String, Object>();
+				params.put("PAC", userPac);
+				Map<String,Object> userMap = dao.queryAreaById(params);
+				id = userPac.toString();
+				level = userMap.get("S_LEVEL") == null ? "" : userMap.get("S_LEVEL").toString();
+			}
+			
+			Map<String, Object> params =Constants.dateContants;
+			params.put("level", level);
+			params.put("id", id);
+			params.put("scope", scope);
+			long month = exampleCountryDao.queryExampleCountryNewMonth(params);
+			params.put("month", month);
+			Map<String,Object> map = exampleCountryDao.queryCountryIndexStaticData(params);
+			//组装JSON数据
+			json.put("code", 0);
+			json.put("msg", "获取信息成功");
+			
+			JSONObject data = new JSONObject();
+			data.put("area_id", level);
+			data.put("area_level", id);
+			String areaName = dao.queryAreaName(params);
+			data.put("area_name", areaName);
+			
+			//示范村达标情况
+			JSONObject reachStandardCountry = new JSONObject();
+			double sumNum = ((BigDecimal) map.get("NATURAL_NUM")).doubleValue();
+			reachStandardCountry.put("complete_num", map.get("E_NATURAL_NUM"));
+			reachStandardCountry.put("province_standard_num", map.get("PROVICE_NATURAL_NUM"));
+			JSONObject chartConfigReachStandard = new JSONObject();
+			chartConfigReachStandard.put("convert_method", "genChartRoundPieConfig");
+			List<JSONObject> reachList = new ArrayList<JSONObject>();
+			JSONObject reach = new JSONObject();
+			JSONObject reach1 = new JSONObject();
+			JSONObject reach2 = new JSONObject();
+			long reachNum = ((BigDecimal) map.get("E_NATURAL_NUM")).longValue();
+			long buildingNum = ((BigDecimal) map.get("BUILD_NATURAL_NUM")).longValue();
+			long notstartNum = ((BigDecimal) map.get("NOTB_NATURAL_NUM")).longValue();
+			reach.put("group", "");
+			reach.put("name", "达标");
+			reach.put("value", reachNum);
+			reach1.put("group", "");
+			reach1.put("name", "建设中");
+			reach1.put("value", buildingNum);
+			reach2.put("group", "");
+			reach2.put("name", "未启动");
+			reach2.put("value", notstartNum);
+			reachList.add(reach);
+			reachList.add(reach1);
+			reachList.add(reach2);
+			chartConfigReachStandard.put("config", reachList);
+			reachStandardCountry.put("chart_config_reach_standard", chartConfigReachStandard);
+			reachStandardCountry.put("country_state", "建设中");
+			data.put("reach_standard_country", reachStandardCountry);
+			
+			//完成提升创建情况
+			JSONObject finishPromoteCountry = new JSONObject();
+			finishPromoteCountry.put("complete_num", map.get("COMPLETE_UPGRADE_NUM"));
+			finishPromoteCountry.put("province_standard_num", map.get("PROVICE_NATURAL_NUM"));
+			JSONObject chartConfigReachStandard1 = new JSONObject();
+			chartConfigReachStandard1.put("convert_method", "genChartRoundPieConfig");
+			List<JSONObject> promoteList = new ArrayList<JSONObject>();
+			JSONObject promote = new JSONObject();
+			JSONObject promote1 = new JSONObject();
+			JSONObject promote2 = new JSONObject();
+			long promoteNum = ((BigDecimal) map.get("PE_NATURAL_NUM")).longValue();
+			long promotingNum = ((BigDecimal) map.get("PBUILD_NATURAL_NUM")).longValue();
+			long notpromoteNum = ((BigDecimal) map.get("PNOTB_NATURAL_NUM")).longValue();
+			
+			promote.put("group", "");
+			promote.put("name", "达标");
+			promote.put("value", promoteNum);
+			promote1.put("group", "");
+			promote1.put("name", "建设中");
+			promote1.put("value", promotingNum);
+			promote2.put("group", "");
+			promote2.put("name", "未启动");
+			promote2.put("value", notpromoteNum);
+			promoteList.add(promote);
+			promoteList.add(promote1);
+			promoteList.add(promote2);
+			chartConfigReachStandard1.put("config", promoteList);
+			finishPromoteCountry.put("chart_config_reach_standard", chartConfigReachStandard1);
+			finishPromoteCountry.put("country_state", "未启动");
+			data.put("finish_promote_country", finishPromoteCountry);
+			
+			DecimalFormat fnum  =   new  DecimalFormat("##0.00");        
+			//左边大于20户自然村达标情况
+			JSONObject more20ReachStandard = new JSONObject();
+			double doneNum = ((BigDecimal) map.get("COMPLETE_MODEL_NUM")).doubleValue();
+			double dingNum = ((BigDecimal) map.get("BUILDING_MODEL_NUM")).doubleValue();
+			double notdoNum =((BigDecimal) map.get("NOSTART_MODEL_NUM")).doubleValue();
+			more20ReachStandard.put("total", doneNum+dingNum+notdoNum);
+			more20ReachStandard.put("reach_standard", map.get("COMPLETE_MODEL_NUM"));
+			
+			double sum = doneNum+dingNum+notdoNum;
+			sum = sum == 0 ? 1 : sum;
+			JSONObject finish = new JSONObject();
+			finish.put("percent", fnum.format((doneNum*100)/sum));
+			finish.put("num", map.get("COMPLETE_MODEL_NUM"));
+			JSONObject building = new JSONObject();
+			building.put("percent",fnum.format((dingNum*100)/sum));
+			building.put("num", map.get("BUILDING_MODEL_NUM"));
+			JSONObject unstart = new JSONObject();
+			unstart.put("percent", fnum.format((notdoNum*100)/sum));
+			unstart.put("num", map.get("NOSTART_MODEL_NUM"));
+			JSONObject bar = new JSONObject();
+			bar.put("finish", finish);
+			bar.put("building", building);
+			bar.put("unstart", unstart);
+			more20ReachStandard.put("bar", bar);
+			data.put("more20_reach_standard", more20ReachStandard);
+			
+			//政治整编规划
+			long impProrpNum = ((BigDecimal) map.get("IMP_PORP_MODEL_NUM")).longValue();
+			long bimpProrpNum = ((BigDecimal) map.get("B_IMP_PORP_MODEL_NUM")).longValue();
+			long nimpProrpNum = ((BigDecimal) map.get("N_IMP_PORP_MODEL_NUM")).longValue();
+			JSONObject compileRenovatePlan = new JSONObject();
+			compileRenovatePlan.put("total", impProrpNum);
+			JSONObject chartConfigRenovatePlan = new JSONObject();
+			chartConfigRenovatePlan.put("chart_type", "highchart");
+			chartConfigRenovatePlan.put("convert_method", "FpyHcReports.exampleCountry.SemicirclePie");
+			JSONObject chartConfigRenovateCofig = new JSONObject();
+		
+			chartConfigRenovatePlan.put("config", chartConfigRenovateCofig);
+			List<JSONObject> prorpList = new ArrayList<JSONObject>();
+			JSONObject prorp = new JSONObject();
+			JSONObject prorp1 = new JSONObject();
+			JSONObject prorp2 = new JSONObject();
+			long sum2 = impProrpNum + bimpProrpNum + nimpProrpNum;
+			prorp.put("name", "已完成");
+			prorp.put("value", sum2 == 0 ? 1 : impProrpNum); //如果为大于20户自然村数为0，则完成100%
+			prorp1.put("name", "建设中");
+			prorp1.put("value", bimpProrpNum);
+			prorp2.put("name", "未启动");
+			prorp2.put("value", nimpProrpNum);
+			prorpList.add(prorp);
+			prorpList.add(prorp1);
+			prorpList.add(prorp2);
+			chartConfigRenovatePlan.put("data",  prorpList);
+			
+			compileRenovatePlan.put("chart_config_renovate_plan", chartConfigRenovatePlan);
+			data.put("compile_renovate_plan", compileRenovatePlan);
+			
+			//三清三拆三政治
+			long trtdtrNum = ((BigDecimal) map.get("IMP_TCTDTR_MODEL_NUM")).longValue();
+			long btrtdtrNum = ((BigDecimal) map.get("B_IMP_TCTDTR_MODEL_NUM")).longValue();
+			long ntrtdtrNum = ((BigDecimal) map.get("N_IMP_TCTDTR_MODEL_NUM")).longValue();
+			long sum3 = trtdtrNum + btrtdtrNum + ntrtdtrNum;
+			JSONObject renovateThree = new JSONObject();
+			renovateThree.put("total", trtdtrNum);
+			JSONObject chartConfigRenovateThree = new JSONObject();
+			chartConfigRenovateThree.put("chart_type", "highchart");
+			chartConfigRenovateThree.put("convert_method", "FpyHcReports.exampleCountry.SemicirclePie");
+			JSONObject chartConfigRenovateCofig1 = new JSONObject();
+			
+			chartConfigRenovateThree.put("config", chartConfigRenovateCofig1);
+			List<JSONObject> trtdtrList = new ArrayList<JSONObject>();
+			JSONObject trtdtr = new JSONObject();
+			JSONObject trtdtr1 = new JSONObject();
+			JSONObject trtdtr2 = new JSONObject();
+			trtdtr.put("name", "已完成");
+			trtdtr.put("value", sum3 == 0 ? 1 :  trtdtrNum);
+			trtdtr1.put("name", "建设中");
+			trtdtr1.put("value", btrtdtrNum);
+			trtdtr2.put("name", "未启动");
+			trtdtr2.put("value", ntrtdtrNum);
+			trtdtrList.add(trtdtr);
+			trtdtrList.add(trtdtr1);
+			trtdtrList.add(trtdtr2);
+			chartConfigRenovateThree.put("data", trtdtrList);
+			renovateThree.put("chart_config_renovate_three", chartConfigRenovateThree);
+			data.put("renovate_three", renovateThree);
+			
+			//基础设施短板
+			JSONObject chartConfigSum = new JSONObject();
+			
+			JSONObject baseFacilityShort = new JSONObject();
+			JSONObject chartConfigRoad = new JSONObject();
+			chartConfigRoad.put("chart_type", "D3");
+			chartConfigRoad.put("convert_method", "FpyD3Reports.exampleCountry.LiquidFillGauge");
+			chartConfigRoad.put("config", chartConfigSum);
+			double roadNum =((BigDecimal) map.get("IMP_ROAD_HARD_MODEL_NUM")).doubleValue();
+			chartConfigRoad.put("data", fnum.format(roadNum*100/sum));
+			baseFacilityShort.put("chart_config_road", chartConfigRoad);
+			
+			JSONObject chartConfigRubbish = new JSONObject();
+			chartConfigRubbish.put("chart_type", "D3");
+			chartConfigRubbish.put("convert_method", "FpyD3Reports.exampleCountry.LiquidFillGauge");
+			chartConfigRubbish.put("config", chartConfigSum);
+			double garbageNum =((BigDecimal) map.get("IMP_GARBAGE_TREAT_MODEL_NUM")).doubleValue();
+			chartConfigRubbish.put("data",  fnum.format(garbageNum*100/sum));
+			
+			baseFacilityShort.put("chart_config_rubbish", chartConfigRubbish);
+			
+			JSONObject chartConfigSewage = new JSONObject();
+			chartConfigSewage.put("chart_type", "D3");
+			chartConfigSewage.put("convert_method", "FpyD3Reports.exampleCountry.LiquidFillGauge");
+			chartConfigSewage.put("config", chartConfigSum);
+			double sewageNum =((BigDecimal) map.get("IMP_SEWAGE_TREAT_MODEL_NUM")).doubleValue();
+			chartConfigSewage.put("data", fnum.format(sewageNum*100/sum));
+			
+			baseFacilityShort.put("chart_config_sewage", chartConfigSewage);
+			
+			JSONObject chartConfigWaterSupply = new JSONObject();
+			chartConfigWaterSupply.put("chart_type", "D3");
+			chartConfigWaterSupply.put("convert_method", "FpyD3Reports.exampleCountry.LiquidFillGauge");
+			chartConfigWaterSupply.put("config", chartConfigSum);
+			double waterNum =((BigDecimal) map.get("IMP_WATER_SUPPLY_MODEL_NUM")).doubleValue();
+			chartConfigWaterSupply.put("data", fnum.format(waterNum*100/sum));
+			baseFacilityShort.put("chart_config_water_supply", chartConfigWaterSupply);
+			data.put("base_facility_short", baseFacilityShort);
+			
+			//右边大于20户自然村提升创建情况
+			JSONObject more20PromoteCreation = new JSONObject();
+			more20PromoteCreation.put("promote_creation", map.get("COMPLETE_UPGRADE_NUM"));
+			double doneNum1 = ((BigDecimal) map.get("COMPLETE_UPGRADE_NUM")).doubleValue();
+			double dingNum1 = ((BigDecimal) map.get("BUILDING_UPGRADE_NUM")).doubleValue();
+			double notdoNum1 =((BigDecimal) map.get("NOSTART_UPGRADE_NUM")).doubleValue();
+			double sum1 = doneNum1+dingNum1+notdoNum1;
+			sum1 = sum1 == 0 ? 1 : sum1;
+			JSONObject finish1 = new JSONObject();
+			finish1.put("percent", fnum.format((doneNum1*100)/sum1));
+			finish1.put("num", map.get("COMPLETE_UPGRADE_NUM"));
+			JSONObject building1 = new JSONObject();
+			building1.put("percent",fnum.format((dingNum1*100)/sum1));
+			building1.put("num", map.get("BUILDING_UPGRADE_NUM"));
+			JSONObject unstart1 = new JSONObject();
+			unstart1.put("percent", fnum.format((notdoNum1*100)/sum1));
+			unstart1.put("num", map.get("NOSTART_UPGRADE_NUM"));
+			JSONObject bar1 = new JSONObject();
+			bar1.put("finish", finish1);
+			bar1.put("building", building1);
+			bar1.put("unstart", unstart1);
+			more20PromoteCreation.put("bar", bar1);
+			data.put("more20_promote_creation", more20PromoteCreation);
+			
+			//编制提升规划
+			JSONObject compilePromotePlan = new JSONObject();
+			long pptpNum = ((BigDecimal) map.get("IMP_PTPP_UPGRADE_NUM")).longValue();
+			long bpptpNum = ((BigDecimal) map.get("B_IMP_PTPP_UPGRADE_NUM")).longValue();
+			long npptpNum = ((BigDecimal) map.get("N_IMP_PTPP_UPGRADE_NUM")).longValue();
+			long sum4 = pptpNum + bpptpNum + npptpNum;
+			compilePromotePlan.put("total", pptpNum);
+			JSONObject chartConfigCompilePromotePlan = new JSONObject();
+			chartConfigCompilePromotePlan.put("chart_type", "highchart");
+			chartConfigCompilePromotePlan.put("convert_method", "FpyHcReports.exampleCountry.SemicirclePie");
+			JSONObject chartConfigRenovateCofig2 = new JSONObject();
+			chartConfigCompilePromotePlan.put("config", chartConfigRenovateCofig2);
+			List<JSONObject> pptpList = new ArrayList<JSONObject>();
+			JSONObject pptp = new JSONObject();
+			JSONObject pptp1 = new JSONObject();
+			JSONObject pptp2 = new JSONObject();
+			pptp.put("name", "已完成");
+			pptp.put("value", sum4 == 0 ? 1 : pptpNum);
+			pptp1.put("name", "建设中");
+			pptp1.put("value", bpptpNum);
+			pptp2.put("name", "未启动");
+			pptp2.put("value", npptpNum);
+			pptpList.add(pptp);
+			pptpList.add(pptp1);
+			pptpList.add(pptp2);
+			chartConfigCompilePromotePlan.put("data", pptpList);
+			compilePromotePlan.put("chart_config_compile_promote_plan", chartConfigCompilePromotePlan);
+			data.put("compile_promote_plan", compilePromotePlan);
+			
+			//绿化美化 
+			JSONObject greenBeautiful = new JSONObject(); // IMP_GREEN_UPGRADE_NUM  B_IMP_GREEN_UPGRADE_NUM  N_IMP_GREEN_UPGRADE_NUM
+			long greenNum = ((BigDecimal) (map.get("IMP_GREEN_UPGRADE_NUM") == null ? new BigDecimal("0") : map.get("IMP_GREEN_UPGRADE_NUM"))).longValue();
+			long bgreenNum = ((BigDecimal) (map.get("B_IMP_GREEN_UPGRADE_NUM") == null ? new BigDecimal("0") : map.get("B_IMP_GREEN_UPGRADE_NUM"))).longValue();
+			long ngreenNum = ((BigDecimal) (map.get("N_IMP_GREEN_UPGRADE_NUM") == null ? new BigDecimal("100") : map.get("N_IMP_GREEN_UPGRADE_NUM"))).longValue();
+			greenBeautiful.put("total", greenNum);
+			JSONObject chartConfigGreenBeautiful = new JSONObject();
+			chartConfigGreenBeautiful.put("chart_type", "highchart");
+			chartConfigGreenBeautiful.put("convert_method", "FpyHcReports.exampleCountry.SemicirclePie");
+			JSONObject chartConfigRenovateCofig3 = new JSONObject();
+
+			chartConfigGreenBeautiful.put("config", chartConfigRenovateCofig3);
+			List<JSONObject> greenList = new ArrayList<JSONObject>();
+			JSONObject green = new JSONObject();
+			JSONObject green1 = new JSONObject();
+			JSONObject green2 = new JSONObject();
+			green.put("name", "已完成");
+			green.put("value", greenNum);
+			green1.put("name", "建设中");
+			green1.put("value", bgreenNum);
+			green2.put("name", "未启动");
+			green2.put("value", ngreenNum);
+			greenList.add(green);
+			greenList.add(green1);
+			greenList.add(green2);
+			chartConfigGreenBeautiful.put("data", greenList);
+			greenBeautiful.put("chart_config_green_beautiful", chartConfigGreenBeautiful);
+			data.put("green_beautiful", greenBeautiful);
+			
+			//完善基础设施和基层治理 
+			
+			json.put("data", data);
+			
+		}catch(Exception e){
+			e.printStackTrace();
+			log.error("示范村基础信息查询失败异常信息："+e.getMessage());
+			json.put("code", 1);
+			json.put("msg", "数据处理异常，获取信息失败!");		
+		}
+		//System.out.println(JsonFormatUtils.JsonFormat(json.toString()));
+		return json.toString();
+	}
+	
+	/**
+	 * 示范村相册
+	 * @param id
+	 * @return
+	 */
+	public String getDataExampleCountryCountryPhoto(String id) {
+		log.info("查询示范村相册=====");
+		JSONObject json = new JSONObject();
+		try{
+			//查询数据
+			Map<String, Object> params =Constants.dateContants;
+			params.put("id", id);
+			long month = exampleCountryDao.queryExampleCountryNewMonth(params);
+			params.put("month", month);
+			List<Map<String,Object>> mapPhoto = exampleCountryDao.queryExampleCountryCountryPhoto(params);
+			//组装JSON数据
+			json.put("code", 0);
+			json.put("msg", "获取信息成功");
+			
+			JSONObject data = new JSONObject();
+			JSONObject selectCountry = new JSONObject();
+		
+			List<JSONObject> countryList = new ArrayList<JSONObject>();
+			List<JSONObject> photoList = new ArrayList<JSONObject>();
+			String naturalId = "";
+			String firstName = "";
+			String countryStatus = "";
+			JSONObject naturalCountryaAll = new JSONObject();
+			naturalCountryaAll.put("name", "全部自然村");
+			naturalCountryaAll.put("id", "all");
+			countryList.add(naturalCountryaAll);
+			for(int i=0;i<mapPhoto.size();i++){
+				String nid = mapPhoto.get(i).get("NATURAL_ID").toString();
+				if(i==0){
+					firstName = mapPhoto.get(i).get("COUNTRY_NAME").toString();
+					countryStatus = mapPhoto.get(i).get("MODEL_BUILD_STATUS").toString();
+				}
+				if(!naturalId.equals(nid)){
+					naturalId = nid;
+					JSONObject naturalCountry = new JSONObject();
+					naturalCountry.put("name", mapPhoto.get(i).get("NATURAL_NAME")+"."+mapPhoto.get(i).get("BUILD_STATUS"));
+					naturalCountry.put("id", naturalId);
+					countryList.add(naturalCountry);
+				}
+				JSONObject photo = new JSONObject();
+				photo.put("belong_country_id", nid);
+				photo.put("brief_src", Global.getConfig("image.path")+mapPhoto.get(i).get("PIC_PATH"));
+				photo.put("big_src", Global.getConfig("image.path")+mapPhoto.get(i).get("PIC_PATH"));
+				photo.put("tips", mapPhoto.get(i).get("PIC_DESC"));
+				photoList.add(photo);
+				
+			}
+			
+			for(int i=0;i<mapPhoto.size();i++){
+				JSONObject photo = new JSONObject();
+				photo.put("belong_country_id", "all");
+				photo.put("brief_src", Global.getConfig("image.path")+mapPhoto.get(i).get("PIC_PATH"));
+				photo.put("big_src", Global.getConfig("image.path")+mapPhoto.get(i).get("PIC_PATH"));
+				photo.put("tips", mapPhoto.get(i).get("PIC_DESC"));
+				photoList.add(photo);
+			}
+			selectCountry.put("selected_id", id);
+			selectCountry.put("selected_name", "全部自然村");
+			selectCountry.put("list", countryList);
+			data.put("title", firstName+"-"+countryStatus);
+			data.put("select_country", selectCountry);
+			data.put("photo_list", photoList);
+			
+			json.put("data", data);
+			
+		}catch(Exception e){
+			e.printStackTrace();
+			log.error("示范村相册查询失败异常信息："+e.getMessage());
+			json.put("code", 1);
+			json.put("msg", "数据处理异常，获取信息失败!");		
+		}
+		//System.out.println(JsonFormatUtils.JsonFormat(json.toString()));
+		return json.toString();
+	}
+	
+	/**
+	 * 示范村-示范村建设-整治达标图形
+	 * @return
+	 */
+	public String getExampleCountryRenovateStandardChart(String id,String level,String year) {
+		log.info("示范村-示范村建设-整治达标图形===========");
+		JSONObject json = new JSONObject();
+		try{
+			//查询数据
+			Map<String, Object> params =new HashMap<String, Object>();
+			params.putAll(Constants.dateContants);
+			params.put("id", id);
+			params.put("level", level);
+			params.put("year", year);
+			//查图表数据
+			List<Map<String,Object>> chart_l = exampleCountryDao.queryExampleManagement1(params);
+			List<Map<String,Object>> chart_r = exampleCountryDao.queryExampleManagement2(params);
+			
+			json.put("code", 0);
+			json.put("msg", "获取信息成功");
+			
+			JSONObject data = new JSONObject();
+			//one
+			JSONObject one = new JSONObject();
+			one.put("convert_method", "genVillageColumnBfbR");
+			List<JSONObject> config_list_one = new ArrayList<JSONObject>();
+			
+			for(int i=1;i<14;i++){
+				JSONObject config = new JSONObject();
+				if(chart_l==null||chart_l.size()==0){
+					config.put("done"+i,"0,0,0,0,0,0,0,0,0,0");
+					config.put("doing"+i, "0,0,0,0,0,0,0,0,0,0");
+					config.put("unstart"+i, "0,0,0,0,0,0,0,0,0,0");
+				}else if(i==13){
+					Calendar now = Calendar.getInstance();  
+					config.put("cur",now.get(Calendar.MONTH));
+				}else{
+					
+				
+				for(int j=0;j<chart_l.size();j++){
+					String no=(String) chart_l.get(j).get("MONTH");
+					String aa=String.format("%02d", i);
+					if(!no.equals(aa)){
+						config.put("done"+i,"0,0,0,0,0,0,0,0,0,0");
+						config.put("doing"+i, "0,0,0,0,0,0,0,0,0,0");
+						config.put("unstart"+i, "0,0,0,0,0,0,0,0,0,0");
+					}else{
+						config.put("done"+i,chart_l.get(j).get("A1")+","+chart_l.get(j).get("A2")+","+chart_l.get(j).get("A3")+","+
+											chart_l.get(j).get("A4")+","+chart_l.get(j).get("A5")+","+chart_l.get(j).get("A6")+","+
+											chart_l.get(j).get("A7")+","+chart_l.get(j).get("A8")+","+chart_l.get(j).get("A9")+","+chart_l.get(j).get("A10"));
+						//已完成数据
+						config.put("doing"+i, chart_l.get(j).get("B1")+","+chart_l.get(j).get("B2")+","+chart_l.get(j).get("B3")+","+
+								 			  chart_l.get(j).get("B4")+","+chart_l.get(j).get("B5")+","+chart_l.get(j).get("B6")+","+
+								              chart_l.get(j).get("B7")+","+chart_l.get(j).get("B8")+","+chart_l.get(j).get("B9")+","+chart_l.get(j).get("B10"));
+						//建设中数据
+						config.put("unstart"+i,chart_l.get(j).get("C1")+","+chart_l.get(j).get("C2")+","+chart_l.get(j).get("C3")+","+
+								              chart_l.get(j).get("C4")+","+chart_l.get(j).get("C5")+","+chart_l.get(j).get("C6")+","+
+								              chart_l.get(j).get("C7")+","+chart_l.get(j).get("C8")+","+chart_l.get(j).get("C9")+","+chart_l.get(j).get("C10"));
+						//未启动数据
+						break;
+					}
+					
+				}
+				
+				}
+				
+				config_list_one.add(config);
+			}
+			one.put("config", config_list_one);
+			
+			data.put("chart_config_renovate_standard_rate", one);
+			
+			//two
+			JSONObject two = new JSONObject();
+			two.put("convert_method", "genVillageColumnGs");
+			List<JSONObject> config_list_two = new ArrayList<JSONObject>();
+			
+			for(int i=1;i<14;i++){
+				JSONObject config = new JSONObject();
+				if(chart_l==null||chart_r.size()==0){
+					config.put("done"+i,"0,0,0,0,0,0,0,0,0,0");
+					config.put("doing"+i, "0,0,0,0,0,0,0,0,0,0");
+					config.put("unstart"+i, "0,0,0,0,0,0,0,0,0,0");
+				}else if(i==13){
+					Calendar now = Calendar.getInstance();  
+					config.put("cur",now.get(Calendar.MONTH));
+				}else{
+				for(int j=0;j<chart_r.size();j++){
+					String no=(String) chart_r.get(j).get("MONTH");
+					String aa=String.format("%02d", i);
+					if(!no.equals(aa)){
+						config.put("done"+i,"0,0,0,0,0,0,0,0,0,0");
+						config.put("doing"+i, "0,0,0,0,0,0,0,0,0,0");
+						config.put("unstart"+i, "0,0,0,0,0,0,0,0,0,0");
+					}else{
+						config.put("done"+i,chart_r.get(j).get("A1")+","+chart_r.get(j).get("A2")+","+chart_r.get(j).get("A3")+","+
+											chart_r.get(j).get("A4")+","+chart_r.get(j).get("A5")+","+chart_r.get(j).get("A6")+","+
+											chart_r.get(j).get("A7")+","+chart_r.get(j).get("A8")+","+chart_r.get(j).get("A9")+","+chart_r.get(j).get("A10"));
+						//已完成数据
+						config.put("doing"+i, chart_r.get(j).get("B1")+","+chart_r.get(j).get("B2")+","+chart_r.get(j).get("B3")+","+
+								 			  chart_r.get(j).get("B4")+","+chart_r.get(j).get("B5")+","+chart_r.get(j).get("B6")+","+
+								              chart_r.get(j).get("B7")+","+chart_r.get(j).get("B8")+","+chart_r.get(j).get("B9")+","+chart_r.get(j).get("B10"));
+						//建设中数据
+						config.put("unstart"+i,chart_r.get(j).get("C1")+","+chart_r.get(j).get("C2")+","+chart_r.get(j).get("C3")+","+
+								              chart_r.get(j).get("C4")+","+chart_r.get(j).get("C5")+","+chart_r.get(j).get("C6")+","+
+								              chart_r.get(j).get("C7")+","+chart_r.get(j).get("C8")+","+chart_r.get(j).get("C9")+","+chart_r.get(j).get("C10"));
+						//未启动数据
+						break;
+					}
+					
+				}
+				
+				}
+				
+				
+				config_list_two.add(config);
+			}
+		
+			two.put("config", config_list_two);
+			
+			data.put("chart_config_renovate_standard_count", two);
+
+			
+			json.put("data", data);
+		}catch(Exception e){
+			e.printStackTrace();
+			log.error("示范村-示范村建设-整治达标图形："+e.getMessage());
+			json.put("code", 1);
+			json.put("msg", "数据处理异常，获取信息失败!");			
+		}
+		//System.out.println(json.toString());
+		return json.toString();
+	}
+	/**
+	 * 示范村-示范村建设-整治达标表格
+	 * @return
+	 */
+	public String getExampleCountryRenovateStandardTable(HttpServletRequest request,String id,String level,String year,String table_month,String table_state) {
+		log.info("示范村-示范村建设-整治达标表格===========");
+		JSONObject json = new JSONObject();
+		try{
+			//查询数据
+			Map<String, Object> params =new HashMap<String, Object>();
+			params.putAll(Constants.dateContants);
+			params.put("id", id);
+			params.put("level", level);
+			params.put("year", year);
+			params.put("month", year+String.format("%02d", Integer.parseInt(table_month)));
+			params.put("state", table_state);
+			String att="";
+			String btt="";
+			String[] content_arr=null;
+			int size=0;
+			//用于导出的参数
+			getParamsPool().put("ExampleManagementww", params);
+			//查table数据
+			Map<String,Object> table_list_c = null;
+			if(!"country".equals(level)){
+				table_list_c = exampleCountryDao.queryExampleManagementTableC(params);//合计
+			}
+			List<Map<String,Object>> table_list = exampleCountryDao.queryExampleManagementTable(params);
+			
+			json.put("code", 0);
+			json.put("msg", "获取信息成功");
+			
+			JSONObject data = new JSONObject();
+		
+			JSONObject table = new JSONObject();
+			table.put("title", "统计表");
+			table.put("export_url", request.getContextPath()+"/antiPoverty/dataMonitor/beforeExport.do?export_task_id=ExampleManagementww");
+			List<List<JSONObject>> head_list = new ArrayList<List<JSONObject>>();
+			List<JSONObject> head1 = new ArrayList<JSONObject>();
+			
+			if("done".equals(table_state)){
+				att="自然村达标</br>个数";
+				btt="示范村达标</br>个数";
+			}else if("doing".equals(table_state)){
+				att="自然村建设中</br>个数";
+				btt="示范村建设中</br>个数";
+			}else if("unstart".equals(table_state)){
+				att="自然村未启动</br>个数";
+				btt="示范村未启动</br>个数";
+			}
+			
+			if("country".equals(level)){
+				size=14;
+				content_arr = new String[]{"序号","行政区域","相对贫困村</br>(个)","20户以</br>上自然村</br>(个)","编制整治</br>规划","三清三拆</br>三整治","村道巷道硬化","垃圾处理","污水处理","集中供水","住房建设","公共服务</br>设施","成立村民</br>理事会",att};
+			}else{
+				size=15;
+				content_arr = new String[]{"序号","行政区域","相对贫困村</br>(个)","20户以</br>上自然村</br>(个)","编制整治</br>规划","三清三拆</br>三整治","村道巷道硬化","垃圾处理","污水处理","集中供水","住房建设","公共服务</br>设施","成立村民</br>理事会",att,btt};
+			}
+			for(int j=0;j<size;j++){
+				JSONObject head_1 =  new JSONObject();
+				head_1.put("content", content_arr[j]);
+				head1.add(head_1);
+			}
+			head_list.add(head1);
+			table.put("head", head_list);
+
+			//合计
+			List<List<JSONObject>> body_list = new ArrayList<List<JSONObject>>();
+			List<JSONObject> body0 =  new ArrayList<JSONObject>();
+			if(table_list_c!=null){
+				for(int n=0;n<size;n++){
+					JSONObject head_content =  new JSONObject();
+					if(n==0){
+						head_content.put("content", "-");
+					}else{
+						head_content.put("content", table_list_c.get("A"+(n+1)));
+					}
+					body0.add(head_content);
+				}
+				body_list.add(body0);
+			}
+//table体数据
+			for(int m=0;m<table_list.size();m++){
+				List<JSONObject> body =  new ArrayList<JSONObject>();
+				for(int n=0;n<size;n++){
+					JSONObject head_content =  new JSONObject();
+					if(n==0){
+						head_content.put("content", (m+1));
+					}else{
+						head_content.put("content", table_list.get(m).get("A"+(n+1)));
+					}
+					body.add(head_content);
+				}
+				body_list.add(body);
+			}
+			table.put("body", body_list);
+			data.put("table", table);
+			
+			json.put("data", data);
+		}catch(Exception e){
+			e.printStackTrace();
+			log.error("示范村-示范村建设-整治达标表格："+e.getMessage());
+			json.put("code", 1);
+			json.put("msg", "数据处理异常，获取信息失败!");			
+		}
+		//System.out.println(json.toString());
+
+		return json.toString();
+	}
+	
+
+}

@@ -1,0 +1,16 @@
+{
+	"data":{
+		"belong_organization":"广州市天河区人力资源和社会保障局",
+		"list":[
+			{
+				"id":"441481128205",
+				"order":1,
+				"contact_phone":"13549107838",
+				"contact_name":"黄永青",
+				"country_name":"鸭桥村委会"
+			}
+		]
+	},
+	"code":0,
+	"msg":"获取信息成功"
+}

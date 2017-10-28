@@ -1,0 +1,390 @@
+{
+  "code": 0,
+  "msg": "获取省/市/县/镇信息成功",
+  "data":{
+    "district_id":"guangdong",
+    "country_name":"新寨村",
+    "district_name":"新寨村贫困现状分析",
+    "intro":"全村总户数  286 户，农村户籍人口  1210 人。<br/>相对贫困户(省定标准) <em>36户</em>，贫困人口<em>100人</em>，贫困发生率<em>8.3%</em>。",
+    "chart_config":[
+      {
+        "chart": {
+          "type": "solidgauge"
+        },
+        "title": "",
+        "pane": {
+          "center": [
+            "50%",
+            "80%"
+          ],
+          "size": "140%",
+          "startAngle": -90,
+          "endAngle": 90,
+          "background": {
+            "backgroundColor": "#EEE",
+            "innerRadius": "60%",
+            "outerRadius": "100%",
+            "shape": "arc"
+          }
+        },
+        "tooltip": {
+          "enabled": true
+        },
+        "exporting": {
+          "enabled": false
+        },
+        "yAxis": {
+          "enabled": false,
+          "stops": [
+            [
+              0.1,
+              "#007AE1"
+            ]
+          ],
+          "lineWidth": 0,
+          "minorTickInterval": null,
+          "tickPixelInterval": 400,
+          "tickWidth": 0,
+          "title": {
+            "y": 25,
+            "style": {
+              "color": "#007AE1"
+            },
+            "text": "相对贫困户"
+          },
+          "labels": {
+            "enabled": false
+          },
+          "min": 0,
+          "max": 250
+        },
+        "series": [
+          {
+            "name": "相对贫困户",
+            "data": [
+              36
+            ],
+            "dataLabels": {
+              "style": {
+                "color": "#007AE1"
+              }
+            }
+          }
+        ],
+        "plotOptions": {
+          "solidgauge": {
+            "dataLabels": {
+              "y": 16,
+              "borderWidth": 0,
+              "useHTML": true
+            }
+          }
+        }
+      },
+      {
+        "chart": {
+          "type": "solidgauge"
+        },
+        "title": "",
+        "pane": {
+          "center": [
+            "50%",
+            "80%"
+          ],
+          "size": "140%",
+          "startAngle": -90,
+          "endAngle": 90,
+          "background": {
+            "backgroundColor": "#EEE",
+            "innerRadius": "60%",
+            "outerRadius": "100%",
+            "shape": "arc"
+          }
+        },
+        "tooltip": {
+          "enabled": true
+        },
+        "exporting": {
+          "enabled": false
+        },
+        "yAxis": {
+          "enabled": false,
+          "stops": [
+            [
+              0.1,
+              "#007AE1"
+            ]
+          ],
+          "lineWidth": 0,
+          "minorTickInterval": null,
+          "tickPixelInterval": 400,
+          "tickWidth": 0,
+          "title": {
+            "y": 25,
+            "style": {
+              "color": "#007AE1"
+            },
+            "text": "贫困人口"
+          },
+          "labels": {
+            "enabled": false
+          },
+          "min": 0,
+          "max": 700
+        },
+        "series": [
+          {
+            "name": "贫困人口",
+            "data": [
+              100
+            ],
+            "dataLabels": {
+              "style": {
+                "color": "#007AE1"
+              }
+            }
+          }
+        ],
+        "plotOptions": {
+          "solidgauge": {
+            "dataLabels": {
+              "y": 16,
+              "borderWidth": 0,
+              "useHTML": true
+            }
+          }
+        }
+      },
+      {
+        "chart": {
+          "type": "solidgauge"
+        },
+        "title": "",
+        "pane": {
+          "center": [
+            "50%",
+            "80%"
+          ],
+          "size": "140%",
+          "startAngle": -90,
+          "endAngle": 90,
+          "background": {
+            "backgroundColor": "#EEE",
+            "innerRadius": "60%",
+            "outerRadius": "100%",
+            "shape": "arc"
+          }
+        },
+        "tooltip": {
+          "enabled": true,
+          "valueSuffix": "%"
+        },
+        "exporting": {
+          "enabled": false
+        },
+        "yAxis": {
+          "enabled": false,
+          "stops": [
+            [
+              0.1,
+              "#007AE1"
+            ]
+          ],
+          "lineWidth": 0,
+          "minorTickInterval": null,
+          "tickPixelInterval": 400,
+          "tickWidth": 0,
+          "title": {
+            "y": 25,
+            "style": {
+              "color": "#007AE1"
+            },
+            "text": "贫困发生率"
+          },
+          "labels": {
+            "enabled": false
+          },
+          "min": 0,
+          "max": 100
+        },
+        "series": [
+          {
+            "name": "贫困发生率",
+            "data": [
+              8.3
+            ],
+            "dataLabels": {
+              "style": {
+                "color": "#007AE1"
+              }
+            }
+          }
+        ],
+        "plotOptions": {
+          "solidgauge": {
+            "dataLabels": {
+              "y": 16,
+              "borderWidth": 0,
+              "useHTML": true
+            }
+          }
+        }
+      }
+    ]
+  ,
+    "list":[
+            {
+                "family_id":1,
+                "family_name":"丘运才"
+            },
+            {
+                "family_id":2,
+                "family_name":"丘凤招"
+            },
+            {
+                "family_id":2,
+                "family_name":"何要娣"
+            },
+            {
+                "family_id":2,
+                "family_name":"丘锡宏"
+            },
+            {
+                "family_id":2,
+                "family_name":"何其昌"
+            },
+            {
+                "family_id":2,
+                "family_name":"潘伟"
+            },
+            {
+                "family_id":2,
+                "family_name":"潘宇旋"
+            },
+            {
+                "family_id":2,
+                "family_name":"潘汉涛"
+            },
+            {
+                "family_id":2,
+                "family_name":"张华香"
+            },
+            {
+                "family_id":2,
+                "family_name":"潘焕龙"
+            },
+            {
+                "family_id":2,
+                "family_name":"林利娥"
+            },
+            {
+                "family_id":2,
+                "family_name":"潘则中"
+            },
+            {
+                "family_id":2,
+                "family_name":"丘凤招"
+            },
+            {
+                "family_id":2,
+                "family_name":"丘相元"
+            },
+            {
+                "family_id":2,
+                "family_name":"肖谷云"
+            },
+            {
+                "family_id":2,
+                "family_name":"范元香"
+            },
+            {
+                "family_id":2,
+                "family_name":"何明达"
+            },
+            {
+                "family_id":2,
+                "family_name":"潘涛"
+            },
+            {
+                "family_id":2,
+                "family_name":"曾新红"
+            },
+            {
+                "family_id":2,
+                "family_name":"黄佑招"
+            },
+            {
+                "family_id":2,
+                "family_name":"何雨华"
+            },
+            {
+                "family_id":2,
+                "family_name":"罗华娣"
+            },
+            {
+                "family_id":2,
+                "family_name":"丘佛金"
+            },
+            {
+                "family_id":2,
+                "family_name":"刘丹"
+            },
+            {
+                "family_id":2,
+                "family_name":"丘梅中"
+            },
+            {
+                "family_id":2,
+                "family_name":"潘汉祥"
+            },
+            {
+                "family_id":2,
+                "family_name":"丘凤招"
+            },
+            {
+                "family_id":2,
+                "family_name":"丘伟荣"
+            },
+            {
+                "family_id":2,
+                "family_name":"潘裕军"
+            },
+            {
+                "family_id":2,
+                "family_name":"潘思云"
+            },
+            {
+                "family_id":2,
+                "family_name":"张娴"
+            },
+            {
+                "family_id":2,
+                "family_name":"丘三妹"
+            },
+            {
+                "family_id":2,
+                "family_name":"潘伟中"
+            },
+            {
+                "family_id":2,
+                "family_name":"丘红"
+            },
+            {
+                "family_id":2,
+                "family_name":"潘玩青"
+            },
+            {
+                "family_id":2,
+                "family_name":"何兴华"
+            },
+            {
+                "family_id":2,
+                "family_name":"潘日标"
+            },
+            {
+                "family_id":2,
+                "family_name":"何洪元"
+            }
+    ]
+  }
+}

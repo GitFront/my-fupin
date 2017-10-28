@@ -1,0 +1,12 @@
+{
+	"code": 0,
+	"msg": "获取信息成功",
+	"data": {
+		//帮扶责任分布
+		"chart_config_duty_distribution": {},
+		//帮扶力度分布
+		"chart_config_strength_distribution": {},
+		//统计表，同data_monitor_table.json定义
+		"table": {}
+	}
+}

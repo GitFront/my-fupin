@@ -1,0 +1,138 @@
+//按钮组
+.btn-group{
+	height: 36px;
+	.btn{
+	display: block;
+	float: left;
+	width: 80px;
+	height: 34px;
+	line-height: 34px;
+	font-size: 16px;
+	text-align: center;
+	cursor: pointer;
+	border: 1px solid $m-c;
+	}
+	.check{
+		background: $m-c;
+		color: #fff;
+	}
+	.btn-group-left{
+		border-right: none;
+		border-radius:$m-radius 0 0 $m-radius;
+	}
+	.btn-group-right{
+		border-left: none;
+		border-radius: 0 $m-radius $m-radius 0 ;
+	}
+}
+//end按钮组
+
+
+//selector下拉
+.selector-ul{
+	z-index:99;
+	display: none;
+	padding: 5px 0 10px 0;
+	li{
+		width: 100%;
+//		width: 92px;
+		height: 42px;
+		line-height: 42px;
+		margin: 0 auto;
+		text-align: center;
+		cursor: pointer;
+		strong{
+			padding:0 8px!important;
+			display: block;
+			margin: 0 auto;
+			width: 80px;
+			height: 42px;
+			color: #fff;
+			border-bottom: 1px solid #94b2fb;
+			&.none-border{
+				border: none;
+			}
+		}
+
+		
+		&:hover{
+			background:#3a6be1;
+		}
+		&.on{
+			background:#3a6be1;
+		}
+	}
+	
+}
+
+
+//end selector下拉
+
+//弹出窗口
+.pop-window-wrap{
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	z-index:99;
+	background: rgba(0,0,0,0.6);
+
+	.pop-window{
+		font-size: 16px;
+		position: absolute;
+		left: 50%;
+		border-radius:5px;
+		color: $font-black-c;
+
+		&.pop-bangfu-detail{
+			$w:1240px;
+			margin-left: -$w / 2;
+			top: 50px;
+			width: $w;
+			height: 670px;
+			background: #fff;
+		}
+
+		.pop-bg-title{
+			position: absolute;
+			top: 30px;
+			display: block;
+			height: 46px;
+			padding:0 34px 0 25px ;
+			line-height: 46px;
+			background: #2e2e36;
+			color: #fff;
+			font-size: 24px;
+			border-radius:0 20px 20px 0;
+
+		}
+		
+		.close-btn{
+				z-index:200;
+				position: absolute;
+				cursor: pointer;
+				right: -20px;
+				top: -22px;
+				width: 54px;
+				height: 58px;
+
+				@include bgPng(close-btn);
+			}
+		
+	}
+}
+
+//end弹出窗口
+
+
+
+//end弹出窗口2
+/* 加载 */
+#loadingDiv{
+	z-index: 1000;
+	position: absolute;
+	width: 1366px;
+	height: 705px;
+	background: rgba(0,0,0,0.5);
+}

@@ -1,0 +1,33 @@
+{
+	"code": 0,
+	"msg": "获取信息成功",
+	"data": {
+		"available_years": [
+			{
+				"name": "2016",
+				"value": "2016"
+			},
+			{
+				"name": "2017",
+				"value": "2017"
+			},
+			{
+				"name": "2018",
+				"value": "2018"
+			}
+		],
+		"default_time": {
+			"year": "2016",
+			"month": "5"
+		},
+		"chart_config": [
+			{ "name": "2015.12", "group": "数值", "value": 38.42 },
+			{ "name": "2016.7", "group": "数值", "value": 28.44 },
+			{ "name": "2016.8", "group": "数值", "value": 39.30 },
+			{ "name": "2016.9", "group": "数值", "value": 55.89 },
+			{ "name": "2016.10", "group": "数值", "value": 60.21 },
+			{ "name": "2016.11", "group": "数值", "value": 57.56 }
+		]
+	}
+}
+

@@ -1,0 +1,84 @@
+{
+  "code": 0,
+  "msg": "获取信息成功",
+  "data": {
+    "chart_config_tab": [{
+    "tooltip": {
+        "trigger": "item",
+        "formatter": "{b}: {c} ({d}%)"
+    },
+      "title": {
+        "text": "贫困户危房比例",
+        "left": "center",
+        "top":20,
+        "textStyle":{
+          "color": "#fff",
+          "fontSize":15
+        }
+      },
+      "series": [
+        {
+          "name":"危房户",
+          "type": "pie",
+          "radius": ["37%", "70%"],
+          "center":["50%", "60%"],
+          "label": {
+            "normal": {
+              "show": false
+            }
+          },
+            "data":[
+                {"value":272, "name":"是危房"},
+                {"value":530, "name":"非危房"}
+            ],
+            "itemStyle": {
+              "emphasis": {
+                "shadowBlur": 40
+              }
+            }
+        }
+    ]
+},
+      {
+        "tooltip": {
+          "formatter": "{b}: {c} ({d}%)"
+        },
+        "title": {
+          "text": "贫困户危房级别分布",
+          "left": "center",
+          "top":20,
+          "textStyle":{
+            "color": "#fff",
+            "fontSize":15
+          }
+        },
+        "series": [
+          {
+            "name":"危房户",
+            "type": "pie",
+            "radius": ["37%", "70%"],
+            "center":["50%", "60%"],
+            "label": {
+              "normal": {
+                "show": false
+              }
+            },
+            "data":[
+              {"value":173, "name":"未填写"},
+              {"value":85, "name":"C-C级"},
+              {"value":14, "name":"D-D级"},
+              {"value":0, "name":"A-A级"},
+              {"value":0, "name":"B-B级"}
+            ],
+            "itemStyle": {
+              "emphasis": {
+                "shadowBlur": 40
+              }
+            }
+          }
+        ]
+      }
+
+    ]
+}
+}

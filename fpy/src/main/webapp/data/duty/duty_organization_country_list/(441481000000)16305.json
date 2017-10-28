@@ -1,0 +1,16 @@
+{
+	"data":{
+		"belong_organization":"广东电网公司梅州供电局",
+		"list":[
+			{
+				"id":"441481115207",
+				"order":1,
+				"contact_phone":"13923001603",
+				"contact_name":"刘召汉",
+				"country_name":"勤光村委会"
+			}
+		]
+	},
+	"code":0,
+	"msg":"获取信息成功"
+}

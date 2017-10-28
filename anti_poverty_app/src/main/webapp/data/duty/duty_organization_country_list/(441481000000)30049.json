@@ -1,0 +1,30 @@
+{
+	"data":{
+		"belong_organization":"兴宁市人大办办公室",
+		"list":[
+			{
+				"id":"441481123207",
+				"order":1,
+				"contact_phone":"13539181355",
+				"contact_name":"钟坚",
+				"country_name":"五一村委会"
+			},
+			{
+				"id":"441481123203",
+				"order":2,
+				"contact_phone":"13719998609",
+				"contact_name":"廖妙新",
+				"country_name":"凉伞村委会"
+			},
+			{
+				"id":"441481123212",
+				"order":3,
+				"contact_phone":"15819006768",
+				"contact_name":"罗运导",
+				"country_name":"丽溪村委会"
+			}
+		]
+	},
+	"code":0,
+	"msg":"获取信息成功"
+}

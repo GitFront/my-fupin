@@ -1,0 +1,180 @@
+{
+	"code": 0,
+	"msg": "获取信息成功",
+	"data": {
+		"tip": "数字为统计年内人均可支配收入，单位：元",
+		"match_node_id": 10,
+		"tree": [
+			{
+				"id": 1,
+				"name": "<span class=\"name\">广东省</span><span class=\"value\">（1560000）</span>",
+				"area_level": "province",
+				"area_id": "111",
+				"children": [
+					{
+						"id": 23,
+						"name": "<span class=\"name\">梅州市</span><span class=\"value\">（1560000）</span>",
+						"area_level": "city",
+						"area_id": "222",
+						"pId": 1,
+						"children": [
+							{
+								"id": 10,
+								"name": "<span class=\"name\">显示县</span><span class=\"value\">（1560000）</span>",
+								"pId": 23,
+								"area_level": "town",
+								"area_id": "333",
+								"children": [
+									{
+										"id": 4,
+										"pId": 2,
+										"area_level": "county",
+										"area_id": "444",
+										"name": "<span class=\"name\">广东省</span><span class=\"value\">（1560000）</span>",
+										"children": [
+											{
+												"id": 9,
+												"pId": 4,
+												"area_level": "country",
+												"area_id": "555",
+												"name": "<span class=\"name\">广东村</span><span class=\"value\">（1560000）</span>"
+											},
+											{
+												"id": 11,
+												"pId": 4,
+												"area_level": "country",
+												"area_id": "555",
+												"name": "<span class=\"name\">广东村</span><span class=\"value\">（1560000）</span>"
+											},
+											{
+												"id": 12,
+												"pId": 4,
+												"area_level": "country",
+												"area_id": "440",
+												"name": "<span class=\"name\">广东村</span><span class=\"value\">（1560000）</span>"
+											},
+											{
+												"id": 10,
+												"pId": 4,
+												"area_level": "country",
+												"area_id": "440",
+												"name": "<span class=\"name\">广东村</span><span class=\"value\">（1560000）</span>"
+											}
+										]
+									}
+								]
+							},
+							{
+								"id": 24,
+								"name": "<span class=\"name\">显示县</span><span class=\"value\">（1560000）</span>",
+								"pId": 23,
+								"area_level": "town",
+								"area_id": "333",
+								"isParent": true
+							}
+						]
+					},
+					{
+						"id": 3,
+						"pId": 1,
+						"area_id": "440",
+						"name": "<span class=\"name\">广东省</span><span class=\"value\">（1560000）</span>",
+						"area_level": "city"
+					}
+				]
+			},
+			{
+				"id": 5,
+				"name": "<span class=\"name\">广东省</span><span class=\"value\">（1560000）</span>",
+				"area_level": "province",
+				"area_id": "440",
+				"children": [
+					{
+						"id": 6,
+						"name": "<span class=\"name\">广东省</span><span class=\"value\">（1560000）</span>",
+						"pId": 5,
+						"area_level": "city",
+						"area_id": "440",
+						"children": [
+							{
+								"id": 7,
+								"pId": 6,
+								"area_level": "town",
+								"area_id": "440",
+								"name": "<span class=\"name\">广东省</span><span class=\"value\">（1560000）</span>"
+							}
+						]
+					},
+					{
+						"id": 8,
+						"pId": 5,
+						"name": "<span class=\"name\">广东省</span><span class=\"value\">（1560000）</span>",
+						"area_id": "440",
+						"area_level": "city"
+					}
+				]
+			},
+			{
+				"id": 13,
+				"area_level": "country",
+				"area_id": "440",
+				"name": "<span class=\"name\">广东村</span><span class=\"value\">（1560000）</span>"
+			},
+			{
+				"id": 14,
+				"area_level": "country",
+				"area_id": "440",
+				"name": "<span class=\"name\">广东村</span><span class=\"value\">（1560000）</span>"
+			},
+			{
+				"id": 15,
+				"area_level": "country",
+				"area_id": "440",
+				"name": "<span class=\"name\">广东村</span><span class=\"value\">（1560000）</span>"
+			},
+			{
+				"id": 16,
+				"area_level": "country",
+				"area_id": "440",
+				"name": "<span class=\"name\">广东村</span><span class=\"value\">（1560000）</span>"
+			},
+			{
+				"id": 17,
+				"area_level": "country",
+				"area_id": "440",
+				"name": "<span class=\"name\">广东村</span><span class=\"value\">（1560000）</span>"
+			},
+			{
+				"id": 18,
+				"area_level": "country",
+				"area_id": "440",
+				"name": "<span class=\"name\">广东村</span><span class=\"value\">（1560000）</span>"
+			},
+			{
+				"id": 19,
+				"area_level": "country",
+				"area_id": "440",
+				"name": "<span class=\"name\">广东村</span><span class=\"value\">（1560000）</span>"
+			},
+			{
+				"id": 20,
+				"area_level": "country",
+				"area_id": "440",
+				"name": "<span class=\"name\">广东村</span><span class=\"value\">（1560000）</span>"
+			},
+			{
+				"id": 21,
+				"area_level": "country",
+				"area_id": "440",
+				"name": "<span class=\"name\">广东村</span><span class=\"value\">（1560000）</span>"
+			},
+			{
+				"id": 22,
+				"area_level": "country",
+				"area_id": "440",
+				"name": "<span class=\"name\">广东村</span><span class=\"value\">（1560000）</span>"
+			}
+		]
+	}
+}
+

@@ -1,0 +1,39 @@
+{
+	"code": 0,
+	"msg": "获取信息成功",
+	"data": {
+		"params":  [
+		{
+			//参数名
+			"key": "scope",
+			//用于显示给用户的参数名
+			"label": "区域范围",
+			/*
+				参数类型：
+				radio: 单选
+				check: 多选，提交参数时会变成简易数组
+			*/
+			"type": "check",
+			/*
+				选中的的值
+				单选时类型为String
+				多选时类型为Array<String>
+			*/
+			"selected_value": [
+				"country"
+			],
+			//可选的值
+			"values": [
+				{
+					//用于显示给用户的参数值名
+					"label": "全部",
+					//值
+					"value": "country",
+					//是否被禁用
+					"disabled": false
+				}
+			]
+		}
+	]
+	}
+}

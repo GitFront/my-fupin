@@ -1,0 +1,128 @@
+{
+	"code": 0,
+	"msg": "获取信息成功",
+	"data": {
+		//区域ID
+		"area_id": 1,
+		//区域层级
+		"area_level": "province",
+		//区域名称
+		"area_name": "广东省",
+		//示范村达标
+		"reach_standard_country":{
+				//示范村达标数
+				"complete_num":2,
+				//省定贫困村数
+				"province_standard_num":2277,
+				//图表数据
+				"chart_config_reach_standard":{
+
+				},
+				//到村级别时的状态,其他级别为空
+				"country_state":"建设中"
+		},
+		//完成提升创建
+		"finish_promote_country":{
+				//完成提升创建村数
+				"complete_num":2,
+				//省定贫困村数
+				"province_standard_num":2277,
+				//图表数据
+				"chart_config_reach_standard":{
+
+				},
+				//到村级别时的状态,其他级别为空
+				"country_state":"未启动"
+		},
+		//大于20户自然村的达标情况(左一)
+		"more20_reach_standard":{
+			//大于20户自然村总数
+			"total":16598,
+			//达标数量
+			"reach_standard":45,
+			"bar":{
+				"finish":{
+					"percent":5.6,
+					"num":45
+					},
+				"building":{
+					"percent":45.6,
+					"num":145
+					},
+				"unstart":{
+					"percent":25.6,
+					"num":245
+					}
+			}
+		},
+		//编制整治规划
+		"compile_renovate_plan":{
+			"total":16598,
+			//图表数据
+			"chart_config_renovate_plan":{
+
+			}
+		},
+		//三清三拆三整治 
+		"renovate_three":{
+			"total":6598,
+			//图表数据
+			"chart_config_renovate_three":{
+
+			}
+		},
+		//补齐基础设施短板
+		"base_facility_short":{
+			//图表-村道巷道硬化
+			"chart_config_road":{
+
+			},
+			//图表-生活垃圾处理
+			"chart_config_rubbish":{
+
+			},
+			//图表-污水处理
+			"chart_config_sewage":{
+
+			},
+			//图表-集中供水
+			"chart_config_water_supply":{
+
+			}
+		},
+		//大于20户自然村提升创建情况(右一)
+		"more20_promote_creation":{
+			//提升创建数量
+			"promote_creation":45,
+			"bar":{
+				"finish":{
+					"percent":5.6,
+					"num":45
+					},
+				"building":{
+					"percent":45.6,
+					"num":145
+					},
+				"unstart":{
+					"percent":25.6,
+					"num":245
+					}
+			}
+		},
+		//编制提升规划 
+		"compile_promote_plan":{
+			"total":1598,
+			//图表数据
+			"chart_config_compile_promote_plan":{
+
+			}
+		},
+		//绿化美化 
+		"green_beautiful":{
+			"total":0,
+			//图表数据
+			"chart_config_green_beautiful":{
+
+			}
+		}
+}

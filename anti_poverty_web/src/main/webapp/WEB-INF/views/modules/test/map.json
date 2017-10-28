@@ -1,0 +1,242 @@
+{
+	"type" : "FeatureCollection",
+	"features" : [{
+				"type" : "Feature",
+				"properties" : {
+					"PAC" : "445381119207",
+					"PPAC" : "440000000000",
+					"latitude" : "22.689528",
+					"name" : "大石村委会",
+					"type" : "PKC",
+					"longitude" : "111.189677"
+				},
+				"geometry" : {
+					"type" : "Point",
+					"coordinates" : [111.189677, 22.689528]
+				}
+			}, {
+				"type" : "Feature",
+				"properties" : {
+					"PAC" : "445381119210",
+					"PPAC" : "440000000000",
+					"latitude" : "22.663809",
+					"name" : "金充村委会",
+					"type" : "PKC",
+					"longitude" : "111.153321"
+				},
+				"geometry" : {
+					"type" : "Point",
+					"coordinates" : [111.153321, 22.663809]
+				}
+			}, {
+				"type" : "Feature",
+				"properties" : {
+					"PAC" : "445381113208",
+					"PPAC" : "440000000000",
+					"latitude" : "22.760903",
+					"name" : "大塘村委会",
+					"type" : "PKC",
+					"longitude" : "111.466538"
+				},
+				"geometry" : {
+					"type" : "Point",
+					"coordinates" : [111.466538, 22.760903]
+				}
+			}, {
+				"type" : "Feature",
+				"properties" : {
+					"PAC" : "445381118207",
+					"PPAC" : "440000000000",
+					"latitude" : "22.732748",
+					"name" : "合江村委会",
+					"type" : "PKC",
+					"longitude" : "111.194347"
+				},
+				"geometry" : {
+					"type" : "Point",
+					"coordinates" : [111.194347, 22.732748]
+				}
+			}, {
+				"type" : "Feature",
+				"properties" : {
+					"PAC" : "445381118209",
+					"PPAC" : "440000000000",
+					"latitude" : "22.728398",
+					"name" : "鳌头村委会",
+					"type" : "PKC",
+					"longitude" : "111.241539"
+				},
+				"geometry" : {
+					"type" : "Point",
+					"coordinates" : [111.241539, 22.728398]
+				}
+			}, {
+				"type" : "Feature",
+				"properties" : {
+					"PAC" : "445381002214",
+					"PPAC" : "440000000000",
+					"latitude" : "22.699265",
+					"name" : "沙豪岗村委会",
+					"type" : "PKC",
+					"longitude" : "111.611607"
+				},
+				"geometry" : {
+					"type" : "Point",
+					"coordinates" : [111.611607, 22.699265]
+				}
+			}, {
+				"type" : "Feature",
+				"properties" : {
+					"PAC" : "445381109215",
+					"PPAC" : "440000000000",
+					"latitude" : "22.673025",
+					"name" : "渡头村委会",
+					"type" : "PKC",
+					"longitude" : "111.647198"
+				},
+				"geometry" : {
+					"type" : "Point",
+					"coordinates" : [111.647198, 22.673025]
+				}
+			}, {
+				"type" : "Feature",
+				"properties" : {
+					"PAC" : "445381106201",
+					"PPAC" : "440000000000",
+					"latitude" : "22.605279",
+					"name" : "满南村委会",
+					"type" : "PKC",
+					"longitude" : "111.696877"
+				},
+				"geometry" : {
+					"type" : "Point",
+					"coordinates" : [111.696877, 22.605279]
+				}
+			}, {
+				"type" : "Feature",
+				"properties" : {
+					"PAC" : "445381104205",
+					"PPAC" : "440000000000",
+					"latitude" : "22.64519",
+					"name" : "围头村委会",
+					"type" : "PKC",
+					"longitude" : "111.562407"
+				},
+				"geometry" : {
+					"type" : "Point",
+					"coordinates" : [111.562407, 22.64519]
+				}
+			}, {
+				"type" : "Feature",
+				"properties" : {
+					"PAC" : "445381110204",
+					"PPAC" : "440000000000",
+					"latitude" : "22.744486",
+					"name" : "三屋村委会",
+					"type" : "PKC",
+					"longitude" : "111.651112"
+				},
+				"geometry" : {
+					"type" : "Point",
+					"coordinates" : [111.651112, 22.744486]
+				}
+			}, {
+				"type" : "Feature",
+				"properties" : {
+					"PAC" : "445381108204",
+					"PPAC" : "440000000000",
+					"latitude" : "22.72895",
+					"name" : "坪塘村委会",
+					"type" : "PKC",
+					"longitude" : "111.861528"
+				},
+				"geometry" : {
+					"type" : "Point",
+					"coordinates" : [111.861528, 22.72895]
+				}
+			}, {
+				"type" : "Feature",
+				"properties" : {
+					"PAC" : "445381110206",
+					"PPAC" : "440000000000",
+					"latitude" : "22.755919",
+					"name" : "寨脚村委会",
+					"type" : "PKC",
+					"longitude" : "111.687964"
+				},
+				"geometry" : {
+					"type" : "Point",
+					"coordinates" : [111.687964, 22.755919]
+				}
+			}, {
+				"type" : "Feature",
+				"properties" : {
+					"PAC" : "445381105218",
+					"PPAC" : "440000000000",
+					"latitude" : "22.524196",
+					"name" : "山垌村委会",
+					"type" : "PKC",
+					"longitude" : "111.646194"
+				},
+				"geometry" : {
+					"type" : "Point",
+					"coordinates" : [111.646194, 22.524196]
+				}
+			}, {
+				"type" : "Feature",
+				"properties" : {
+					"PAC" : "445381111207",
+					"PPAC" : "440000000000",
+					"latitude" : "22.794181",
+					"name" : "永坑村委会",
+					"type" : "PKC",
+					"longitude" : "111.378247"
+				},
+				"geometry" : {
+					"type" : "Point",
+					"coordinates" : [111.378247, 22.794181]
+				}
+			}, {
+				"type" : "Feature",
+				"properties" : {
+					"PAC" : "445381114205",
+					"PPAC" : "440000000000",
+					"latitude" : "22.676797",
+					"name" : "榃兵村委会",
+					"type" : "PKC",
+					"longitude" : "111.466577"
+				},
+				"geometry" : {
+					"type" : "Point",
+					"coordinates" : [111.466577, 22.676797]
+				}
+			}, {
+				"type" : "Feature",
+				"properties" : {
+					"PAC" : "445381111213",
+					"PPAC" : "440000000000",
+					"latitude" : "22.857262",
+					"name" : "思甲村委会",
+					"type" : "PKC",
+					"longitude" : "111.36285"
+				},
+				"geometry" : {
+					"type" : "Point",
+					"coordinates" : [111.36285, 22.857262]
+				}
+			}, {
+				"type" : "Feature",
+				"properties" : {
+					"PAC" : "445381115202",
+					"PPAC" : "440000000000",
+					"latitude" : "22.661906",
+					"name" : "车战村委会",
+					"type" : "PKC",
+					"longitude" : "111.475272"
+				},
+				"geometry" : {
+					"type" : "Point",
+					"coordinates" : [111.475272, 22.661906]
+				}
+			}]
+}

@@ -1,0 +1,103 @@
+{
+	"code": 0,
+	"msg": "获取信息成功",
+	"data": {
+		"area_name": "广东省",
+		"medical": {
+			"amount_poor_people": 15851,
+			"amount_have_medical_insurance": 11135,
+			"amount_diff": 574,
+			"percent": 5
+		},
+		"chart_config": [
+		  {
+			"name":"2016.06",
+			"group":"差异比例",
+			"value":95,
+			"type":"line"
+		  },
+		  {
+			"name":"2016.07",
+			"group":"差异比例",
+			"value":90,
+			"type":"line"
+		  },
+		  {
+			"name":"2016.08",
+			"group":"差异比例",
+			"value":86,
+			"type":"line"
+		  },
+		  {
+			"name":"2016.09",
+			"group":"差异比例",
+			"value":82,
+			"type":"line"
+		  },
+		  {
+			"name":"2016.10",
+			"group":"差异比例",
+			"value":69,
+			"type":"line"
+		  },
+		  {
+			"name":"2016.11",
+			"group":"差异比例",
+			"value":50,
+			"type":"line"
+		  },
+		  {
+			"name":"2016.12",
+			"group":"差异比例",
+			"value":43,
+			"type":"line"
+		  },
+		  {
+			"name":"2016.06",
+			"group":"差异户数",
+			"value":1000,
+			"type":"bar"
+		  },
+		  {
+			"name":"2016.07",
+			"group":"差异户数",
+			"value":980,
+			"type":"bar"
+		  },
+		  {
+			"name":"2016.08",
+			"group":"差异户数",
+			"value":860,
+			"type":"bar"
+		  },
+		  {
+			"name":"2016.09",
+			"group":"差异户数",
+			"value":820,
+			"type":"bar"
+		  },
+		  {
+			"name":"2016.10",
+			"group":"差异户数",
+			"value":690,
+			"type":"bar"
+		  },
+		  {
+			"name":"2016.11",
+			"group":"差异户数",
+			"value":502,
+			"type":"bar"
+		  },
+		  {
+			"name":"2016.12",
+			"group":"差异户数",
+			"value":430,
+			"type":"bar"
+		  }
+		],
+		"default_time": {
+			"year": 2016,
+			"month": 5
+		}
+	}
+}

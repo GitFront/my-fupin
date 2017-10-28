@@ -1,0 +1,16 @@
+{
+	"data":{
+		"belong_organization":"梅州市教育局",
+		"list":[
+			{
+				"id":"441481132207",
+				"order":1,
+				"contact_phone":"13719991618",
+				"contact_name":"石成柱",
+				"country_name":"浊水村委会"
+			}
+		]
+	},
+	"code":0,
+	"msg":"获取信息成功"
+}

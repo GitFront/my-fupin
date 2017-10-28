@@ -1,0 +1,16 @@
+{
+	"data":{
+		"belong_organization":"中共兴宁市委办公室",
+		"list":[
+			{
+				"id":"441481002202",
+				"order":1,
+				"contact_phone":"15819033985",
+				"contact_name":"黄国昌",
+				"country_name":"五里村委会"
+			}
+		]
+	},
+	"code":0,
+	"msg":"获取信息成功"
+}

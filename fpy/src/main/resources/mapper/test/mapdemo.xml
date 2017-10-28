@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+        
+<mapper namespace="aspire.bi.common.map">
+
+ 	<!-- select all the Source List -->
+	<select id="queryMapGeoData"  parameterType="string"
+       resultType="hashmap">
+ 		SELECT 
+ 		*
+ 		FROM DIM_POVERTY_GEOMETRY
+ 		WHERE 1=1 
+ 		<if test=" '' != map_level and null != map_level and 5 == map_level  ">
+			AND PAC=#{map_pac}
+		</if>
+		<if test=" '' != map_level and null != map_level and 5 != map_level  ">
+			AND PPAC=#{map_pac}
+		</if>
+	</select> 
+	
+	<select id="queryMapInfo"  parameterType="string"
+       resultType="hashmap">
+ 		SELECT 
+ 		*
+ 		FROM DO_MAP_DEMO
+ 		WHERE 1=1 
+ 		AND INFO_TYPE=#{type}
+	</select> 
+	
+	<select id="queryMapInfoLayer"  parameterType="string"
+       resultType="hashmap">
+ 		SELECT 
+ 		*
+ 		FROM DO_MAP_DEMO
+ 		WHERE 1=1 
+ 		AND INFO_TYPE=#{type}
+ 		<if test=" '' != map_pac and null != map_pac">
+			AND PID=#{map_pac}
+		</if>
+	</select> 
+	
+	<select id="queryMapInfoLayerTest1"  parameterType="string"
+       resultType="hashmap">
+ 		SELECT 
+ 		ID,NAME,INFO_TYPE,PID PPAC,RSPACE,VALUE1,VALUE2,VALUE3,round(VALUE4*100,2) AS VALUE4
+ 		FROM DO_MAP_DEMO
+ 		WHERE 1=1 
+ 		AND INFO_TYPE=#{type}
+ 		AND RSPACE NOT LIKE '%99%'
+ 		<if test=" '' != map_pac and null != map_pac">
+			AND PID=#{map_pac}
+		</if>
+	</select> 
+	
+	<select id="queryMapPoint1"  parameterType="string"
+       resultType="hashmap">
+ 		SELECT 
+ 		T.*,'TPH' POINT_TYPE
+ 		FROM DO_MAP_DEMO T
+ 		WHERE 1=1 
+ 		AND T.INFO_TYPE='point' 
+ 		AND T.RSPACE='1'
+		<if test=" '' != map_pac and null != pac">
+			AND T.PID=#{map_pac}
+		</if>
+	</select> 
+	
+	<select id="queryMapPoint2"  parameterType="string"
+       resultType="hashmap">
+ 		SELECT 
+ 		T.*,'PKH' POINT_TYPE
+ 		FROM DO_MAP_DEMO T
+ 		WHERE 1=1 
+ 		AND T.INFO_TYPE='point' 
+ 		AND T.RSPACE='2'
+		<if test=" '' != map_pac and null != map_pac">
+			AND T.PID=#{map_pac}
+		</if>
+	</select> 
+	
+ 	 	
+</mapper>

@@ -1,0 +1,16 @@
+{
+	"data":{
+		"belong_organization":"兴宁市体育局",
+		"list":[
+			{
+				"id":"441481001201",
+				"order":1,
+				"contact_phone":"15119330755",
+				"contact_name":"赖佑强",
+				"country_name":"一联村委会"
+			}
+		]
+	},
+	"code":0,
+	"msg":"获取信息成功"
+}

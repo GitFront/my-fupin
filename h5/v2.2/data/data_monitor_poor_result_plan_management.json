@@ -1,0 +1,12 @@
+{
+	"code": 0,
+	"msg": "获取信息成功",
+	"data": {
+		//累计数据
+		"chart_config_accumulated": {},
+		//当年数据
+		"chart_config_cur_year": {},
+		//统计表，同data_monitor_table.json定义
+		"table": {}
+	}
+}

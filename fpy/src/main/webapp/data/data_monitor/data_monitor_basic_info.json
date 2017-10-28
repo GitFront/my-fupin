@@ -1,0 +1,31 @@
+{
+	"code": 0,
+	"msg": "获取信息成功",
+	"data": {
+		"years": {
+			"available_years": [
+				{
+					"name": "2016年",
+					"value": "2016"
+				},
+				{
+					"name": "2017年",
+					"value": "2017"
+				},
+				{
+					"name": "2018年",
+					"value": "2018"
+				},
+				{
+					"name": "2019年",
+					"value": "2019"
+				},
+				{
+					"name": "2020年",
+					"value": "2020"
+				}
+			],
+			"selected_value": "2018"
+		}
+	}
+}

@@ -1,0 +1,1 @@
+$(function(){$(function(){$(".nav-ul li").hover(function(){$(this).find(".second-nav").show()},function(){$(this).find(".second-nav").hide()})})});

@@ -1,0 +1,84 @@
+{
+	"code": 0,
+	"msg": "获取信息成功",
+	"data": {
+		"summary": {
+			//村名
+			"country_name": "梅州市五华县河东镇高车塘村",
+			//村属性
+			"country_attribute": "贫困村",
+			//地形地貌
+			"topography": "山区村镇",
+			//发展方向
+			"dev_target": "一般村镇",
+			//自然村（村民小组）
+			"groups": "11个"
+		},
+		//人口结构
+		"population": {
+			//户
+			"family": {
+				//总户数
+				"total": 569,
+				//条图
+				"bars": [
+					{
+						//指标名
+						"name": "贫困户数",
+						//指标值
+						"value": 82
+					}
+				]
+			},
+			//人口
+			"people": {
+				//总人口数
+				"total": 2926,
+				//条图
+				"bars": [
+					{
+						//指标名
+						"name": "贫困人口",
+						//指标值
+						"value": 279
+					}
+				]
+			},
+			//劳动力
+			"labor": {
+				//劳动力人数
+				"total": 2926,
+				//条图
+				"bars": [
+					{
+						//指标名
+						"name": "外出务工人数",
+						//指标值
+						"value": 1000
+					}
+				]
+			}
+		},
+		//生产条件
+		"production": {
+			//耕地面积
+			"cultivated_land": {
+				//总亩数
+				"total": 1700,
+				//有效亩数
+				"available": 1300
+			},
+			//林地面积
+			"forest_land": {
+				//总亩数
+				"total": 12167,
+				//有效亩数
+				"available": 50
+			},
+			//牧草地面积总亩数
+			"grass_total": 0,
+			//水域面积总亩数
+			"water_total": 30
+		}
+	}
+}

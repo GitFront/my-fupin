@@ -1,0 +1,16 @@
+{
+	"data":{
+		"belong_organization":"广州市天河区民政局",
+		"list":[
+			{
+				"id":"441481131204",
+				"order":1,
+				"contact_phone":"13500128223",
+				"contact_name":"张妙",
+				"country_name":"荷树村委会"
+			}
+		]
+	},
+	"code":0,
+	"msg":"获取信息成功"
+}

@@ -1,0 +1,12 @@
+{
+	"code": 0,
+	"msg": "获取信息成功",
+	"data": {
+		//低保五保政策落实(户数)
+		"chart_config_family": {},
+		//低保五保政策落实(人数)
+		"chart_config_people": {},
+		//统计表，同data_monitor_table.json定义
+		"table": {}
+	}
+}

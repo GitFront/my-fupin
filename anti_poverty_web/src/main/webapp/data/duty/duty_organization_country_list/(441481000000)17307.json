@@ -1,0 +1,16 @@
+{
+	"data":{
+		"belong_organization":"广州市体育局",
+		"list":[
+			{
+				"id":"441481135219",
+				"order":1,
+				"contact_phone":"3838101",
+				"contact_name":"吴奕文",
+				"country_name":"教礼村委会"
+			}
+		]
+	},
+	"code":0,
+	"msg":"获取信息成功"
+}

@@ -1,0 +1,68 @@
+﻿{
+	"data": {
+		"chart_config_top_poor": {
+			"count": 10,
+			"list": [
+				{
+					"percent": "100.00%",
+					"name": "湛江市(83991户)",
+					"district_name": "湛江市"
+				},
+				{
+					"percent": "90.17%",
+					"name": "茂名市(75733户)",
+					"district_name": "茂名市"
+				},
+				{
+					"percent": "76.35%",
+					"name": "梅州市(64128户)",
+					"district_name": "梅州市"
+				},
+				{
+					"percent": "74.03%",
+					"name": "清远市(62182户)",
+					"district_name": "清远市"
+				},
+				{
+					"percent": "60.23%",
+					"name": "云浮市(50585户)",
+					"district_name": "云浮市"
+				},
+				{
+					"percent": "56.60%",
+					"name": "揭阳市(47537户)",
+					"district_name": "揭阳市"
+				},
+				{
+					"percent": "52.35%",
+					"name": "河源市(43971户)",
+					"district_name": "河源市"
+				},
+				{
+					"percent": "51.11%",
+					"name": "肇庆市(42930户)",
+					"district_name": "肇庆市"
+				},
+				{
+					"percent": "50.31%",
+					"name": "汕尾市(42255户)",
+					"district_name": "汕尾市"
+				},
+				{
+					"percent": "48.12%",
+					"name": "阳江市(40420户)",
+					"district_name": "阳江市"
+				}
+			]
+		},
+		"stat": {
+			"amount_poor_households": "2277",
+			"amount_poor_people": "171.8万",
+			"amount_poor_families": "65.8万",
+			"rate_poor": "4.6%",
+			"amount_plan": "50.0万"
+		}
+	},
+	"code": 0,
+	"msg": "获取信息成功"
+}

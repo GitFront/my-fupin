@@ -1,0 +1,29 @@
+/* 颜色 */
+$m-c:#6691f9;  //主要颜色
+$border-c:#343c4a;
+$font-black-c:#252525;
+
+$table-border:#e9e9eb;
+	//半透明颜色
+$ml-rgba-c:rgba(47,47,58, 0.2);  //左边透明颜色
+$mr-rgba-c:rgba(44,52,60, 0.74); //右边透明颜色
+$shrink-rgba-c:rgba(37,37,43, 0.7);
+
+$m-shadow:0px 0px 10px  #2075c6;
+$div-shadow:0px 0px 10px  #0d2033;
+$shadow-c:rgba(20,20,20, 0.5);
+/* end 颜色 */
+
+/* 长宽 */
+$m-w:1366px;
+$m-h:768px;
+
+$m-radius:18px;
+
+/*end 长宽 */
+
+
+/* 间距 */
+
+
+/*end 间距 */

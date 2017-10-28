@@ -1,0 +1,34 @@
+.c-app-dialog{
+  .dialog-overlay{
+    height: 100%;
+    overflow: auto;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    position: fixed;
+    width: 100%;
+    z-index: 1000;
+    background-color: rgba(0, 0, 0, 0.498039);
+  }
+  .dialog-content-box{
+    overflow: auto;
+    padding: inRem(50);
+    top: 50%;
+    left: 50%;
+    position: fixed;
+    transform:translate(-50%, -50%);
+    z-index: 10000;
+    .dialog-content{
+      background-color: #fff;
+      border-radius:inRem(10);
+    }
+    .dialog-alert{
+      width:inRem(600);
+      height:inRem(200);
+      line-height:inRem(200);
+      text-align: center;
+      font-size:inRem(32);
+    }
+  }
+}

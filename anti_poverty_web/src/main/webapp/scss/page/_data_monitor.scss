@@ -1,0 +1,885 @@
+$img-monitor-path:'../../images/fupin_strategy/';
+
+.pop-poor-monitor-wrap{
+  $nav-border-c:  #606b97;
+  $content-bg-c:  linear-gradient(to bottom,#252640, #212235);
+  $content-w:1052px;
+  display: none;
+  position: absolute;
+  left: 50%;
+  top:$hearder-h ;
+  margin-left:-$m-w / 2;
+  width: $m-w;
+  height:$m-h - $hearder-h;
+  z-index: $zIndexDataMonitor;
+  background: $content-bg-c;
+  overflow: hidden;
+
+   .monitor-header{
+    $h:61px;
+    $bg-c:#343451;
+    z-index: 10;
+    position: relative;
+    left: -10px;
+    padding-left: 10px;
+    height: 61px;
+    width: $m-w + 10 ;
+    line-height: $h;
+    background:  $bg-c;
+    border-bottom: 1px solid $nav-border-c;
+    box-shadow:0 6px 6px 1px #1d212d inset,0 8px 8px rgba(29,33,45, .5), inset 0 0px 8px 1px rgba(139, 171, 255, 0.55);
+
+   .header-title{
+    float: left;
+    padding-left: 15px;
+    width: 234px;
+    font-size: 20px;
+    }
+
+    .tab-year{
+      text-align: center;
+      float: left;
+      height: $h;
+      line-height: $h +2;
+    }
+
+    .monitor-nav{
+      &.tabs-s {
+        li {
+          width: auto;
+          padding-left: 14px;
+          padding-right: 14px;
+        }
+      }
+      float: left;
+      margin-left: 15px;
+      li{
+        @extend %forbid-select-text;
+        margin-top: 25px;
+        padding-bottom: 1px;
+        opacity:.7;
+        $w:102px;
+        float: left;
+        width: $w;
+        height: 15px;
+        line-height: 15px;
+        text-align: center;
+        border-right: 1px solid #4b5a96;
+        &.active{
+          margin-top: 15px;
+          opacity:1;
+          height: 36px;
+          line-height: 36px;
+          background: #8babff;
+          color: #202030;
+        }
+  
+        strong{
+          cursor: pointer;
+        }
+      }
+    }
+    
+    .download-select{
+      margin-top: 16px;
+      margin-right: 13px;
+      float: right;
+      height: 32px;
+      padding-top: 8px;
+      font-size: 14px;
+    }
+
+    .back-btn{
+      margin-top: 16px;
+      margin-right: 20px;
+      margin-left: 0;
+//      float: right;
+      width: auto;
+      font-size: 14px;
+      height: 28px;
+      line-height: 26px;
+      padding-right: 10px;
+      padding-left: 32px;
+      @include bgPng(back-icon,12px,8px);
+    }
+
+    .second-tab-title{
+      position: absolute;
+      float: left;
+      height: 40px;
+      width: 800px;
+      line-height: 40px;
+      top: 13px;
+      left: 376px;
+      padding-left: 35px;
+      font-size: 14px;
+      background:  $bg-c;
+    }
+}
+
+.monitor-content{
+
+  margin-top: 10px;
+  float: right;
+  width:$content-w ;
+
+  .page-content-wrap{
+    height: 636px;
+  }
+}
+
+
+
+.page-content+.page-content{
+  margin-top: 20px;
+}
+.page-content{
+  position: relative;
+  margin-top:0px;
+
+  .chart-row {
+      &.chart-expanded {
+        .chart-item {
+          display: none;
+        }
+      }
+    @extend .clearfix;
+  }
+  .chart-item{
+    &.top-no-title{
+      margin-top: 16px;
+    }
+    &.chart-expand {
+      display: none;
+    }
+    $margin-r:18px;
+    box-shadow:0px 10px 38px #181827;
+    border:2px solid #414163;
+    position:relative;
+    float:left;
+    margin-right:$margin-r;
+    margin-top: 33px;
+    padding-bottom: 6px;
+    width:350px;
+    background-color: #292536;
+
+    .chart-item-extra {
+      position: absolute;
+      z-index: 10;
+      right: 10px;
+      top: 10px;
+      @extend .clearfix;
+      > * {
+        float: left;
+      }
+      .link-a{
+        color: $yellow;
+        font-size: 12px;
+        cursor: pointer;
+        line-height: 30px;
+        margin-left: 12px;
+      }
+      .btn-cyan {
+        &:hover {
+          cursor: pointer;
+        }
+        $h: 30px;
+        height: $h;
+        line-height: $h;
+        text-align: center;
+        font-size: 14px;
+        color: $cyan;
+        width: 78px;
+        border: 1px solid $cyan;
+        box-sizing: border-box;
+      }
+
+    }
+    .chart-item-title{
+      position:absolute;
+      top:-14px;
+      left:10px;
+      color:#FBDF16;
+      font-size:16px;
+      min-width:152px;
+      padding:0 20px;
+      height:30px;
+      line-height:30px;
+      text-align: center;
+      background: url('#{$img-monitor-path}poor_atrribute_chart_title.png') no-repeat;
+      background-size: 100% 100%;
+    }
+    .charts-wrap{
+      height: 240px;
+      overflow: hidden;
+      &.high{
+        height: 315px;
+        .chart{
+          height: 300px;
+        }
+      }
+    }
+
+    
+    &.chart-whole{
+      width: $content-w - 30;
+    }
+    &.chart-half{
+      width: 500px;
+      &:nth-child(even){
+      margin-right:0;
+      }
+    }
+    &.chart-33p{
+      width: 326px;
+      &:nth-child(3n){
+       margin-right: 0;
+      }
+    }
+    
+    &.chart-small{
+      width: 435px;
+    }
+    &.chart-big{
+      width: 566px;
+    }
+    .chart{
+      background: #000;
+      position: relative;
+      top: 5px;
+      box-sizing:border-box;
+      height: 240px;
+      padding-top:25px;
+
+    }
+
+    .chart-tab{
+      z-index: 50;
+      position: absolute;
+      right: 24px;
+      top: 10px;
+      li{
+        float: left;
+        min-width: 76px;
+        height: 28px;
+        line-height: 28px;
+        text-align: center;
+        color:$light-blue;
+        border:1px solid $light-blue;
+        cursor: pointer;
+        &.active{
+          color: #202030;
+          background: $light-blue;
+        }
+      }
+    }
+  }
+
+  .table-title-select{
+    position: absolute;
+    left: 70px;
+    top: 12px;
+  }
+  .table-item{
+    width: $content-w - 26;
+    padding-bottom: 10px;
+
+    &.has-title-select{
+      .table-title{
+         line-height: 52px;
+           height: 52px;
+      }
+    }
+    .table-title{
+      padding-left: 5px;
+      font-size: 16px;
+      color: $yellow;
+      line-height: 35px;
+      height: 35px;
+      .btn-area{
+        float: right;
+        position: relative;
+        top:4px;
+      }
+      
+    }
+  }
+ }
+ .jspVerticalBar{
+  right: 6px;
+ }
+}
+
+//二级弹窗
+.pop-poor-monitor-second-wrap{
+  display: none;
+  @extend %shade-wrap;
+  z-index: $zIndexDataMonitorPopup;
+
+  .pop-poor-monitor-second {
+    $w: 1290px;
+    $h: 670px;
+    $margin-l:20px;
+
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: $w;
+    height: $h;
+    margin-top: - $h/2;
+    margin-left: - $w/2;
+    background: url('#{$img-monitor-path}monitor_second_bg.png') no-repeat 0 0;
+
+    .btn-close {
+      $s: 46px;
+      position: absolute;
+      width: $s;
+      height: $s;
+      cursor: pointer;
+      right: -21px;
+      top: -14px;
+      @include bgPng(file_btn_close);
+      z-index: 80;
+    }
+
+    .page-content-wrap {
+      height: 604px;
+    }
+
+    .second-popup-header{
+      padding-left: 24px;
+      line-height: 63px;
+      font-size: 18px;
+    }
+
+    .basic-info-wrap{
+      .select-area{
+        margin-top: 24px;
+        margin-left: $margin-l;
+      }
+    }
+
+    .check-area{
+      margin:0 $margin-l;
+      margin-top: 4px;
+    }
+
+    .second-popup-table {
+      padding:0 $margin-l;
+      padding-top: 10px;
+      padding-bottom: 10px;
+
+        .table-title {
+          font-size: 16px;
+          color: $yellow;
+          line-height: 35px;
+          height: 35px;
+          .btn-area {
+            float: right;
+            position: relative;
+            top: 4px;
+          }
+        }
+    }
+  }
+
+
+}
+
+.monitor-tree {
+  &.popup-monitor-tree{
+      .tree-container{
+        height: 605px;
+      }
+  }
+  .tree-container {
+    box-sizing:border-box;
+    background: #403c55;
+    border-right:2px solid #404165 ;
+    .ico-quest {
+      $s: 16px;
+      //&.active {
+      //  .tip {
+      //    display: block;
+      //  }
+      //}
+      &:hover {
+        .tip {
+          display: block;
+        }
+      }
+      .tip {
+        &:after {
+          $w: 18px;
+          $h: 18px;
+          content: " ";
+          display: block;
+          position: absolute;
+          bottom: -18px;
+          right: 5px;
+          width: $w;
+          height: $h;
+          @include bgPng(file_tip_arrow);
+          filter: drop-shadow(0 12px 38px rgba(29, 33, 45, 1));
+        }
+        line-height: 24px;
+        font-size: 12px;
+        color: #FFF;
+        z-index: 3;
+        position: absolute;
+        bottom: 100%;
+        right: -5px;
+        width: 280px;
+        background-color: #373755;
+        padding: 14px 16px;
+        box-sizing: border-box;
+        box-shadow: 0 12px 38px rgba(29, 33, 45, 1);
+        margin-bottom: 13px;
+        display: none;
+        cursor: default;
+      }
+      z-index: 3;
+      width: $s;
+      height: $s;
+      right: 10px;
+      bottom: 10px;
+      cursor: pointer;
+      position: absolute;
+      display: none;
+      @include bgPng(file_ico_quest);
+    }
+    position: relative;
+    width: 290px;
+    height: 658px;
+  }
+  .tree-wrapper {
+    //height: 623px;
+    //width: 260px
+    height: 100%;
+    width: 100%;
+    box-sizing: border-box;
+    margin: 0 auto;
+  }
+  .tree {
+    padding: 20px 15px;
+  }
+}
+
+
+//统计表
+.monitor-total-table{
+  width:1000px;
+}
+//table公共
+.monitor-tb-wrap {
+  width: 100%;
+}
+
+.monitor-tb{
+  width:100%;
+  line-height: 16px;
+  border:1px solid #5B748C;
+  border-collapse:collapse;
+  color:#ebebeb;
+  font-size:12px;
+  .no-detail{
+    text-decoration: none;
+    cursor: default;
+    color: #fff;
+  }
+  td{
+    border:1px solid #5B748C;
+    padding:8px;
+  }
+  > thead{
+    background:#47425C;
+    td {
+      white-space: nowrap;
+      text-align: center;
+    }
+    span{
+      position:relative;
+      top:3px;
+    }
+    .ico-quest {
+      $s: 16px;
+      &.active {
+        .tip {
+          display: block;
+        }
+      }
+      .tip {
+        &:after {
+          $w: 18px;
+          $h: 18px;
+          content: " ";
+          display: block;
+          position: absolute;
+          bottom: -18px;
+          right: 88px;
+          width: $w;
+          height: $h;
+          @include bgPng(file_tip_arrow);
+          filter: drop-shadow(0 12px 38px rgba(29, 33, 45, 1));
+        }
+        table {
+          td {
+            background-color:#373755;
+            &:first-child {
+              width: 64px;
+              vertical-align: top;
+            }
+            padding: 0;
+            border: none;
+            line-height: 24px;
+            font-size: 12px;
+            color: #FFF;
+          }
+          width: 100%;
+        }
+        z-index: 2;
+        position: absolute;
+        bottom: 100%;
+        right: -88px;
+        width: 251px;
+        background-color: #373755;
+        padding: 14px 16px;
+        box-sizing: border-box;
+        box-shadow: 0 12px 38px rgba(29, 33, 45, 1);
+        margin-bottom: 13px;
+        display: none;
+        cursor: default;
+        line-height: 16px;
+      }
+      width: $s;
+      height: $s;
+      display: inline-block;
+      cursor: pointer;
+      position: relative;
+      @include bgPng(file_ico_quest);
+      top: 3px;
+      left: 3px;
+    }
+  }
+  > tbody{
+    td{
+      line-height:16px;
+      background:#322E41;
+      white-space: nowrap;
+      &[data-action-type]{
+        cursor: pointer;
+        text-decoration: underline;
+        color:#84DFF3;
+      }
+    }
+  }
+}
+
+.yellow-btn{
+        float: right;
+        padding-right: 5px;
+        margin-left: 8px;
+        width: 48px;
+        padding-top: 2px;
+        height: 22px;
+        line-height: 22px;
+        font-size: 12px;
+        text-align: right;
+      }
+      .export-btn{
+          @include bgPng("export-icon",7px,6px);
+      }
+      .detail-btn{
+          @include bgPng("detail-icon",7px,6px);
+      }
+//导出
+.export-wrap{
+  display: none;
+  @extend %shade-wrap;
+  z-index: $zIndexDataExport;
+  font-size: 14px;
+  color: #5bbeff;
+  .export-content{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin-top: -50px;
+    transform: translate(-50%,-50%);
+    .tips{
+      padding-left: 4px;
+      margin-bottom: 9px;
+    }
+    .export-bar-wrap{
+      .export-bar{
+        width: 364px;
+        height: 15px;
+        display: inline-block;
+        @include bgPng(export-bar-bg);
+
+        .export-bar-process{
+        width: 364px;
+        height: 15px;
+        border-radius: 7px;
+        @include bgPng(export-bar);
+        }
+      }
+      .rate-num{
+        padding-left: 4px;
+        vertical-align: 3px;
+      }
+    }
+  }
+}
+//表格页脚
+.table-notes{
+  float: left;
+  margin-top: 12px;
+  font-size: 12px;
+  color: #bcbcbe;
+}
+.table-pagination{
+  $h:18px;
+  float: right;
+  margin-top: 12px;
+  font-size: 12px;
+  height: $h;
+  line-height:$h ;
+  .cur-page{
+    margin: 0 4px;
+  }
+  em{
+    margin-left: 12px;
+  }
+  .icon{
+    @extend %forbid-select-text;
+    display: inline-block;
+    width: 22px;
+    height: 16px;
+    vertical-align: -5px;
+    border: 1px solid $light-blue;
+    cursor: pointer;
+  }
+  .arrow-first{
+    @include bgPng(icon-2arrow-left,6px,4px);
+  }
+  .arrow-end{
+    @include bgPng(icon-2arrow-right,6px,4px);
+  }
+  .arrow-left{
+    @include bgPng(icon-arrow-left,9px,4px);
+  }
+  .arrow-right{
+    @include bgPng(icon-arrow-right,9px,4px);
+  }
+}
+
+
+ //选择区域
+.check-area{
+    strong {
+      display: inline-block;
+      padding-right: 4px;
+    }
+    margin-top: 10px;
+}
+
+.check-area-table {
+  width: 100%;
+  $h:38px;
+  line-height: $h;
+}
+
+.check-area-label {
+  text-align: right;
+  width: 70px;
+  white-space: nowrap;
+  vertical-align: top;
+}
+
+.check-row,.radio-row{
+  p {
+   float: left;
+  }
+}
+
+.check{
+  $h:30px;
+  display: inline-block;
+  box-sizing:border-box;
+  margin-right: 16px;
+  padding-left: 23px;
+  height: $h;
+  line-height: $h;
+  color: $light-blue;
+  text-align: center;
+  cursor: pointer;
+  @include bgPng(check-off,0,7px);
+  @extend %forbid-select-text;
+
+
+  &.disabled{
+    opacity:.3;
+    cursor: not-allowed;
+  }
+
+  &:hover{
+  color: $light-blue;
+  }
+
+  &.active{
+    @include bgPng(check-on,0,7px);
+  }
+ }
+.radio{
+  $h:30px;
+  display: inline-block;
+  box-sizing:border-box;
+  margin-right: 12px;
+  padding:0 14px;
+  height: $h;
+  line-height: $h;
+  color: $light-blue;
+  text-align: center;
+  cursor: pointer;
+  @extend %forbid-select-text;
+  
+  &.disabled{
+    opacity:.3;
+    cursor: not-allowed;
+  }
+
+  &:hover{
+  color: $light-blue;
+  }
+
+  &.active{
+    background: $light-blue;
+    color: #202030;
+    box-shadow: 0 2px 2px  rgba(0,0,0, .55);
+  }
+}
+
+
+
+//下拉
+.select-row {
+   margin-bottom: 8px;
+    label{
+      display: inline-block;
+      width: 70px;
+      text-align: right;
+    }
+
+  .selected {
+    border: 1px solid #87E5F9;
+  }
+}
+  .select-box {
+    width: 70px;
+    padding: 7px 10px;
+    border: 1px solid #C2C2CB;
+    display: inline-block;
+    position: relative;
+    line-height: 1;
+    cursor: pointer;
+    &.forbid{
+      border-color: #999;
+      cursor: not-allowed;
+      &>span{
+        color: #999;
+      }
+    }
+    &.download-select{
+      margin-left: 26px;
+      padding-top: 5px;
+      padding-left: 7px;
+      padding-right: 6px;
+      box-sizing:border-box;
+      width: auto;
+      height: 26px;
+      border-color: $yellow;
+      font-size: 12px;
+      strong{
+        padding:0 4px;
+         @extend %forbid-select-text;
+        color: $yellow;
+      }
+      .icon-down{
+        display: inline-block;
+        width: 13px;
+        height: 12px;
+        background: url('#{$img-monitor-path}export-icon.png') no-repeat 0 0;
+      }
+      .arrow {
+        background: url('#{$img-monitor-path}arrow_down_yellow.png') no-repeat 0 0!important;
+      }
+      .arrow-on {
+      background: url('#{$img-monitor-path}arrow_up_yellow.png') no-repeat 0 0!important;
+       }
+       .select-list {
+        text-align: center;
+       }
+
+    }
+    
+    .arrow {
+      width: 11px;
+      height: 7px;
+      display: inline-block;
+      float: right;
+      position: relative;
+      top: 4px;
+      background: url('#{$img-monitor-path}arrow_down.png') no-repeat 0 0;
+    }
+    .arrow-on {
+      background: url('#{$img-monitor-path}arrow_up.png') no-repeat 0 0;
+    }
+    span {
+      @extend %forbid-select-text;
+      width: 54px;
+      overflow: hidden;
+      height: 13px;
+      display: inline-block;
+    }
+    .select-list {
+      background-color: #353553;
+      position: absolute;
+      padding: 10px;
+      min-width: 75px;
+      //max-width: 150px;
+      max-height: 320px;
+      left: -2px;
+      top: 34px;
+      z-index: 100;
+      text-align: left;
+      display: none;
+
+      .jspHorizontalBar {
+        display: none;
+      }
+      li {
+        padding: 12px 10px;
+        border: 1px solid #353553;
+        cursor: pointer;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        font-size: 12px;
+
+        &:hover, &.active {
+          border: 1px solid #6E76A4;
+          background-color: #4A4A6F;
+        }
+      }
+    }
+  }
+
+//贫困分析
+#poorAnalysisPoorAnalysisChartTable {
+  position: relative;
+    .detail-btn{
+      position: absolute;
+      right: 13px;
+      top: -8px;
+    }
+}

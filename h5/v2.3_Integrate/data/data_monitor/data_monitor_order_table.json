@@ -1,0 +1,279 @@
+{
+	"code": 0,
+	"msg": "获取信息成功",
+	"data": {
+		"table": {
+			"title": "村准确率排序",
+			"export_url": "export.json",
+			"head": [
+				[
+					{
+						"content": "排名"
+					},
+					{
+						"content": "行政区域"
+					},
+					{
+						"content": "指标"
+					},
+					{
+						"content": "操作"
+					}
+				]
+			],
+			"body": [
+				[
+					{
+						"content": "1"
+					},
+					{
+						"content": "云浮云浮云浮云浮"
+					},
+					{
+						"content": "准确率"
+					},
+					{
+						"content": "查看",
+						"action_type": "area_data",
+						"action_data": {
+							"area_level": "country",
+							"area_id": 3
+						}
+					}
+				],
+				[
+					{
+						"content": "2"
+					},
+					{
+						"content": "云浮云浮云浮云浮"
+					},
+					{
+						"content": "准确率"
+					},
+					{
+						"content": "查看",
+						"action_type": "file_detail",
+						"action_data": {
+							"file_id": 2
+						}
+					}
+				],
+				[
+					{
+						"content": "3"
+					},
+					{
+						"content": "云浮云浮云浮云浮"
+					},
+					{
+						"content": "准确率"
+					},
+					{
+						"content": "查看",
+						"action_type": "area_data",
+						"action_data": {
+							"area_level": "country",
+							"area_id": 3
+						}
+					}
+				],
+				[
+					{
+						"content": "3"
+					},
+					{
+						"content": "云浮云浮云浮云浮"
+					},
+					{
+						"content": "准确率"
+					},
+					{
+						"content": "查看",
+						"action_type": "area_data",
+						"action_data": {
+							"area_level": "country",
+							"area_id": 3
+						}
+					}
+				],
+				[
+					{
+						"content": "3"
+					},
+					{
+						"content": "云浮云浮云浮云浮"
+					},
+					{
+						"content": "准确率"
+					},
+					{
+						"content": "查看",
+						"action_type": "area_data",
+						"action_data": {
+							"area_level": "country",
+							"area_id": 3
+						}
+					}
+				],
+				[
+					{
+						"content": "3"
+					},
+					{
+						"content": "云浮云浮云浮云浮"
+					},
+					{
+						"content": "准确率"
+					},
+					{
+						"content": "查看",
+						"action_type": "area_data",
+						"action_data": {
+							"area_level": "country",
+							"area_id": 3
+						}
+					}
+				],
+				[
+					{
+						"content": "3"
+					},
+					{
+						"content": "云浮云浮云浮云浮"
+					},
+					{
+						"content": "准确率"
+					},
+					{
+						"content": "查看",
+						"action_type": "area_data",
+						"action_data": {
+							"area_level": "country",
+							"area_id": 3
+						}
+					}
+				],
+				[
+					{
+						"content": "3"
+					},
+					{
+						"content": "云浮云浮云浮云浮"
+					},
+					{
+						"content": "准确率"
+					},
+					{
+						"content": "查看",
+						"action_type": "area_data",
+						"action_data": {
+							"area_level": "country",
+							"area_id": 3
+						}
+					}
+				],
+				[
+					{
+						"content": "3"
+					},
+					{
+						"content": "云浮云浮云浮云浮"
+					},
+					{
+						"content": "准确率"
+					},
+					{
+						"content": "查看",
+						"action_type": "area_data",
+						"action_data": {
+							"area_level": "country",
+							"area_id": 3
+						}
+					}
+				],
+				[
+					{
+						"content": "3"
+					},
+					{
+						"content": "云浮云浮云浮云浮"
+					},
+					{
+						"content": "准确率"
+					},
+					{
+						"content": "查看",
+						"action_type": "area_data",
+						"action_data": {
+							"area_level": "country",
+							"area_id": 3
+						}
+					}
+				],
+				[
+					{
+						"content": "3"
+					},
+					{
+						"content": "云浮云浮云浮云浮"
+					},
+					{
+						"content": "准确率"
+					},
+					{
+						"content": "查看",
+						"action_type": "area_data",
+						"action_data": {
+							"area_level": "country",
+							"area_id": 3
+						}
+					}
+				],
+				[
+					{
+						"content": "3"
+					},
+					{
+						"content": "云浮云浮云浮云浮"
+					},
+					{
+						"content": "准确率"
+					},
+					{
+						"content": "查看",
+						"action_type": "area_data",
+						"action_data": {
+							"area_level": "country",
+							"area_id": 3
+						}
+					}
+				],
+				[
+					{
+						"content": "3"
+					},
+					{
+						"content": "云浮云浮云浮云浮"
+					},
+					{
+						"content": "准确率"
+					},
+					{
+						"content": "查看",
+						"action_type": "area_data",
+						"action_data": {
+							"area_level": "country",
+							"area_id": 3
+						}
+					}
+				]
+			],
+			"pagination": {
+				"page_total": 19,
+				"page_cur": 3,
+				"amount_total": 186
+			}
+		}
+	}
+}

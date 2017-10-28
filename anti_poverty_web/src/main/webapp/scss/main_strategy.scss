@@ -1,0 +1,60 @@
+@charset "UTF-8";
+
+@font-face{
+  font-family: dongQingHeiTi;
+  //src: url('../../font/Hiragino Sans GB W3.otf');
+  src: local('微软雅黑'), local('宋体');
+}
+
+@font-face{
+  font-family: miNiJian;
+  src: url('../../font/impact.otf');
+}
+
+/* 引入scss文件 */
+/* base基础文件 */
+@import "base/_var";//sass变量
+@import "base/_function";//函数
+@import "base/_reset";//重置浏览器默认属性
+@import "base/_mixin_strategy";//混合
+@import "base/_base_strategy";//基本样式
+@import "base/_animation";//动画
+/* end base */
+
+@import "components/under_construction";
+@import "components/dialog";
+@import "components/scroll_pane";
+@import "components/tipso";
+@import "components/carousel";
+@import "components/loading_mask";
+@import "components/copyright";
+@import "components/_tab_switch";
+@import "components/tree";
+@import "components/_popup";
+@import "components/_select";
+@import "components/_select";
+@import "components/_small_components";
+
+/* layout 重复布局 */
+@import "layout/_header_strategy";//头部导航
+@import "layout/_center_strategy";//页面中部布局-现状基本是贫困分析的中部
+@import "layout/_footer";
+/* end layout */
+
+/* page 页面 */
+@import "page/_poor_county_detail";//贫困村档案 和 贫困户档案
+@import "page/_strategy";//战略地图
+@import "page/_poor_east_west";//东西扶贫协作
+@import "page/_poor_service";//扶贫服务
+@import "page/_data";//数据监控
+@import "page/_data_monitor";//数据分析
+//@import "page/_data_analyse";//老 数据分析
+@import "page/_search";
+@import "page/_search_result";
+@import "page/under_construction";
+@import "page/_capital";//资金监控
+@import "page/_example_country"; //示范村
+//@import "page/_edu";
+//@import "page/_edu_school";
+
+/* end page */

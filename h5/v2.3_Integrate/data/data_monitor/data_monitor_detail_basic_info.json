@@ -1,0 +1,144 @@
+{
+	"code": 0,
+	"msg": "获取信息成功",
+	"data": {
+		"win_title": "扶贫对象监控>变动分析>扶贫对象明细",
+		"years": {
+			"available_years": [
+				{
+					"name": "2016",
+					"value": "2016"
+				},
+				{
+					"name": "2017",
+					"value": "2017"
+				},
+				{
+					"name": "2018",
+					"value": "2018"
+				},
+				{
+					"name": "全部",
+					"value": ""
+				}
+			],
+			"selected_value": "2017"
+		},
+		"month": {
+			"available_month": [
+				{
+					"name": "1月",
+					"value": "1"
+				},
+				{
+					"name": "2月",
+					"value": "2"
+				},
+				{
+					"name": "3月",
+					"value": "3"
+				},
+				{
+					"name": "全部",
+					"value": ""
+				}
+			],
+			"selected_value": "2"
+		},
+		"area_path":[
+		{
+			"level": "province",
+			"authority":false,
+			"selected_id": 1,
+			"selected_name":"广东省",
+			"list": [
+				{
+					"name": "广东省",
+					"id": 1
+				}
+			]
+		},
+		{
+			"level": "city",
+
+			"authority":false,
+			"selected_id":2,
+			"selected_name":"广州市",
+			"list": [
+				{
+					"name": "全部",
+					"id": null
+				},
+				{
+					"name": "广州市",
+					"id": 2
+				},
+				{
+					"name": "深圳市",
+					"id": 3
+				}
+			]
+		},
+		{
+			"level": "county",
+			"selected_id":null,
+			"selected_name":"全部",
+			"list": [
+				{
+					"name": "全部",
+					"id": null
+				},
+				{
+					"name": "五华县五华县五华县五华县",
+					"id": 4
+				},
+				{
+					"name": "吴县",
+					"id": 5
+				},
+				{
+					"name": "五华县五华县",
+					"id": 4
+				},
+				{
+					"name": "吴县",
+					"id": 5
+				}
+			,
+				{
+					"name": "五华县五华县",
+					"id": 4
+				},
+				{
+					"name": "吴县",
+					"id": 5
+				},
+				{
+					"name": "五华县五华县",
+					"id": 4
+				},
+				{
+					"name": "吴县",
+					"id": 5
+				},
+				{
+					"name": "五华县五华县",
+					"id": 4
+				},
+				{
+					"name": "吴县",
+					"id": 5
+				},
+				{
+					"name": "五华县五华县",
+					"id": 4
+				},
+				{
+					"name": "吴县",
+					"id": 5
+				}
+			]
+		}
+	 ]
+	}
+}

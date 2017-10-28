@@ -1,0 +1,16 @@
+{
+	"code": 0,
+	"msg": "获取信息成功",
+	"data": {
+		//当年贫困人口变化年初数
+		"amount_poor_changed_yearly_begin": 4805,
+		//累计贫困人口变化认定数
+		"amount_poor_changed_accumulated": 54912,
+		//当年贫困人口变化
+		"chart_config_poor_changed_yearly": {},
+		//累计贫困人口变化
+		"chart_config_poor_changed_accumulated": {},
+		//统计表，同data_monitor_table.json定义
+		"table": {}
+	}
+}

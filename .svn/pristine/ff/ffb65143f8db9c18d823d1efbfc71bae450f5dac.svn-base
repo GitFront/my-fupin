@@ -1,0 +1,16 @@
+{
+	"code": 0,
+	"msg": "获取信息成功",
+	"data": {
+		//人均可支配收入（元）
+		"chart_config_average_disposable_income": {},
+		//收入构成（万元）
+		"chart_config_income_composition": {},
+		//人均可支配收入分布（户数）
+		"chart_config_income_distribution": {},
+		//支出构成（万元）
+		"chart_config_payment_composition": {},
+		//统计表，同data_monitor_table.json定义
+		"table": {}
+	}
+}

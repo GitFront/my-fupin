@@ -1,0 +1,369 @@
+﻿{
+  "code": 0,
+  "msg": "获取省/市/县/镇信息成功",
+  "data":{
+    "district_id":"guangdong",
+    "district_name":"兴宁市贫困现状分析",
+    "intro":"全县有20个乡(镇)，455 个村，农村户籍人口有86.9万。<br/>有贫困人口申报的乡(镇)20 个。<br/>相对贫困村<em>58个</em>，贫困户(省定标准) <em>12650户</em>，贫困人口<em>31912人</em> 。",
+    "chart_config":[
+      {
+        "chart": {
+          "type": "solidgauge"
+        },
+        "title": "",
+        "pane": {
+          "center": [
+            "50%",
+            "80%"
+          ],
+          "size": "140%",
+          "startAngle": -90,
+          "endAngle": 90,
+          "background": {
+            "backgroundColor": "#EEE",
+            "innerRadius": "60%",
+            "outerRadius": "100%",
+            "shape": "arc"
+          }
+        },
+        "tooltip": {
+          "enabled": true
+        },
+        "exporting": {
+          "enabled": false
+        },
+        "yAxis": {
+          "enabled": false,
+          "stops": [
+            [
+              0.1,
+              "#007AE1"
+            ]
+          ],
+          "lineWidth": 0,
+          "minorTickInterval": null,
+          "tickPixelInterval": 400,
+          "tickWidth": 0,
+          "title": {
+            "text": "相对贫困村",
+            "y": 25,
+            "style": {
+              "color": "#007AE1"
+            }
+          },
+          "labels": {
+            "enabled": false
+          },
+          "min": 0,
+          "max": 300
+        },
+        "plotOptions": {
+          "solidgauge": {
+            "dataLabels": {
+              "y": 16,
+              "borderWidth": 0,
+              "useHTML": true
+            }
+          }
+        },
+        "series": [
+          {
+            "name": "相对贫困村",
+            "data": [
+              58
+            ],
+            "dataLabels": {
+              "style": {
+                "color": "#007AE1"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "chart": {
+          "type": "solidgauge"
+        },
+        "title": "",
+        "pane": {
+          "center": [
+            "50%",
+            "80%"
+          ],
+          "size": "140%",
+          "startAngle": -90,
+          "endAngle": 90,
+          "background": {
+            "backgroundColor": "#EEE",
+            "innerRadius": "60%",
+            "outerRadius": "100%",
+            "shape": "arc"
+          }
+        },
+        "tooltip": {
+          "enabled": true
+        },
+        "exporting": {
+          "enabled": false
+        },
+        "yAxis": {
+          "enabled": false,
+          "stops": [
+            [
+              0.1,
+              "#007AE1"
+            ]
+          ],
+          "lineWidth": 0,
+          "minorTickInterval": null,
+          "tickPixelInterval": 400,
+          "tickWidth": 0,
+          "title": {
+            "text": "贫困户",
+            "y": 25,
+            "style": {
+              "color": "#007AE1"
+            }
+          },
+          "labels": {
+            "enabled": false
+          },
+          "min": 0,
+          "max": 55800
+        },
+        "plotOptions": {
+          "solidgauge": {
+            "dataLabels": {
+              "y": 16,
+              "borderWidth": 0,
+              "useHTML": true
+            }
+          }
+        },
+        "series": [
+          {
+            "name": "贫困户",
+            "data": [
+              12650
+            ],
+            "dataLabels": {
+              "style": {
+                "color": "#007AE1"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "chart": {
+          "type": "solidgauge"
+        },
+        "title": "",
+        "pane": {
+          "center": [
+            "50%",
+            "80%"
+          ],
+          "size": "140%",
+          "startAngle": -90,
+          "endAngle": 90,
+          "background": {
+            "backgroundColor": "#EEE",
+            "innerRadius": "60%",
+            "outerRadius": "100%",
+            "shape": "arc"
+          }
+        },
+        "tooltip": {
+          "enabled": true
+        },
+        "exporting": {
+          "enabled": false
+        },
+        "yAxis": {
+          "enabled": false,
+          "stops": [
+            [
+              0.1,
+              "#007AE1"
+            ]
+          ],
+          "lineWidth": 0,
+          "minorTickInterval": null,
+          "tickPixelInterval": 400,
+          "tickWidth": 0,
+          "title": {
+            "text": "贫困人口",
+            "y": 25,
+            "style": {
+              "color": "#007AE1"
+            }
+          },
+          "labels": {
+            "enabled": false
+          },
+          "min": 0,
+          "max": 125000
+        },
+        "plotOptions": {
+          "solidgauge": {
+            "dataLabels": {
+              "y": 16,
+              "borderWidth": 0,
+              "useHTML": true
+            }
+          }
+        },
+        "series": [
+          {
+            "name": "贫苦人口",
+            "data": [
+              31912
+            ],
+            "dataLabels": {
+              "style": {
+                "color": "#007AE1"
+              }
+            }
+          }
+        ]
+      }
+    ]
+  ,
+    "list":[
+      {
+        "district_id":1,
+        "district_name":"永和镇",
+        "poor_family":802,
+        "poor_count":1630,
+        "poor_index":56
+      },
+      {
+        "district_id":2,
+        "district_name":"新陂镇",
+        "poor_family":443,
+        "poor_count":989,
+        "poor_index":38
+      },
+      {
+        "district_id":2,
+        "district_name":"新圩镇",
+        "poor_family":631,
+        "poor_count":1545,
+        "poor_index":42
+      },
+      {
+        "district_id":2,
+        "district_name":"兴田街道办事处",
+        "poor_family":272,
+        "poor_count":579,
+        "poor_index":30
+      },
+      {
+        "district_id":2,
+        "district_name":"叶塘镇",
+        "poor_family":6,
+        "poor_count":1203,
+        "poor_index":82
+      },
+      {
+        "district_id":2,
+        "district_name":"水口镇",
+        "poor_family":1266,
+        "poor_count":3625,
+        "poor_index":89
+      },
+      {
+        "district_id":2,
+        "district_name":"大坪镇",
+        "poor_family":833,
+        "poor_count":2185,
+        "poor_index":53
+      },
+      {
+        "district_id":2,
+        "district_name":"刁坊镇",
+        "poor_family":544,
+        "poor_count":1295,
+        "poor_index":41
+      },
+      {
+        "district_id":2,
+        "district_name":"福兴街道办事处",
+        "poor_family":259,
+        "poor_count":576,
+        "poor_index":31
+      },
+      {
+        "district_id":2,
+        "district_name":"合水镇",
+        "poor_family":378,
+        "poor_count":906,
+        "poor_index":46
+      },
+      {
+        "district_id":2,
+        "district_name":"黄陂镇",
+        "poor_family":589,
+        "poor_count":1616,
+        "poor_index":45
+      },
+      {
+        "district_id":2,
+        "district_name":"黄槐镇",
+        "poor_family":244,
+        "poor_count":716,
+        "poor_index":29
+      },
+      {
+        "district_id":2,
+        "district_name":"径南镇",
+        "poor_family":599,
+        "poor_count":1359,
+        "poor_index":39
+      },
+      {
+        "district_id":2,
+        "district_name":"龙田镇",
+        "poor_family":723,
+        "poor_count":1794,
+        "poor_index":47
+      },
+      {
+        "district_id":2,
+        "district_name":"罗浮镇",
+        "poor_family":646,
+        "poor_count":1725,
+        "poor_index":41
+      },
+      {
+        "district_id":2,
+        "district_name":"罗岗镇",
+        "poor_family":964,
+        "poor_count":2796,
+        "poor_index":71
+      },
+      {
+        "district_id":2,
+        "district_name":"坭陂镇",
+        "poor_family":762,
+        "poor_count":2116,
+        "poor_index":52
+      },
+      {
+        "district_id":2,
+        "district_name":"宁新街道办事处",
+        "poor_family":232,
+        "poor_count":435,
+        "poor_index":27
+      },
+      {
+        "district_id":2,
+        "district_name":"宁中镇",
+        "poor_family":456,
+        "poor_count":992,
+        "poor_index":47
+      }
+    ]
+  }
+}

@@ -1,0 +1,37 @@
+{
+	"data":{
+		"belong_organization":"兴宁市总工会",
+		"list":[
+			{
+				"id":"441481132213",
+				"order":1,
+				"contact_phone":"18211468692",
+				"contact_name":"练文才",
+				"country_name":"甘一村委会"
+			},
+			{
+				"id":"441481132210",
+				"order":2,
+				"contact_phone":"13430128601",
+				"contact_name":"石尚玉",
+				"country_name":"陶古村委会"
+			},
+			{
+				"id":"441481132201",
+				"order":3,
+				"contact_phone":"13643092705",
+				"contact_name":"曾开元",
+				"country_name":"三佳村委会"
+			},
+			{
+				"id":"441481132202",
+				"order":4,
+				"contact_phone":"13727636913",
+				"contact_name":"李云香",
+				"country_name":"上翁村委会"
+			}
+		]
+	},
+	"code":0,
+	"msg":"获取信息成功"
+}

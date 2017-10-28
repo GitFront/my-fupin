@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+        
+<mapper namespace="aspire.bi.common.test">
+
+	<select id="queryMapByPAC"  parameterType="string"
+       resultType="hashmap">
+ 		SELECT  DL1.LSB_PAC PAC,DL2.LSB_PAC PPAC,
+ 		R.TEST_VALUE AID_POOR_POP
+		FROM TEST_MAP R,DIM_LRB_PAC_MAP DL1,DIM_LRB_PAC_MAP DL2
+		WHERE 
+		R.PAC=DL1.PAC AND R.PPAC = DL2.PAC 
+ 		
+	</select> 
+	<insert id="setMap">
+			insert into TEST_MAP (PAC,PPAC,TEST_VALUE)
+	    values
+	      (#{PAC},#{PPAC}, #{TEST_VALUE})
+	</insert>
+</mapper>

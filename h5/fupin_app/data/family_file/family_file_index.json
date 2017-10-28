@@ -1,0 +1,24 @@
+{
+  "code": 0,
+  "msg": "获取信息成功",
+  "data":{
+    "poor_business_card":{
+      "id":1,
+      "avatar":"../../images/family_file/icon_avatar.png",
+      "name":"李老根",
+      "poor_attribute":"一般困难户",
+      "poor_reason":"因残、缺劳动力",
+      "help_people":"陈星",
+      "contact_tel":"0755-2111654"
+    },
+    "help_policy":[
+      {
+        "id":1,
+        "title":"广东省教育厅xxxx"
+      }
+    ],
+    "project_working":{
+      "amount":3
+    }
+  }
+}

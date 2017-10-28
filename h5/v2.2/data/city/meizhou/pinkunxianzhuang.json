@@ -1,0 +1,292 @@
+{
+  "code": 0,
+  "msg": "获取省/市/县/镇信息成功",
+  "data":{
+    "district_id":"meizhou",
+    "district_name":"梅州市贫困现状分析",
+    "intro":"全市有8个县区，112个乡(镇)，2039个农村，农村户籍人口有345.0万。<br />有贫困人口申报的县8个，乡(镇)112个。<br />相对贫困村<em>349个</em>，贫困户(省定标准)<em>6.4万</em>，贫困人口<em>18.0万</em>，贫困发生率<em>5.2%。</em>",
+    "chart_config":[
+      {
+        "chart": {
+          "type": "solidgauge"
+        },
+        "title": "",
+        "pane": {
+          "center": [
+            "50%",
+            "80%"
+          ],
+          "size": "140%",
+          "startAngle": -90,
+          "endAngle": 90,
+          "background": {
+            "backgroundColor": "#EEE",
+            "innerRadius": "60%",
+            "outerRadius": "100%",
+            "shape": "arc"
+          }
+        },
+        "tooltip": {
+          "enabled": true
+        },
+        "exporting": {
+          "enabled": false
+        },
+        "yAxis": {
+          "enabled": false,
+          "stops": [
+            [
+              0.1,
+              "#007AE1"
+            ]
+          ],
+          "lineWidth": 0,
+          "minorTickInterval": null,
+          "tickPixelInterval": 400,
+          "tickWidth": 0,
+          "title": {
+            "text": "相对贫困村",
+            "y": 25,
+            "style": {
+              "color": "#007AE1"
+            }
+          },
+          "labels": {
+            "enabled": false
+          },
+          "min": 0,
+          "max": 1200
+        },
+        "plotOptions": {
+          "solidgauge": {
+            "dataLabels": {
+              "y": 16,
+              "borderWidth": 0,
+              "useHTML": true
+            }
+          }
+        },
+        "series": [
+          {
+            "name": "相对贫困村",
+            "data": [
+              349
+            ],
+            "dataLabels": {
+              "style": {
+                "color": "#007AE1"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "chart": {
+          "type": "solidgauge"
+        },
+        "title": "",
+        "pane": {
+          "center": [
+            "50%",
+            "80%"
+          ],
+          "size": "140%",
+          "startAngle": -90,
+          "endAngle": 90,
+          "background": {
+            "backgroundColor": "#EEE",
+            "innerRadius": "60%",
+            "outerRadius": "100%",
+            "shape": "arc"
+          }
+        },
+        "tooltip": {
+          "enabled": true
+        },
+        "exporting": {
+          "enabled": false
+        },
+        "yAxis": {
+          "enabled": false,
+          "stops": [
+            [
+              0.1,
+              "#007AE1"
+            ]
+          ],
+          "lineWidth": 0,
+          "minorTickInterval": null,
+          "tickPixelInterval": 400,
+          "tickWidth": 0,
+          "title": {
+            "text": "贫困户",
+            "y": 25,
+            "style": {
+              "color": "#007AE1"
+            }
+          },
+          "labels": {
+            "enabled": false
+          },
+          "min": 0,
+          "max": 190000
+        },
+        "plotOptions": {
+          "solidgauge": {
+            "dataLabels": {
+              "y": 16,
+              "borderWidth": 0,
+              "useHTML": true
+            }
+          }
+        },
+        "series": [
+          {
+            "name": "贫困户",
+            "data": [
+              64128
+            ],
+            "dataLabels": {
+              "style": {
+                "color": "#007AE1"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "chart": {
+          "type": "solidgauge"
+        },
+        "title": "",
+        "pane": {
+          "center": [
+            "50%",
+            "80%"
+          ],
+          "size": "140%",
+          "startAngle": -90,
+          "endAngle": 90,
+          "background": {
+            "backgroundColor": "#EEE",
+            "innerRadius": "60%",
+            "outerRadius": "100%",
+            "shape": "arc"
+          }
+        },
+        "tooltip": {
+          "enabled": true
+        },
+        "exporting": {
+          "enabled": false
+        },
+        "yAxis": {
+          "enabled": false,
+          "stops": [
+            [
+              0.1,
+              "#007AE1"
+            ]
+          ],
+          "lineWidth": 0,
+          "minorTickInterval": null,
+          "tickPixelInterval": 400,
+          "tickWidth": 0,
+          "title": {
+            "text": "贫困人口",
+            "y": 25,
+            "style": {
+              "color": "#007AE1"
+            }
+          },
+          "labels": {
+            "enabled": false
+          },
+          "min": 0,
+          "max": 595000
+        },
+        "plotOptions": {
+          "solidgauge": {
+            "dataLabels": {
+              "y": 16,
+              "borderWidth": 0,
+              "useHTML": true
+            }
+          }
+        },
+        "series": [
+          {
+            "name": "贫苦人口",
+            "data": [
+              180494
+            ],
+            "dataLabels": {
+              "style": {
+                "color": "#007AE1"
+              }
+            }
+          }
+        ]
+      }
+    ]
+  ,
+    "list":[
+      {
+        "district_id":1,
+        "district_name":"兴宁市",
+        "poor_family":12650,
+        "poor_count":31912,
+        "poor_index":52
+      },
+      {
+        "district_id":2,
+        "district_name":"大埔县",
+        "poor_family":5516,
+        "poor_count":12259,
+        "poor_index":32
+      },
+      {
+        "district_id":3,
+        "district_name":"丰顺县",
+        "poor_family":5884,
+        "poor_count":15893,
+        "poor_index":36
+      },
+      {
+        "district_id":4,
+        "district_name":"蕉岭县",
+        "poor_family":3475,
+        "poor_count":7434,
+        "poor_index":33
+      },
+      {
+        "district_id":4,
+        "district_name":"梅江区",
+        "poor_family":925,
+        "poor_count":1905,
+        "poor_index":19
+      },
+      {
+        "district_id":4,
+        "district_name":"梅县",
+        "poor_family":8349,
+        "poor_count":19179,
+        "poor_index":48
+      },
+      {
+        "district_id":4,
+        "district_name":"平远县",
+        "poor_family":1838,
+        "poor_count":4774,
+        "poor_index":14
+      },
+      {
+        "district_id":4,
+        "district_name":"五华县",
+        "poor_family":25433,
+        "poor_count":86954,
+        "poor_index":92
+      }
+    ]
+  }
+}

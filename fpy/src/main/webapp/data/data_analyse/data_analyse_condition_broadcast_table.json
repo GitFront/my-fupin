@@ -1,0 +1,41 @@
+{
+	"code": 0,
+	"msg": "获取信息成功",
+	"data": {
+		"tips": {
+			"amount_country_have_broadcast": {
+				"source": "建档立卡、省民政厅",
+				"stat_method": "建档立卡是一般贫困的无劳动能力户/五保户/低保户应该享受兜底政策贫困人口、民政是低保户和五保户的人口,两者人口信息不能完全匹配时的贫困户数。"
+			},
+			"amount_country_no_broadcast": {
+				"source": "建档立卡、省民政厅",
+				"stat_method": "建档立卡是一般贫困的无劳动能力户/五保户/低保户应该享受兜底政策贫困人口、民政是低保户和五保户的人口,两者人口信息不能完全匹配时的贫困户数。"
+			},
+			"rate_country_no_broadcast": {
+				"source": "建档立卡、省民政厅",
+				"stat_method": "建档立卡是一般贫困的无劳动能力户/五保户/低保户应该享受兜底政策贫困人口、民政是低保户和五保户的人口,两者人口信息不能完全匹配时的贫困户数。"
+			}
+		},
+		"table": {
+			"list": [
+				{
+					"area_id": 1,
+					"area_level": "town",
+					"area_name": "东海县",
+					"order": 1,
+					"amount_family": 674,
+					"amount_country_have_broadcast": 56,
+					"amount_country_no_broadcast": 124,
+					"rate_country_no_broadcast": "42.5%"
+				}
+			],
+			"total": {
+				"amount_family": 674,
+				"amount_country_have_broadcast": 56,
+				"amount_country_no_broadcast": 124,
+				"rate_country_no_broadcast": "42.5%"
+			}
+		}
+	}
+}
+

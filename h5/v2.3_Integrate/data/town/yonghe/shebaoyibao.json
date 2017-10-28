@@ -1,0 +1,113 @@
+{
+  "code": 0,
+  "msg": "获取信息成功",
+  "data": {
+    "chart_config_tab": [{
+      "tooltip": {
+        "trigger": "axis"
+      },
+      "legend": {
+        "data":["参保的贫困人","参保率"],
+        "x" : "center",
+        "y" : "bottom",
+        "textStyle" : {
+          "color" : "#fff"
+        }
+      },
+      "title": {
+        "text": "贫困人口参保情况",
+        "left": "center",
+        "textStyle":{
+          "color": "#fff",
+          "fontSize":15
+        }
+      },
+      "grid":{
+        "width":255,
+        "right":50,
+        "top":80
+      },
+      "axisLabel" : {
+        "show" : "true"
+      },
+
+      "xAxis":[
+        {
+          "type": "category",
+          "data": ["养老保险","医疗保险","重大疾病保险"],
+          "axisLine":{
+            "lineStyle":{
+              "color":"#fff"
+            }
+          }
+        }
+      ],
+      "yAxis": [
+
+        {
+          "splitLine":{
+            "show":false
+          },
+          "axisLabel": {
+            "formatter": "{value}"
+
+          },
+          "axisLine":{
+            "lineStyle":{
+              "color":"#fff"
+            }
+          }
+        },
+        {
+          "splitLine":{
+            "show":false
+          },
+          "max":100,
+          "axisLabel": {
+            "formatter": "{value}%"
+          },
+          "axisLine": {
+            "lineStyle": {
+              "color": "#fff"
+            }
+          }
+        }
+      ],
+      "series": [
+        {
+          "name":"参保的贫困人",
+          "type":"bar",
+          "data":[163,578,573],
+          "itemStyle": {
+            "normal": {
+              "barBorderRadius": 8
+            },
+            "emphasis": {
+              "barBorderRadius": 8
+            }
+          },
+          "markPoint": {
+            "data": [
+              {"type": "max", "name": "最大值"},
+              {"type": "min", "name": "最小值"}
+            ]
+          }
+        },
+        {
+          "name":"参保率",
+          "type":"line",
+          "yAxisIndex": 1,
+          "data":[28.2,99.67,98.42],
+          "symbolSize":6,
+          "smooth":true,
+          "lineStyle": {
+            "normal": {
+              "width": 4
+            }
+          }
+        }
+      ]
+    }]
+  }
+}
+

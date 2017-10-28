@@ -1,0 +1,164 @@
+{
+	"code": 0,
+	"msg": "获取信息成功",
+	"data": {
+		"table": {
+			"title": "村准确率排序",
+			"export_url": "../../../data/data_monitor/export_table.json",
+			"head": [
+				[
+					{
+						"content": "序号"
+					},
+					{
+						"content": "村名"
+					},
+					{
+						"content": "户主姓名"
+					},
+					{
+						"content": "经纬度"
+					},
+					{
+						"content": "脱贫年份"
+					},
+					{
+						"content": "2017年综合得分"
+					}
+				]
+			],
+			"body": [
+				[
+					{
+						"content": "1"
+					},
+					{
+						"content": "份饭村"
+					},
+					{
+						"content": "张三",
+						"action_type":"family_file",
+						"action_data": {
+							"family_id": 11
+						}
+					},
+					{
+						"content": ""
+					},
+					{
+						"content": "2016"
+					},
+					{
+						"content": "准确率"
+					}
+					
+				],
+				[
+					{
+						"content": "1"
+					},
+					{
+						"content": "份饭村"
+					},
+					{
+						"content": "张三",
+						"action_type":"family_file",
+						"action_data": {
+							"family_id": 11
+						}
+					},
+					{
+						"content": "115.46，23.61"
+					},
+					{
+						"content": "2016"
+					},
+					{
+						"content": "准确率"
+					}
+					
+				],
+				[
+					{
+						"content": "1"
+					},
+					{
+						"content": "份饭村"
+					},
+					{
+						"content": "张三",
+						"action_type":"family_file",
+						"action_data": {
+							"family_id": 11
+						}
+					},
+					{
+						"content": ""
+					},
+					{
+						"content": "2016"
+					},
+					{
+						"content": "准确率"
+					}
+					
+				],
+				[
+					{
+						"content": "1"
+					},
+					{
+						"content": "份饭村"
+					},
+					{
+						"content": "张三",
+						"action_type":"family_file",
+						"action_data": {
+							"family_id": 11
+						}
+					},
+					{
+						"content": "115.46，23.61"
+					},
+					{
+						"content": "2016"
+					},
+					{
+						"content": "准确率"
+					}
+					
+				],
+				[
+					{
+						"content": "1"
+					},
+					{
+						"content": "份饭村"
+					},
+					{
+						"content": "张三",
+						"action_type":"family_file",
+						"action_data": {
+							"family_id": 11
+						}
+					},
+					{
+						"content": "115.46，23.61"
+					},
+					{
+						"content": "2016"
+					},
+					{
+						"content": "准确率"
+					}
+					
+				]
+			],
+			"pagination": {
+				"page_total": 19,
+				"page_cur": 3,
+				"amount_total": 186
+			}
+		}
+	}
+}

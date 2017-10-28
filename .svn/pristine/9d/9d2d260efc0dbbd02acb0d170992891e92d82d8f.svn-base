@@ -1,0 +1,23 @@
+{
+	"data":{
+		"belong_organization":"兴宁市档案局",
+		"list":[
+			{
+				"id":"441481117201",
+				"order":1,
+				"contact_phone":"13719998458",
+				"contact_name":"曾通华",
+				"country_name":"槐西村委会"
+			},
+			{
+				"id":"441481117206",
+				"order":2,
+				"contact_phone":"13549176198",
+				"contact_name":"胡海泉",
+				"country_name":"双龙村委会"
+			}
+		]
+	},
+	"code":0,
+	"msg":"获取信息成功"
+}

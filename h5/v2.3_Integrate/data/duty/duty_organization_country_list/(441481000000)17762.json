@@ -1,0 +1,16 @@
+{
+	"data":{
+		"belong_organization":"梅州市人民政府办公室",
+		"list":[
+			{
+				"id":"441481133201",
+				"order":1,
+				"contact_phone":"13727636149",
+				"contact_name":"罗艳芳",
+				"country_name":"罗陂村委会"
+			}
+		]
+	},
+	"code":0,
+	"msg":"获取信息成功"
+}

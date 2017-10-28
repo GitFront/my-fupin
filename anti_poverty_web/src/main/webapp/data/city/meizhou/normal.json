@@ -1,0 +1,58 @@
+﻿{
+	"data": {
+		"chart_config_top_poor": {
+			"count": 8,
+			"list": [
+				{
+					"percent": "100.00%",
+					"name": "五华县(25433户)",
+					"district_name": "五华县"
+				},
+				{
+					"percent": "49.74%",
+					"name": "兴宁市(12650户)",
+					"district_name": "兴宁市"
+				},
+				{
+					"percent": "32.83%",
+					"name": "梅县(8349户)",
+					"district_name": "梅县"
+				},
+				{
+					"percent": "23.14%",
+					"name": "丰顺县(5884户)",
+					"district_name": "丰顺县"
+				},
+				{
+					"percent": "21.69%",
+					"name": "大埔县(5516户)",
+					"district_name": "大埔县"
+				},
+				{
+					"percent": "13.66%",
+					"name": "蕉岭县(3475户)",
+					"district_name": "蕉岭县"
+				},
+				{
+					"percent": "7.23%",
+					"name": "平远县(1838户)",
+					"district_name": "平远县"
+				},
+				{
+					"percent": "3.64%",
+					"name": "梅江区(925户)",
+					"district_name": "梅江区"
+				}
+			]
+		},
+		"stat": {
+			"amount_poor_households": "349",
+			"amount_poor_people": "18.0万",
+			"amount_poor_families": "6.4万",
+			"rate_poor": "5.2%",
+			"amount_plan": "4.8万"
+		}
+	},
+	"code": 0,
+	"msg": "获取信息成功"
+}

@@ -1,0 +1,90 @@
+.implement-wrap{
+  .implement{
+    overflow: hidden;
+    background-color: #fff;
+  }
+  .implement-hd{
+    padding: 0 inRem(72);
+    border-bottom: 1px solid #c8c8c8;
+    span{
+      display: inline-block;
+      color: #333333;
+      font-size: inRem(32);
+      text-decoration: none;
+      border-bottom: inRem(3) solid #fff;
+      line-height: inRem(87);
+      padding: 0 inRem(45);
+      &.active{
+        color: #0a82f5;
+        border-color: #0a82f5
+      }
+    }
+  }
+  .implement-items{
+    display: block;
+    list-style: none;
+    > li{
+      display: block;
+      border-bottom: 1px solid #c8c8c8;
+      padding: 0 inRem(27);
+      line-height: inRem(90);
+    }
+  }
+  .implement-item{
+    display: flex;
+  }
+  .implement-tit{
+    flex: 1;
+    width: 0;
+    font-size: inRem(30);
+    color: #636363;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    margin-right: inRem(20);
+  }
+  .implement-val{
+    padding-left: inRem(20);
+    font-size: inRem(30);
+    color: #636363;
+  }
+  .implement-tabs-content{
+    display: block;
+    overflow: hidden;
+    list-style: none;
+    > li{
+      display: none;
+      &.active{
+        display: block;
+      }
+    }
+  }
+  .implement-tabs{
+    display: block;
+    overflow: hidden;
+    list-style: none;
+    > li{
+      float: left;
+      display: block;
+      width: 50%;
+      text-align: center;
+      border-bottom: 1px solid #c8c8c8;
+      span{
+        color: #333333;
+        font-size: inRem(32);
+        text-decoration: none;
+        display: inline-block;
+        border-bottom: inRem(3) solid #fff;
+        line-height: inRem(87);
+        padding: 0 inRem(45);
+      }
+
+      &.active{
+        span{
+          color: #0a82f5;
+          border-color: #0a82f5
+        }
+      }
+    }
+  }
+}

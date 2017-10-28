@@ -1,0 +1,58 @@
+{
+  "code": 0,
+  "msg": "获取信息成功",
+  "data":{
+    "family_pics":[
+      {
+        "img_url":"../../data/images/family_file/slider1.jpg",
+        "url":"http://baidu.com"
+      },
+      {
+        "img_url":"../../data/images/family_file/slider1.jpg",
+        "url":"http://baidu.com"
+      },
+      {
+        "img_url":"../../data/images/family_file/slider1.jpg",
+        "url":"http://baidu.com"
+      }
+    ],
+    "base_info": {
+      "contact_tel":"0755-2111654",
+      "base_condition":"李三根家庭人口共有6人，属于扶贫户，其中劳动力2人，60岁以上老人1人，残疾1人，学龄前儿童2人。户主李景球年老无劳力（患有慢性病），妻子残疾（哑），其女儿李金玲已婚，目前居住在户主家，主要照顾其      二女，家庭收入主要靠其李啟明外出务工（酒吧打工）为主，家庭无种养。现住一间70平方土木结构平房(属于危房)。经核查，2015年家庭人均可支配收入为2861元。家庭主要贫困原因是因残、缺劳力，家庭负担较重。"
+    },
+    "poor_reason":[
+      {
+        "color":"#ff0000",
+        "name":"因残"
+      },
+      {
+        "color":"#00ff00",
+        "name":"劳力缺失"
+      },
+      {
+        "color":"#0000ff",
+        "name":"劳力缺失字字"
+      },
+      {
+        "color":"#00ff00",
+        "name":"力缺失"
+      },
+      {
+        "color":"#ff0000",
+        "name":"因残"
+      },
+      {
+        "color":"#0000ff",
+        "name":"劳力缺失字字字字字"
+      }
+    ],
+    "other_info":{
+      "poor_attribute":"一般困难户",
+      "average_income":"17170.00",
+      "year_average_income":"2868.00",
+      "danger_house_rank":"C级",
+      "family_address":"广东省云浮书云城区云城街道岔路村民委员会栗子村",
+      "concat_tel":"0755-2111654"
+    }
+  }
+}

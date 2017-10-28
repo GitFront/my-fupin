@@ -1,0 +1,50 @@
+{
+	"code": 0,
+	"msg": "获取信息成功",
+	"data": {
+		"area_name": "广东省",
+		"total": {
+			"amount": 5851
+		},
+		"farm_at_home": {
+			"amount": 5851,
+			"percent": 41
+		},
+		"chart_config_labor_status": [
+			{
+				"name":"在家务工",
+				"value":1870
+			},
+			{
+				"name":"县内务工",
+				"value":4890
+			},
+			{
+				"name":"县外省内务工",
+				"value":2390
+			},
+			{
+				"name":"省外务工",
+				"value":1200
+			},
+			{
+				"name":"其他",
+				"value":780
+			}
+		],
+		"chart_config_farm_distribution":[
+			{
+				"name":"劳动力",
+				"value":500
+			},
+			{
+				"name":"丧失劳动能力",
+				"value":370
+			},
+			{
+				"name":"无劳动能力",
+				"value":130
+			}
+		]
+	}
+}

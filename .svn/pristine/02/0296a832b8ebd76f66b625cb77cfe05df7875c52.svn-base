@@ -1,0 +1,79 @@
+{
+	"code": 0,
+	"msg": "获取信息成功",
+	"data": {
+		//家庭成员
+		"member": {
+			//成员数（可能会和table长度不一样，特此加上属性）
+			"count": 6,
+			"table":[
+				{
+					//序号
+					"order": 1,
+					//A1姓名
+					"name": "陈志环",
+					//A2性别
+					"sex": "男",
+					//证件类型
+					"credential_type": "残疾证",
+					//年龄
+					"age": 43,
+					//A4与户主关系
+					"relationship": "户主",
+					//A5民族
+					"nationality": "汉族",
+					//A6政治面貌
+					"political_affiliation": "群众",
+					//A7文化程度
+					"education": "小学",
+					//A8在校生情况
+					"at_school": "非在校",
+					//A9健康状况
+					"health": "残疾",
+					//A10劳动能力
+					"labor_capacity": "普通劳动力",
+					//A11务工情况
+					"work_status": "务工情况",
+					//A12务工时间
+					"work_time": 0,
+					//A13是否现役军人
+					"active_service": "否",
+					//A14是否参加大病医疗保险
+					"serious_illness_insurance": "否",
+					//入读技工院校意愿
+					"technical_school_willing": "无意愿",
+					//培训需求
+					"train_need": "无",
+					//技能状况
+					"skill_status": "无",
+					//就业意向
+					"employment_willing": "无",
+					//就业预期
+					"employment_expectation": "无",
+					//是否参加城镇职工基本养老保险
+					"staff_pension_insurance": "否",
+					//是否参加城乡居民基本医疗保险
+					"resident_medical_insurance": "是",
+					//是否参加城乡居民基本养老保险
+					"resident_pension_insurance": "否",
+					//城乡居民基本养老保险个人缴费档次或目前领取养老金水平
+					"pension_level": 0,
+					//成员变更备注
+					"comment": ""
+				}
+			]
+		},
+		//家庭相册
+		"album":{
+			//户主名
+			"house_holder_name": "陈志环",
+			//相册列表
+			"list": [
+				{
+					//照片路径
+					"src": "xxx.jpg"
+				}
+			]
+		}
+	}
+}

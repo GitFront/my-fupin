@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+        
+<mapper namespace="aspire.bi.common.testThread">
+
+	<select id="test"  parameterType="string"
+       resultType="hashmap">
+ 		SELECT  R.ID,R.NAME FROM DEMO_THREAD R
+	</select> 
+	
+	<insert id="add" parameterType="hashmap">
+		insert into DEMO_THREAD (ID, NAME)
+		values (#{id,jdbcType=VARCHAR},#{name,jdbcType=VARCHAR})
+	</insert>
+	
+</mapper>

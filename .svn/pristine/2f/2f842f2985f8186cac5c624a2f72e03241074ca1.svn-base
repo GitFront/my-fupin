@@ -1,0 +1,37 @@
+{
+	"data":{
+		"belong_organization":"兴宁市气象局",
+		"list":[
+			{
+				"id":"441481128216",
+				"order":1,
+				"contact_phone":"13723698582",
+				"contact_name":"邱志强",
+				"country_name":"邹陶村委会"
+			},
+			{
+				"id":"441481128217",
+				"order":2,
+				"contact_phone":"13826640071",
+				"contact_name":"王映芹",
+				"country_name":"土坑村委会"
+			},
+			{
+				"id":"441481128212",
+				"order":3,
+				"contact_phone":"15812924201",
+				"contact_name":"何忠平",
+				"country_name":"大茔村委会"
+			},
+			{
+				"id":"441481128214",
+				"order":4,
+				"contact_phone":"13430114158",
+				"contact_name":"陈雪辉",
+				"country_name":"建民村委会"
+			}
+		]
+	},
+	"code":0,
+	"msg":"获取信息成功"
+}

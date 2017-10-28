@@ -1,0 +1,32 @@
+{
+	"code": 0,
+	"msg": "获取信息成功",
+	"data": {
+		//人均可支配收入年趋势
+		"chart_config_average_income_trend": {},
+		//收入区域分布
+		"chart_config_income_area_distribution": {},
+		//收入统计表
+		"table": [
+			{
+				//行政区域
+				"area_name": "",
+				//贫困户数
+				"poor": {
+					//户数（户）
+					"amount_family": "",
+					//人数（人）
+					"amount_people": ""
+				},
+				//总收入
+				"total_income": "",
+				//总支出
+				"total_payment": "",
+				//可支配收入
+				"disposable_income": "",
+				//人均可支配收入
+				"average_disposable_income": ""
+			}
+		]
+	}
+}

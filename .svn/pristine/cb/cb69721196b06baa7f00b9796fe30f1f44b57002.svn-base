@@ -1,0 +1,40 @@
+{
+	"code": 0,
+	"msg": "获取信息成功",
+	"data": {
+		//年份信息
+		"years": {
+			//可选年份
+			"available_years": [
+				{
+					"name": "2016",
+					"value": "2016"
+				},
+				{
+					"name": "2017",
+					"value": "2017"
+				},
+				{
+					"name": "2018",
+					"value": "2018"
+				}
+			]
+		},
+		//默认选中时间
+		"default_time": {
+			"year": "2016",
+			"month": "5"
+		},
+		"stat": {
+			//总收入
+			"total_income": "5495元",
+			//总支出
+			"total_expense": "5235元",
+			//可支配收入
+			"disposable_income": "230元",
+			//年人均可支配收入
+			"year_average_disposable_income": "1115元"
+		},
+		"chart_config_bar": {}
+	}
+}

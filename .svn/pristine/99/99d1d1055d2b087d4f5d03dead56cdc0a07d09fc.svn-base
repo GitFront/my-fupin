@@ -1,0 +1,9 @@
+{
+  "code": 0,
+  "msg": "获取信息成功",
+  "data": {
+    //指标的echart config
+    "chart_config_tab": [
+    ]
+  }
+}

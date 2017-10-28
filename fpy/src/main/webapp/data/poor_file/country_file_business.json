@@ -1,0 +1,73 @@
+{
+	"code": 0,
+	"msg": "获取信息成功",
+	"data": {
+		"list_doing": {
+			"amount_total": 10,
+			"list": [
+				{
+					"text": "住房改造 申请危房改造（两不具备）补贴",
+					"link": "http://www.wtf.com"
+				},
+				{
+					"text": "住房改造 申请危房改造（两不具备）补贴",
+					"link": "http://www.wtf.com"
+				},
+				{
+					"text": "住房改造 申请危房改造（两不具备）补贴",
+					"link": "http://www.wtf.com"
+				},
+				{
+					"text": "住房改造 申请危房改造（两不具备）补贴",
+					"link": "http://www.wtf.com"
+				}
+			]
+		},
+		"list_done": {
+			"amount_total": 10,
+			"list": [
+				{
+					"text": "住房改造 申请危房改造（两不具备）补贴",
+					"link": "http://www.wtf.com"
+				},
+				{
+					"text": "住房改造 申请危房改造（两不具备）补贴",
+					"link": "http://www.wtf.com"
+				},
+				{
+					"text": "住房改造 申请危房改造（两不具备）补贴",
+					"link": "http://www.wtf.com"
+				},
+				{
+					"text": "住房改造 申请危房改造（两不具备）补贴",
+					"link": "http://www.wtf.com"
+				}
+			]
+		},
+		"list_todo": {
+			"amount_total": 10,
+			"list": [
+				{
+					"text": "社会保障 残疾人生活津贴和重度残疾人护理补贴标准",
+					"link": "http://www.wtf.com"
+				},
+				{
+					"text": "社会保障 残疾人生活津贴和重度残疾人护理补贴标准",
+					"link": "http://www.wtf.com"
+				},
+				{
+					"text": "社会保障 残疾人生活津贴和重度残疾人护理补贴标准",
+					"link": "http://www.wtf.com"
+				},
+				{
+					"text": "社会保障 残疾人生活津贴和重度残疾人护理补贴标准",
+					"link": "http://www.wtf.com"
+				},
+				{
+					"text": "社会保障 残疾人生活津贴和重度残疾人护理补贴标准",
+					"link": "http://www.wtf.com"
+				}
+			]
+		}
+	}
+}

@@ -1,0 +1,47 @@
+{
+	"code": 0,
+	"msg": "获取信息成功",
+	"data": {
+		"country_name": "高车塘村",
+		"summary": {
+			//村委负责人姓名
+			"responsible_name": "陈远雄",
+			//村委负责人照片
+			"responsible_avatar": "xxx.jpg",
+			//村委负责人电话
+			"responsible_phone": "13000000000",
+			//村委负责人职务
+			"responsible_duty": "主任书记",
+			//驻村队长姓名
+			"country_leader_name": "吴昔中",
+			//驻村队长照片
+			"country_leader_avatar": "xxx.jpg",
+			//驻村队长电话
+			"country_leader_phone": "15000000000",
+			//驻村队长单位
+			"country_leader_org": "广东省农村信用合作社联合社",
+			//驻村时间
+			"country_leader_start_time": "2016年4月23日"
+		},
+		"stat": {
+			//全村人口户数
+			"amount_total_family": 569,
+			//全村人口人数
+			"amount_total_people": 2926,
+			//贫困人口户数
+			"amount_poor_family": 82,
+			//贫困人口人数
+			"amount_poor_people": 279,
+			//贫困发生率，单位%
+			"ratio_poor": 9.53,
+			//脱贫人口户数
+			"amount_success_family": 25,
+			//脱贫人口人数
+			"amount_success_people": 75,
+			//综合得分
+			"score": 70,
+			//是否已达标
+			"has_achieved": false
+		}
+	}
+}

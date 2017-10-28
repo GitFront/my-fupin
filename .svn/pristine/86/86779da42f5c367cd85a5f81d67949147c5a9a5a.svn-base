@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+	<script type="text/javascript" src="../../js/libs/flexible.js"></script>
+	<title>广东扶贫</title>
+	<link type="text/css" rel="stylesheet" href="../../css/all.css">
+</head>
+
+<body>
+
+<div id="app" class="p-wrap implement-wrap">
+	<app-header ref="appHeader" title="帮扶施策" show-back="true"></app-header>
+	<div class="implement">
+		<div class="implement-hd">
+			<span class="active">施策总览</span>
+		</div>
+		<div class="implement-bd">
+			<ul class="implement-items">
+				<li>
+					<div class="implement-item">
+						<div class="implement-tit">进行中／已完成／项目总数</div>
+						<div class="implement-val">{{summary.amount_project}}</div>
+					</div>
+				</li>
+				<li>
+					<div class="implement-item">
+						<div class="implement-tit">已投入资金（元）</div>
+						<div class="implement-val">{{summary.capital_invested | money}}</div>
+					</div>
+				</li>
+				<li>
+					<div class="implement-item">
+						<div class="implement-tit">项目收益（元）</div>
+						<div class="implement-val">{{summary.project_revenue | money}}</div>
+					</div>
+				</li>
+			</ul>
+			<div class="implement-tab-wrapper">
+				<ul class="implement-tabs"  ref="tabs">
+					<li class="active" data-name="running" @click.capture="switchTab">
+						<span >进行中项目</span>
+					</li>
+					<li @click="switchTab" data-name="complete" @click.capture="switchTab">
+						<span >已完成项目</span>
+					</li>
+				</ul>
+				<ul class="implement-tabs-content" ref="contents">
+					<li  data-name="running" class="active">
+						<ul class="implement-items">
+							<template v-if="projects_running">
+								<li v-for="(project, index) in projects_running" :key="index">
+									<div class="implement-item">
+										<div class="implement-tit">{{project.name}}</div>
+										<div class="implement-val">{{project.value}}</div>
+									</div>
+								</li>
+							</template>
+						</ul>
+					</li>
+					<li   data-name="complete">
+						<ul class="implement-items">
+							<template v-if="projects_completed">
+								<li v-for="(project, index) in projects_completed" :key="index">
+									<div class="implement-item">
+										<div class="implement-tit">{{project.name}}</div>
+										<div class="implement-val">{{project.value}}</div>
+									</div>
+								</li>
+							</template>
+						</ul>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script type="text/javascript" src="../../js/libs/vue.min.js"></script>
+<script type="text/javascript" src="../../js/libs/vue-resource.min.js"></script>
+
+<script type="text/javascript" src="../../js/urls_mock.js"></script>
+<script type="text/javascript" src="../../js/common.js"></script>
+<script type="text/javascript" src="../../js/components.js"></script>
+
+<script type="text/javascript" src="../../js/pages/family_file/implement.js"></script>
+</body>
+</html>

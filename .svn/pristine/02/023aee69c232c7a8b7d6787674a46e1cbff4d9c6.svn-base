@@ -1,0 +1,63 @@
+{
+	"code": 0,
+	"msg": "获取信息成功",
+	"data": {
+		//脱贫目标倒计时，单位毫秒
+		"time_end": 1476431802040,
+		//两不愁
+		"average": {
+			//劳动能力人均可支配收入百分比
+			"chart_config_labor": {
+				"percent": 60
+			},
+			//社会保障兜底百分比
+			"chart_config_society": {
+				"percent": 100
+			}
+		},
+		//三保障
+		"guarantee": {
+			"chart_config_edu": {},
+			"chart_config_medical": {},
+			"chart_config_house": {}
+		},
+		//一相当
+		"bars": [
+			{
+				"name": "道路硬化",
+				"percent": 88
+			}
+		],
+		//预警监控
+		"alarm": {
+			//贫困户
+			"family": 0,
+			//建档立卡的异常记录
+			"records": 0,
+			//相对贫困村
+			"country": 0,
+			//未被走访的贫困户
+			"family_not_visited": {
+				"label": "一年内走访<2次的",
+				"value": 0
+			}
+		},
+		//资金监控
+		"capital": {
+			"stat": {
+				//总投入
+				"invested": "105亿",
+				//总项目
+				"projects": "2.8万个",
+				//完成率
+				"rate_completed": "62.5%"
+			},
+			//饼图
+			"chart_config_pie": {},
+			//气泡图
+			"chart_config_bubble": {}
+		},
+		//贫困分析
+		"chart_config_poor_analysis": {}
+	}
+}

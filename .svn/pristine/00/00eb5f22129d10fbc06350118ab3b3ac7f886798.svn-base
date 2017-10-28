@@ -1,0 +1,221 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+        
+<mapper namespace="com.aspire.birp.modules.antiPoverty.dao.ExampleCountryMapDao">
+
+	<sql id="dim_DetailCount_sql">
+				INNER JOIN (
+				 select COUNTRY_ID 
+				 from DIM_HELP_AREA_MAP  
+				 WHERE help_p_pac=#{helppac,jdbcType=VARCHAR} 
+				 ) t2 ON (t1.COUNTRY_PAC=t2.COUNTRY_ID)
+	</sql>
+	
+	<!--地图区域展示数据-->
+	<select id="queryEcMapData"  parameterType="hashmap" resultType="hashmap">
+			SELECT
+			    DL1.LSB_PAC PAC,DL2.LSB_PAC PPAC,
+			    R.PROVICE_NATURAL_NUM PROVICE_NATURAL_NUM <!-- 省定贫困村-行政村 -->
+			    ,R.E_NATURAL_NUM E_NATURAL_NUM <!-- 示范村达标-行政村 -->
+			    ,CASE WHEN R.PROVICE_NATURAL_NUM !=0 THEN TRUNC((R.E_NATURAL_NUM/R.PROVICE_NATURAL_NUM)*100,1) ELSE 0 END E_NATURAL_RATE <!-- 示范村达标比例 -->
+			    ,R.P_NATURAL_NUM P_NATURAL_NUM <!-- 完成提升创建-行政村 -->
+			    ,CASE WHEN R.PROVICE_NATURAL_NUM !=0 THEN TRUNC((R.P_NATURAL_NUM/R.PROVICE_NATURAL_NUM)*100,1) ELSE 0 END P_NATURAL_RATE <!-- 示范村提升创建比例 -->
+			    
+			    ,R.NATURAL_NUM NATURAL_NUM <!-- 左边自然村数 -->
+			    ,R.COMPLETE_MODEL_NUM COMPLETE_MODEL_NUM <!-- 已完成示范村 -->
+			    ,CASE WHEN R.NATURAL_NUM !=0 THEN TRUNC((R.COMPLETE_MODEL_NUM/R.NATURAL_NUM)*100,1) ELSE 0 END COMPLETE_MODEL_RATE <!-- 自然村达标比例 -->
+				,R.COMPLETE_UPGRADE_NUM COMPLETE_UPGRADE_NUM <!-- 已完成提升创建 -->
+			    ,CASE WHEN R.NATURAL_NUM !=0 THEN TRUNC((R.COMPLETE_UPGRADE_NUM/R.NATURAL_NUM)*100,1) ELSE 0 END COMPLETE_UPGRADE_RATE <!-- 自然村提升比例 -->
+				FROM 
+				(
+				<if test=" null != userPac and '440000000000' != userPac ">
+					select * from 
+				</if>
+				(select <include refid="level_area_sql"/>
+				count(1) PROVICE_NATURAL_NUM --省定贫困村-行政村
+			    ,count(CASE WHEN IS_MODEL=1 AND MODEL_BUILD_STATUS='达标' THEN 1 ELSE null END) E_NATURAL_NUM --示范村达标-行政村
+			    ,count(CASE WHEN IS_UPGRADE=1 AND UPGRADE_BUILD_STATUS='达标' THEN 1 ELSE null END) P_NATURAL_NUM --完成提升创建-行政村
+			    ,sum(NOSTART_MODEL_NUM+BUILDING_MODEL_NUM+COMPLETE_MODEL_NUM) NATURAL_NUM --左边自然村数
+			    ,sum(COMPLETE_MODEL_NUM) COMPLETE_MODEL_NUM --已完成示范村
+			    ,sum(COMPLETE_UPGRADE_NUM) COMPLETE_UPGRADE_NUM --已完成提升创建
+			    FROM
+				R_DW_POOROBJ_COUNTRY_M t1
+				<include refid="dim_DetailCount_sql"/>				
+				<where>
+					<include refid="month_sql"/>
+					and t1.IS_KEY_POVERTY = 1
+				</where>
+				<include refid="by_group"/>) 
+		      ) R,
+	 		DIM_LRB_PAC_MAP DL1,DIM_LRB_PAC_MAP DL2 
+	 		WHERE R.S_ID=DL1.PAC AND  DL2.PAC=R.P_ID 
+	 		<!-- 分层查询处理 -->
+			<if test=" null != map_pac and '' != map_pac ">
+				AND DL2.LSB_PAC  IN <!--  =  #{map_pac} -->
+				<foreach item="item" index="index" collection="map_pac_level" open="(" separator="," close=")">
+					#{item}
+				</foreach>
+			</if>
+	</select>
+	
+	<!-- 地图位置点经纬度（示范村） -->
+	<select id="queryMappiontGeoForCountry"  parameterType="hashmap"
+	       resultType="hashmap">
+	       <choose>
+		 			<when test="2 == map_level or 3 == map_level or 4 == map_level and '' != map_pac">
+		 					SELECT  	
+		 						t.COUNTRY_PAC PAC,t.COUNTRY_NAME NAME,d.LSB_PAC PPAC,t.LONGITUDE LONGITUDE,t.LATITUDE LATITUDE,'PKC' POINT_TYPE
+		 					FROM 
+		 						(select * from 
+		 						R_DW_POOROBJ_COUNTRY_M t1 
+		 						<include refid="dim_DetailCount_sql"/>
+		 						where 1=1 
+		 						<include refid="month_sql"/>
+								and IS_KEY_POVERTY = 1
+								<if test=" '' != buildStatus and null != buildStatus">
+									<choose>
+										<when test="1 == buildStatus ">
+											and MODEL_BUILD_STATUS =  '达标'
+										</when>
+										<when test="0 == buildStatus ">
+											and MODEL_BUILD_STATUS =  '建设中'
+										</when>
+										<otherwise>
+											and MODEL_BUILD_STATUS =  '未启动'
+										</otherwise>
+									</choose>
+								</if>) t ,		 						
+		 						DIM_LRB_PAC_MAP d
+		 					WHERE 1 = 1 
+		 					<!-- 分层筛选 -->
+					 		<choose>
+					 			<when test="2 == map_level">
+					 				AND t.CITY_PAC=d.PAC
+									AND d.LSB_PAC=#{map_pac} 
+					 			</when>
+					 			<when test="3 == map_level">
+					 				AND t.COUNTY_PAC=d.PAC
+									AND d.LSB_PAC=#{map_pac} 
+					 			</when>
+					 			<when test="4 == map_level">
+					 				AND t.TOWN_PAC=d.PAC
+									AND d.LSB_PAC=#{map_pac} 
+					 			</when>
+					 		</choose>
+				 			<!-- 权限筛选 -->
+		 					<if test=" '' != userLevel and null != userLevel">
+					 			<choose>
+					 				<when test="2 == userLevel">
+					 					AND t.CITY_PAC=#{userPac}  
+					 				</when>
+					 				<when test="3 == userLevel">
+					 					AND t.COUNTY_PAC=#{userPac}  
+					 				</when>
+					 				<when test="4 == userLevel">
+					 					AND t.TOWN_PAC=#{userPac}  
+					 				</when>
+					 				<when test="5 == userLevel">
+					 					AND t.COUNTRY_PAC=#{userPac}  
+					 				</when>
+					 			</choose>
+							</if>
+					 		<![CDATA[ AND t.LONGITUDE >109 AND t.LONGITUDE < 118 AND t.LATITUDE >20 AND t.LATITUDE < 26 ]]>
+		 			</when>
+		 			<when test="1 == map_level">
+		 					SELECT  	t1.COUNTRY_PAC PAC,t1.COUNTRY_NAME NAME,'440000000000' PPAC,t1.LONGITUDE LONGITUDE,t1.LATITUDE LATITUDE,'PKC' POINT_TYPE
+		 					FROM R_DW_POOROBJ_COUNTRY_M t1 
+		 					<include refid="dim_DetailCount_sql"/>
+		 					WHERE 1 = 1 
+							<include refid="month_sql"/>
+							and IS_KEY_POVERTY = 1
+							<if test=" '' != buildStatus and null != buildStatus">
+								<choose>
+									<when test="1 == buildStatus ">
+										and MODEL_BUILD_STATUS =  '达标'
+									</when>
+									<when test="0 == buildStatus ">
+										and MODEL_BUILD_STATUS =  '建设中'
+									</when>
+									<otherwise>
+										and MODEL_BUILD_STATUS =  '未启动'
+									</otherwise>
+								</choose>
+							</if>
+		 					<!-- 权限筛选 -->
+		 					<if test=" '' != userLevel and null != userLevel">
+					 			<choose>
+					 				<when test="2 == userLevel">
+					 					AND CITY_PAC=#{userPac}  
+					 				</when>
+					 				<when test="3 == userLevel">
+					 					AND COUNTY_PAC=#{userPac}  
+					 				</when>
+					 				<when test="4 == userLevel">
+					 					AND TOWN_PAC=#{userPac}  
+					 				</when>
+					 				<when test="5 == userLevel">
+					 					AND COUNTRY_PAC=#{userPac}  
+					 				</when>
+					 			</choose>
+							</if>
+					 		<![CDATA[ AND LONGITUDE >109 AND LONGITUDE < 118 AND LATITUDE >20 AND LATITUDE < 26 ]]>
+		 			</when>
+		 			<otherwise>
+		 					SELECT  	t.COUNTRY_PAC PAC,t.COUNTRY_NAME NAME,'440000000000' PPAC,t.LONGITUDE LONGITUDE,t.LATITUDE LATITUDE,'PKC' POINT_TYPE
+		 					FROM F_COUNTRYFILE_BASIC_INFO_D t WHERE 1 &lt;&gt; 1 
+		 			</otherwise>
+		 		</choose>
+		</select> 
+	
+<!-- 筛选条件sql -->
+	
+	<sql id="month_sql">
+	
+		<if test=" '' != month and null != month">
+			AND ACC_MONTH = 	#{month}		
+		</if>
+	
+	</sql>
+	
+	<sql id="level_area_sql">
+			
+			<if test="1 == map_level  ">
+				CITY_PAC S_ID, CITY_NAME A2, '440000000000' P_ID,
+			</if>
+			<if test="2 == map_level  ">
+				COUNTY_PAC S_ID,COUNTY_NAME A2,MAX(CITY_PAC) P_ID,
+			</if>
+			
+			<if test="3 == map_level  ">
+				 TOWN_PAC S_ID ,TOWN_NAME A2, MAX(COUNTY_PAC) P_ID,
+			</if>
+			
+			<if test="4 == map_level  ">
+				COUNTRY_PAC S_ID ,COUNTRY_NAME  A2, MAX(TOWN_PAC) P_ID,
+			</if>
+			<if test="5 == map_level  ">
+				'' S_ID ,''  A2, '' P_ID,
+			</if>
+	</sql>
+	<sql id="by_group">
+	
+			<if test="1== map_level  ">
+				 GROUP BY CITY_PAC , CITY_NAME
+			</if>
+			<if test="2== map_level  ">
+				 GROUP BY COUNTY_PAC ,COUNTY_NAME
+			</if>
+			
+			<if test="3== map_level  ">
+				   GROUP BY TOWN_PAC ,TOWN_NAME 
+			</if>
+			
+			<if test="4 == map_level  ">
+				 GROUP BY COUNTRY_PAC  ,COUNTRY_NAME 
+			</if>
+			<if test="5 == map_level  ">
+				 AND 1 &lt;&gt; 1
+			</if>
+	</sql>
+</mapper>

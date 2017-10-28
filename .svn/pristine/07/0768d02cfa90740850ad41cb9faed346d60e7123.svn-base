@@ -1,0 +1,10 @@
+{
+	"code": 0,
+	"msg": "获取信息成功",
+	"data": {
+		//转移性支出构成
+		"chart_config_composition": {},
+		//统计表，同data_monitor_table.json定义
+		"table": {}
+	}
+}

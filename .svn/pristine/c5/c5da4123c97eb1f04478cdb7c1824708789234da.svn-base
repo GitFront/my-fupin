@@ -1,0 +1,23 @@
+{
+	"data":{
+		"belong_organization":"兴宁市中小企业局",
+		"list":[
+			{
+				"id":"441481115210",
+				"order":1,
+				"contact_phone":"07533451149",
+				"contact_name":"刘海涛",
+				"country_name":"浮东村委会"
+			},
+			{
+				"id":"441481115220",
+				"order":2,
+				"contact_phone":"13411256898",
+				"contact_name":"黄日堂",
+				"country_name":"象湖村委会"
+			}
+		]
+	},
+	"code":0,
+	"msg":"获取信息成功"
+}

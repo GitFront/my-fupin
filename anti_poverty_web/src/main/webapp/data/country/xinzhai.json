@@ -1,0 +1,86 @@
+{
+    "code": 0,
+    "msg": "获取信息成功",
+    "data": {
+        "responsible_person": {
+            "avatar": "../../../data/images/country-touxiang.png",
+            "name": "王忠民",
+            "duty": "主任",
+            "phone": "159****1166"
+        },
+        "shortage":{
+            "status":{
+                "amount_households":"65户",
+                "amount_people":"155人",
+                "rate_poor":"5.21%"
+            },
+            "analysis": "农业生产基础依然薄弱，现代设施装备应用较少，科技支撑能力不足；农业经营规模偏小，农业劳动力素质偏低，农业发展质量效益和竞争力都有待提高。尤其是随着青壮年劳动力的转移就业，“谁来种地”的问题日益突出。"
+        },
+        "info":{
+            "person": [
+                {
+                    "name": "李永利",
+                    "organization": "惠州市市住建委",
+                    "duty": "办公室主任",
+                    "relation": "县",
+                    "time_start": "2016-3-21",
+                    "time_end": "2016-3-21",
+                    "phone": ""
+                }
+            ],
+            "plan": [
+                {
+                    "name": "开展基础设施建设",
+                    "content": "分别在上下村建设文化广场1个",
+                    "unit": "个",
+                    "amount": "2",
+                    "total_money": "280000",
+                    "time": "2016-3-21"
+                }
+            ],
+            "policy": [
+                {
+                    "type": "基础设施建设",
+                    "amount": "280000"
+                }
+            ]
+        },
+        "album":{
+            "school":[
+                {
+                    "title":"学校图",
+                    "img":"../../../data/images/country-school.png"
+                }
+            ],
+            "health_station":[
+                {
+                    "title":"卫生站图",
+                    "img":"../../../data/images/country-hospital.png"
+                },
+                {
+                    "title":"卫生站图",
+                    "img":"../../../data/images/country-hospital2.png"
+                }
+            ],
+            "country_other":[
+                {
+                    "title":"其他",
+                    "img":"../../../data/images/country-other1.png"
+                },
+                {
+                    "title":"其他",
+                    "img":"../../../data/images/country-other2.png"
+                },
+                {
+                    "title":"其他",
+                    "img":"../../../data/images/country-other3.png"
+                },
+                {
+                    "title":"其他",
+                    "img":"../../../data/images/country-other4.png"
+                }
+
+            ]
+        }
+    }
+}

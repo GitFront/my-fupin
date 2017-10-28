@@ -1,0 +1,16 @@
+{
+	"data":{
+		"belong_organization":"广州市天河区人民政府黄村街道办事处",
+		"list":[
+			{
+				"id":"441481124208",
+				"order":1,
+				"contact_phone":"13826664228",
+				"contact_name":"陈金辉",
+				"country_name":"新石村委会"
+			}
+		]
+	},
+	"code":0,
+	"msg":"获取信息成功"
+}

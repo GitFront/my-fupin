@@ -1,0 +1,1251 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+        
+<mapper namespace="com.aspire.birp.modules.antiPoverty.dao.AlarmedPoorExceptionDao">
+	<!--aid_year true 脱贫  false 未脱贫    -->
+	
+	<sql id="stat_time_sql">
+		<if test="null != year and ''!=null ">
+			and STAT_TIME=case
+			when to_number(SUBSTR(STAT_TIME,1,4))=to_number(to_char(sysdate,'yyyy'))  
+			
+			then to_number(#{TW_FAMILY_INCOME_MM})
+			
+			else to_number(SUBSTR(STAT_TIME,1,4)||'1201')
+			end  
+			
+			
+		
+		</if>
+	</sql>
+	<sql id="c_month_sql">
+		<if test="null != year and ''!=null ">
+			and MONTH_OF_ACC=case
+			when to_number(SUBSTR(MONTH_OF_ACC,1,4))=to_number(to_char(sysdate,'yyyy'))  
+			
+			then to_number(SUBSTR(#{TW_FAMILY_INCOME_MM},1,6))
+			
+			else to_number(SUBSTR(MONTH_OF_ACC,1,4)||'12')
+			end  
+		</if>
+	</sql>
+	
+	
+	<!-- detail_area_sql  -->
+	<sql id="detail_area_sql">
+		
+			<if test=" '' != level and null != level and 'city' == level  ">
+				CITY_ID S_ID, CITY_NAME_S A2,
+			</if>
+			
+			<if test=" '' != level and null != level and 'county' == level  ">
+				COUNTY_ID S_ID,COUNTY_NAME_S A2,
+			</if>
+			
+			<if test=" '' != level and null != level and 'town' == level  ">
+				 TOWN_ID S_ID ,TOWN_NAME_S A2,
+			</if>
+			
+			<if test=" '' != level and null != level and 'country' == level  ">
+				COUNTRY_ID S_ID ,COUNTRY_NAME_S  A2,
+			</if>
+	</sql>
+	
+	<!-- 合计用  -->
+	<sql id="count_group_by_sql">
+	
+			<if test=" '' != level and null != level and 'province' == level  ">
+				 1
+			</if>
+			<if test=" '' != level and null != level and 'city' == level  ">
+				 CITY_PAC , CITY_NAME
+			</if>
+			
+			<if test=" '' != level and null != level and 'county' == level  ">
+				COUNTY_PAC , COUNTY_NAME  
+			</if>
+			
+			<if test=" '' != level and null != level and 'town' == level  ">
+				 TOWN_PAC , TOWN_NAME 
+			</if>
+			
+			<if test=" '' != level and null != level and 'country' == level  ">
+				COUNTRY_PAC  ,COUNTRY_NAME 
+			</if>
+	</sql>
+	
+	<!-- 合计用  -->
+	<sql id="count_group_by_sql1">
+	
+			<if test=" '' != level and null != level and 'province' == level  ">
+				
+			</if>
+			<if test=" '' != level and null != level and 'city' == level  ">
+				group by CITY_NAME
+			</if>
+			
+			<if test=" '' != level and null != level and 'county' == level  ">
+				group by COUNTY_NAME  
+			</if>
+			
+			<if test=" '' != level and null != level and 'town' == level  ">
+				 group by TOWN_NAME 
+			</if>
+			
+			<if test=" '' != level and null != level and 'country' == level  ">
+				group by COUNTRY_NAME 
+			</if>
+	</sql>
+
+<!-- 层级分组 -->
+	<sql id="group_by_sql">
+	
+			<if test=" '' != level and null != level and 'province' == level  ">
+				CITY_PAC ,  CITY_NAME 
+			</if>
+			<if test=" '' != level and null != level and 'city' == level  ">
+				COUNTY_PAC , COUNTY_NAME
+			</if>
+			
+			<if test=" '' != level and null != level and 'county' == level  ">
+				TOWN_PAC ,  TOWN_NAME 
+			</if>
+			
+			<if test=" '' != level and null != level and 'town' == level  ">
+				COUNTRY_PAC  , COUNTRY_NAME 
+			</if>
+			
+			<if test=" '' != level and null != level and 'country' == level  ">
+				COUNTRY_PAC  ,COUNTRY_NAME 
+			</if>
+			
+		
+	</sql>
+
+	<!-- 区域 -->
+	<sql id="level_area_sql">
+			
+			<if test=" '' != level and null != level and 'province' == level  ">
+				CITY_PAC S_ID,CITY_NAME A2,
+			</if>
+			<if test=" '' != level and null != level and 'city' == level  ">
+				COUNTY_PAC S_ID,COUNTY_NAME A2,
+			</if>
+			
+			<if test=" '' != level and null != level and 'county' == level  ">
+				TOWN_PAC S_ID , TOWN_NAME A2,
+			</if>
+			
+			<if test=" '' != level and null != level and 'town' == level  ">
+				COUNTRY_PAC S_ID,COUNTRY_NAME  A2,
+			</if>
+			
+			<if test=" '' != level and null != level and 'country' == level  ">
+				COUNTRY_PAC S_ID ,COUNTRY_NAME  A2,
+			</if>
+	</sql>
+	
+	<sql id="level_area_sql1">
+			
+			<if test=" '' != level and null != level and 'province' == level  ">
+				CITY_PAC S_ID,CITY_NAME S_NAME,
+			</if>
+			<if test=" '' != level and null != level and 'city' == level  ">
+				COUNTY_PAC S_ID,COUNTY_NAME S_NAME,
+			</if>
+			
+			<if test=" '' != level and null != level and 'county' == level  ">
+				 TOWN_PAC S_ID ,TOWN_NAME S_NAME,
+			</if>
+			
+			<if test=" '' != level and null != level and 'town' == level  ">
+				COUNTRY_PAC S_ID ,COUNTRY_NAME  S_NAME,
+			</if>
+			
+			<if test=" '' != level and null != level and 'country' == level  ">
+				COUNTRY_PAC S_ID ,COUNTRY_NAME  S_NAME,
+			</if>
+	</sql>
+	
+	<sql id="level_area_sql2">
+			
+			<if test=" '' != level and null != level and 'province' == level  ">
+				/*+INDEX(t PK_R_DW_EXCEPTION_Y_CITY)+*/ CITY_PAC S_ID,CITY_NAME A2,
+			</if>
+			<if test=" '' != level and null != level and 'city' == level  ">
+				/*+INDEX(t PK_R_DW_EXCEPTION_Y_CITY)+*/ COUNTY_PAC S_ID,COUNTY_NAME A2,
+			</if>
+			
+			<if test=" '' != level and null != level and 'county' == level  ">
+				TOWN_PAC S_ID , TOWN_NAME A2,
+			</if>
+			
+			<if test=" '' != level and null != level and 'town' == level  ">
+				COUNTRY_PAC S_ID,COUNTRY_NAME  A2,
+			</if>
+			
+			<if test=" '' != level and null != level and 'country' == level  ">
+				COUNTRY_PAC S_ID ,COUNTRY_NAME  A2,
+			</if>
+	</sql>
+
+	<!-- 层级sql -->
+	<sql id="level_sql">
+			
+			<if test=" '' != level and null != level and 'province' == level  ">
+				
+			</if>
+			
+			<if test=" '' != level and null != level and 'city' == level  ">
+				AND CITY_PAC = #{id}
+			</if>
+			
+			<if test=" '' != level and null != level and 'county' == level  ">
+				AND COUNTY_PAC = #{id} 
+			</if>
+			
+			<if test=" '' != level and null != level and 'town' == level  ">
+				AND TOWN_PAC = #{id} 
+			</if>
+			
+			<if test=" '' != level and null != level and 'country' == level  ">
+				AND COUNTRY_PAC = #{id}
+			</if>
+	</sql>
+	
+	<!-- STAT_TIME  -->
+	<sql id="year_sql">
+				<if test="'' != year and null != year">
+				and ACC_YEAR = #{year} 
+			</if>
+	</sql>
+	
+	<sql id="year_sql1">
+				<if test="'' != year and null != year">
+				and ACC_YEAR &lt;= #{year} 
+			</if>
+	</sql>
+	
+	<sql id="r_year_sql">
+				<if test="'' != year and null != year">
+				and STAT_YEAR = #{year} 
+			</if>
+	</sql>
+	
+	<sql id="r_year_sql1">
+				<if test="'' != year and null != year">
+				and STAT_YEAR &lt;= #{year} 
+			</if>
+	</sql>
+	
+	<sql id="query_condition_sql">
+		<if test="list==null or list.size()==0" >
+			AND EXCEPTION_TYPE=0  
+		</if>
+		
+        <if test="list!=null and list.size()>0 and list.size() &lt; 4" >
+			AND EXCEPTION_TYPE in  
+			<foreach item="item" index="index" collection="list" open="(" separator="," close=")">  
+			 #{item}  
+			</foreach>
+		</if>
+	</sql>
+	
+	<sql id="query_condition_sql2">
+	
+		<if test="exceptionTypes==null or exceptionTypes.size()==0">
+			AND EXCEPTION_TYPE=0
+		</if>
+				
+		<if test="exceptionTypes!=null and exceptionTypes.size()>0 and exceptionTypes.size() &lt; 4">
+			AND EXCEPTION_TYPE in  
+			<foreach item="item" index="index" collection="exceptionTypes" open="(" separator="," close=")">  
+			 #{item}  
+			</foreach>  
+		</if>
+		
+	</sql>
+	
+	<sql id="query_condition_sql1">
+				
+		<if test="'' != exception_type and null != exception_type and 2== exception_type">
+			AND IS_HELP_FUND_EXCEPTION  = 0
+		</if>
+		
+		<if test="'' != exception_type and null != exception_type and 3== exception_type">
+			AND IS_HELP_FUND_EXCEPTION  = 1
+		</if>
+		
+	</sql>
+	
+	<!-- 合计用  -->
+	<sql id="count_area_sql">
+			<if test=" '' != level and null != level and 'province' == level  ">
+				'440000000000' S_ID , '合计' A2,
+			</if>
+			<if test=" '' != level and null != level and 'city' == level  ">
+				CITY_PAC S_ID, '合计' A2,
+			</if>
+			
+			<if test=" '' != level and null != level and 'county' == level  ">
+				COUNTY_PAC S_ID,'合计' A2,
+			</if>
+			
+			<if test=" '' != level and null != level and 'town' == level  ">
+				 TOWN_PAC S_ID ,'合计' A2,
+			</if>
+			
+			<if test=" '' != level and null != level and 'country' == level  ">
+				COUNTRY_PAC S_ID ,'合计'  A2,
+			</if>
+	</sql>
+	
+	<sql id="aid_year_sql">
+	
+		<if test="null != aid_year  and true == aid_year">
+				<![CDATA[ 	
+					and AID_DATE<=STAT_DT
+				
+				 ]]> <!-- 脱贫 -->
+				
+		</if>
+		
+		<if test="null != aid_year  and true == aid_year and year !=null and '' !=year">
+					and substr(AID_DATE,1,4)=#{year}
+				
+		</if>
+		
+		
+		<if test="null != aid_year  and false == aid_year">
+				and IF_CURR_POOR = 1
+		</if>
+	
+	</sql>
+	<sql id="month_sql">
+
+				<choose>
+					<when test="null != year and '' != year">
+					
+						AND ACC_YEAR=
+						CASE
+							WHEN to_number(#{year}) = to_number(to_char(sysdate,'yyyy')) then  to_number(substr(#{TW_FAMILY_INCOME_MM},1,6))
+							WHEN to_number(#{year}) &lt; to_number(to_char(sysdate,'yyyy')) then  to_number(#{year}||'12')
+						END
+						AND substr(ACC_YEAR,1,4)=#{year}		
+					
+					</when>
+					<otherwise>
+					
+							AND ACC_YEAR=
+							CASE
+								WHEN substr(ACC_YEAR,1,4) = to_char(sysdate,'yyyy') then  to_number(substr(#{TW_FAMILY_INCOME_MM},1,6))
+								WHEN substr(ACC_YEAR,1,4) &lt; to_char(sysdate,'yyyy') then  to_number(substr(MONTH_OF_ACC,1,4)||'12')
+							END
+				
+					
+					</otherwise>
+				</choose>
+		
+	
+	</sql>
+	
+	<!-- 排序类型 -->
+	<sql id="sort_area_sql">
+			
+			<if test=" '' != sort_area and null != sort_area and 1 == sort_area  ">
+				CITY_ID S_ID, CITY_NAME_S A2,
+			</if>
+			<if test=" '' != sort_area and null != sort_area and 2 == sort_area  ">
+				COUNTY_ID S_ID,CITY_NAME_S||'>'||COUNTY_NAME_S A2,
+			</if>
+			
+			<if test=" '' != sort_area and null != sort_area and 3 == sort_area  ">
+				 TOWN_ID S_ID ,CITY_NAME_S||'>'||COUNTY_NAME_S||'>'||TOWN_NAME_S A2,
+			</if>
+			
+			<if test=" '' != sort_area and null != sort_area and 4 == sort_area  ">
+				COUNTRY_ID S_ID ,CITY_NAME_S||'>'||COUNTY_NAME_S||'>'||TOWN_NAME_S||'>'||COUNTRY_NAME_S  A2,
+			</if>
+			
+	</sql>
+	<sql id="group_sort_area_sql">
+			<if test=" '' != sort_area and null != sort_area and 1 == sort_area  ">
+				CITY_ID , CITY_NAME_S 
+			</if>
+			<if test=" '' != sort_area and null != sort_area and 2 == sort_area  ">
+				COUNTY_ID ,CITY_NAME_S||'>'||COUNTY_NAME_S 
+			</if>
+			
+			<if test=" '' != sort_area and null != sort_area and 3 == sort_area  ">
+				 TOWN_ID  ,CITY_NAME_S||'>'||COUNTY_NAME_S||'>'||TOWN_NAME_S 
+			</if>
+			
+			<if test=" '' != sort_area and null != sort_area and 4 == sort_area  ">
+				COUNTRY_ID  ,CITY_NAME_S||'>'||COUNTY_NAME_S||'>'||TOWN_NAME_S||'>'||COUNTRY_NAME_S  
+			</if>
+			
+	</sql>
+	
+	<sql id="area_sql">
+		 <if test=" '' != level and null != level and 'province' == level  ">
+				
+			</if>
+			
+			<if test=" '' != level and null != level and 'city' == level  ">
+				AND CITY_PAC = #{id}
+			</if>
+			
+			<if test=" '' != level and null != level and 'county' == level  ">
+				AND COUNTY_PAC = #{id} 
+			</if>
+			
+			<if test=" '' != level and null != level and 'town' == level  ">
+				AND TOWN_PAC = #{id} 
+			</if>
+			
+			<if test=" '' != level and null != level and 'country' == level  ">
+				AND COUNTRY_PAC = #{id}
+			</if>
+	</sql>
+	
+	<sql id="finan_area_sql">
+		    <if test=" '' != level and null != level and 'province' == level  ">
+				'-' A2,
+			</if>
+			
+			<if test=" '' != level and null != level and 'city' == level  ">
+				(select distinct city_name from dim_area_5lvl  where CITY_PAC = #{id}) || '' A2,
+			</if>
+			
+			<if test=" '' != level and null != level and 'county' == level  ">
+				(select distinct county_name from dim_area_5lvl  where COUNTY_PAC = #{id})  || '' A2,
+			</if>
+			
+			<if test=" '' != level and null != level and 'town' == level  ">
+				(select distinct town_name from dim_area_5lvl  where TOWN_PAC = #{id})  || '' A2,
+			</if>
+			
+			<if test=" '' != level and null != level and 'country' == level  ">
+				(select distinct country_name from dim_area_5lvl  where COUNTRY_PAC = #{id})  || '' A2,
+			</if>
+	</sql>
+	
+		<!-- 各类异常占比 -->
+		<select id="queryExceptionScale"  parameterType="hashmap" resultType="hashmap">
+
+				select etype S_GROUP,etype S_NAME,sum(EXCEPTION_NUM) S_VALUE from (select decode(t.exception_type,1,'身份证不匹配',11,'身份证不匹配',12,'身份证不匹配',
+				3,'低保五保不匹配',4,'低保五保不匹配',9,'低保五保不匹配',10,'低保五保不匹配',
+				6,'残疾信息不匹配',8,'名下有房',2,'名下有车',5,'有工商注册信息',7,'享有财政供养','其他') etype, 
+				EXCEPTION_NUM, exception_type
+				from R2_DM_WARN_MONITOR_Y t
+				<where>
+					<include refid="r_year_sql"/>
+					<include refid="area_sql"/>
+					<include refid="query_condition_sql"/>
+					AND MONITOR_TYPE=1
+				</where>
+				)
+				group by etype
+	
+	</select>
+	
+	<!-- 地区分布图占比 -->
+		<select id="queryExceptionArea"  parameterType="hashmap" resultType="hashmap">
+
+				 select <include refid="level_area_sql1"/> sum(MONITOR_NUM) S_VALUE,
+    				 sum(EXCEPTION_NUM) S_VALUE1
+					from R2_DM_WARN_MONITOR_Y t 
+				<where>
+					<include refid="r_year_sql"/>
+					<include refid="area_sql"/>
+					AND MONITOR_TYPE=1
+					<include refid="query_condition_sql"/>
+				</where>
+				 group by <include refid="group_by_sql"/>
+				 order by S_VALUE1 desc
+	   </select>
+	  
+
+
+	<!-- 贫困识别 -->
+	<select id="queryPoorIndetificationTable"  parameterType="hashmap" resultType="hashmap">
+			
+			select A2,c1 A3,c2 A4,to_char(trunc(c2/decode(c1,0,1,c1),4)*100,'fm9990.00') || '%' A5 from
+            (select <include refid="level_area_sql"/>
+            sum(MONITOR_NUM) c1, 
+            sum(EXCEPTION_NUM) c2
+            from R2_DM_WARN_MONITOR_Y t 
+            <where>
+				<include refid="level_sql"/>
+				<include refid="r_year_sql"/>
+				AND MONITOR_TYPE=1
+				<include refid="query_condition_sql"/>
+			</where>
+            group by <include refid="group_by_sql"/>)
+			order by S_ID
+		
+	</select>
+	
+	<!-- 贫困识别贫困分析合计  -->
+	<select id="queryPoorIndetificationTableCount"  parameterType="hashmap" resultType="hashmap">
+	
+			select A2,c1 A3,c2 A4,to_char(trunc(c2/decode(c1,0,1,c1),4)*100,'fm9990.00') || '%' A5 from
+			(select  <include refid="count_area_sql"/> 
+			sum(1) c1
+			,sum(MONITOR_NUM) c2
+			from R2_DM_WARN_MONITOR_Y t
+			<where>
+				<include refid="level_sql"/>
+				<include refid="r_year_sql"/>
+				AND MONITOR_TYPE=1
+				<include refid="query_condition_sql"/>
+			</where>
+			group by <include refid="count_group_by_sql"/>
+			)
+				
+	</select>
+	
+	<!-- 贫困识别明细总数  -->
+	<select id="queryPoorIndetificationDetailoCount"  parameterType="hashmap" resultType="long">
+	
+			select 
+
+				count(*)
+				
+				from
+				(
+				select t1.*,ROWNUM RM
+				from
+				(
+				 SELECT
+				
+						CITY_NAME A2 --市 
+				,COUNTY_NAME A3 --县 
+				,TOWN_NAME A4 --镇 
+				,COUNTRY_NAME A5 --村
+				 ,FAM_CODE A6 --户码 
+				,FAM_NAME A7 --户主姓名 
+				,POP_NAME A8 --成员姓名 
+				,EXCEPTION_TYPE  A9 --异常类型
+				,EXCEPTION_DESC A10 --异常描述
+				,FAM_ID S_ID
+				 from R_DW_POP_IDENTIFICATION_Y
+				 <where>
+					<include refid="year_sql"/>
+					<include refid="area_sql"/>
+					<include refid="query_condition_sql2"/>
+					AND IS_EXCEPTION=1
+				</where>
+				) t1
+				
+				)
+				
+	</select>
+	<!-- 贫困识别明细 -->
+	<select id="queryPoorIndetificationDetailo"  parameterType="hashmap" resultType="hashmap">
+			select 
+
+				*
+				
+				from
+				(
+				select t1.*,ROWNUM RM
+				from
+				(
+				 SELECT
+				
+					CITY_NAME A2 --市 
+				,COUNTY_NAME A3 --县 
+				,TOWN_NAME A4 --镇 
+				,COUNTRY_NAME A5 --村
+				 ,FAM_CODE A6 --户码 
+				,FAM_NAME A7 --户主姓名 
+				,POP_NAME A8 --成员姓名 
+				,(select POOR_MARK_ALARM_NAME from dim_poor_mark_alarm where POOR_MARK_ALARM = r.exception_type) A9 --异常类型
+				,EXCEPTION_DESC A10 --异常描述
+				,FAM_ID S_ID
+				 from R_DW_POP_IDENTIFICATION_Y r
+				<where>
+					<include refid="year_sql"/>
+					<include refid="area_sql"/>
+					<include refid="query_condition_sql2"/>
+					AND IS_EXCEPTION=1
+				</where>	
+				) t1
+				
+				)
+				
+				<if test="page !=null">
+						WHERE RM BETWEEN #{pageSize}*(#{page}-1)+1 AND #{pageSize}  * #{page}
+				</if>
+						
+	</select>
+	
+	<!-- 贫困识别 排序 -->
+	<select id="queryPoorIndetificationSortCount"  parameterType="hashmap" resultType="long">
+			SELECT COUNT(*) FROM
+			
+			(
+			
+			SELECT A1.*,ROWNUM RM
+			FROM
+			(
+			
+			SELECT
+			<include refid="sort_area_sql1"/>
+
+			<if test=" '' != taxis_indexes and null != taxis_indexes">
+					<if test="1 == taxis_indexes"> sum(EXCEPTION_NUM) A3</if>
+					<if test="2 == taxis_indexes">to_char(trunc(sum(EXCEPTION_NUM)/sum(MONITOR_NUM),4)*100,'fm9990.00') || '%' A3</if>
+					
+			</if>
+			
+			FROM					
+			R2_DM_WARN_MONITOR_Y
+			<where>
+				<include refid="level_sql"/>
+				<include refid="r_year_sql"/>
+				AND MONITOR_TYPE=1
+				<include refid="query_condition_sql"/>
+			</where>
+			GROUP BY <include refid="group_sort_area_sql1"/>
+			
+			) A1
+			)
+		
+	</select>
+	<!-- 排序 -->
+	<select id="queryPoorIndetificationSort"  parameterType="hashmap" resultType="hashmap">
+			
+			SELECT * FROM
+			
+			(
+			
+			SELECT A1.*,ROWNUM RM
+			FROM
+			(
+			
+			SELECT
+			<include refid="sort_area_sql1"/>
+
+			<if test=" '' != taxis_indexes and null != taxis_indexes">
+					<if test="1 == taxis_indexes"> sum(EXCEPTION_NUM) A3</if>
+					<if test="2 == taxis_indexes">to_char(trunc(sum(EXCEPTION_NUM)/sum(MONITOR_NUM),4)*100,'fm9990.00') || '%' A3</if>
+			</if>
+			
+			FROM					
+			R2_DM_WARN_MONITOR_Y
+			<where>
+				<include refid="level_sql"/>
+				<include refid="r_year_sql"/>
+				AND MONITOR_TYPE=1
+				<include refid="query_condition_sql"/>
+			</where>
+	
+			GROUP BY <include refid="group_sort_area_sql1"/>
+			ORDER BY A3 
+			<if test=" '' != taxis_indexes and null != taxis_indexes">
+				<if test="1 == taxis_indexes"> desc</if>
+			</if>
+			
+			) A1
+			)
+		
+		
+			<if test="page !=null">
+					WHERE RM BETWEEN #{pageSize}*(#{page}-1)+1 AND #{pageSize}  * #{page}
+			</if>
+		</select>
+		
+			<!-- 贫困识别排序详细#    -->
+	<select id="queryPoorIndetificationDetail"  parameterType="hashmap" resultType="hashmap">
+
+			select 
+			<include refid="sort_area_sql2"/>
+			sum(MONITOR_NUM) A3
+			,sum(case when t.is_exception=1 then 1 else 0 end) A4
+			,sum(case when t.exception_type=1 then MONITOR_NUM else 0 end) A5
+			,sum(case when t.exception_type=1 then EXCEPTION_NUM else 0 end) A6
+			,sum(case when (t.exception_type=3 or t.exception_type=4 or t.exception_type=9 or t.exception_type=10) then MONITOR_NUM else 0 end) A7
+			,sum(case when (t.exception_type=3 or t.exception_type=4 or t.exception_type=9 or t.exception_type=10)  then EXCEPTION_NUM else 0 end) A8
+			,sum(case when t.exception_type=6 then MONITOR_NUM else null end) A9
+			,sum(case when t.exception_type=6  then EXCEPTION_NUM else 0 end) A10
+			,sum(case when t.exception_type=8 then MONITOR_NUM else 0 end) A11
+			,sum(case when t.exception_type=8  then EXCEPTION_NUM else 0 end) A12
+			,sum(case when t.exception_type=2 then MONITOR_NUM else 0 end) A13
+			,sum(case when t.exception_type=2  then EXCEPTION_NUM else 0 end) A14
+			,sum(case when t.exception_type=5 then MONITOR_NUM else 0 end) A15
+			,sum(case when t.exception_type=5 then EXCEPTION_NUM else 0 end) A16
+			,sum(case when t.exception_type=7 then MONITOR_NUM else 0 end) A17
+			,sum(case when t.exception_type=7 then EXCEPTION_NUM else 0 end) A18
+			from  R2_DM_WARN_MONITOR_Y t
+			<where>
+				<include refid="area_sql"/>
+				<include refid="r_year_sql"/>
+				AND MONITOR_TYPE=1
+			</where>
+       		GROUP BY <include refid="group_sort_area_sql2"/>
+	</select>
+	
+		<!-- 建档立卡各类异常占比 -->
+		<select id="queryRecordsExceptionScale"  parameterType="hashmap" resultType="hashmap">
+
+				select S_NAME S_GROUP,S_NAME,S_VALUE from (select (select POOR_MARK_ALARM_NAME from dim_poor_mark_alarm where POOR_MARK_ALARM = t.exception_type) S_NAME,
+				sum(t.EXCEPTION_NUM) S_VALUE
+                from R2_DM_WARN_MONITOR_Y t 
+				<where>
+					<include refid="r_year_sql"/>
+					<include refid="area_sql"/>
+					<include refid="query_condition_sql"/>
+					AND MONITOR_TYPE=2
+				</where>
+				group by t.exception_type)
+	
+	</select>
+	
+	<!-- 建档立卡地区分布图占比 -->
+		<select id="queryRecordsExceptionArea"  parameterType="hashmap" resultType="hashmap">
+
+ 			select <include refid="level_area_sql1"/> sum(MONITOR_NUM) S_VALUE,
+    				sum(EXCEPTION_NUM) S_VALUE1
+					from R2_DM_WARN_MONITOR_Y t 
+				<where>
+					<include refid="r_year_sql"/>
+					<include refid="area_sql"/>
+					AND MONITOR_TYPE=2
+					<include refid="query_condition_sql"/>
+				</where>
+				 group by <include refid="group_by_sql"/>
+				 order by S_VALUE1 desc
+	   </select>
+	  
+
+
+	<!-- 建档立卡统计 -->
+	<select id="queryRecordsTable"  parameterType="hashmap" resultType="hashmap">
+			
+			select A2,c1 A3,c2 A4,to_char(trunc(c2/decode(c1,0,1,c1),4)*100,'fm9990.00') || '%' A5 from
+            (select <include refid="level_area_sql2"/>
+            sum(MONITOR_NUM) c1, 
+            sum(EXCEPTION_NUM) c2
+            from R2_DM_WARN_MONITOR_Y t 
+            <where>
+				<include refid="level_sql"/>
+				<include refid="r_year_sql"/>
+				AND MONITOR_TYPE=2
+				<include refid="query_condition_sql"/>
+			</where>
+            group by <include refid="group_by_sql"/>)
+		    order by S_ID
+	</select>
+	
+	<!-- 建档立卡合计总数  -->
+	<select id="queryRecordsTableCount"  parameterType="hashmap" resultType="hashmap">
+						select A2,c1 A3,c2 A4,to_char(trunc(c2/decode(c1,0,1,c1),4)*100,'fm9990.00') || '%' A5 from
+					(select  <include refid="count_area_sql"/> 
+					sum(MONITOR_NUM) c1
+					,sum(EXCEPTION_NUM) c2
+					from R2_DM_WARN_MONITOR_Y t
+					<where>
+						<include refid="level_sql"/>
+						<include refid="r_year_sql"/>
+						AND MONITOR_TYPE=2
+						<include refid="query_condition_sql"/>
+					</where>
+					group by <include refid="count_group_by_sql"/>
+					)
+				
+	</select>
+	
+	<!-- 建档立卡明细总数  -->
+	<select id="queryPoorRecordsDetailCount"  parameterType="hashmap" resultType="long">
+	
+			select 
+
+				count(*)
+				
+				from
+				(
+				select t1.*,ROWNUM RM
+				from
+				(
+				 SELECT
+				
+				CITY_NAME A2 --市 
+				,COUNTY_NAME A3 --县 
+				,TOWN_NAME A4 --镇 
+				,COUNTRY_NAME A5 --村
+				 ,FAM_CODE A6 --户码 
+				,FAM_NAME A7 --户主姓名 
+				,FAM_ID A8 --成员姓名 
+				,EXCEPTION_TYPE  A9 --异常类型
+				,EXCEPTION_DESC A10 --异常描述
+				,EXCEPTION_RECORD A11 --异常记录
+				,FAM_ID S_ID
+				 from R_DW_EXCEPTION_MONITOR_Y r
+				 <where>
+					<include refid="year_sql"/>
+					<include refid="area_sql"/>
+					<include refid="query_condition_sql2"/>
+					AND IS_EXCEPTION=1
+				</where>
+				) t1
+				
+				)
+				
+	</select>
+	<!-- 建档立卡明细 -->
+	<select id="queryPoorRecordsDetail"  parameterType="hashmap" resultType="hashmap">
+			select 
+
+				*
+				
+				from
+				(
+				select t1.*,ROWNUM RM
+				from
+				(
+				 SELECT
+				
+					CITY_NAME A2 --市 
+				,COUNTY_NAME A3 --县 
+				,TOWN_NAME A4 --镇 
+				,COUNTRY_NAME A5 --村
+				 ,FAM_CODE A6 --户码 
+				,FAM_NAME A7 --户主姓名 
+				,POP_NAME A8 --成员姓名 
+				,(select POOR_MARK_ALARM_NAME from dim_poor_mark_alarm where POOR_MARK_ALARM = r.exception_type) A9 --异常类型
+				,EXCEPTION_DESC A10 --异常描述
+				,EXCEPTION_RECORD A11 --异常记录
+				,FAM_ID S_ID
+				 from R_DW_EXCEPTION_MONITOR_Y r
+				<where>
+					<include refid="year_sql"/>
+					<include refid="area_sql"/>
+					<include refid="query_condition_sql2"/>
+					AND IS_EXCEPTION=1
+				</where>	
+				) t1
+				
+				)
+				
+				<if test="page !=null">
+						WHERE RM BETWEEN #{pageSize}*(#{page}-1)+1 AND #{pageSize}  * #{page}
+				</if>
+						
+	</select>
+	
+	<!-- 建档立卡排序 -->
+	<select id="queryPoorRecordsSort"  parameterType="hashmap" resultType="hashmap">
+			
+			SELECT * FROM
+			
+			(
+			
+			SELECT A1.*,ROWNUM RM
+			FROM
+			(
+			
+			SELECT
+			<include refid="sort_area_sql1"/>
+
+			<if test=" '' != taxis_indexes and null != taxis_indexes">
+					<if test="1 == taxis_indexes"> sum(EXCEPTION_NUM) A3</if>
+					<if test="2 == taxis_indexes">to_char(trunc(sum(EXCEPTION_NUM)/sum(MONITOR_NUM),4)*100,'fm9990.00') || '%' A3</if>
+			</if>
+			
+			FROM					
+			R2_DM_WARN_MONITOR_Y
+			<where>
+				<include refid="level_sql"/>
+				<include refid="r_year_sql"/>
+				AND MONITOR_TYPE=2
+				<include refid="query_condition_sql"/>
+			</where>
+	
+			GROUP BY <include refid="group_sort_area_sql1"/>
+			ORDER BY A3 DESC
+			
+			) A1
+			)
+		
+		
+			<if test="page !=null">
+					WHERE RM BETWEEN #{pageSize}*(#{page}-1)+1 AND #{pageSize}  * #{page}
+			</if>
+		</select>
+		
+		<!-- 建档立卡排序 总数-->
+		<select id="queryPoorRecordsSortCount"  parameterType="hashmap" resultType="long">
+			SELECT COUNT(*) FROM
+			
+			(
+			
+			SELECT A1.*,ROWNUM RM
+			FROM
+			(
+			
+			SELECT
+			<include refid="sort_area_sql1"/>
+
+			<if test=" '' != taxis_indexes and null != taxis_indexes">
+					<if test="1 == taxis_indexes"> sum(EXCEPTION_NUM) A3</if>
+					<if test="2 == taxis_indexes">to_char(trunc(sum(EXCEPTION_NUM)/sum(MONITOR_NUM),4)*100,'fm9990.00') || '%' A3</if>
+					
+			</if>
+			
+			FROM					
+			R2_DM_WARN_MONITOR_Y
+			<where>
+				<include refid="level_sql"/>
+				<include refid="r_year_sql"/>
+				AND MONITOR_TYPE=2
+				<include refid="query_condition_sql"/>
+			</where>
+			GROUP BY <include refid="group_sort_area_sql1"/>
+			ORDER BY A3
+			
+			) A1
+			)
+	</select>
+	
+		<!-- 建档立卡排序详细#    -->
+	<select id="queryPoorRecordDetail"  parameterType="hashmap" resultType="hashmap">
+
+			select 
+			<include refid="sort_area_sql2"/>
+			 sum(MONITOR_NUM) A3
+			,sum(EXCEPTION_NUM) A4
+			,sum(case when t.exception_type=20 then MONITOR_NUM else 0 end) A5
+			,sum(case when t.exception_type=20 then EXCEPTION_NUM else 0 end) A6
+			,sum(case when t.exception_type=21 then MONITOR_NUM else 0 end) A7
+			,sum(case when t.exception_type=21  then EXCEPTION_NUM else 0 end) A8
+			,sum(case when t.exception_type=22 then MONITOR_NUM else 0 end) A9
+			,sum(case when t.exception_type=22  then EXCEPTION_NUM else 0 end) A10
+			,sum(case when t.exception_type=23 then MONITOR_NUM else 0 end) A11
+			,sum(case when t.exception_type=23  then EXCEPTION_NUM else 0 end) A12
+			from  R2_DM_WARN_MONITOR_Y t
+			<where>
+				<include refid="area_sql"/>
+				<include refid="r_year_sql"/>
+				AND MONITOR_TYPE=2
+			</where>
+			GROUP BY <include refid="group_sort_area_sql2"/>
+	</select>
+	
+	<!--帮扶资金  -->
+	<!-- 帮扶资金各年占比 -->
+		<select id="queryAlarmedMoneyScale"  parameterType="hashmap" resultType="hashmap">
+
+				select t.acc_year S_NAME,
+				count(case when t.IS_HELP_FUND_EXCEPTION = 1 and IS_MONITOR_HELP_FUND=1  then t.acc_year else null end) S_VALUE 
+				from r_dw_poorobj_country_y t
+				<where>
+					<include refid="year_sql1"/>
+					<include refid="area_sql"/>
+					and t.IS_KEY_POVERTY=1
+					<!-- <include refid="query_condition_sql"/> -->
+				</where>
+				group by t.acc_year
+				order by t.acc_year
+	
+	</select>
+	
+	<!-- 地区分布图占比 -->
+		<select id="queryAlarmedMoneyArea"  parameterType="hashmap" resultType="hashmap">
+                
+               	select <include refid="level_area_sql1"/> count(1) S_VALUE,
+   				count(CASE WHEN t.IS_HELP_FUND_EXCEPTION=1 and IS_MONITOR_HELP_FUND=1 then 1 else null end) S_VALUE1
+				from R_DW_POOROBJ_COUNTRY_Y t 
+				<where>
+					<include refid="year_sql"/>
+					<include refid="area_sql"/>
+					and t.IS_KEY_POVERTY=1
+				</where>
+				 group by <include refid="group_by_sql"/> 
+				order by S_VALUE1 desc
+	   </select>
+	   
+	   	<!-- 帮扶资金统计明细 -->
+	<select id="queryAlarmedMoneyTable"  parameterType="hashmap" resultType="hashmap">
+			
+			select A2,c1 A3,c2 A4,to_char(trunc(c2/decode(c1,0,1,c1),4)*100,'fm9990.00') || '%' A5 from
+            (select <include refid="level_area_sql"/>
+            count(1) c1, 
+            count(CASE WHEN t.IS_HELP_FUND_EXCEPTION=1 and IS_MONITOR_HELP_FUND=1 then 1 else null end) c2
+            from R_DW_POOROBJ_COUNTRY_Y t 
+            <where>
+				<include refid="level_sql"/>
+				<include refid="year_sql"/>
+				and t.IS_KEY_POVERTY=1
+			</where>
+            group by <include refid="group_by_sql"/>)
+			order by S_ID
+	</select>
+	
+	<!-- 帮扶资金统计明细总数  -->
+	<select id="queryAlarmedMoneyTableCount"  parameterType="hashmap" resultType="hashmap">
+	
+	        select A2,c1 A3,c2 A4,to_char(trunc(c2/decode(c1,0,1,c1),4)*100,'fm9990.00') || '%' A5 from
+			(select  <include refid="count_area_sql"/> 
+			count(1) c1
+			,count(CASE WHEN t.IS_HELP_FUND_EXCEPTION=1 and IS_MONITOR_HELP_FUND=1 then 1 else null end) c2
+			from R_DW_POOROBJ_COUNTRY_Y t
+			<where>
+				<include refid="level_sql"/>
+				<include refid="year_sql"/>
+				and t.IS_KEY_POVERTY=1
+			</where>
+			group by <include refid="count_group_by_sql"/>
+			)
+				
+	</select>
+	
+	<!-- 帮扶资金明细总数  -->
+	<select id="queryPoorMoneyDetailCount"  parameterType="hashmap" resultType="long">
+	
+			select 
+
+				count(*)
+				
+				from
+				(
+				select t1.*,ROWNUM RM
+				from
+				(
+				SELECT
+				
+					CITY_NAME A2 --市 
+				,COUNTY_NAME A3 --县 
+				,TOWN_NAME A4 --镇 
+				,COUNTRY_NAME A5 --村
+				 ,HELP_UNITS A6 --帮扶单位
+				,MAJOR_LEADER A7 --主要领导 
+				,YEAR_HELP_FUND A8 --当年帮扶资金 
+				,TOTAL_HELP_FUND A9 --累计帮扶资金
+				 from R_DW_POOROBJ_COUNTRY_Y r
+				 <where>
+					<include refid="year_sql"/>
+					<include refid="area_sql"/>
+					<include refid="query_condition_sql1"/>
+					and IS_MONITOR_HELP_FUND=1 
+					and IS_KEY_POVERTY=1
+				</where>
+				) t1
+				
+				)
+				
+	</select>
+	<!-- 帮扶资金明细 -->
+	<select id="queryPoorMoneyDetail"  parameterType="hashmap" resultType="hashmap">
+			select 
+
+				*
+				
+				from
+				(
+				select t1.*,ROWNUM RM
+				from
+				(
+				SELECT
+				
+					CITY_NAME A2 --市 
+				,COUNTY_NAME A3 --县 
+				,TOWN_NAME A4 --镇 
+				,COUNTRY_NAME A5 --村
+				 ,HELP_UNITS A6 --帮扶单位
+				,MAJOR_LEADER A7 --主要领导 
+				,trunc(YEAR_HELP_FUND/10000,2) A8 --当年帮扶资金 
+				,trunc(TOTAL_HELP_FUND/10000,2) A9 --累计帮扶资金
+				,COUNTRY_PAC B1
+				 from R_DW_POOROBJ_COUNTRY_Y r
+				<where>
+					<include refid="year_sql"/>
+					<include refid="area_sql"/>
+					<include refid="query_condition_sql1"/>
+					and IS_MONITOR_HELP_FUND=1 
+					and IS_KEY_POVERTY=1
+				</where>
+				order by TOTAL_HELP_FUND desc	
+				) t1
+				
+				)
+				
+				<if test="page !=null">
+						WHERE RM BETWEEN #{pageSize}*(#{page}-1)+1 AND #{pageSize}  * #{page}
+				</if>
+						
+	</select>
+	
+	<!-- 帮扶资金排序 -->
+	<select id="queryAlarmedMoneySort"  parameterType="hashmap" resultType="hashmap">
+			
+			SELECT * FROM
+			
+			(
+			
+			SELECT A1.*,ROWNUM RM
+			FROM
+			(
+			
+			SELECT
+			<include refid="sort_area_sql1"/>
+
+			<if test=" '' != exception_type and null != exception_type">
+					<if test="2 == exception_type"> count(CASE WHEN IS_HELP_FUND_EXCEPTION=1 and IS_MONITOR_HELP_FUND=1  then 1 else null end) A3,count(CASE WHEN IS_HELP_FUND_EXCEPTION=1 and IS_MONITOR_HELP_FUND=1  then 1 else null end) A4</if>
+					<if test="1 == exception_type">to_char(trunc(count(CASE WHEN IS_HELP_FUND_EXCEPTION=1 and IS_MONITOR_HELP_FUND=1  then 1 else null end)/count(1),4)*100,'fm9990.00') || '%' A3,trunc(count(CASE WHEN IS_HELP_FUND_EXCEPTION=1 and IS_MONITOR_HELP_FUND=1  then 1 else null end)/count(1),4)*100 A4</if>
+			</if>
+			
+			FROM					
+			R_DW_POOROBJ_COUNTRY_Y
+			<where>
+				<include refid="level_sql"/>
+				<include refid="year_sql"/>
+				and IS_KEY_POVERTY = 1
+				<!-- <include refid="query_condition_sql"/> -->
+			</where>
+	
+			GROUP BY <include refid="group_sort_area_sql1"/>
+			ORDER BY A4 DESC
+			
+			) A1
+			)
+		
+		
+			<if test="page !=null">
+					WHERE RM BETWEEN #{pageSize}*(#{page}-1)+1 AND #{pageSize}  * #{page}
+			</if>
+		</select>
+		
+		<!-- 帮扶资金排序 总数-->
+		<select id="queryAlarmedMoneySortCount"  parameterType="hashmap" resultType="long">
+			SELECT COUNT(*) FROM
+			
+			(
+			
+			SELECT A1.*,ROWNUM RM
+			FROM
+			(
+			
+			SELECT
+			<include refid="sort_area_sql1"/>
+
+			<if test=" '' != taxis_indexes and null != taxis_indexes">
+					<if test="1 == taxis_indexes"> count(CASE WHEN IS_HELP_FUND_EXCEPTION=1 and IS_MONITOR_HELP_FUND=1  then 1 else null end) A3</if>
+					<if test="2 == taxis_indexes">to_char(trunc(count(CASE WHEN IS_HELP_FUND_EXCEPTION=1 and IS_MONITOR_HELP_FUND=1  then 1 else null end)/count(1),4)*100,'fm9990.00') || '%' A3</if>
+					
+			</if>
+			
+			FROM					
+			R_DW_POOROBJ_COUNTRY_Y
+			<where>
+				<include refid="level_sql"/>
+				<include refid="year_sql"/>
+				and IS_KEY_POVERTY = 1
+				<!-- <include refid="query_condition_sql"/> -->
+			</where>
+			GROUP BY <include refid="group_sort_area_sql1"/>
+			ORDER BY A3
+			
+			) A1
+			)
+	</select>
+	
+		<!-- 帮扶资金排序详细#    -->
+	<select id="queryAlarmedMoneyDetail"  parameterType="hashmap" resultType="hashmap">
+	
+			select 
+
+			<include refid="sort_area_sql2"/>
+		
+			 count(1) as A3  --相对贫困村数
+			,count(CASE WHEN IS_HELP_FUND_EXCEPTION=1 then 1 else null end) as A4  --帮扶资金小于＜30万的相对贫困村数
+			,to_char(trunc(count(CASE WHEN IS_HELP_FUND_EXCEPTION=1 then 1 else null end)/count(1),4)*100,'fm9990.00') || '%' as A5  --比例
+			
+			FROM 
+			R_DW_POOROBJ_COUNTRY_Y
+			<where>
+				<include refid="area_sql"/>
+				<include refid="year_sql"/>
+				and IS_KEY_POVERTY = 1
+			</where>
+			GROUP BY <include refid="group_sort_area_sql2"/>
+
+	</select>
+	
+	<!-- 排序类型 -->
+	<sql id="sort_area_sql1">
+			
+			<if test=" '' != sort_area and null != sort_area and 1 == sort_area  ">
+				CITY_PAC S_ID, CITY_NAME A2,
+			</if>
+			<if test=" '' != sort_area and null != sort_area and 2 == sort_area  ">
+				COUNTY_PAC S_ID,CITY_NAME||'>'||COUNTY_NAME A2,
+			</if>
+			
+			<if test=" '' != sort_area and null != sort_area and 3 == sort_area  ">
+				 TOWN_PAC S_ID ,CITY_NAME||'>'||COUNTY_NAME||'>'||TOWN_NAME A2,
+			</if>
+			
+			<if test=" '' != sort_area and null != sort_area and 4 == sort_area  ">
+				COUNTRY_PAC S_ID ,CITY_NAME||'>'||COUNTY_NAME||'>'||TOWN_NAME||'>'||COUNTRY_NAME  A2,
+			</if>
+			
+	</sql>
+	<sql id="group_sort_area_sql1">
+			<if test=" '' != sort_area and null != sort_area and 1 == sort_area  ">
+				CITY_PAC , CITY_NAME 
+			</if>
+			<if test=" '' != sort_area and null != sort_area and 2 == sort_area  ">
+				COUNTY_PAC ,CITY_NAME||'>'||COUNTY_NAME 
+			</if>
+			
+			<if test=" '' != sort_area and null != sort_area and 3 == sort_area  ">
+				TOWN_PAC ,CITY_NAME||'>'||COUNTY_NAME||'>'||TOWN_NAME
+			</if>
+			
+			<if test=" '' != sort_area and null != sort_area and 4 == sort_area  ">
+				COUNTRY_PAC ,CITY_NAME||'>'||COUNTY_NAME||'>'||TOWN_NAME||'>'||COUNTRY_NAME
+			</if>
+			
+	</sql>
+	
+	<!-- 排序类型 -->
+	<sql id="sort_area_sql2">
+			
+			<if test=" '' != level and null != level and 'city' == level  ">
+				CITY_PAC S_ID, CITY_NAME A2,
+			</if>
+			<if test=" '' != level and null != level and 'county' == level  ">
+				COUNTY_PAC S_ID,CITY_NAME||'>'||COUNTY_NAME A2,
+			</if>
+			
+			<if test=" '' != level and null != level and 'town' == level  ">
+				 TOWN_PAC S_ID ,CITY_NAME||'>'||COUNTY_NAME||'>'||TOWN_NAME A2,
+			</if>
+			
+			<if test=" '' != level and null != level and 'country' == level  ">
+				COUNTRY_PAC S_ID ,CITY_NAME||'>'||COUNTY_NAME||'>'||TOWN_NAME||'>'||COUNTRY_NAME  A2,
+			</if>
+			
+	</sql>
+	<sql id="group_sort_area_sql2">
+			<if test=" '' != level and null != level and 'city' == level  ">
+				CITY_PAC , CITY_NAME 
+			</if>
+			<if test=" '' != level and null != level and 'county' == level  ">
+				COUNTY_PAC ,CITY_NAME||'>'||COUNTY_NAME 
+			</if>
+			
+			<if test=" '' != level and null != level and 'town' == level  ">
+				TOWN_PAC ,CITY_NAME||'>'||COUNTY_NAME||'>'||TOWN_NAME
+			</if>
+			
+			<if test=" '' != level and null != level and 'country' == level  ">
+				COUNTRY_PAC ,CITY_NAME||'>'||COUNTY_NAME||'>'||TOWN_NAME||'>'||COUNTRY_NAME
+			</if>
+			
+	</sql>
+	
+</mapper>

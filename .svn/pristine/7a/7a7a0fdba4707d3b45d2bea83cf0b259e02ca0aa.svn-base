@@ -1,0 +1,5 @@
+npm install --global --production windows-build-tools£¨°²×°windowÒÀÀµ£©
+
+npm install -g gulp-cli
+npm install --dev
+gulp js:min

@@ -1,0 +1,86 @@
+{
+    "code": 0,
+    "msg": "获取信息成功",
+    "data": {
+        "responsible_person": {
+            "avatar": "../../../data/images/country-touxiang.png",
+            "name": "王忠民",
+            "duty": "主任",
+            "phone": "159****1166"
+        },
+        "shortage":{
+            "status":{
+                "amount_households":"55户",
+                "amount_people":"129人",
+                "rate_poor":"6.1%"
+            },
+            "analysis": "物质匮乏，缺乏知识和技能，须全面提高人的文化素质才是脱贫的根本。故对他们来说，须摒弃“等、靠、要”的思想，积极进取学习技能，假以时日，当能成功改变贫困面貌。"
+        },
+        "info":{
+            "person": [
+                {
+                    "name": "杨育武",
+                    "organization": "中共广州市天河区委党校",
+                    "duty": "办公室主任",
+                    "relation": "县",
+                    "time_start": "2016-5-8",
+                    "time_end": "2019-5-8",
+                    "phone": ""
+                }
+            ],
+            "plan": [
+                {
+                    "name": "发展优质水稻种植主导产业",
+                    "content": "购进优质谷种发放给村民耕种",
+                    "unit": "斤",
+                    "amount": "1333",
+                    "total_money": "37324",
+                    "time": "2016-5-8"
+                }
+            ],
+            "policy": [
+                {
+                    "type": "购进谷种",
+                    "amount": "37324"
+                }
+            ]
+        },
+        "album":{
+            "school":[
+                {
+                    "title":"学校图",
+                    "img":"../../../data/images/country-school.png"
+                }
+            ],
+            "health_station":[
+                {
+                    "title":"卫生站图",
+                    "img":"../../../data/images/country-hospital.png"
+                },
+                {
+                    "title":"卫生站图",
+                    "img":"../../../data/images/country-hospital2.png"
+                }
+            ],
+            "country_other":[
+                {
+                    "title":"其他",
+                    "img":"../../../data/images/country-other1.png"
+                },
+                {
+                    "title":"其他",
+                    "img":"../../../data/images/country-other2.png"
+                },
+                {
+                    "title":"其他",
+                    "img":"../../../data/images/country-other3.png"
+                },
+                {
+                    "title":"其他",
+                    "img":"../../../data/images/country-other4.png"
+                }
+
+            ]
+        }
+    }
+}

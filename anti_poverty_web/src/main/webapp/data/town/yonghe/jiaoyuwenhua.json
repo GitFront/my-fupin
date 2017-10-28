@@ -1,0 +1,94 @@
+{
+    "code": 0,
+    "msg": "获取信息成功",
+    "data": {
+        "chart_config_tab": [{
+            "tooltip" : {
+                "trigger": "item",
+                "formatter": "{a} <br/>{b} : {c} ({d}%)"
+            },
+            "title": {
+                "text": "贫困人口学历分布",
+                "left": "center",
+                "top":20,
+                "textStyle":{
+                    "color": "#fff",
+                    "fontSize":15
+                }
+            },
+            "series" : [
+                {
+                    "name": "文化程度",
+                    "type": "pie",
+                    "radius": ["37%", "70%"],
+                    "center":["50%", "60%"],
+                    "label": {
+                        "normal": {
+                            "show": false
+                        }
+                    },
+                    "data":[
+                        {"value":72471, "name":"小学"},
+                        {"value":62459, "name":"初中"},
+                        {"value":20773, "name":"文盲或半文盲"},
+                        {"value":13263, "name":"未选择"},
+                        {"value":11338, "name":"高中"},
+                        {"value":6, "name":"中专"},
+                        {"value":0, "name":"大专以上"},
+                        {"value":0, "name":"学龄儿童"}
+                    ],
+                    "itemStyle": {
+                        "emphasis": {
+                            "shadowBlur": 40
+                        }
+                    }
+                }
+            ]
+        },{
+            "tooltip": {
+                "trigger": "item",
+                "formatter": "{a} <br/>{b} : {c} ({d}%)"
+            },
+            "title": {
+                "text": "贫困人口在校生学历分布",
+                "left": "center",
+                "top":20,
+                "textStyle":{
+                    "color": "#fff",
+                    "fontSize":15
+                }
+            },
+            "series" : [
+                {
+                    "name": "文化程度",
+                    "type": "pie",
+                    "radius": ["37%", "70%"],
+                    "center":["50%", "60%"],
+                    "label": {
+                        "normal": {
+                            "show": false
+                        }
+                    },
+                    "data":[
+                        {"value":16769, "name":"小学"},
+                        {"value":8242, "name":"初中"},
+                        {"value":5841, "name":"未选择"},
+                        {"value":5759, "name":"高中"},
+                        {"value":4, "name":"中专"},
+                        {"value":0, "name":"学龄儿童"},
+                        {"value":0, "name":"大专以上"}
+                    ],
+                    "itemStyle": {
+                        "emphasis": {
+                            "shadowBlur": 40
+                        }
+                    }
+                }
+            ]
+        }]
+    }
+}
+
+
+
+

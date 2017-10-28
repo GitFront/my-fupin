@@ -1,0 +1,25 @@
+{
+	"code": 0,
+	"msg": "获取信息成功",
+	"data": {
+		//综合得分
+		"total_score": 60,
+		//各指标
+		"scores": [
+			{
+				//指标名
+				"index_name": "家庭人均收入",
+				//权重
+				"weight": 30,
+				//值名称
+				"value_name": "实际人均收入",
+				//实际值
+				"value_actual": "4500",
+				//考核目标值
+				"value_target": "<2%",
+				//是否已达标
+				"has_achieved": false
+			}
+		]
+	}
+}

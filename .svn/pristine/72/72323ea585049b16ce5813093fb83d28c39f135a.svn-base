@@ -1,0 +1,37 @@
+{
+	"data":{
+		"belong_organization":"兴宁市外经贸局",
+		"list":[
+			{
+				"id":"441481128211",
+				"order":1,
+				"contact_phone":"3242241",
+				"contact_name":"林羽兰",
+				"country_name":"和山村委会"
+			},
+			{
+				"id":"441481128201",
+				"order":2,
+				"contact_phone":"13536724980",
+				"contact_name":"王国华",
+				"country_name":"星民村委会"
+			},
+			{
+				"id":"441481128202",
+				"order":3,
+				"contact_phone":"13826687313",
+				"contact_name":"李城玩",
+				"country_name":"枫岭村委会"
+			},
+			{
+				"id":"441481128210",
+				"order":4,
+				"contact_phone":"13449132012",
+				"contact_name":"何剑彬",
+				"country_name":"和新村委会"
+			}
+		]
+	},
+	"code":0,
+	"msg":"获取信息成功"
+}

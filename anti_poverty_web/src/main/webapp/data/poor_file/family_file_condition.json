@@ -1,0 +1,30 @@
+{
+	"code": 0,
+	"msg": "获取信息成功",
+	"data": {
+		"production":{
+			"cultivated_land": {
+				"total": 1,
+				"available": 1
+			},
+			"forest_land": {
+				"total": 0,
+				"return": 0,
+				"fruit": 0
+			},
+			"grass_total": 0,
+			"water_total": 0
+		},
+		"living": {
+			"production_electricity": "否",
+			"living_electricity": "否",
+			"water_safety": "否",
+			"house_area": 88,
+			"distance_main_road": 0,
+			"road_type": "硬硬硬水泥路",
+			"fuel_type": "清洁能源",
+			"toilet": "无",
+			"joined_fsc": "否"
+		}
+	}
+}

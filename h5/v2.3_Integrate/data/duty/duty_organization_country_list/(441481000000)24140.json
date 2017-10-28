@@ -1,0 +1,16 @@
+{
+	"data":{
+		"belong_organization":"广州市天河区司法局",
+		"list":[
+			{
+				"id":"441481132216",
+				"order":1,
+				"contact_phone":"13751964986",
+				"contact_name":"石藴玉",
+				"country_name":"大二村委会"
+			}
+		]
+	},
+	"code":0,
+	"msg":"获取信息成功"
+}

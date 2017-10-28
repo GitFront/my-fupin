@@ -1,0 +1,774 @@
+
+$img-analyse-path:'../../images/fupin_analyse/';
+.mask-popup-poor-analyse{
+  &.poor-reason-analyse {
+    z-index: $zIndexDataAnalyse;
+  }
+  position: fixed;
+  height: 100%;
+  width: 100%;
+  left: 0;
+  top: 0;
+  background: rgba(0, 0, 0, .74);
+  display: none;
+  font-family: dongQingHeiTi;
+}
+.popup-poor-analyse{
+  .btn-close {
+    $s: 46px;
+    position: absolute;
+    width: $s;
+    height: $s;
+    cursor: pointer;
+    right: -25px;
+    top: -14px;
+    border-radius: 100%;
+    //filter: drop-shadow(0 6px 6px rgba(29, 30, 34, .25));
+    @include bgPng(file_btn_close);
+    z-index: 100;
+  }
+  .popup-content {
+    height: 100%;
+    width: 100%;
+    .arrow{
+      width: 11px;  height: 7px;
+      display: inline-block;
+      float: right;
+      position: relative;
+      top: 4px;
+      background: url('#{$img-analyse-path}arrow_down.png') no-repeat 0 0;
+    }
+    .arrow-on{
+      background: url('#{$img-analyse-path}arrow_up.png') no-repeat 0 0;
+    }
+    //锁定头部
+    .lock-analyse-header{
+      background: rgba(55,55,84,0.4);
+      width: 100%;
+      height: 70px;
+      position: absolute;
+      top: 0;
+      left: 0;
+      display:none;
+    }
+    .analyse-header{
+      .analyse-title {
+        $w: 138px;
+        $h: 46px;
+        position: absolute;
+        line-height: $h;
+        height: $h;
+        min-width: $w;
+        left: 0;
+        top: 8px;
+        font-size: 20px;
+        text-align: left;
+        padding-left: 50px;
+        border-radius: 0 23px 23px 0;
+        background-color: rgba(255, 255, 255, .13);
+        box-shadow: 0 6px 6px rgba(29, 30, 34, .14), inset 0 0 1px rgba(255, 255, 255, .42);
+      }
+      .area-select{
+        padding:18px 40px 0 0;
+        float:right;
+        .area-barrio{
+          float:left;
+          .select-box{
+            width: 70px;
+            padding: 7px 10px;
+            border: 1px solid #C2C2CB;
+            display: inline-block;
+            position:relative;
+            cursor: pointer;
+            span{
+              width: 54px;
+              overflow: hidden;
+              height: 13px;
+              display: inline-block;
+            }
+            .select-list{
+              background-color: #353553;
+              position: absolute;
+              padding: 10px;
+              min-width:75px;
+              //max-width: 150px;
+              max-height: 320px;
+              left: -2px;
+              top: 34px;
+              z-index: 100;
+              text-align: left;
+              display:none;
+              .jspHorizontalBar{
+                display:none;
+              }
+              li{
+                padding:12px 10px;
+                border:1px solid #353553;
+                cursor:pointer;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                font-size:12px;
+                &:hover,
+                &.active{
+                  border:1px solid #6E76A4;
+                  background-color: #4A4A6F;
+                }
+              }
+            }
+          }
+          .selected{
+            border:1px solid #87E5F9;
+          }
+        }
+        .area-radio{
+          float:left;
+          padding-left:30px;
+          padding-top: 8px;
+          .radio-tag{
+            display:inline-block;
+            padding-left:5px;
+            cursor: pointer;
+            &.disabled{
+              opacity:.5;
+              cursor: not-allowed;
+            }
+            .radio{
+              width: 12px;
+              height: 12px;
+              display: inline-block;
+              background: url('#{$img-analyse-path}radio_close.png') no-repeat 0 0;
+            }
+            &.active{
+              .radio{
+                background: url('#{$img-analyse-path}radio_on.png') no-repeat 0 0;
+              }
+            }
+          }
+
+        }
+      }
+    }
+    .analyse-nav{
+      float:left;
+      width:220px;
+      margin-top:36px;
+
+      ul{
+        float:left;
+        li{
+          &.nav-active{
+            color:#88E7FB;
+          }
+          &.white{
+            color: #fff!important;
+
+          }
+          &.nav-current{
+            width: 180px;
+            padding: 15px 10px;
+            border: 1px solid #55577A;
+            background-color: #4A4A6F;
+            margin-top: 1px;
+            box-shadow: 0 6px 6px rgba(29, 30, 34, .14), inset 0 0 1px rgba(255, 255, 255, .42);
+            cursor:pointer;
+          }
+          &.nav-current-detail{
+            padding:10px 20px;
+            dl{
+              dd{
+                padding:10px 0;
+                cursor:pointer;
+                i.icon-point{
+                  width: 5px;
+                  height: 5px;
+                  display: inline-block;
+                  position: relative;
+                  top: -3px;
+                  background: url('#{$img-analyse-path}point_white.png') no-repeat 0 0;
+                  margin-right:10px;
+                }
+                &.active{
+                  color:#88E7FB;
+                  i{
+                    background: url('#{$img-analyse-path}point_blue.png') no-repeat 0 0;
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+    .analyse-content{
+      float:left;
+      margin-top:36px;
+      width: 1065px;
+    }
+  }
+  $w: 1290px;
+  $h: 671px;
+  width: $w;
+  height: $h;
+  position: absolute;
+  box-shadow: 0 12px 38px rgba(29, 33, 45, .51);
+  margin-left: -$w / 2;
+  margin-top: -$h / 2;
+  left: 50%;
+  //top: 50%;
+  top: 50%;
+  @extend .clearfix;
+  background: url('#{$img-analyse-path}data_analyse_bg.png') no-repeat 0 0;
+}
+//致贫原因
+.analyse-poor-reason{
+  .poor-reason-header{
+    width:379px;
+    height:71px;
+    background: url('#{$img-analyse-path}poor_reason.png') no-repeat;
+    .ml{
+      margin-left: 16px;
+    }
+    .poor-reason-item{
+      width:150px;
+      float:left;
+      padding:15px;
+      color:#F3E824;
+      span{
+        font-size:24px;
+        font-family: miNiJian;
+        text-shadow: 0 2px 2px rgba(29, 33, 45, 0.68);
+        padding-right:6px;
+      }
+      p{
+        color:#9DBAFF;
+        margin-top:6px;
+      }
+    }
+  }
+  .chart-poor-reason{
+    width:580px;
+    height:450px;
+    margin:10px auto;
+  }
+}
+//贫困户属性分析,危房分析
+.analyse-poor-page{
+  .poor-page-header{
+    width:379px;
+    height:91px;
+    background: url('#{$img-analyse-path}poor_atrribute_header.png') no-repeat;
+    .ml{
+      margin-left: 16px;
+    }
+    .poor-page-item{
+      width:150px;
+      float:left;
+      padding:15px;
+      color:#F3E824;
+      span.amount{
+        font-size:24px;
+        font-family: miNiJian;
+        text-shadow: 0 2px 2px rgba(29, 33, 45, 0.68);
+        padding-right:6px;
+      }
+      p.poor-name{
+        color:#9DBAFF;
+        margin-top:6px;
+      }
+      .poor-bar{
+        padding-top:6px;
+        .litem {
+          &:before {
+            background: #30507A;
+            display: block;
+            content: " ";
+            position: absolute;
+            z-index: 1;
+            box-sizing: border-box;
+            height: 100%;
+            width: 100%
+          }
+          position: relative;
+          height: 12px;
+          width: 100px;
+          display:inline-block;
+        }
+        .vnum {
+          color: #f3e924;
+          font-size:10px;
+          display:inline-block;
+        }
+        .bar {
+          height: 12px;
+          position: absolute;
+          z-index: 10;
+          background-image: linear-gradient(to top, #b39a0e, #ffee5e);
+        }
+      }
+
+    }
+  }
+  .poor-one-header{
+    width:185px;
+  }
+  .inline-block{
+    display:inline-block;
+  }
+  .mr10{
+    margin-right:8px;
+  }
+}
+.chart-page-content{
+  margin-top:50px;
+  .chart-item{
+    border:1px solid #414163;
+    position:relative;
+    padding:35px 20px 25px;
+    float:left;
+    margin-right:35px;
+    min-width:450px;
+    background-color: #292536;
+    .chart-item-title{
+      position:absolute;
+      top:-14px;
+      left:10px;
+      color:#FBDF16;
+      font-size:16px;
+      min-width:152px;
+      padding:0 20px;
+      height:30px;
+      line-height:30px;
+      text-align: center;
+      background: url('#{$img-analyse-path}poor_atrribute_chart_title.png') no-repeat;
+      background-size: 100% 100%;
+    }
+    //贫困分析chart
+    .poor-chart{
+      width:450px;
+      height:310px;
+    }
+    //教育
+    .edu-chart{
+      width:1000px;
+      height:175px;
+    }
+    //一相当
+    .condition-chart{
+      width: 1000px;
+      height: 291px;
+    }
+  }
+}
+//通用顶部tab
+.data-analyse-tab{
+  &.inline-tab{
+    display: inline-block;
+    &:nth-child(even){
+      margin-left: 32px;
+    }
+  }
+  .tab-title{
+    font-size:16px;
+    color:#8DAAF1;
+    float:left;
+    margin-top: 12px;
+  }
+  ul{
+    float:left;
+//    margin-left:15px;
+border:1px solid #86E4F8;
+color:#86E4F8;
+li{
+  float:left;
+  min-width:110px;
+  padding: 10px 0;
+  text-align: center;
+  cursor:pointer;
+  white-space: nowrap;
+  &.active{
+    background:#86E4F8;
+    color:#232636;
+  }
+  label{
+    border-right:1px solid #4E7183;
+    height:14px;
+    width: 90%;
+    padding:0 5%;
+    display: inline-block;
+    cursor:pointer;
+  }
+  &:last-child{
+    label{
+      border:none;
+    }
+  }
+}
+}
+}
+//方形框
+.square-info-box{
+  min-width:164px;
+  height:79px;
+  background: url('#{$img-analyse-path}square_box.png') no-repeat;
+  background-size:100% 100%;
+  padding:0 20px;
+  //margin-top:20px;
+  margin-right:15px;
+  display:inline-block;
+  .money{
+    color:#F3E824;
+    margin-top:15px;
+    span{
+      font-family: miNiJian;
+      font-size:26px;
+      padding-right:10px;
+      text-shadow: 0 2px 2px rgba(29, 33, 45, 0.68);
+    }
+  }
+  .money-title{
+    margin-top:12px;
+  }
+  li{
+    margin-top:9px;
+  }
+  .info-name{
+    color:#fff;
+  }
+  .yellow{
+    color:#F1E524;
+  }
+  .litem {
+    &:before {
+      background: #30507A;
+      display: block;
+      content: " ";
+      position: absolute;
+      z-index: 1;
+      box-sizing: border-box;
+      height: 100%;
+      width: 100%
+    }
+    position: relative;
+    height: 12px;
+    width: 110px;
+    display:inline-block;
+  }
+  .vnum {
+    color: #f3e924;
+    font-size:10px;
+    display:inline-block;
+  }
+  .bar {
+    height: 12px;
+    position: absolute;
+    z-index: 10;
+    background-image: linear-gradient(to top, #b39a0e, #ffee5e);
+  }
+}
+.mt15{
+  margin-top:15px;
+}
+.mt20{
+  margin-top:20px;
+}
+//统计表
+.analyse-total-table{
+  width:1000px;
+}
+//table公共
+.analyse-tb{
+  border:1px solid #5B748C;
+  border-collapse:collapse;
+  color:#fff;
+  font-size:12px;
+  width:100%;
+  .no-detail{
+    text-decoration: none;
+    cursor: default;
+    color: #fff;
+  }
+  td{
+    border:1px solid #5B748C;
+    padding:10px;
+  }
+  thead{
+    background:#47425C;
+    
+    span{
+      position:relative;
+      top:3px;
+    }
+    .ico-quest {
+      $s: 16px;
+      &.active {
+        .tip {
+          display: block;
+        }
+      }
+      .tip {
+        &:after {
+          $w: 18px;
+          $h: 18px;
+          content: " ";
+          display: block;
+          position: absolute;
+          bottom: -18px;
+          right: 88px;
+          width: $w;
+          height: $h;
+          @include bgPng(file_tip_arrow);
+          filter: drop-shadow(0 12px 38px rgba(29, 33, 45, 1));
+        }
+        table {
+          td {
+            background-color:#373755;
+            &:first-child {
+              width: 64px;
+              vertical-align: top;
+            }
+            padding: 0;
+            border: none;
+            line-height: 24px;
+            font-size: 12px;
+            color: #FFF;
+          }
+          width: 100%;
+        }
+        z-index: 2;
+        position: absolute;
+        bottom: 100%;
+        right: -88px;
+        width: 251px;
+        background-color: #373755;
+        padding: 14px 16px;
+        box-sizing: border-box;
+        box-shadow: 0 12px 38px rgba(29, 33, 45, 1);
+        margin-bottom: 13px;
+        display: none;
+        cursor: default;
+        line-height: 16px;
+      }
+      width: $s;
+      height: $s;
+      display: inline-block;
+      cursor: pointer;
+      position: relative;
+      @include bgPng(file_ico_quest);
+      top: 3px;
+      left: 3px;
+    }
+  }
+  tbody{
+    td{
+      line-height:16px;
+      background:#322E41;
+      a{
+        text-decoration: underline;
+        color:#84DFF3;
+      }
+    }
+  }
+}
+//查询页面
+.data-search-box{
+  position: relative;
+  top: -33px;
+  .search-top-option{
+    right: 18px;
+    top:-24px;
+    position: absolute;
+    width: 136px;
+    .export-btn{
+      float: left;
+      position: static;
+    }
+    span{
+      color: $yellow;
+      padding:0 10px;
+    }
+    .return-main{
+      float: right;
+      position: relative;
+      top: -2px;
+      left: -2px;
+      color:#D2C820;
+      font-size: 12px;
+      line-height: 1;
+      cursor:pointer;
+      .icon-back{
+        display:inline-block;
+        width:14px;
+        height:14px;
+        position:relative;
+        top: 2px;
+        left: -4px;
+        background: url('#{$img-analyse-path}icon_return.png') no-repeat;
+        background-size: 100%;
+
+      }
+    }
+  }  
+  .data-search-header{
+    border:1px solid #88E7FB;
+    overflow:hidden;
+    font-size:12px;
+    margin:5px 0 20px;
+    //width:847px;
+    input,
+    button{
+      height:30px;
+      background:none;
+      border:0;
+    }
+    input{
+      float:left;
+      width:900px;
+      color:#88E7FB;
+      padding-left:20px;
+      box-sizing:border-box;
+    }
+    button.btn-search{
+      float:right;
+      background:#88E7FB;
+      width:70px;
+      color:#191821;
+      cursor: pointer;
+    }
+  }
+  .data-search-content{
+    height:410px;
+    //overflow:hidden;
+    $search-w:1010px;
+    $search-h:410px;
+    .detail-search-content{
+      width: $search-w;
+      height: $search-h;
+    }
+    .analyse-tb{
+      width:100%;
+      thead{
+        td{
+          min-width:45px;
+        }
+      }
+    }
+    .jsp-search-content{
+      width: $search-w;
+      height: 371px;
+      .jspPane{
+        width:100%!important;
+      }
+      .analyse-tb{
+        border-top:0!important;
+        tbody>tr:first-child{
+          td{
+            border-top:0!important;
+          }
+        }
+      }
+    }
+    .none-search{
+      text-align: center;
+      padding-top:160px;
+      display:none;
+    }
+  }
+}
+.analyse-main-content{
+  width:100%;
+  height:580px;
+  .jspHorizontalBar{
+    display:none;
+  }
+
+}
+//人均可支配收入分析
+.average-income{
+  width:1065px;
+  height:580px;
+  .average-income-count{
+    overflow:hidden;
+    .square-info-box{
+      float:left;
+    }
+  }
+  .average-income-tb{
+    width:861px;
+    margin:20px 0;
+    .analyse-tb-title{
+      padding-right:11px;
+    }
+    .yellow{
+      color:#F3E824;
+    }
+  }
+  .jspHorizontalBar{
+    display:none;
+  }
+  .average-income-detail{
+    width:1065px;
+    height:185px;
+    .content{
+      width:1000px;
+      //height:125px;
+      .analyse-tb{
+        width: 3000px;
+      }
+      .jspHorizontalBar{
+        display:block!important;
+      }
+    }
+  }
+}
+//社会保障兜底
+.social-policy{
+  .social-policy-count{
+    overflow:hidden;
+    .square-info-box{
+      float:left;
+    }
+  }
+}
+//预警监控存在异常的贫困户
+.alarmed-family{
+  .alarmed-family-info{
+    font-size:18px;
+    color:#8DABF1;
+    .yellow{
+      color:#EAD017;
+    }
+  }
+  .check-all{
+    position: absolute;
+    right: 20px;
+    top: 10px;
+    color: #EAD017;
+  }
+  .alarmed-family-table{
+    width:1000px;
+    .analyse-tb{
+      width:100%;
+      td{
+        min-width:45px;
+      }
+    }
+  }
+}
+
+//数据导出
+.export-btn{
+  position: absolute;
+  display: block;
+  padding-right: 20px;
+  padding-top: 1px;
+  right: 20px;
+  top: 11px;
+  font-size: 12px;
+  color: $yellow;
+  background:url('#{$img-analyse-path}icon_export.png') no-repeat 54px 0px;
+  &:hover{
+    color: $yellow;
+  }
+}
+

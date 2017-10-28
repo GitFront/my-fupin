@@ -1,0 +1,1 @@
+function loadPage(a,n,t){1==n?window.location.href=baseCtx+t+"?parentId="+a:0==n&&(window.location.href=baseCtx+"a?parentId="+a)}$(function(){$("#li_"+parentId).attr("class","on")});

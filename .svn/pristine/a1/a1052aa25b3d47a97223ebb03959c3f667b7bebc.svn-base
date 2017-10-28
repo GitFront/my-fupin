@@ -1,0 +1,50 @@
+{
+	"code": 0,
+	"msg": "获取信息成功",
+	"data": {
+		//生产条件
+		"production":{
+			//耕地面积
+			"cultivated_land": {
+				//总亩数
+				"total": 1,
+				//有效亩数
+				"available": 1
+			},
+			//林地面积
+			"forest_land": {
+				//总亩数
+				"total": 0,
+				//退耕还林亩数
+				"return": 0,
+				//林果面积亩数
+				"fruit": 0
+			},
+			//牧草面积亩数
+			"grass_total": 0,
+			//水面面积亩数
+			"water_total": 0
+		},
+		//生活条件
+		"living": {
+			//是否通生产用电
+			"production_electricity": "否",
+			//是否通生活用电
+			"living_electricity": "否",
+			//是否通饮水安全
+			"water_safety": "否",
+			//住房面积平方米数
+			"house_area": 88,
+			//与村主干路距离公里数
+			"distance_main_road": 0,
+			//入户路类型
+			"road_type": "水泥路",
+			//主要燃料类型
+			"fuel_type": "清洁能源",
+			//有无卫生厕所
+			"toilet": "无",
+			//是否加入农民专业合作社
+			"joined_fsc": "否"
+		}
+	}
+}

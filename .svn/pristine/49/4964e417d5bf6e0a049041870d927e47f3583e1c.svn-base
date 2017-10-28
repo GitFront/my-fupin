@@ -1,0 +1,17 @@
+{
+  "code": 0,
+  "msg": "获取信息成功",
+  "data": {
+    "belong_area":"梅州市",
+    "list":[
+      {
+        "id": 11,
+        "order": 1, 
+        "name": "胡丽玲",
+        "organization": "广州市天河区商务和金融工作局",
+        "duty": "职务",
+        "amount": 111 
+      }
+    ]
+  }
+}

@@ -1,0 +1,54 @@
+{
+  "code": 0,
+  "msg": "获取信息成功",
+  "data":{
+    //轮播图
+    "family_pics":[
+      {
+        //图片地址
+        "img_url":"xxx.jpg",
+        //跳转链接，没有返回""
+        "url":"http://xxxx"
+      },
+      {
+        "img_url":"xxx2.jpg",
+        "url":"http://xxxx2"
+      }
+    ],
+    //贫困户基本信息
+    "base_info": {
+      //id
+      "id":1,
+      //贫困户主名字
+      "name":"李三根",
+      //联系电话
+      "contact_tel":"0755-2111654",
+      //基本情况
+      "base_condition":"李三根家庭人口共有6人，属于扶贫户"
+    },
+    //致贫原因
+    "poor_reason":[
+      {
+        //tag颜色
+        "color":"#ff0000",
+        //tag名
+        "name":"因残"
+      }
+    ],
+    //其他信息
+    "other_info":{
+      //贫困户属性
+      "poor_attribute":"一般困难户",
+      //家庭可支配收入
+      "average_income":"17170.00",
+      //家庭年人均可支配收入
+      "year_average_income":"2868.00",
+      //危房级别
+      "danger_house_rank":"C级",
+      //家庭地址
+      "family_address":"广东省云浮书云城区云城街道岔路村民委员会栗子村",
+      //联系电话
+      "concat_tel":"0755-2111654"
+    }
+  }
+}

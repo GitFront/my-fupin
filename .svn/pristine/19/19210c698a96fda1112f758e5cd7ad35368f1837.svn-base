@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>广东省新时期脱贫攻坚信息平台</title>
+	<link rel="stylesheet" href="../../../static/themes/css/fupin/entrance.css">
+</head>
+
+<body>
+<div class="main-bg">
+	<div class="main-wrap">
+		<div class="main-title"></div>
+		<div class="btns-row clearfix">
+			<div class="btns-wrap clearfix">
+				<a class="btn-entrance" href="http://202.104.32.195:83/s/login/" target="_blank">建档立卡信息平台</a>
+				<a class="btn-entrance" href="http://210.76.68.69/anti_poverty_web/a" target="_blank">广东扶贫云</a>
+				<a class="btn-entrance" href="http://www.gdfp.gov.cn/" target="_blank">广东扶贫信息网</a>
+			</div>
+		</div>
+		<div class="sections clearfix">
+			<section>
+				<div class="section-title">广东省情</div>
+				<div class="section-content">
+					<p>广东省地处中国大陆最南部。东邻福建，北接江西、湖南，西连广西，南临南海，珠江三角洲东西两侧分别与香港、澳门特别行政区接壤，西南部雷州半岛隔琼州海峡与海南省相望。全省陆地面积为17.98万平方公里，约占全国陆地面积的1.87%；其中岛屿面积1592.7平方公里，约占全省陆地面积的0.89%。全省沿海共有面积500平方米以上的岛屿759个，数量仅次于浙江、福建两省，居全国第三位。另有明礁和干出礁1631个。全省大陆岸线长3368.1公里，居全国第一位。按照《联合国海洋公约》关于领海、大陆架及专属经济区归沿岸国家管辖的规定，全省海域总面积41.9万平方公里。</p>
+					<p>全省各地、各部门动员了32.67万名干部进村入户，按照发布群众公开信、整村摸查、农户申请、群众评议、公示、镇县审核批准等程序，创新“四看、五优先、六进、七不进”、“四看、十不宜、五把关”、“十问精准识贫”、“看、访、听22333工作法”等方式方法，对相对贫困人口进行精准识别，截至年底，扶贫信息系统已录入相对贫困人口66.4万户、173.1万人，基本完成了相对贫困村、相对贫困人口的精准识别工作。在精准识别的基础上，全省各地整合梳理贫困人口基本信息，完成了分布在97个县市区（含90个建制县区、7个非建制区）、1112个乡镇（街道等）、16483条村的相对贫困人口建档立卡工作，基本做到“户有卡、村有册、镇有簿、市县有数据库、省有数据平台”。按照省公安厅农村户籍人口计算，全省的贫困发生率为4.55%（按照省统计局农村户籍人口统计口径计算，全省贫困发生率为4.34%）。相对贫困人口4万人以上（含4万人）的县（市、区）有10个，相对贫困人口5000人以上的乡镇有30个。全省相对贫困户主要致贫原因前5位分别是因病（36.2%）、缺劳力（23.3%）、因残（19.9%）、因学（4.9%）、缺资金（4.5%），全省有88.8％贫困人口因上述五大因素造成贫困，其它因素（因灾、因婚、缺土地、缺水、缺技术、交通不便等）占11.2％。</p>
+				</div>
+			</section>
+			<section class="map">
+				<div class="section-title">贫困分布</div>
+				<div class="section-content">
+					<div id="chart" class="chart"></div>
+				</div>
+			</section>
+		</div>
+		<div class="copyright-wrap">
+			<div class="copyright">版权所有：广东省扶贫开发办公室&nbsp;&nbsp;&nbsp;&nbsp;技术支持：中国移动通信集团广东有限公司</div>
+		</div>
+		<div class="btns-download clearfix">
+			<div class="btn-download android-app">
+				<div class="ico-download-wrap">
+					<div class="hint">
+						<div class="qrcode" id="qrAndroidApp" data-src="http://210.76.68.6:8090/gdhelp/download/apk.action"></div>
+						<p class="hint-name">下载扶贫云安卓客户端</p>
+					</div>
+					<i class="ico-download android-app"></i>
+				</div>
+			</div>
+			<div class="btn-download wechat">
+				<div class="ico-download-wrap">
+					<div class="hint">
+						<div class="qrcode"><img src="http://open.weixin.qq.com/qr/code/?username=gdsfpb"></div>
+						<p class="hint-name">关注“广东省扶贫办”</p>
+					</div>
+					<i class="ico-download wechat"></i><span class="ico-label">二维码入口</span>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script src="../../../static/js/modules/fupin/libs/jquery.min.js"></script>
+<script src="../../../static/js/modules/fupin/libs/qrcode.min.js"></script>
+
+<script src="../../../static/js/modules/fupin_strategy/entrance.js"></script>
+</body>
+</html>

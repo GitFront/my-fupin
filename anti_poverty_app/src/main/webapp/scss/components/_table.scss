@@ -1,0 +1,33 @@
+/* 减贫计划与帮扶 */
+
+.normal-table{
+	@extend %BB;
+	width: 100%;
+	border: 1px solid $table-border;
+	&.has-bar{
+		width: 98%;
+	}
+	thead{
+		height: 38px;
+		line-height: 38px;
+		background: #f3f3f6;
+		border-bottom: 1px solid $table-border;
+	}
+	tr{
+		line-height: 40px;
+	}
+	tr+tr{
+		border-top: 1px solid $table-border;
+	}
+	th,td{
+		text-align: center;
+	}
+	a{
+		cursor: pointer;
+	}
+}
+
+.jianpinPlan-table{
+
+}
+/*end 减贫计划与帮扶 */

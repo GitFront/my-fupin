@@ -1,0 +1,16 @@
+{
+	"data":{
+		"belong_organization":"广州市重点公共建设项目管理办公室",
+		"list":[
+			{
+				"id":"441481133221",
+				"order":1,
+				"contact_phone":"13723655192",
+				"contact_name":"陈启荣",
+				"country_name":"霞洞村委会"
+			}
+		]
+	},
+	"code":0,
+	"msg":"获取信息成功"
+}

@@ -1,0 +1,37 @@
+{
+	"data":{
+		"belong_organization":"兴宁市农业局",
+		"list":[
+			{
+				"id":"441481128219",
+				"order":1,
+				"contact_phone":"13719968988",
+				"contact_name":"陈伟君",
+				"country_name":"新塘村委会"
+			},
+			{
+				"id":"441481128209",
+				"order":2,
+				"contact_phone":"13500129273",
+				"contact_name":"何红",
+				"country_name":"和一村委会"
+			},
+			{
+				"id":"441481128218",
+				"order":3,
+				"contact_phone":"13719974128",
+				"contact_name":"何向阳",
+				"country_name":"蔗塘村委会"
+			},
+			{
+				"id":"441481128208",
+				"order":4,
+				"contact_phone":"13923004956",
+				"contact_name":"李晓明",
+				"country_name":"文一村委会"
+			}
+		]
+	},
+	"code":0,
+	"msg":"获取信息成功"
+}

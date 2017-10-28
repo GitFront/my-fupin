@@ -1,0 +1,2984 @@
+@charset "UTF-8";
+@font-face {
+  font-family: dongQingHeiTi;
+  src: url("../../font/Hiragino Sans GB W3.otf"); }
+
+@font-face {
+  font-family: miNiJian;
+  src: url("../../font/impact.otf"); }
+
+/* 引入scss文件 */
+/* base基础文件 */
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed,
+figure, figcaption, footer, header, hgroup,
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font: inherit;
+  font-size: 100%;
+  vertical-align: baseline; }
+
+html {
+  line-height: 1; }
+
+ol, ul {
+  list-style: none; }
+
+table {
+  border-collapse: collapse;
+  border-spacing: 0; }
+
+caption, th, td {
+  text-align: left;
+  font-weight: normal;
+  vertical-align: middle; }
+
+q, blockquote {
+  quotes: none; }
+
+q:before, q:after, blockquote:before, blockquote:after {
+  content: "";
+  content: none; }
+
+a img {
+  border: none; }
+
+elements-of-type(html5-block) {
+  display: block; }
+
+/* 颜色 */
+/* end 颜色 */
+/* 长宽 */
+/*end 长宽 */
+/* 间距 */
+/*end 间距 */
+/* 层叠关系 */
+/* 层叠关系 */
+/* 基本 */
+* {
+  box-sizing: content-box; }
+
+body {
+  color: #fff;
+  font-size: 14px;
+  font-family: '微软雅黑';
+  background: #1e1d2d; }
+
+a {
+  text-decoration: none;
+  color: #6691f9; }
+  a:link {
+    text-decoration: none; }
+  a:active {
+    text-decoration: none; }
+  a:hover {
+    color: #6691f9;
+    text-decoration: none; }
+
+.btn-link:hover {
+  text-decoration: underline; }
+
+.btn {
+  outline: none !important; }
+
+*:focus {
+  outline: none; }
+
+.main-wrap {
+  position: relative;
+  margin: 0 auto;
+  width: 1366px;
+  height: 768px;
+  overflow: hidden;
+  background: #191919; }
+
+.disabled-btn {
+  background: #ddd !important;
+  cursor: not-allowed !important; }
+
+.disabled-btn:hover {
+  background: #ddd !important;
+  cursor: not-allowed !important; }
+
+.clearfix, header .nav-ul > li.search .presearch-wrapper .presearch-form, .popup-poor-file .popup-content .basic-stat, .popup-poor-file .popup-content .page-tabs, .popup-poor-file .popup-content .timeline-wrapper .timeline .timeline-item, .popup-poor-file .popup-content .timeline-wrapper .timeline .album, .popup-poor-file, .country-file .popup-content .file-right .basic-stat .values, .country-file .popup-content .page-tab-content .page-status .attributes, .country-file .popup-content .page-tab-content .population-section .block .bars li, .country-file .popup-content .page-tab-content ul, .country-file .popup-content .page-implement .sub-tabs, .family-file .popup-content .page-tab-content .page-members .album-section ul, .family-file .popup-content .page-tab-content .page-condition ul, .country-file .file-right .page-tab-content .page-plan .plan-wrapper, .family-file .file-right .page-tab-content .page-plan .plan-wrapper, .country-file .file-right .page-tab-content .page-implement .stat .block, .family-file .file-right .page-tab-content .page-implement .stat .block, .country-file .file-right .page-tab-content .page-implement .stat, .family-file .file-right .page-tab-content .page-implement .stat, .country-file .file-right .page-tab-content .page-implement-album .detail-album, .family-file .file-right .page-tab-content .page-implement-album .detail-album, .country-file .file-right .page-tab-content .page-eliminate-path .scores-section li .values, .family-file .file-right .page-tab-content .page-eliminate-path .scores-section li .values, .country-file .file-right .page-tab-content .page-eliminate-path .scores-section, .family-file .file-right .page-tab-content .page-eliminate-path .scores-section, .country-file .file-right .page-tab-content .page-invested .summary .block, .family-file .file-right .page-tab-content .page-invested .summary .block, .country-file .file-right .page-tab-content .page-invested .summary, .family-file .file-right .page-tab-content .page-invested .summary, .strategy-blocks-wrap .block-average, .data-blocks-wrap .block-average, .popup-poor-analyse, .edu-school-wrap .pbd li .right, .edu-school-wrap .pbd li {
+  *zoom: 1; }
+
+.clearfix:before, header .nav-ul > li.search .presearch-wrapper .presearch-form:before, .popup-poor-file .popup-content .basic-stat:before, .popup-poor-file .popup-content .page-tabs:before, .popup-poor-file .popup-content .timeline-wrapper .timeline .timeline-item:before, .popup-poor-file .popup-content .timeline-wrapper .timeline .album:before, .popup-poor-file:before, .country-file .popup-content .file-right .basic-stat .values:before, .country-file .popup-content .page-tab-content .page-status .attributes:before, .country-file .popup-content .page-tab-content .population-section .block .bars li:before, .country-file .popup-content .page-tab-content ul:before, .country-file .popup-content .page-implement .sub-tabs:before, .family-file .popup-content .page-tab-content .page-members .album-section ul:before, .family-file .popup-content .page-tab-content .page-condition ul:before, .country-file .file-right .page-tab-content .page-plan .plan-wrapper:before, .family-file .file-right .page-tab-content .page-plan .plan-wrapper:before, .country-file .file-right .page-tab-content .page-implement .stat .block:before, .family-file .file-right .page-tab-content .page-implement .stat .block:before, .country-file .file-right .page-tab-content .page-implement .stat:before, .family-file .file-right .page-tab-content .page-implement .stat:before, .country-file .file-right .page-tab-content .page-implement-album .detail-album:before, .family-file .file-right .page-tab-content .page-implement-album .detail-album:before, .country-file .file-right .page-tab-content .page-eliminate-path .scores-section li .values:before, .family-file .file-right .page-tab-content .page-eliminate-path .scores-section li .values:before, .country-file .file-right .page-tab-content .page-eliminate-path .scores-section:before, .family-file .file-right .page-tab-content .page-eliminate-path .scores-section:before, .country-file .file-right .page-tab-content .page-invested .summary .block:before, .family-file .file-right .page-tab-content .page-invested .summary .block:before, .country-file .file-right .page-tab-content .page-invested .summary:before, .family-file .file-right .page-tab-content .page-invested .summary:before, .strategy-blocks-wrap .block-average:before, .data-blocks-wrap .block-average:before, .popup-poor-analyse:before, .edu-school-wrap .pbd li .right:before, .edu-school-wrap .pbd li:before,
+.clearfix:after,
+header .nav-ul > li.search .presearch-wrapper .presearch-form:after,
+.popup-poor-file .popup-content .basic-stat:after,
+.popup-poor-file .popup-content .page-tabs:after,
+.popup-poor-file .popup-content .timeline-wrapper .timeline .timeline-item:after,
+.popup-poor-file .popup-content .timeline-wrapper .timeline .album:after,
+.popup-poor-file:after,
+.country-file .popup-content .file-right .basic-stat .values:after,
+.country-file .popup-content .page-tab-content .page-status .attributes:after,
+.country-file .popup-content .page-tab-content .population-section .block .bars li:after,
+.country-file .popup-content .page-tab-content ul:after,
+.country-file .popup-content .page-implement .sub-tabs:after,
+.family-file .popup-content .page-tab-content .page-members .album-section ul:after,
+.family-file .popup-content .page-tab-content .page-condition ul:after,
+.country-file .file-right .page-tab-content .page-plan .plan-wrapper:after,
+.family-file .file-right .page-tab-content .page-plan .plan-wrapper:after,
+.country-file .file-right .page-tab-content .page-implement .stat .block:after,
+.family-file .file-right .page-tab-content .page-implement .stat .block:after,
+.country-file .file-right .page-tab-content .page-implement .stat:after,
+.family-file .file-right .page-tab-content .page-implement .stat:after,
+.country-file .file-right .page-tab-content .page-implement-album .detail-album:after,
+.family-file .file-right .page-tab-content .page-implement-album .detail-album:after,
+.country-file .file-right .page-tab-content .page-eliminate-path .scores-section li .values:after,
+.family-file .file-right .page-tab-content .page-eliminate-path .scores-section li .values:after,
+.country-file .file-right .page-tab-content .page-eliminate-path .scores-section:after,
+.family-file .file-right .page-tab-content .page-eliminate-path .scores-section:after,
+.country-file .file-right .page-tab-content .page-invested .summary .block:after,
+.family-file .file-right .page-tab-content .page-invested .summary .block:after,
+.country-file .file-right .page-tab-content .page-invested .summary:after,
+.family-file .file-right .page-tab-content .page-invested .summary:after,
+.strategy-blocks-wrap .block-average:after,
+.data-blocks-wrap .block-average:after,
+.popup-poor-analyse:after,
+.edu-school-wrap .pbd li .right:after,
+.edu-school-wrap .pbd li:after {
+  display: table;
+  line-height: 0;
+  content: ""; }
+
+.clearfix:after, header .nav-ul > li.search .presearch-wrapper .presearch-form:after, .popup-poor-file .popup-content .basic-stat:after, .popup-poor-file .popup-content .page-tabs:after, .popup-poor-file .popup-content .timeline-wrapper .timeline .timeline-item:after, .popup-poor-file .popup-content .timeline-wrapper .timeline .album:after, .popup-poor-file:after, .country-file .popup-content .file-right .basic-stat .values:after, .country-file .popup-content .page-tab-content .page-status .attributes:after, .country-file .popup-content .page-tab-content .population-section .block .bars li:after, .country-file .popup-content .page-tab-content ul:after, .country-file .popup-content .page-implement .sub-tabs:after, .family-file .popup-content .page-tab-content .page-members .album-section ul:after, .family-file .popup-content .page-tab-content .page-condition ul:after, .country-file .file-right .page-tab-content .page-plan .plan-wrapper:after, .family-file .file-right .page-tab-content .page-plan .plan-wrapper:after, .country-file .file-right .page-tab-content .page-implement .stat .block:after, .family-file .file-right .page-tab-content .page-implement .stat .block:after, .country-file .file-right .page-tab-content .page-implement .stat:after, .family-file .file-right .page-tab-content .page-implement .stat:after, .country-file .file-right .page-tab-content .page-implement-album .detail-album:after, .family-file .file-right .page-tab-content .page-implement-album .detail-album:after, .country-file .file-right .page-tab-content .page-eliminate-path .scores-section li .values:after, .family-file .file-right .page-tab-content .page-eliminate-path .scores-section li .values:after, .country-file .file-right .page-tab-content .page-eliminate-path .scores-section:after, .family-file .file-right .page-tab-content .page-eliminate-path .scores-section:after, .country-file .file-right .page-tab-content .page-invested .summary .block:after, .family-file .file-right .page-tab-content .page-invested .summary .block:after, .country-file .file-right .page-tab-content .page-invested .summary:after, .family-file .file-right .page-tab-content .page-invested .summary:after, .strategy-blocks-wrap .block-average:after, .data-blocks-wrap .block-average:after, .popup-poor-analyse:after, .edu-school-wrap .pbd li .right:after, .edu-school-wrap .pbd li:after {
+  clear: both; }
+
+/* end基本 */
+/* 常用 */
+.hide {
+  display: none !important; }
+
+.show {
+  display: block !important; }
+
+.txt-center {
+  text-align: center; }
+
+/* end 常用 */
+/* 动画 */
+/* end base */
+.jspContainer {
+  overflow: hidden;
+  position: relative; }
+
+.jspPane {
+  position: absolute; }
+
+.jspVerticalBar {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 9px;
+  height: 100%; }
+  .jspVerticalBar .jspDrag {
+    width: 5px; }
+  .jspVerticalBar .jspArrow {
+    height: 16px; }
+  .jspVerticalBar .jspArrow:focus {
+    outline: none; }
+
+.jspHorizontalBar {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  height: 9px; }
+  .jspHorizontalBar .jspDrag {
+    height: 5px; }
+  .jspHorizontalBar .jspTrack, .jspHorizontalBar .jspDrag {
+    float: left; }
+  .jspHorizontalBar .jspCap {
+    float: left; }
+  .jspHorizontalBar .jspArrow {
+    width: 16px;
+    float: left;
+    height: 100%; }
+
+.jspCap {
+  display: none; }
+
+.jspTrack {
+  padding: 2px;
+  border-radius: 2px;
+  background-color: #343650;
+  position: relative;
+  overflow: hidden; }
+
+.jspDrag {
+  border-radius: 2px;
+  overflow: hidden;
+  background-color: #5c6a93;
+  position: relative;
+  top: 0;
+  left: 0;
+  cursor: pointer; }
+
+.jspArrow {
+  background: #50506d;
+  text-indent: -20000px;
+  cursor: pointer;
+  padding: 0;
+  margin: 0;
+  display: none; }
+
+.jspArrow.jspDisabled {
+  cursor: default;
+  background: #80808d; }
+
+.jspCorner {
+  background: #eeeef4;
+  float: left;
+  height: 100%; }
+
+* html .jspCorner {
+  margin: 0 -3px 0 0; }
+
+/*
+ * 	Core Owl Carousel CSS File
+ *	v1.3.3
+ */
+/* clearfix */
+.owl-carousel .owl-wrapper:after {
+  content: ".";
+  display: block;
+  clear: both;
+  visibility: hidden;
+  line-height: 0;
+  height: 0; }
+
+/* display none until init */
+.owl-carousel {
+  display: none;
+  position: relative;
+  width: 100%;
+  -ms-touch-action: pan-y; }
+
+.owl-carousel .owl-wrapper {
+  display: none;
+  position: relative;
+  -webkit-transform: translate3d(0px, 0px, 0px); }
+
+.owl-carousel .owl-wrapper-outer {
+  overflow: hidden;
+  position: relative;
+  width: 100%; }
+
+.owl-carousel .owl-wrapper-outer.autoHeight {
+  -webkit-transition: height 500ms ease-in-out;
+  -moz-transition: height 500ms ease-in-out;
+  -ms-transition: height 500ms ease-in-out;
+  -o-transition: height 500ms ease-in-out;
+  transition: height 500ms ease-in-out; }
+
+.owl-carousel .owl-item {
+  float: left; }
+
+.owl-controls .owl-page,
+.owl-controls .owl-buttons div {
+  cursor: pointer; }
+
+.owl-controls {
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent; }
+
+/* mouse grab icon */
+.grabbing {
+  cursor: url(grabbing.png) 8 8, move; }
+
+/* fix */
+.owl-carousel .owl-wrapper,
+.owl-carousel .owl-item {
+  -webkit-backface-visibility: hidden;
+  -moz-backface-visibility: hidden;
+  -ms-backface-visibility: hidden;
+  -webkit-transform: translate3d(0, 0, 0);
+  -moz-transform: translate3d(0, 0, 0);
+  -ms-transform: translate3d(0, 0, 0); }
+
+/* layout 重复布局 */
+/* 头部布局
+ */
+header {
+  font-family: dongQingHeiTi;
+  width: 1366px;
+  margin: 0 auto;
+  height: 50px;
+  box-shadow: 0 8px 8px #050608;
+  background: #6a93ff linear-gradient(to top, #141821, #0a0c12); }
+  header .logo {
+    width: 322px;
+    height: 26px;
+    position: absolute;
+    background: url("../../images/fupin_strategy/nav_logo.png") no-repeat 0 0;
+    left: 35px;
+    top: 14px; }
+  header .nav-ul {
+    height: 100%;
+    line-height: 50px;
+    float: right;
+    position: relative; }
+    header .nav-ul > li {
+      padding-right: 1px;
+      position: relative;
+      float: left;
+      height: 100%;
+      width: 115px;
+      text-align: center; }
+      header .nav-ul > li.on > a, header .nav-ul > li:hover > a {
+        background: #090e0e;
+        color: #6c92fa; }
+        header .nav-ul > li.on > a:after, header .nav-ul > li:hover > a:after {
+          content: " ";
+          position: absolute;
+          left: 0;
+          bottom: 0;
+          display: block;
+          width: 100%;
+          height: 3px;
+          background: #6d94fc; }
+      header .nav-ul > li a {
+        display: block;
+        color: rgba(255, 255, 255, 0.5);
+        font-size: 16px;
+        width: 100%;
+        height: 100%; }
+      header .nav-ul > li:after {
+        content: " ";
+        width: 1px;
+        height: 44px;
+        position: absolute;
+        right: 0;
+        bottom: 0;
+        display: block;
+        background: url("../../images/fupin_strategy/nav_splitter.png") no-repeat 0 0; }
+      header .nav-ul > li.search {
+        background: url("../../images/fupin_strategy/nav_search.png") no-repeat center center;
+        position: relative;
+        padding: 0;
+        cursor: pointer;
+        width: 48px; }
+        header .nav-ul > li.search:after {
+          display: none; }
+        header .nav-ul > li.search.open {
+          background: url("../../images/fupin_strategy/nav_search_active.png") no-repeat center center;
+          background-color: #090e0e; }
+          header .nav-ul > li.search.open .presearch-wrapper {
+            display: block; }
+        header .nav-ul > li.search .presearch-wrapper {
+          text-shadow: 0 1px 1px rgba(29, 30, 34, 0.32);
+          display: none;
+          position: absolute;
+          right: 8px;
+          top: 58px;
+          width: 422px;
+          z-index: 10;
+          cursor: default;
+          text-align: left; }
+          header .nav-ul > li.search .presearch-wrapper .presearch-form {
+            height: 34px;
+            box-sizing: border-box;
+            box-shadow: 0 2px 2px rgba(0, 0, 0, 0.55), inset 0 2px 2px rgba(0, 0, 0, 0.55);
+            border: 1px solid #83dff2;
+            background: #11141d; }
+            header .nav-ul > li.search .presearch-wrapper .presearch-form .select-wrapper {
+              width: 122px;
+              height: 100%;
+              float: left;
+              position: relative; }
+              header .nav-ul > li.search .presearch-wrapper .presearch-form .select-wrapper:after {
+                background: #525a75;
+                content: " ";
+                display: block;
+                height: 21px;
+                width: 1px;
+                position: absolute;
+                right: 0;
+                top: 6px; }
+              header .nav-ul > li.search .presearch-wrapper .presearch-form .select-wrapper select {
+                display: none; }
+              header .nav-ul > li.search .presearch-wrapper .presearch-form .select-wrapper .sbHolder {
+                position: relative; }
+              header .nav-ul > li.search .presearch-wrapper .presearch-form .select-wrapper .sbSelector {
+                line-height: 32px;
+                font-size: 14px;
+                color: #83dff2;
+                text-align: left;
+                padding-left: 16px; }
+              header .nav-ul > li.search .presearch-wrapper .presearch-form .select-wrapper .sbToggle {
+                position: absolute;
+                width: 14px;
+                height: 10px;
+                background: url("../../images/fupin_strategy/presearch_select_arrow.png") no-repeat 0 0;
+                right: 12px;
+                top: 12px; }
+              header .nav-ul > li.search .presearch-wrapper .presearch-form .select-wrapper .sbOptions {
+                z-index: 11;
+                text-align: center; }
+            header .nav-ul > li.search .presearch-wrapper .presearch-form .input-wrapper {
+              width: 298px;
+              height: 100%;
+              float: left;
+              position: relative; }
+              header .nav-ul > li.search .presearch-wrapper .presearch-form .input-wrapper .input-presearch-field {
+                box-sizing: border-box;
+                height: 100%;
+                width: 100%;
+                padding: 8px 36px 8px 15px;
+                display: block;
+                background: transparent;
+                border: none;
+                color: #FFF; }
+              header .nav-ul > li.search .presearch-wrapper .presearch-form .input-wrapper .btn-clear-presearch {
+                position: absolute;
+                right: 0;
+                top: 0;
+                height: 100%;
+                width: 36px;
+                cursor: pointer;
+                display: none;
+                background: url("../../images/fupin_strategy/presearch_btn_clear_presearch.png") no-repeat center center; }
+          header .nav-ul > li.search .presearch-wrapper .presearch-suggest {
+            display: none; }
+            header .nav-ul > li.search .presearch-wrapper .presearch-suggest li {
+              color: #87E5F9;
+              text-align: left;
+              padding: 0 10px; }
+              header .nav-ul > li.search .presearch-wrapper .presearch-suggest li span {
+                color: #FFF; }
+          header .nav-ul > li.search .presearch-wrapper ul {
+            margin-top: 2px;
+            width: 100%;
+            padding: 7px 10px;
+            box-sizing: border-box;
+            background-color: #373755;
+            box-shadow: 0 12px 38px rgba(29, 33, 45, 0.39); }
+            header .nav-ul > li.search .presearch-wrapper ul li {
+              cursor: pointer;
+              height: 37px;
+              line-height: 37px;
+              box-sizing: border-box;
+              font-size: 14px; }
+              header .nav-ul > li.search .presearch-wrapper ul li.hover, header .nav-ul > li.search .presearch-wrapper ul li:hover {
+                background-color: #4a4a6f;
+                box-shadow: 0 8px 8px rgba(29, 33, 45, 0.38), inset 0 1px rgba(220, 236, 251, 0.23), inset 0 0 3px rgba(139, 171, 255, 0.55); }
+              header .nav-ul > li.search .presearch-wrapper ul li, header .nav-ul > li.search .presearch-wrapper ul li a {
+                color: #FFF; }
+    header .nav-ul:before {
+      content: " ";
+      width: 1px;
+      height: 44px;
+      position: absolute;
+      left: -1px;
+      bottom: 0;
+      display: block;
+      background: url("../../images/fupin_strategy/nav_splitter.png") no-repeat 0 0; }
+
+/* end 头部导航 */
+/* 页面中部布局 */
+#mapWrap {
+  position: absolute;
+  top: 3px;
+  width: 1366px;
+  height: 715px;
+  display: flex;
+  justify-content: center;
+  align-items: center; }
+  #mapWrap .map-con {
+    position: relative;
+    height: 100%;
+    width: 100%; }
+
+/* 页面底部 */
+/* end页面底部 */
+/* end layout */
+/* page 页面 */
+.mask-popup-poor-file {
+  position: fixed;
+  height: 100%;
+  width: 100%;
+  left: 0;
+  top: 0;
+  background: rgba(0, 0, 0, 0.74);
+  display: none;
+  font-family: dongQingHeiTi; }
+  .mask-popup-poor-file.country-file {
+    z-index: 90; }
+  .mask-popup-poor-file.family-file {
+    z-index: 100; }
+
+.popup-poor-file {
+  width: 1290px;
+  height: 671px;
+  position: absolute;
+  box-shadow: 0 12px 38px rgba(29, 33, 45, 0.51);
+  margin-left: -645px;
+  margin-top: -335.5px;
+  left: 50%;
+  top: 50%;
+  background: url("../../images/fupin_strategy/file_bg.png") no-repeat 0 0; }
+  .popup-poor-file .btn-close {
+    position: absolute;
+    width: 36px;
+    height: 36px;
+    cursor: pointer;
+    right: -18px;
+    top: -13px;
+    border-radius: 100%;
+    filter: drop-shadow(0 6px 6px rgba(29, 30, 34, 0.25));
+    background: url("../../images/fupin_strategy/file_btn_close.png") no-repeat 0 0; }
+  .popup-poor-file .popup-content {
+    height: 100%;
+    width: 100%; }
+    .popup-poor-file .popup-content .file-title {
+      position: absolute;
+      line-height: 46px;
+      height: 46px;
+      min-width: 188px;
+      left: 0;
+      top: 23px;
+      font-size: 20px;
+      text-align: center;
+      border-radius: 0 23px 23px 0;
+      background-color: rgba(255, 255, 255, 0.13);
+      box-shadow: 0 6px 6px rgba(29, 30, 34, 0.14), inset 0 0 1px rgba(255, 255, 255, 0.42); }
+    .popup-poor-file .popup-content .basic-stat {
+      font-size: 14px;
+      height: 71px;
+      position: relative;
+      margin-bottom: 20px; }
+      .popup-poor-file .popup-content .basic-stat .data {
+        float: left;
+        box-sizing: border-box;
+        height: 100%;
+        padding-top: 10px;
+        padding-left: 20px; }
+      .popup-poor-file .popup-content .basic-stat .value {
+        color: #f1e524;
+        margin-bottom: 10px;
+        height: 24px; }
+        .popup-poor-file .popup-content .basic-stat .value span:last-child {
+          margin: 0; }
+      .popup-poor-file .popup-content .basic-stat .num {
+        font-family: miNiJian;
+        font-size: 26px;
+        position: relative;
+        bottom: -3px; }
+      .popup-poor-file .popup-content .basic-stat .label {
+        color: #96b5ff; }
+      .popup-poor-file .popup-content .basic-stat span {
+        margin-right: 7px;
+        display: flex;
+        justify-content: flex-end;
+        height: 100%;
+        float: left;
+        align-items: flex-end; }
+    .popup-poor-file .popup-content .ico-quest {
+      width: 16px;
+      height: 16px;
+      display: inline-block;
+      cursor: pointer;
+      position: relative;
+      background: url("../../images/fupin_strategy/file_ico_quest.png") no-repeat 0 0; }
+      .popup-poor-file .popup-content .ico-quest.active .tip {
+        display: block; }
+      .popup-poor-file .popup-content .ico-quest .tip {
+        z-index: 2;
+        position: absolute;
+        bottom: 100%;
+        right: -88px;
+        width: 251px;
+        background-color: #373755;
+        padding: 14px 16px;
+        box-sizing: border-box;
+        box-shadow: 0 12px 38px rgba(29, 33, 45, 0.39);
+        margin-bottom: 13px;
+        display: none;
+        cursor: default; }
+        .popup-poor-file .popup-content .ico-quest .tip:after {
+          content: " ";
+          display: block;
+          position: absolute;
+          bottom: -18px;
+          right: 88px;
+          width: 18px;
+          height: 18px;
+          background: url("../../images/fupin_strategy/file_tip_arrow.png") no-repeat 0 0; }
+        .popup-poor-file .popup-content .ico-quest .tip table {
+          width: 100%; }
+          .popup-poor-file .popup-content .ico-quest .tip table td {
+            line-height: 24px;
+            font-size: 12px;
+            color: #FFF; }
+            .popup-poor-file .popup-content .ico-quest .tip table td:first-child {
+              width: 64px;
+              vertical-align: top; }
+    .popup-poor-file .popup-content .stamp {
+      position: absolute;
+      right: 0;
+      top: -4px;
+      color: #FFF;
+      font-size: 12px;
+      height: 24px;
+      line-height: 24px;
+      text-align: center;
+      width: 52px;
+      background: #ff1562; }
+      .popup-poor-file .popup-content .stamp.success {
+        color: #1d1b28;
+        background: #f3e824; }
+        .popup-poor-file .popup-content .stamp.success:before {
+          border-color: transparent transparent transparent #958e0b; }
+      .popup-poor-file .popup-content .stamp:before {
+        content: " ";
+        display: block;
+        position: absolute;
+        border: 3px solid;
+        border-color: transparent transparent transparent #b10b42;
+        left: 0;
+        top: 0;
+        transform: rotate(45deg);
+        transform-origin: 0 0; }
+    .popup-poor-file .popup-content .page-tabs {
+      height: 32px;
+      color: #83dff2;
+      background-color: #292536;
+      box-shadow: 0 2px 2px rgba(0, 0, 0, 0.55);
+      border: 1px solid #83dff2; }
+      .popup-poor-file .popup-content .page-tabs li {
+        line-height: 32px;
+        text-align: center;
+        position: relative;
+        cursor: pointer;
+        float: left;
+        height: 100%; }
+        .popup-poor-file .popup-content .page-tabs li:first-child:before, .popup-poor-file .popup-content .page-tabs li.active:before {
+          display: none; }
+        .popup-poor-file .popup-content .page-tabs li.active {
+          cursor: default;
+          background: #83dff2;
+          color: #292536; }
+          .popup-poor-file .popup-content .page-tabs li.active + li:before {
+            display: none; }
+        .popup-poor-file .popup-content .page-tabs li:before {
+          content: " ";
+          display: block;
+          position: absolute;
+          left: 0;
+          top: 10px;
+          opacity: .4;
+          background: #83dff2;
+          width: 1px;
+          height: 15px; }
+    .popup-poor-file .popup-content .page-tab-content {
+      flex: 1;
+      background-color: #2b2637;
+      box-shadow: 0 12px 38px rgba(29, 33, 45, 0.51);
+      border: solid 2px #494971;
+      border-top: none; }
+      .popup-poor-file .popup-content .page-tab-content .page {
+        position: relative;
+        padding: 20px 8px 0; }
+        .popup-poor-file .popup-content .page-tab-content .page .btn-back {
+          line-height: 19px;
+          position: absolute;
+          right: 0;
+          top: 6px;
+          font-size: 14px;
+          color: #f3e824;
+          padding-left: 35px;
+          cursor: pointer;
+          background: url("../../images/fupin_strategy/file_btn_back.png") no-repeat 0 0; }
+    .popup-poor-file .popup-content .section-title span {
+      min-width: 152px;
+      padding: 0 16px;
+      white-space: nowrap;
+      height: 30px;
+      line-height: 30px;
+      font-size: 16px;
+      color: #fbdf16;
+      text-align: center;
+      background-color: rgba(19, 30, 31, 0.5);
+      box-shadow: 0 12px 38px rgba(29, 33, 45, 0.51), inset 0 0 6px rgba(109, 148, 252, 0.66);
+      background-image: linear-gradient(to bottom, rgba(63, 82, 134, 0.5) 44%, rgba(32, 43, 61, 0.5) 54%);
+      display: inline-block;
+      box-sizing: border-box; }
+    .popup-poor-file .popup-content .table {
+      table-layout: fixed; }
+      .popup-poor-file .popup-content .table thead {
+        background: #47425c; }
+        .popup-poor-file .popup-content .table thead th {
+          padding: 10px 8px;
+          white-space: nowrap; }
+      .popup-poor-file .popup-content .table tbody {
+        background: #322e41; }
+      .popup-poor-file .popup-content .table td, .popup-poor-file .popup-content .table th {
+        vertical-align: top;
+        border: 1px solid #517e90;
+        color: #FFF;
+        font-size: 12px;
+        padding: 10px;
+        line-height: 18px; }
+    .popup-poor-file .popup-content .card-table {
+      width: 100%;
+      line-height: 26px;
+      vertical-align: middle;
+      font-size: 14px;
+      text-align: left; }
+      .popup-poor-file .popup-content .card-table.no-label th {
+        width: 138px;
+        padding-right: 12px;
+        white-space: nowrap; }
+      .popup-poor-file .popup-content .card-table .label {
+        color: #96b5ff;
+        padding-left: 20px;
+        padding-right: 26px;
+        width: 1px;
+        white-space: nowrap; }
+      .popup-poor-file .popup-content .card-table .num {
+        display: inline-block;
+        font-size: 26px;
+        font-family: miNiJian;
+        margin-right: 10px; }
+      .popup-poor-file .popup-content .card-table .value {
+        color: #f1e524; }
+      .popup-poor-file .popup-content .card-table th {
+        color: #fff;
+        width: 79px;
+        border-right: 1px solid rgba(136, 231, 251, 0.4); }
+      .popup-poor-file .popup-content .card-table tr span {
+        vertical-align: middle; }
+      .popup-poor-file .popup-content .card-table sup {
+        position: relative;
+        top: -0.3em;
+        font-size: 16px;
+        display: inline-block;
+        transform: scale(0.5) translate(-4px, 0); }
+    .popup-poor-file .popup-content .section-title {
+      margin-left: 10px;
+      margin-bottom: 19px; }
+    .popup-poor-file .popup-content .timeline-wrapper {
+      padding: 29px 34px 29px 32px; }
+      .popup-poor-file .popup-content .timeline-wrapper .timeline {
+        position: relative;
+        padding-bottom: 30px; }
+        .popup-poor-file .popup-content .timeline-wrapper .timeline:before {
+          content: " ";
+          display: block;
+          position: absolute;
+          width: 1px;
+          height: 100%;
+          background-color: #51597f;
+          background-image: linear-gradient(to top, #2f2c40 0%, #51597f 17px, #51597f 100%);
+          left: 126px;
+          top: 0; }
+        .popup-poor-file .popup-content .timeline-wrapper .timeline:after {
+          content: " ";
+          display: block;
+          border: 1px solid #96b5ff;
+          border-radius: 100%;
+          background: #96b5ff;
+          width: 14px;
+          height: 14px;
+          position: absolute;
+          top: 0;
+          left: 118px; }
+        .popup-poor-file .popup-content .timeline-wrapper .timeline .timeline-item {
+          position: relative;
+          margin-bottom: 11px; }
+          .popup-poor-file .popup-content .timeline-wrapper .timeline .timeline-item:first-child {
+            padding-top: 24px; }
+        .popup-poor-file .popup-content .timeline-wrapper .timeline .time {
+          font-size: 14px;
+          color: #FFF;
+          padding-top: 24px;
+          float: left;
+          width: 134px;
+          position: relative; }
+          .popup-poor-file .popup-content .timeline-wrapper .timeline .time:after {
+            content: " ";
+            display: block;
+            border: 1px solid #96b5ff;
+            border-radius: 100%;
+            background: #1b1b2a;
+            width: 14px;
+            height: 14px;
+            position: absolute;
+            right: 0;
+            top: 24px; }
+        .popup-poor-file .popup-content .timeline-wrapper .timeline .item {
+          cursor: pointer;
+          margin-left: 152px;
+          width: 741px;
+          box-sizing: border-box;
+          padding: 15px 28px 20px;
+          background-color: #292536;
+          box-shadow: 0 12px 38px rgba(29, 33, 45, 0.357), inset 0 1px rgba(220, 236, 251, 0.23), inset 0 0 8px rgba(139, 171, 255, 0.55);
+          position: relative; }
+          .popup-poor-file .popup-content .timeline-wrapper .timeline .item:before {
+            content: " ";
+            display: block;
+            width: 21px;
+            height: 19px;
+            position: absolute;
+            left: -13px;
+            top: 24px;
+            background: url("../../images/fupin_strategy/file_timeline_arrow.png") no-repeat 0 0; }
+          .popup-poor-file .popup-content .timeline-wrapper .timeline .item.desc-only {
+            padding-top: 28px; }
+        .popup-poor-file .popup-content .timeline-wrapper .timeline .album li {
+          float: left;
+          height: 64px;
+          margin-right: 8px; }
+        .popup-poor-file .popup-content .timeline-wrapper .timeline .album img {
+          height: 100%; }
+        .popup-poor-file .popup-content .timeline-wrapper .timeline .table {
+          width: 100%; }
+          .popup-poor-file .popup-content .timeline-wrapper .timeline .table th, .popup-poor-file .popup-content .timeline-wrapper .timeline .table td {
+            width: 33.33333%;
+            text-align: center; }
+        .popup-poor-file .popup-content .timeline-wrapper .timeline .desc {
+          font-size: 14px;
+          color: #96b5ff;
+          margin-bottom: 10px; }
+        .popup-poor-file .popup-content .timeline-wrapper .timeline .link-more {
+          color: #f3e627;
+          font-size: 12px;
+          right: 10px;
+          bottom: 15px;
+          position: absolute; }
+    .popup-poor-file .popup-content .file-left {
+      float: left;
+      height: 100%;
+      width: 298px;
+      box-sizing: border-box;
+      position: relative; }
+      .popup-poor-file .popup-content .file-left .ico-phone {
+        width: 20px;
+        height: 20px;
+        background: url("../../images/fupin_strategy/file_ico_phone.png") no-repeat 0 0;
+        position: absolute;
+        cursor: pointer; }
+      .popup-poor-file .popup-content .file-left .avatar {
+        padding: 6px;
+        width: 145px;
+        height: 166px;
+        background-color: rgba(255, 255, 255, 0.24);
+        box-shadow: 0 8px 13px rgba(29, 30, 34, 0.66), inset 0 0 1px rgba(255, 255, 255, 0.25);
+        box-sizing: border-box;
+        margin: 0 auto; }
+        .popup-poor-file .popup-content .file-left .avatar img {
+          object-fit: cover;
+          border-radius: 6px;
+          height: 100%;
+          width: 100%;
+          overflow: hidden; }
+      .popup-poor-file .popup-content .file-left .desc {
+        position: relative;
+        font-size: 13px;
+        line-height: 22px;
+        color: #FFF; }
+    .popup-poor-file .popup-content .file-right {
+      height: 100%;
+      box-sizing: border-box;
+      margin-left: 298px;
+      padding: 25px 19px 0;
+      display: flex;
+      flex-direction: column; }
+
+.country-file .popup-content .file-left {
+  padding-top: 100px; }
+  .country-file .popup-content .file-left .avatar {
+    margin-bottom: 12px; }
+  .country-file .popup-content .file-left .responsible .desc {
+    height: 80px; }
+  .country-file .popup-content .file-left .desc {
+    padding-left: 80px;
+    width: 206px; }
+  .country-file .popup-content .file-left .ico-phone {
+    left: 206px;
+    top: 0; }
+
+.country-file .popup-content .file-right .basic-stat {
+  background: url("../../images/fupin_strategy/file_country_basic_blocks.png") no-repeat 0 0; }
+  .country-file .popup-content .file-right .basic-stat .data {
+    width: 158px;
+    margin-right: 16px;
+    padding-left: 12px; }
+  .country-file .popup-content .file-right .basic-stat .data2 {
+    width: 178px; }
+  .country-file .popup-content .file-right .basic-stat .data1, .country-file .popup-content .file-right .basic-stat .data4 {
+    width: 198px; }
+  .country-file .popup-content .file-right .basic-stat .data5 {
+    margin: 0; }
+  .country-file .popup-content .file-right .basic-stat .values .value {
+    position: relative;
+    float: left; }
+    .country-file .popup-content .file-right .basic-stat .values .value:first-child {
+      padding-right: 10px;
+      margin-right: 8px; }
+      .country-file .popup-content .file-right .basic-stat .values .value:first-child:after {
+        content: " ";
+        width: 1px;
+        height: 19px;
+        display: block;
+        position: absolute;
+        top: 6px;
+        right: 0;
+        background: #f3e627; }
+
+.country-file .popup-content .file-right .page-tabs li {
+  width: 10%; }
+
+.country-file .popup-content .page-tab-content .page-status .main-title {
+  color: #f3e627;
+  font-size: 16px;
+  padding-bottom: 9px;
+  border-bottom: 1px solid #4f7385;
+  margin-bottom: 20px; }
+
+.country-file .popup-content .page-tab-content .page-status .attributes {
+  margin-bottom: 28px; }
+  .country-file .popup-content .page-tab-content .page-status .attributes li {
+    float: left;
+    margin-right: 60px; }
+    .country-file .popup-content .page-tab-content .page-status .attributes li span {
+      color: #FFF;
+      font-size: 14px; }
+    .country-file .popup-content .page-tab-content .page-status .attributes li .value {
+      color: #96b5ff; }
+
+.country-file .popup-content .page-tab-content .population-section {
+  margin-bottom: 28px; }
+  .country-file .popup-content .page-tab-content .population-section .block {
+    width: 301px;
+    height: 194px;
+    padding: 16px; }
+    .country-file .popup-content .page-tab-content .population-section .block .header {
+      position: relative;
+      margin-bottom: 11px; }
+      .country-file .popup-content .page-tab-content .population-section .block .header .value {
+        color: #f3e627;
+        font-family: miNiJian;
+        font-size: 24px;
+        text-align: right;
+        display: block; }
+      .country-file .popup-content .page-tab-content .population-section .block .header .label {
+        color: #FFF;
+        font-size: 14px;
+        position: absolute;
+        bottom: 4px;
+        left: 0; }
+    .country-file .popup-content .page-tab-content .population-section .block.family .bars .label {
+      width: 70px; }
+    .country-file .popup-content .page-tab-content .population-section .block.family .bars .bar-wrap {
+      margin-left: 80px; }
+    .country-file .popup-content .page-tab-content .population-section .block .bars li {
+      font-size: 14px;
+      margin-bottom: 8px; }
+      .country-file .popup-content .page-tab-content .population-section .block .bars li .label {
+        float: left;
+        width: 84px;
+        text-align: right;
+        color: #96b5ff; }
+      .country-file .popup-content .page-tab-content .population-section .block .bars li .value {
+        float: right;
+        color: #83dff2; }
+      .country-file .popup-content .page-tab-content .population-section .block .bars li .bar-wrap {
+        margin-left: 94px;
+        margin-right: 48px;
+        border: 1px solid #6098ab;
+        height: 12px; }
+      .country-file .popup-content .page-tab-content .population-section .block .bars li .bar {
+        height: 100%;
+        background-color: #88e7fb;
+        background-image: linear-gradient(to top, #5c84f3, #83b2ff); }
+      .country-file .popup-content .page-tab-content .population-section .block .bars li:last-child {
+        margin: 0; }
+
+.country-file .popup-content .page-tab-content .production-section .block {
+  padding-top: 12px;
+  padding-left: 14px;
+  width: 301px;
+  height: 79px; }
+  .country-file .popup-content .page-tab-content .production-section .block .value {
+    padding-right: 18px;
+    text-align: right; }
+    .country-file .popup-content .page-tab-content .production-section .block .value .num {
+      font-size: 24px;
+      margin-right: 18px; }
+  .country-file .popup-content .page-tab-content .production-section .block.grass-water th {
+    padding-right: 20px;
+    text-align: right; }
+  .country-file .popup-content .page-tab-content .production-section .block th {
+    width: 94px;
+    box-sizing: border-box;
+    text-align: center; }
+
+.country-file .popup-content .page-tab-content .block {
+  box-sizing: border-box;
+  background-color: rgba(32, 32, 48, 0.7);
+  box-shadow: 0 12px 38px rgba(29, 33, 45, 0.357), inset 0 1px rgba(220, 236, 251, 0.161), inset 0 0 8px rgba(139, 171, 255, 0.385);
+  float: left;
+  margin-right: 14px; }
+  .country-file .popup-content .page-tab-content .block:last-child {
+    margin: 0; }
+
+.country-file .popup-content .page-tab-content .sub-title {
+  color: #FFF;
+  margin-bottom: 20px; }
+
+.country-file .popup-content .page-development-status .content-wrapper {
+  height: 502px; }
+
+.country-file .popup-content .page-development-status .blocks-table {
+  border-spacing: 15px;
+  border-collapse: separate;
+  width: 100%;
+  table-layout: fixed; }
+  .country-file .popup-content .page-development-status .blocks-table .cell-block {
+    vertical-align: top;
+    width: 33.33333%;
+    box-sizing: border-box;
+    background-color: rgba(32, 32, 48, 0.7);
+    box-shadow: 0 12px 38px rgba(29, 33, 45, 0.357), inset 0 1px rgba(220, 236, 251, 0.161), inset 0 0 8px rgba(139, 171, 255, 0.385);
+    padding: 16px;
+    font-size: 14px; }
+    .country-file .popup-content .page-development-status .blocks-table .cell-block .header {
+      color: #FFF;
+      margin-bottom: 16px; }
+    .country-file .popup-content .page-development-status .blocks-table .cell-block .content {
+      width: 100%;
+      line-height: 22px; }
+      .country-file .popup-content .page-development-status .blocks-table .cell-block .content .label {
+        color: #96b5ff; }
+      .country-file .popup-content .page-development-status .blocks-table .cell-block .content .value {
+        color: #83dff2;
+        text-align: right;
+        white-space: nowrap; }
+
+.country-file .popup-content .page-implement .sub-tabs {
+  width: 253px;
+  height: 36px;
+  background-color: #33334d;
+  box-shadow: 0 12px 38px rgba(29, 33, 45, 0.39); }
+  .country-file .popup-content .page-implement .sub-tabs li {
+    float: left;
+    width: 50%;
+    text-align: center;
+    line-height: 36px;
+    color: #FFF;
+    font-size: 14px;
+    cursor: pointer; }
+    .country-file .popup-content .page-implement .sub-tabs li.active {
+      color: #83dff2;
+      background-color: rgba(93, 93, 136, 0.5);
+      box-shadow: 0 8px 8px rgba(29, 33, 45, 0.33), inset 0 1px rgba(220, 236, 251, 0.115), inset 0 0 3px rgba(139, 171, 255, 0.275);
+      cursor: default; }
+
+.country-file .popup-content .page-implement .sub-tab-contents {
+  position: relative;
+  z-index: 2; }
+  .country-file .popup-content .page-implement .sub-tab-contents .sub-tab-content {
+    display: none; }
+    .country-file .popup-content .page-implement .sub-tab-contents .sub-tab-content.active {
+      display: block; }
+    .country-file .popup-content .page-implement .sub-tab-contents .sub-tab-content .table-wrapper {
+      height: 284px; }
+  .country-file .popup-content .page-implement .sub-tab-contents .table-empty {
+    height: 100%;
+    width: 100%;
+    box-sizing: border-box; }
+    .country-file .popup-content .page-implement .sub-tab-contents .table-empty td {
+      vertical-align: middle;
+      background-color: #2f2b3e;
+      box-shadow: 0 12px 38px rgba(29, 33, 45, 0.31);
+      border: solid 2px #373755;
+      text-align: center;
+      font-size: 14px;
+      color: #FFF; }
+
+.family-file .popup-content .file-left {
+  padding-top: 100px; }
+  .family-file .popup-content .file-left .avatar {
+    margin-bottom: 12px; }
+  .family-file .popup-content .file-left .house-holder .desc {
+    height: 130px; }
+  .family-file .popup-content .file-left .desc {
+    padding-left: 65px;
+    width: 206px; }
+  .family-file .popup-content .file-left .ico-phone {
+    left: 206px;
+    top: 0; }
+
+.family-file .popup-content .file-right .basic-stat {
+  background: url("../../images/fupin_strategy/file_family_basic_blocks.png") no-repeat 0 0; }
+  .family-file .popup-content .file-right .basic-stat .data {
+    width: 178px;
+    margin-right: 16px; }
+  .family-file .popup-content .file-right .basic-stat .data5 {
+    margin: 0; }
+
+.family-file .popup-content .file-right .page-tabs li {
+  width: 11.11111%; }
+
+.family-file .popup-content .page-tab-content .page-members {
+  padding: 20px 0 0 !important; }
+  .family-file .popup-content .page-tab-content .page-members .table tbody td:nth-child(1) {
+    text-align: center; }
+  .family-file .popup-content .page-tab-content .page-members .member-table {
+    height: 204px; }
+  .family-file .popup-content .page-tab-content .page-members .section-title {
+    margin-bottom: 19px; }
+  .family-file .popup-content .page-tab-content .page-members .member-section {
+    margin-bottom: 25px;
+    padding: 0 8px; }
+  .family-file .popup-content .page-tab-content .page-members .album-section .section-title {
+    margin-left: 8px; }
+  .family-file .popup-content .page-tab-content .page-members .album-section li {
+    cursor: pointer;
+    width: 191px;
+    height: 121px;
+    border-radius: 4px;
+    overflow: hidden;
+    float: left;
+    margin: 0 10px 20px; }
+    .family-file .popup-content .page-tab-content .page-members .album-section li img {
+      object-fit: cover;
+      width: 100%;
+      height: 100%; }
+  .family-file .popup-content .page-tab-content .page-members .album-section .member-album {
+    width: 100%;
+    height: 121px; }
+
+.family-file .popup-content .page-tab-content .page-members-album {
+  display: none; }
+  .family-file .popup-content .page-tab-content .page-members-album .album-section {
+    position: relative; }
+    .family-file .popup-content .page-tab-content .page-members-album .album-section .section-title {
+      margin-bottom: 21px; }
+    .family-file .popup-content .page-tab-content .page-members-album .album-section .detail-album .li {
+      height: 411px;
+      text-align: center;
+      overflow: hidden; }
+      .family-file .popup-content .page-tab-content .page-members-album .album-section .detail-album .li img {
+        height: 100%;
+        display: inline-block; }
+    .family-file .popup-content .page-tab-content .page-members-album .album-section .detail-album .btn-nav {
+      cursor: pointer;
+      position: absolute;
+      width: 37px;
+      height: 67px;
+      background-color: #5d5d88;
+      box-shadow: 0 8px 8px rgba(29, 33, 45, 0.66), inset 0 1px rgba(220, 236, 251, 0.23), inset 0 0 3px rgba(139, 171, 255, 0.55);
+      top: 50%;
+      margin-top: -33.5px; }
+    .family-file .popup-content .page-tab-content .page-members-album .album-section .detail-album .btn-prev {
+      left: 0;
+      background: url("../../images/fupin_strategy/file_album_ico_prev.png") no-repeat center center; }
+    .family-file .popup-content .page-tab-content .page-members-album .album-section .detail-album .btn-next {
+      right: 0;
+      background: url("../../images/fupin_strategy/file_album_ico_next.png") no-repeat center center; }
+
+.family-file .popup-content .page-tab-content .page-condition {
+  padding-left: 0;
+  padding-right: 0; }
+  .family-file .popup-content .page-tab-content .page-condition section {
+    margin-bottom: 30px; }
+  .family-file .popup-content .page-tab-content .page-condition ul {
+    padding: 0 3px; }
+  .family-file .popup-content .page-tab-content .page-condition li {
+    margin: 0 6px;
+    width: 301px;
+    height: 109px;
+    background-color: #252132;
+    box-shadow: 0 12px 38px rgba(29, 33, 45, 0.51), inset 0 1px rgba(220, 236, 251, 0.23), inset 0 0 8px rgba(139, 171, 255, 0.55);
+    float: left;
+    box-sizing: border-box;
+    padding: 0 22px; }
+    .family-file .popup-content .page-tab-content .page-condition li.cultivated-land {
+      padding-top: 26px; }
+    .family-file .popup-content .page-tab-content .page-condition li.forest-land {
+      padding-top: 14px; }
+    .family-file .popup-content .page-tab-content .page-condition li.grass-water {
+      padding-top: 26px; }
+    .family-file .popup-content .page-tab-content .page-condition li.living1 {
+      padding-top: 14px; }
+      .family-file .popup-content .page-tab-content .page-condition li.living1 .value {
+        padding-left: 39px; }
+    .family-file .popup-content .page-tab-content .page-condition li.living2 {
+      padding-top: 14px; }
+      .family-file .popup-content .page-tab-content .page-condition li.living2 .value {
+        padding-left: 27px; }
+      .family-file .popup-content .page-tab-content .page-condition li.living2 .num {
+        min-width: 26px; }
+    .family-file .popup-content .page-tab-content .page-condition li.living3 {
+      padding-top: 14px; }
+      .family-file .popup-content .page-tab-content .page-condition li.living3 .value {
+        padding-left: 14px; }
+
+.country-file .file-right .page-tab-content .page-plan .plan-wrapper, .family-file .file-right .page-tab-content .page-plan .plan-wrapper {
+  height: 478px; }
+
+.country-file .file-right .page-tab-content .page-plan .sub-tabs, .family-file .file-right .page-tab-content .page-plan .sub-tabs {
+  float: left;
+  height: 100%;
+  width: 95px;
+  background-color: #373755;
+  box-shadow: 0 12px 38px rgba(29, 33, 45, 0.39); }
+  .country-file .file-right .page-tab-content .page-plan .sub-tabs li, .family-file .file-right .page-tab-content .page-plan .sub-tabs li {
+    padding: 12px 0;
+    position: relative; }
+    .country-file .file-right .page-tab-content .page-plan .sub-tabs li:last-child:after, .family-file .file-right .page-tab-content .page-plan .sub-tabs li:last-child:after {
+      display: none; }
+    .country-file .file-right .page-tab-content .page-plan .sub-tabs li:after, .family-file .file-right .page-tab-content .page-plan .sub-tabs li:after {
+      content: " ";
+      background: #5d5d88;
+      width: 80px;
+      height: 1px;
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      margin-left: -40px;
+      display: block; }
+    .country-file .file-right .page-tab-content .page-plan .sub-tabs li .tab, .family-file .file-right .page-tab-content .page-plan .sub-tabs li .tab {
+      width: 92px;
+      height: 67px;
+      box-sizing: border-box;
+      line-height: 26px;
+      padding: 8px 12px;
+      color: #FFF; }
+    .country-file .file-right .page-tab-content .page-plan .sub-tabs li.active .tab, .country-file .file-right .page-tab-content .page-plan .sub-tabs li:hover .tab, .family-file .file-right .page-tab-content .page-plan .sub-tabs li.active .tab, .family-file .file-right .page-tab-content .page-plan .sub-tabs li:hover .tab {
+      color: #83dff2;
+      background-color: #5d5d88;
+      box-shadow: 0 8px 8px rgba(29, 33, 45, 0.66), inset 0 1px rgba(220, 236, 251, 0.23), inset 0 0 3px rgba(139, 171, 255, 0.55); }
+    .country-file .file-right .page-tab-content .page-plan .sub-tabs li.active:after, .country-file .file-right .page-tab-content .page-plan .sub-tabs li:hover:after, .family-file .file-right .page-tab-content .page-plan .sub-tabs li.active:after, .family-file .file-right .page-tab-content .page-plan .sub-tabs li:hover:after {
+      display: none; }
+    .country-file .file-right .page-tab-content .page-plan .sub-tabs li:hover, .family-file .file-right .page-tab-content .page-plan .sub-tabs li:hover {
+      cursor: pointer; }
+    .country-file .file-right .page-tab-content .page-plan .sub-tabs li:active, .family-file .file-right .page-tab-content .page-plan .sub-tabs li:active {
+      cursor: default; }
+
+.country-file .file-right .page-tab-content .page-plan .sub-tab-content, .family-file .file-right .page-tab-content .page-plan .sub-tab-content {
+  border: 2px solid #33324c;
+  border-left: none;
+  font-size: 14px;
+  margin-left: 95px;
+  box-sizing: border-box;
+  padding: 20px 25px; }
+  .country-file .file-right .page-tab-content .page-plan .sub-tab-content li, .family-file .file-right .page-tab-content .page-plan .sub-tab-content li {
+    height: 434px;
+    display: none; }
+    .country-file .file-right .page-tab-content .page-plan .sub-tab-content li.active, .family-file .file-right .page-tab-content .page-plan .sub-tab-content li.active {
+      display: block; }
+  .country-file .file-right .page-tab-content .page-plan .sub-tab-content .header, .family-file .file-right .page-tab-content .page-plan .sub-tab-content .header {
+    color: #83dff2;
+    margin-bottom: 32px; }
+    .country-file .file-right .page-tab-content .page-plan .sub-tab-content .header span, .family-file .file-right .page-tab-content .page-plan .sub-tab-content .header span {
+      margin-right: 48px; }
+  .country-file .file-right .page-tab-content .page-plan .sub-tab-content .content-wrapper, .family-file .file-right .page-tab-content .page-plan .sub-tab-content .content-wrapper {
+    width: 100%;
+    height: 100%; }
+  .country-file .file-right .page-tab-content .page-plan .sub-tab-content .content h3.title, .family-file .file-right .page-tab-content .page-plan .sub-tab-content .content h3.title {
+    color: #FFF;
+    text-align: center;
+    margin-bottom: 18px; }
+  .country-file .file-right .page-tab-content .page-plan .sub-tab-content .content .text, .family-file .file-right .page-tab-content .page-plan .sub-tab-content .content .text {
+    line-height: 26px;
+    color: rgba(255, 255, 255, 0.5); }
+
+.country-file .file-right .page-tab-content .page-implement .stat, .family-file .file-right .page-tab-content .page-implement .stat {
+  margin-bottom: 25px; }
+  .country-file .file-right .page-tab-content .page-implement .stat .block, .family-file .file-right .page-tab-content .page-implement .stat .block {
+    margin-right: 15px;
+    box-sizing: border-box;
+    float: left;
+    width: 301px;
+    height: 79px;
+    background-color: #242130;
+    box-shadow: 0 12px 38px rgba(29, 33, 45, 0.51), inset 0 1px rgba(220, 236, 251, 0.23), inset 0 0 8px rgba(139, 171, 255, 0.55);
+    padding: 11px 0 0 7px; }
+    .country-file .file-right .page-tab-content .page-implement .stat .block:last-child, .family-file .file-right .page-tab-content .page-implement .stat .block:last-child {
+      margin: 0; }
+    .country-file .file-right .page-tab-content .page-implement .stat .block .data, .family-file .file-right .page-tab-content .page-implement .stat .block .data {
+      float: left;
+      font-size: 14px;
+      padding-left: 13px; }
+      .country-file .file-right .page-tab-content .page-implement .stat .block .data:last-child .label:after, .family-file .file-right .page-tab-content .page-implement .stat .block .data:last-child .label:after {
+        display: none; }
+      .country-file .file-right .page-tab-content .page-implement .stat .block .data .value, .family-file .file-right .page-tab-content .page-implement .stat .block .data .value {
+        color: #f1e524;
+        padding-right: 15px;
+        margin-bottom: 15px; }
+        .country-file .file-right .page-tab-content .page-implement .stat .block .data .value .num, .family-file .file-right .page-tab-content .page-implement .stat .block .data .value .num {
+          font-size: 26px;
+          font-family: miNiJian;
+          margin-right: 6px;
+          position: relative;
+          bottom: -2px; }
+      .country-file .file-right .page-tab-content .page-implement .stat .block .data .label, .family-file .file-right .page-tab-content .page-implement .stat .block .data .label {
+        position: relative;
+        color: #FFF;
+        width: 100%; }
+        .country-file .file-right .page-tab-content .page-implement .stat .block .data .label:after, .family-file .file-right .page-tab-content .page-implement .stat .block .data .label:after {
+          content: "|";
+          position: absolute;
+          right: 0; }
+
+.country-file .file-right .page-tab-content .page-implement .table-wrapper, .family-file .file-right .page-tab-content .page-implement .table-wrapper {
+  width: 100%;
+  height: 376px; }
+  .country-file .file-right .page-tab-content .page-implement .table-wrapper .table, .family-file .file-right .page-tab-content .page-implement .table-wrapper .table {
+    width: 100%; }
+    .country-file .file-right .page-tab-content .page-implement .table-wrapper .table thead th, .family-file .file-right .page-tab-content .page-implement .table-wrapper .table thead th {
+      text-align: center; }
+      .country-file .file-right .page-tab-content .page-implement .table-wrapper .table thead th:nth-child(5), .family-file .file-right .page-tab-content .page-implement .table-wrapper .table thead th:nth-child(5) {
+        width: 8em; }
+      .country-file .file-right .page-tab-content .page-implement .table-wrapper .table thead th:nth-child(6), .family-file .file-right .page-tab-content .page-implement .table-wrapper .table thead th:nth-child(6) {
+        width: 8em; }
+      .country-file .file-right .page-tab-content .page-implement .table-wrapper .table thead th:nth-child(7), .family-file .file-right .page-tab-content .page-implement .table-wrapper .table thead th:nth-child(7) {
+        width: 6em; }
+  .country-file .file-right .page-tab-content .page-implement .table-wrapper td.album, .family-file .file-right .page-tab-content .page-implement .table-wrapper td.album {
+    vertical-align: middle;
+    text-align: center;
+    line-height: 0;
+    padding: 6px 0; }
+  .country-file .file-right .page-tab-content .page-implement .table-wrapper td .ico-pic, .family-file .file-right .page-tab-content .page-implement .table-wrapper td .ico-pic {
+    display: inline-block;
+    width: 26px;
+    height: 19px;
+    background: url("../../images/fupin_strategy/file_ico_pic.png") no-repeat 0 0;
+    cursor: pointer; }
+
+.country-file .file-right .page-tab-content .page-implement-album, .family-file .file-right .page-tab-content .page-implement-album {
+  display: none; }
+  .country-file .file-right .page-tab-content .page-implement-album .section-title, .family-file .file-right .page-tab-content .page-implement-album .section-title {
+    margin-bottom: 35px; }
+  .country-file .file-right .page-tab-content .page-implement-album .album-section, .family-file .file-right .page-tab-content .page-implement-album .album-section {
+    position: relative; }
+  .country-file .file-right .page-tab-content .page-implement-album .detail-album, .family-file .file-right .page-tab-content .page-implement-album .detail-album {
+    padding-left: 29px; }
+    .country-file .file-right .page-tab-content .page-implement-album .detail-album > div, .family-file .file-right .page-tab-content .page-implement-album .detail-album > div {
+      position: relative;
+      float: left;
+      margin-right: 30px;
+      width: 270px;
+      height: 302px;
+      border-radius: 4px;
+      overflow: hidden; }
+      .country-file .file-right .page-tab-content .page-implement-album .detail-album > div:last-child, .family-file .file-right .page-tab-content .page-implement-album .detail-album > div:last-child {
+        margin: 0; }
+      .country-file .file-right .page-tab-content .page-implement-album .detail-album > div img, .family-file .file-right .page-tab-content .page-implement-album .detail-album > div img {
+        object-fit: cover;
+        width: 100%;
+        height: 100%; }
+      .country-file .file-right .page-tab-content .page-implement-album .detail-album > div .label, .family-file .file-right .page-tab-content .page-implement-album .detail-album > div .label {
+        background: rgba(0, 0, 0, 0.55);
+        width: 100%;
+        line-height: 37px;
+        padding: 0 14px;
+        box-sizing: border-box;
+        bottom: 0;
+        position: absolute;
+        left: 0; }
+
+.country-file .file-right .page-tab-content .page-news, .family-file .file-right .page-tab-content .page-news {
+  padding: 0; }
+  .country-file .file-right .page-tab-content .page-news .content-wrapper, .family-file .file-right .page-tab-content .page-news .content-wrapper {
+    height: 519px;
+    width: 100%; }
+  .country-file .file-right .page-tab-content .page-news .jspHorizontalBar, .family-file .file-right .page-tab-content .page-news .jspHorizontalBar {
+    display: none; }
+
+.country-file .file-right .page-tab-content .page-news-detail, .family-file .file-right .page-tab-content .page-news-detail {
+  height: 100%;
+  display: none; }
+  .country-file .file-right .page-tab-content .page-news-detail .detail-news, .family-file .file-right .page-tab-content .page-news-detail .detail-news {
+    position: relative; }
+  .country-file .file-right .page-tab-content .page-news-detail .content-wrapper, .family-file .file-right .page-tab-content .page-news-detail .content-wrapper {
+    padding: 28px 10px 0; }
+    .country-file .file-right .page-tab-content .page-news-detail .content-wrapper .content, .family-file .file-right .page-tab-content .page-news-detail .content-wrapper .content {
+      height: 471px; }
+  .country-file .file-right .page-tab-content .page-news-detail .desc, .family-file .file-right .page-tab-content .page-news-detail .desc {
+    font-size: 14px;
+    color: #96b5ff;
+    margin-bottom: 30px; }
+  .country-file .file-right .page-tab-content .page-news-detail .pics img, .family-file .file-right .page-tab-content .page-news-detail .pics img {
+    margin: 0 auto 10px;
+    width: 556px;
+    display: block; }
+
+.country-file .file-right .page-tab-content .page-eliminate-path .page-wrapper, .family-file .file-right .page-tab-content .page-eliminate-path .page-wrapper {
+  width: 100%;
+  height: 484px; }
+
+.country-file .file-right .page-tab-content .page-eliminate-path .chart, .family-file .file-right .page-tab-content .page-eliminate-path .chart {
+  height: 267px;
+  margin-bottom: 25px; }
+
+.country-file .file-right .page-tab-content .page-eliminate-path .section-title, .family-file .file-right .page-tab-content .page-eliminate-path .section-title {
+  margin-bottom: 19px; }
+
+.country-file .file-right .page-tab-content .page-eliminate-path .scores-section li, .family-file .file-right .page-tab-content .page-eliminate-path .scores-section li {
+  position: relative;
+  width: 445px;
+  height: 109px;
+  background-color: #292536;
+  box-shadow: 0 12px 38px rgba(29, 33, 45, 0.51), inset 0 1px rgba(220, 236, 251, 0.23), inset 0 0 8px rgba(139, 171, 255, 0.55);
+  float: left;
+  box-sizing: border-box; }
+  .country-file .file-right .page-tab-content .page-eliminate-path .scores-section li.odd, .family-file .file-right .page-tab-content .page-eliminate-path .scores-section li.odd {
+    margin-right: 31px;
+    margin-bottom: 31px; }
+  .country-file .file-right .page-tab-content .page-eliminate-path .scores-section li .meta, .family-file .file-right .page-tab-content .page-eliminate-path .scores-section li .meta {
+    padding: 8px 16px 0;
+    margin-bottom: 20px; }
+    .country-file .file-right .page-tab-content .page-eliminate-path .scores-section li .meta .index-name, .family-file .file-right .page-tab-content .page-eliminate-path .scores-section li .meta .index-name {
+      color: #FFF;
+      font-size: 16px;
+      margin-right: 40px; }
+    .country-file .file-right .page-tab-content .page-eliminate-path .scores-section li .meta .weight, .family-file .file-right .page-tab-content .page-eliminate-path .scores-section li .meta .weight {
+      color: #96b5ff; }
+    .country-file .file-right .page-tab-content .page-eliminate-path .scores-section li .meta .num, .family-file .file-right .page-tab-content .page-eliminate-path .scores-section li .meta .num {
+      color: #f3e824;
+      width: 40px;
+      display: inline-block;
+      text-align: right; }
+    .country-file .file-right .page-tab-content .page-eliminate-path .scores-section li .meta span, .family-file .file-right .page-tab-content .page-eliminate-path .scores-section li .meta span {
+      font-size: 14px; }
+  .country-file .file-right .page-tab-content .page-eliminate-path .scores-section li .values, .family-file .file-right .page-tab-content .page-eliminate-path .scores-section li .values {
+    text-align: center;
+    width: 344px;
+    margin: 0 auto; }
+    .country-file .file-right .page-tab-content .page-eliminate-path .scores-section li .values .value, .family-file .file-right .page-tab-content .page-eliminate-path .scores-section li .values .value {
+      width: 172px;
+      float: left;
+      position: relative; }
+      .country-file .file-right .page-tab-content .page-eliminate-path .scores-section li .values .value.actual:after, .family-file .file-right .page-tab-content .page-eliminate-path .scores-section li .values .value.actual:after {
+        content: " ";
+        display: block;
+        width: 1px;
+        height: 40px;
+        right: 0;
+        top: 2px;
+        background: rgba(136, 231, 251, 0.7);
+        position: absolute; }
+      .country-file .file-right .page-tab-content .page-eliminate-path .scores-section li .values .value.actual .num, .family-file .file-right .page-tab-content .page-eliminate-path .scores-section li .values .value.actual .num {
+        color: #f3e824; }
+      .country-file .file-right .page-tab-content .page-eliminate-path .scores-section li .values .value.target .num, .family-file .file-right .page-tab-content .page-eliminate-path .scores-section li .values .value.target .num {
+        color: #FFF; }
+      .country-file .file-right .page-tab-content .page-eliminate-path .scores-section li .values .value.target .label, .family-file .file-right .page-tab-content .page-eliminate-path .scores-section li .values .value.target .label {
+        width: 120px;
+        margin: 0 auto;
+        position: relative; }
+        .country-file .file-right .page-tab-content .page-eliminate-path .scores-section li .values .value.target .label .ico-quest, .family-file .file-right .page-tab-content .page-eliminate-path .scores-section li .values .value.target .label .ico-quest {
+          position: absolute;
+          right: 0; }
+    .country-file .file-right .page-tab-content .page-eliminate-path .scores-section li .values .num, .family-file .file-right .page-tab-content .page-eliminate-path .scores-section li .values .num {
+      font-family: miNiJian;
+      font-size: 22px;
+      margin-bottom: 7px; }
+    .country-file .file-right .page-tab-content .page-eliminate-path .scores-section li .values .label, .family-file .file-right .page-tab-content .page-eliminate-path .scores-section li .values .label {
+      color: #96b5ff;
+      font-size: 14px; }
+
+.country-file .file-right .page-tab-content .page-invested .summary, .family-file .file-right .page-tab-content .page-invested .summary {
+  margin-bottom: 25px; }
+  .country-file .file-right .page-tab-content .page-invested .summary .block, .family-file .file-right .page-tab-content .page-invested .summary .block {
+    margin-right: 15px;
+    box-sizing: border-box;
+    float: left;
+    width: 301px;
+    height: 79px;
+    background-color: #242130;
+    box-shadow: 0 12px 38px rgba(29, 33, 45, 0.51), inset 0 1px rgba(220, 236, 251, 0.23), inset 0 0 8px rgba(139, 171, 255, 0.55);
+    padding: 11px 0 0 7px; }
+    .country-file .file-right .page-tab-content .page-invested .summary .block:last-child, .family-file .file-right .page-tab-content .page-invested .summary .block:last-child {
+      margin: 0; }
+    .country-file .file-right .page-tab-content .page-invested .summary .block .data, .family-file .file-right .page-tab-content .page-invested .summary .block .data {
+      float: left;
+      font-size: 14px;
+      padding-left: 13px; }
+      .country-file .file-right .page-tab-content .page-invested .summary .block .data .value, .family-file .file-right .page-tab-content .page-invested .summary .block .data .value {
+        color: #f1e524;
+        padding-right: 15px;
+        margin-bottom: 15px; }
+        .country-file .file-right .page-tab-content .page-invested .summary .block .data .value .num, .family-file .file-right .page-tab-content .page-invested .summary .block .data .value .num {
+          font-size: 26px;
+          font-family: miNiJian;
+          margin-right: 14px;
+          position: relative;
+          bottom: -2px; }
+      .country-file .file-right .page-tab-content .page-invested .summary .block .data .label, .family-file .file-right .page-tab-content .page-invested .summary .block .data .label {
+        color: #FFF; }
+
+.country-file .file-right .page-tab-content .page-invested .table-section, .family-file .file-right .page-tab-content .page-invested .table-section {
+  position: relative;
+  height: 346px;
+  width: 100%;
+  overflow: hidden; }
+  .country-file .file-right .page-tab-content .page-invested .table-section .table.fixed, .family-file .file-right .page-tab-content .page-invested .table-section .table.fixed {
+    width: 260px;
+    position: absolute;
+    left: 0;
+    top: 0;
+    z-index: 2; }
+  .country-file .file-right .page-tab-content .page-invested .table-section .table.float td, .country-file .file-right .page-tab-content .page-invested .table-section .table.float th, .family-file .file-right .page-tab-content .page-invested .table-section .table.float td, .family-file .file-right .page-tab-content .page-invested .table-section .table.float th {
+    height: 18px;
+    text-align: center; }
+  .country-file .file-right .page-tab-content .page-invested .table-section .table td, .country-file .file-right .page-tab-content .page-invested .table-section .table th, .family-file .file-right .page-tab-content .page-invested .table-section .table td, .family-file .file-right .page-tab-content .page-invested .table-section .table th {
+    height: 18px;
+    white-space: nowrap; }
+  .country-file .file-right .page-tab-content .page-invested .table-section .table-float-wrapper, .family-file .file-right .page-tab-content .page-invested .table-section .table-float-wrapper {
+    width: 100%;
+    height: 100%; }
+    .country-file .file-right .page-tab-content .page-invested .table-section .table-float-wrapper .table-float, .family-file .file-right .page-tab-content .page-invested .table-section .table-float-wrapper .table-float {
+      margin-left: 259px; }
+  .country-file .file-right .page-tab-content .page-invested .table-section .jspTrack, .family-file .file-right .page-tab-content .page-invested .table-section .jspTrack {
+    z-index: 3; }
+
+.country-file .file-right .page-tab-content .page-data-path, .family-file .file-right .page-tab-content .page-data-path {
+  padding: 0; }
+  .country-file .file-right .page-tab-content .page-data-path .content-wrapper, .family-file .file-right .page-tab-content .page-data-path .content-wrapper {
+    height: 519px;
+    width: 100%; }
+  .country-file .file-right .page-tab-content .page-data-path .jspHorizontalBar, .family-file .file-right .page-tab-content .page-data-path .jspHorizontalBar {
+    display: none; }
+
+.country-file .file-right .page-tab-content .page-business .content-wrapper, .family-file .file-right .page-tab-content .page-business .content-wrapper {
+  height: 482px;
+  width: 100%; }
+
+.country-file .file-right .page-tab-content .page-business .section-title, .family-file .file-right .page-tab-content .page-business .section-title {
+  margin-bottom: 20px; }
+
+.country-file .file-right .page-tab-content .page-business ul, .family-file .file-right .page-tab-content .page-business ul {
+  padding: 0 54px; }
+
+.country-file .file-right .page-tab-content .page-business li, .family-file .file-right .page-tab-content .page-business li {
+  list-style: disc;
+  font-size: 14px;
+  margin-bottom: 24px; }
+  .country-file .file-right .page-tab-content .page-business li, .country-file .file-right .page-tab-content .page-business li a, .family-file .file-right .page-tab-content .page-business li, .family-file .file-right .page-tab-content .page-business li a {
+    color: #83dff2; }
+
+.country-file .file-right .page-tab-content .page-business .link-more, .family-file .file-right .page-tab-content .page-business .link-more {
+  display: block;
+  padding-left: 54px;
+  color: #f3e627;
+  font-size: 12px;
+  margin-bottom: 36px; }
+
+.strategy-wrap #mapWrap .map-con {
+  top: 20px; }
+
+.strategy-blocks-wrap {
+  font-family: dongQingHeiTi;
+  width: 100%;
+  height: 715px;
+  position: relative; }
+  .strategy-blocks-wrap .block {
+    position: absolute;
+    box-sizing: border-box;
+    background-color: rgba(28, 25, 37, 0.7);
+    box-shadow: 0 12px 38px rgba(29, 33, 45, 0.51), inset 0 1px rgba(220, 236, 251, 0.23), inset 0 0 8px rgba(139, 171, 255, 0.55); }
+    .strategy-blocks-wrap .block > .title {
+      position: absolute;
+      font-size: 16px;
+      z-index: 3;
+      left: 14px;
+      top: -13px;
+      line-height: 30px;
+      color: #fbdf16;
+      padding: 0 19px;
+      background-image: linear-gradient(to bottom, rgba(63, 82, 134, 0.5) 44%, rgba(32, 43, 61, 0.5) 54%);
+      box-shadow: 0 12px 38px rgba(29, 33, 45, 0.51), inset 0 0 6px rgba(109, 148, 252, 0.66);
+      white-space: nowrap; }
+    .strategy-blocks-wrap .block > .content {
+      height: 100%;
+      width: 100%;
+      box-sizing: border-box; }
+    .strategy-blocks-wrap .block.no-border {
+      background-color: transparent;
+      box-shadow: none; }
+  .strategy-blocks-wrap .chart {
+    height: 100%;
+    width: 100%; }
+  .strategy-blocks-wrap .scope-wrap {
+    position: absolute;
+    top: 33px;
+    left: 21px;
+    z-index: 3; }
+    .strategy-blocks-wrap .scope-wrap .btn-scope {
+      line-height: 34px;
+      text-align: center;
+      width: 156px;
+      height: 34px;
+      box-sizing: border-box;
+      background-color: #83dff3;
+      box-shadow: 0 2px 2px rgba(0, 0, 0, 0.55);
+      font-size: 16px;
+      color: #1f1d30;
+      cursor: pointer; }
+    .strategy-blocks-wrap .scope-wrap .scope-list {
+      width: 160px;
+      padding: 7px 10px;
+      box-sizing: border-box;
+      background-color: #373755;
+      box-shadow: 0 12px 38px rgba(29, 33, 45, 0.39);
+      margin-left: 2px;
+      display: none;
+      position: absolute;
+      top: 0;
+      left: 100%; }
+      .strategy-blocks-wrap .scope-wrap .scope-list.show {
+        display: block; }
+      .strategy-blocks-wrap .scope-wrap .scope-list li {
+        cursor: pointer;
+        height: 37px;
+        line-height: 37px;
+        box-sizing: border-box;
+        text-align: center;
+        color: #FFF;
+        font-size: 14px; }
+        .strategy-blocks-wrap .scope-wrap .scope-list li.active {
+          cursor: default; }
+        .strategy-blocks-wrap .scope-wrap .scope-list li.active, .strategy-blocks-wrap .scope-wrap .scope-list li:hover {
+          background-color: #4a4a6f;
+          box-shadow: 0 8px 8px rgba(29, 33, 45, 0.38), inset 0 1px rgba(220, 236, 251, 0.23), inset 0 0 3px rgba(139, 171, 255, 0.55); }
+  .strategy-blocks-wrap .block-top {
+    left: 50%;
+    margin-left: -286.5px;
+    color: #96b5ff;
+    top: 13px;
+    font-size: 16px;
+    background: url("../../images/fupin_strategy/strategy_block_top.png") no-repeat 0 0;
+    width: 573px;
+    height: 87px; }
+    .strategy-blocks-wrap .block-top li {
+      box-sizing: border-box;
+      width: 180px;
+      height: 87px;
+      float: left;
+      margin-right: 16px;
+      padding-left: 18px; }
+      .strategy-blocks-wrap .block-top li:last-child {
+        margin: 0; }
+    .strategy-blocks-wrap .block-top .num {
+      color: #f3e824;
+      font-size: 36px;
+      line-height: 42px;
+      font-family: miNiJian;
+      text-shadow: 0 2px 2px rgba(29, 33, 45, 0.68); }
+    .strategy-blocks-wrap .block-top .label {
+      margin-bottom: 6px; }
+    .strategy-blocks-wrap .block-top .bar-bg {
+      background: #30507a;
+      width: 108px;
+      height: 10px;
+      float: left; }
+    .strategy-blocks-wrap .block-top .bar {
+      height: 100%;
+      background: #55ed72 linear-gradient(to top, #b39a0e, #ffee5e); }
+    .strategy-blocks-wrap .block-top .rate {
+      font-size: 10px;
+      color: #f3e824;
+      float: left;
+      margin-left: 4px; }
+  .strategy-blocks-wrap .block-average {
+    padding: 28px 0 0 24px;
+    left: 21px;
+    top: 100px;
+    width: 348px;
+    height: 169px; }
+    .strategy-blocks-wrap .block-average .labor {
+      margin-right: 30px; }
+      .strategy-blocks-wrap .block-average .labor .chart {
+        width: 151px; }
+    .strategy-blocks-wrap .block-average .society .chart {
+      width: 98px; }
+    .strategy-blocks-wrap .block-average .label {
+      font-size: 12px;
+      color: #96b5ff;
+      text-align: center; }
+    .strategy-blocks-wrap .block-average .chart {
+      height: 98px;
+      text-align: center;
+      margin-bottom: 10px; }
+      .strategy-blocks-wrap .block-average .chart svg {
+        height: 100%;
+        width: 100%; }
+    .strategy-blocks-wrap .block-average .content > div {
+      float: left; }
+  .strategy-blocks-wrap .block-guarantee {
+    left: 21px;
+    width: 348px;
+    height: 168px;
+    top: 292px; }
+  .strategy-blocks-wrap .block-bars {
+    left: 21px;
+    top: 480px;
+    width: 348px;
+    height: 217px; }
+    .strategy-blocks-wrap .block-bars .chart-bars {
+      font-size: 12px;
+      line-height: 14px;
+      padding: 22px 0 0 14px; }
+      .strategy-blocks-wrap .block-bars .chart-bars li.vl-item {
+        float: left;
+        width: 100%;
+        margin-bottom: 13px; }
+        .strategy-blocks-wrap .block-bars .chart-bars li.vl-item.completed .litem:before {
+          border: 1px solid #f3e924; }
+        .strategy-blocks-wrap .block-bars .chart-bars li.vl-item.completed .vnum {
+          color: #f3e924; }
+        .strategy-blocks-wrap .block-bars .chart-bars li.vl-item.completed .bar {
+          background-image: linear-gradient(to top, #b39a0e, #ffee5e); }
+      .strategy-blocks-wrap .block-bars .chart-bars .vote-box-list {
+        width: 100%; }
+        .strategy-blocks-wrap .block-bars .chart-bars .vote-box-list li {
+          list-style: none outside none; }
+          .strategy-blocks-wrap .block-bars .chart-bars .vote-box-list li .vote-item-wrap {
+            padding: 5px 0; }
+          .strategy-blocks-wrap .block-bars .chart-bars .vote-box-list li h4 {
+            float: left;
+            font-weight: normal;
+            margin: 0;
+            overflow: hidden;
+            padding: 0;
+            text-align: right;
+            width: 56px;
+            word-wrap: break-word;
+            color: #96b5ff; }
+          .strategy-blocks-wrap .block-bars .chart-bars .vote-box-list li .litem {
+            position: relative;
+            height: 14px;
+            width: 223px; }
+            .strategy-blocks-wrap .block-bars .chart-bars .vote-box-list li .litem:before {
+              border: 1px solid rgba(136, 231, 251, 0.6);
+              display: block;
+              content: " ";
+              position: absolute;
+              z-index: 1;
+              box-sizing: border-box;
+              height: 100%;
+              width: 100%; }
+          .strategy-blocks-wrap .block-bars .chart-bars .vote-box-list li p {
+            float: left;
+            margin: 0;
+            padding: 0; }
+            .strategy-blocks-wrap .block-bars .chart-bars .vote-box-list li p input {
+              float: left;
+              margin: 0; }
+          .strategy-blocks-wrap .block-bars .chart-bars .vote-box-list li em {
+            float: left;
+            height: 14px;
+            overflow: hidden; }
+          .strategy-blocks-wrap .block-bars .chart-bars .vote-box-list li .bar {
+            height: 14px;
+            position: relative;
+            z-index: 3;
+            background-image: linear-gradient(to top, #5c84f3, #83b2ff); }
+          .strategy-blocks-wrap .block-bars .chart-bars .vote-box-list li span {
+            float: left;
+            overflow: hidden; }
+        .strategy-blocks-wrap .block-bars .chart-bars .vote-box-list li.over {
+          background-color: #FFE57F; }
+      .strategy-blocks-wrap .block-bars .chart-bars .vnum {
+        text-indent: 5px;
+        color: #83dff2; }
+  .strategy-blocks-wrap .block-alarm {
+    right: 16px;
+    top: 550px;
+    width: 358px;
+    height: 149px; }
+    .strategy-blocks-wrap .block-alarm > .content {
+      padding: 18px 0 0 24px; }
+    .strategy-blocks-wrap .block-alarm table {
+      width: 100%; }
+      .strategy-blocks-wrap .block-alarm table tr td {
+        text-align: left;
+        color: #96b5ff;
+        font-size: 12px;
+        padding: 8px 0;
+        width: 50%; }
+        .strategy-blocks-wrap .block-alarm table tr td:first-child {
+          width: 157px; }
+        .strategy-blocks-wrap .block-alarm table tr td p:first-child {
+          margin-bottom: 10px; }
+        .strategy-blocks-wrap .block-alarm table tr td b {
+          text-decoration: underline;
+          font-weight: normal;
+          margin-right: 5px;
+          color: #f3e627;
+          font-size: 20px; }
+  .strategy-blocks-wrap .block-countdown {
+    font-size: 16px;
+    width: 348px;
+    height: 82px;
+    right: 16px;
+    top: 20px;
+    padding-left: 49px;
+    color: #96b5ff; }
+    .strategy-blocks-wrap .block-countdown h3 {
+      margin-bottom: 10px; }
+    .strategy-blocks-wrap .block-countdown strong {
+      font-size: 24px;
+      font-family: miNiJian;
+      color: #f3e627;
+      background: rgba(40, 40, 64, 0.7);
+      box-shadow: 0px 12px 38px 0px rgba(29, 33, 45, 0.51), inset 0 0 4px rgba(139, 171, 255, 0.5);
+      display: inline-block;
+      padding: 3px 7px;
+      text-shadow: 0 2px 2px rgba(29, 33, 45, 0.68); }
+  .strategy-blocks-wrap .block-capital {
+    right: 16px;
+    top: 115px;
+    width: 358px;
+    height: 411px; }
+    .strategy-blocks-wrap .block-capital .upper {
+      padding-left: 19px;
+      padding-top: 29px;
+      margin-bottom: 6px; }
+      .strategy-blocks-wrap .block-capital .upper .chart-pie {
+        height: 170px; }
+      .strategy-blocks-wrap .block-capital .upper .values {
+        font-size: 12px;
+        color: #96b5ff;
+        margin-bottom: 18px; }
+        .strategy-blocks-wrap .block-capital .upper .values .label {
+          display: inline;
+          margin-right: 6px; }
+        .strategy-blocks-wrap .block-capital .upper .values .num {
+          color: #95ffff; }
+        .strategy-blocks-wrap .block-capital .upper .values p {
+          display: inline;
+          margin-right: 10px; }
+    .strategy-blocks-wrap .block-capital .lower {
+      position: relative;
+      height: 175px; }
+      .strategy-blocks-wrap .block-capital .lower .sub {
+        color: #96b5ff;
+        font-size: 10px;
+        z-index: 3;
+        left: 16px;
+        bottom: 12px;
+        position: absolute; }
+      .strategy-blocks-wrap .block-capital .lower .chart-bubble {
+        position: relative;
+        z-index: 1; }
+  .strategy-blocks-wrap .block-bottom {
+    width: 567px;
+    height: 61px;
+    top: 637px;
+    left: 50%;
+    margin-left: -288.5px;
+    color: #96b5ff;
+    background: url("../../images/fupin_strategy/strategy_block_bottom.png") no-repeat 0 0; }
+    .strategy-blocks-wrap .block-bottom ul {
+      height: 100%;
+      left: 100%; }
+    .strategy-blocks-wrap .block-bottom li {
+      float: left;
+      margin-right: 10px;
+      height: 100%;
+      padding: 10px 14px;
+      box-sizing: border-box; }
+    .strategy-blocks-wrap .block-bottom .num {
+      font-family: miNiJian;
+      font-size: 25px;
+      color: #83dff2;
+      margin-bottom: 4px;
+      text-shadow: 0 2px 2px rgba(29, 33, 45, 0.68); }
+    .strategy-blocks-wrap .block-bottom .label {
+      font-size: 14px; }
+    .strategy-blocks-wrap .block-bottom .data1 {
+      width: 131px; }
+    .strategy-blocks-wrap .block-bottom .data2 {
+      width: 134px; }
+    .strategy-blocks-wrap .block-bottom .data3 {
+      width: 131px; }
+    .strategy-blocks-wrap .block-bottom .data4 {
+      width: 134px;
+      margin: 0; }
+
+.data-wrap #mapWrap .map-con {
+  top: 20px; }
+
+.data-blocks-wrap {
+  font-family: dongQingHeiTi;
+  width: 100%;
+  height: 715px;
+  position: relative; }
+  .data-blocks-wrap .block {
+    position: absolute;
+    box-sizing: border-box;
+    background-color: rgba(28, 25, 37, 0.7);
+    box-shadow: 0 12px 38px rgba(29, 33, 45, 0.51), inset 0 1px rgba(220, 236, 251, 0.23), inset 0 0 8px rgba(139, 171, 255, 0.55); }
+    .data-blocks-wrap .block > .title {
+      position: absolute;
+      font-size: 16px;
+      z-index: 3;
+      left: 14px;
+      top: -13px;
+      line-height: 30px;
+      color: #fbdf16;
+      padding: 0 19px;
+      background-image: linear-gradient(to bottom, rgba(63, 82, 134, 0.5) 44%, rgba(32, 43, 61, 0.5) 54%);
+      box-shadow: 0 12px 38px rgba(29, 33, 45, 0.51), inset 0 0 6px rgba(109, 148, 252, 0.66);
+      white-space: nowrap; }
+    .data-blocks-wrap .block > .content {
+      height: 100%;
+      width: 100%;
+      box-sizing: border-box; }
+    .data-blocks-wrap .block.no-border {
+      background-color: transparent;
+      box-shadow: none; }
+  .data-blocks-wrap .chart {
+    height: 100%;
+    width: 100%; }
+  .data-blocks-wrap .link-more {
+    font-size: 12px;
+    color: #fbdf16;
+    position: absolute;
+    cursor: pointer;
+    right: 8px;
+    top: 8px; }
+  .data-blocks-wrap .btn-map-back {
+    width: 63px;
+    height: 29px;
+    line-height: 29px;
+    color: #73d0fb;
+    border: 1px solid #83dff2;
+    box-shadow: 0 2px 2px rgba(0, 0, 0, 0.55);
+    text-align: center;
+    cursor: pointer;
+    right: 391px;
+    top: 116px;
+    position: absolute;
+    display: none; }
+  .data-blocks-wrap .area-wrap {
+    position: absolute;
+    top: 33px;
+    left: 21px;
+    z-index: 3; }
+    .data-blocks-wrap .area-wrap .btn {
+      line-height: 34px;
+      text-align: center;
+      width: 156px;
+      height: 34px;
+      box-sizing: border-box;
+      background-color: #83dff3;
+      box-shadow: 0 2px 2px rgba(0, 0, 0, 0.55);
+      font-size: 16px;
+      color: #1f1d30;
+      cursor: pointer; }
+    .data-blocks-wrap .area-wrap .scope-list {
+      width: 160px;
+      padding: 7px 10px;
+      box-sizing: border-box;
+      background-color: #373755;
+      box-shadow: 0 12px 38px rgba(29, 33, 45, 0.39);
+      margin-left: 2px;
+      display: none;
+      position: absolute;
+      top: 0;
+      left: 100%; }
+      .data-blocks-wrap .area-wrap .scope-list.show {
+        display: block; }
+      .data-blocks-wrap .area-wrap .scope-list li {
+        cursor: pointer;
+        height: 37px;
+        line-height: 37px;
+        box-sizing: border-box;
+        text-align: center;
+        color: #FFF;
+        font-size: 14px; }
+        .data-blocks-wrap .area-wrap .scope-list li.active {
+          cursor: default; }
+        .data-blocks-wrap .area-wrap .scope-list li.active, .data-blocks-wrap .area-wrap .scope-list li:hover {
+          background-color: #4a4a6f;
+          box-shadow: 0 8px 8px rgba(29, 33, 45, 0.38), inset 0 1px rgba(220, 236, 251, 0.23), inset 0 0 3px rgba(139, 171, 255, 0.55); }
+    .data-blocks-wrap .area-wrap .btn-country-file {
+      cursor: pointer;
+      display: none; }
+  .data-blocks-wrap .block-top {
+    left: 50%;
+    margin-left: -286.5px;
+    color: #96b5ff;
+    top: 13px;
+    font-size: 16px;
+    background: url("../../images/fupin_strategy/strategy_block_top.png") no-repeat 0 0;
+    width: 573px;
+    height: 87px; }
+    .data-blocks-wrap .block-top li {
+      box-sizing: border-box;
+      width: 180px;
+      height: 87px;
+      float: left;
+      margin-right: 16px;
+      padding-left: 18px; }
+      .data-blocks-wrap .block-top li:last-child {
+        margin: 0; }
+    .data-blocks-wrap .block-top .num {
+      color: #f3e824;
+      font-size: 36px;
+      line-height: 42px;
+      font-family: miNiJian;
+      text-shadow: 0 2px 2px rgba(29, 33, 45, 0.68); }
+    .data-blocks-wrap .block-top .label {
+      margin-bottom: 6px; }
+    .data-blocks-wrap .block-top .bar-bg {
+      background: #30507a;
+      width: 108px;
+      height: 10px;
+      float: left; }
+    .data-blocks-wrap .block-top .bar {
+      height: 100%;
+      background: #55ed72 linear-gradient(to top, #b39a0e, #ffee5e); }
+    .data-blocks-wrap .block-top .rate {
+      font-size: 10px;
+      color: #f3e824;
+      float: left;
+      margin-left: 4px; }
+  .data-blocks-wrap .block-average {
+    padding: 28px 0 0 24px;
+    left: 21px;
+    top: 98px;
+    width: 348px;
+    height: 169px; }
+    .data-blocks-wrap .block-average .labor {
+      margin-right: 30px; }
+      .data-blocks-wrap .block-average .labor .chart {
+        width: 151px; }
+    .data-blocks-wrap .block-average .society .chart {
+      width: 98px; }
+    .data-blocks-wrap .block-average .label {
+      font-size: 12px;
+      color: #96b5ff;
+      text-align: center; }
+    .data-blocks-wrap .block-average .chart {
+      height: 98px;
+      text-align: center;
+      margin-bottom: 10px; }
+      .data-blocks-wrap .block-average .chart svg {
+        cursor: pointer;
+        height: 100%;
+        width: 100%; }
+    .data-blocks-wrap .block-average .content > div {
+      float: left; }
+  .data-blocks-wrap .block-guarantee {
+    left: 21px;
+    width: 348px;
+    height: 168px;
+    top: 290px; }
+  .data-blocks-wrap .block-bars {
+    left: 21px;
+    top: 480px;
+    width: 348px;
+    height: 217px; }
+    .data-blocks-wrap .block-bars .chart-bars {
+      font-size: 12px;
+      line-height: 14px;
+      padding: 22px 0 0 14px; }
+      .data-blocks-wrap .block-bars .chart-bars li.vl-item {
+        float: left;
+        width: 100%;
+        margin-bottom: 13px; }
+        .data-blocks-wrap .block-bars .chart-bars li.vl-item.completed .litem:before {
+          border: 1px solid #f3e924; }
+        .data-blocks-wrap .block-bars .chart-bars li.vl-item.completed .vnum {
+          color: #f3e924; }
+        .data-blocks-wrap .block-bars .chart-bars li.vl-item.completed .bar {
+          background-image: linear-gradient(to top, #b39a0e, #ffee5e); }
+      .data-blocks-wrap .block-bars .chart-bars .vote-box-list {
+        width: 100%; }
+        .data-blocks-wrap .block-bars .chart-bars .vote-box-list li {
+          list-style: none outside none; }
+          .data-blocks-wrap .block-bars .chart-bars .vote-box-list li .vote-item-wrap {
+            padding: 5px 0; }
+          .data-blocks-wrap .block-bars .chart-bars .vote-box-list li h4 {
+            float: left;
+            font-weight: normal;
+            margin: 0;
+            overflow: hidden;
+            padding: 0;
+            text-align: right;
+            width: 56px;
+            word-wrap: break-word;
+            color: #96b5ff; }
+          .data-blocks-wrap .block-bars .chart-bars .vote-box-list li .litem {
+            position: relative;
+            height: 14px;
+            width: 223px; }
+            .data-blocks-wrap .block-bars .chart-bars .vote-box-list li .litem:before {
+              border: 1px solid rgba(136, 231, 251, 0.6);
+              display: block;
+              content: " ";
+              position: absolute;
+              z-index: 1;
+              box-sizing: border-box;
+              height: 100%;
+              width: 100%; }
+          .data-blocks-wrap .block-bars .chart-bars .vote-box-list li p {
+            float: left;
+            margin: 0;
+            padding: 0; }
+            .data-blocks-wrap .block-bars .chart-bars .vote-box-list li p input {
+              float: left;
+              margin: 0; }
+          .data-blocks-wrap .block-bars .chart-bars .vote-box-list li em {
+            float: left;
+            height: 14px;
+            overflow: hidden; }
+          .data-blocks-wrap .block-bars .chart-bars .vote-box-list li .bar {
+            height: 14px;
+            position: relative;
+            z-index: 3;
+            background-image: linear-gradient(to top, #5c84f3, #83b2ff); }
+          .data-blocks-wrap .block-bars .chart-bars .vote-box-list li span {
+            float: left;
+            overflow: hidden; }
+        .data-blocks-wrap .block-bars .chart-bars .vote-box-list li.over {
+          background-color: #FFE57F; }
+      .data-blocks-wrap .block-bars .chart-bars .vnum {
+        text-indent: 5px;
+        color: #83dff2; }
+  .data-blocks-wrap .block-poor-analysis {
+    right: 16px;
+    top: 114px;
+    width: 358px;
+    height: 165px; }
+  .data-blocks-wrap .block-alarm {
+    right: 16px;
+    top: 549px;
+    width: 358px;
+    height: 149px; }
+    .data-blocks-wrap .block-alarm > .content {
+      padding: 18px 0 0 24px; }
+    .data-blocks-wrap .block-alarm table {
+      width: 100%; }
+      .data-blocks-wrap .block-alarm table td {
+        text-align: left;
+        color: #96b5ff;
+        font-size: 12px;
+        padding: 10px 0;
+        width: 50%; }
+        .data-blocks-wrap .block-alarm table td:first-child {
+          width: 157px; }
+        .data-blocks-wrap .block-alarm table td p:first-child {
+          margin-bottom: 10px; }
+        .data-blocks-wrap .block-alarm table td b {
+          text-decoration: underline;
+          font-weight: normal;
+          margin-right: 5px;
+          color: #f3e627;
+          font-size: 20px; }
+  .data-blocks-wrap .block-capital {
+    right: 16px;
+    top: 306px;
+    width: 358px;
+    height: 219px; }
+    .data-blocks-wrap .block-capital .values {
+      line-height: 1.5;
+      padding: 0 14px;
+      font-size: 12px;
+      margin-top: 20px; }
+      .data-blocks-wrap .block-capital .values .label {
+        color: #96b5ff;
+        margin-right: 6px; }
+      .data-blocks-wrap .block-capital .values .num {
+        color: #95ffff;
+        margin-right: 15px; }
+    .data-blocks-wrap .block-capital .chart-wrap {
+      height: 178px;
+      position: relative; }
+      .data-blocks-wrap .block-capital .chart-wrap .notice {
+        position: absolute;
+        color: #96b5ff;
+        font-size: 10px;
+        left: 20px;
+        bottom: 11px; }
+  .data-blocks-wrap .block-countdown {
+    font-size: 16px;
+    width: 348px;
+    height: 82px;
+    right: 16px;
+    top: 20px;
+    padding-left: 49px;
+    color: #96b5ff; }
+    .data-blocks-wrap .block-countdown h3 {
+      margin-bottom: 10px; }
+    .data-blocks-wrap .block-countdown strong {
+      font-size: 24px;
+      font-family: miNiJian;
+      color: #f3e627;
+      background: rgba(40, 40, 64, 0.7);
+      box-shadow: 0px 12px 38px 0px rgba(29, 33, 45, 0.51), inset 0 0 4px rgba(139, 171, 255, 0.5);
+      display: inline-block;
+      padding: 3px 7px;
+      text-shadow: 0 2px 2px rgba(29, 33, 45, 0.68); }
+  .data-blocks-wrap .block-bottom {
+    width: 567px;
+    height: 61px;
+    top: 637px;
+    left: 50%;
+    margin-left: -288.5px;
+    color: #96b5ff;
+    background: url("../../images/fupin_strategy/strategy_block_bottom.png") no-repeat 0 0; }
+    .data-blocks-wrap .block-bottom ul {
+      height: 100%;
+      left: 100%; }
+    .data-blocks-wrap .block-bottom li {
+      float: left;
+      margin-right: 10px;
+      height: 100%;
+      padding: 10px 14px;
+      box-sizing: border-box; }
+    .data-blocks-wrap .block-bottom .num {
+      font-family: miNiJian;
+      font-size: 25px;
+      color: #83dff2;
+      margin-bottom: 4px;
+      text-shadow: 0 2px 2px rgba(29, 33, 45, 0.68); }
+    .data-blocks-wrap .block-bottom .label {
+      font-size: 14px; }
+    .data-blocks-wrap .block-bottom .data1 {
+      width: 131px; }
+    .data-blocks-wrap .block-bottom .data2 {
+      width: 134px; }
+    .data-blocks-wrap .block-bottom .data3 {
+      width: 131px; }
+    .data-blocks-wrap .block-bottom .data4 {
+      width: 134px;
+      margin: 0; }
+  .data-blocks-wrap .block-desc {
+    width: 294px;
+    height: 70px;
+    color: #96b5ff;
+    font-size: 12px;
+    line-height: 18px;
+    right: 405px;
+    bottom: 88px;
+    padding: 7px 19px; }
+    .data-blocks-wrap .block-desc.level-country {
+      width: 567px; }
+    .data-blocks-wrap .block-desc .content {
+      width: 100%;
+      height: 100%; }
+  .data-blocks-wrap .block-map-data-types {
+    padding: 10px;
+    width: 268px;
+    height: 70px;
+    bottom: 88px;
+    font-size: 12px;
+    left: 395px;
+    color: rgba(150, 181, 255, 0.5); }
+    .data-blocks-wrap .block-map-data-types input[type=radio] {
+      display: none; }
+      .data-blocks-wrap .block-map-data-types input[type=radio]:checked + span {
+        color: #96b5ff; }
+        .data-blocks-wrap .block-map-data-types input[type=radio]:checked + span:before {
+          background: url("../../images/fupin_strategy/data_radio_checked.png") no-repeat 0 0; }
+    .data-blocks-wrap .block-map-data-types label span:before {
+      display: inline-block;
+      content: " ";
+      width: 9px;
+      height: 9px;
+      margin-right: 5px;
+      background: url("../../images/fupin_strategy/data_radio_unchecked.png") no-repeat 0 0; }
+    .data-blocks-wrap .block-map-data-types table {
+      width: 100%; }
+      .data-blocks-wrap .block-map-data-types table td {
+        line-height: 24px;
+        width: 33.33333%; }
+
+.mask-popup-poor-analyse {
+  position: fixed;
+  height: 100%;
+  width: 100%;
+  left: 0;
+  top: 0;
+  background: rgba(0, 0, 0, 0.74);
+  display: none;
+  font-family: dongQingHeiTi; }
+  .mask-popup-poor-analyse.poor-reason-analyse {
+    z-index: 80; }
+
+.popup-poor-analyse {
+  width: 1290px;
+  height: 671px;
+  position: absolute;
+  box-shadow: 0 12px 38px rgba(29, 33, 45, 0.51);
+  margin-left: -645px;
+  margin-top: -335.5px;
+  left: 50%;
+  top: 50%;
+  background: url("../../images/fupin_analyse/data_analyse_bg.png") no-repeat 0 0; }
+  .popup-poor-analyse .btn-close {
+    position: absolute;
+    width: 36px;
+    height: 36px;
+    cursor: pointer;
+    right: -18px;
+    top: -13px;
+    border-radius: 100%;
+    filter: drop-shadow(0 6px 6px rgba(29, 30, 34, 0.25));
+    background: url("../../images/fupin_strategy/file_btn_close.png") no-repeat 0 0; }
+  .popup-poor-analyse .popup-content {
+    height: 100%;
+    width: 100%; }
+    .popup-poor-analyse .popup-content .arrow {
+      width: 11px;
+      height: 7px;
+      display: inline-block;
+      float: right;
+      position: relative;
+      top: 4px;
+      background: url("../../images/fupin_analyse/arrow_down.png") no-repeat 0 0; }
+    .popup-poor-analyse .popup-content .arrow-on {
+      background: url("../../images/fupin_analyse/arrow_up.png") no-repeat 0 0; }
+    .popup-poor-analyse .popup-content .analyse-header .analyse-title {
+      position: absolute;
+      line-height: 46px;
+      height: 46px;
+      min-width: 138px;
+      left: 0;
+      top: 8px;
+      font-size: 20px;
+      text-align: left;
+      padding-left: 50px;
+      border-radius: 0 23px 23px 0;
+      background-color: rgba(255, 255, 255, 0.13);
+      box-shadow: 0 6px 6px rgba(29, 30, 34, 0.14), inset 0 0 1px rgba(255, 255, 255, 0.42); }
+    .popup-poor-analyse .popup-content .analyse-header .area-select {
+      padding: 18px 40px 0 0;
+      float: right; }
+      .popup-poor-analyse .popup-content .analyse-header .area-select .area-barrio {
+        float: left; }
+        .popup-poor-analyse .popup-content .analyse-header .area-select .area-barrio .select-box {
+          width: 70px;
+          padding: 7px 10px;
+          border: 1px solid #C2C2CB;
+          display: inline-block;
+          position: relative; }
+          .popup-poor-analyse .popup-content .analyse-header .area-select .area-barrio .select-box .select-list {
+            background-color: #353553;
+            position: absolute;
+            padding: 10px;
+            width: 75px;
+            left: -2px;
+            top: 34px;
+            text-align: center; }
+            .popup-poor-analyse .popup-content .analyse-header .area-select .area-barrio .select-box .select-list li {
+              padding: 12px 0;
+              border: 1px solid #353553; }
+              .popup-poor-analyse .popup-content .analyse-header .area-select .area-barrio .select-box .select-list li:hover, .popup-poor-analyse .popup-content .analyse-header .area-select .area-barrio .select-box .select-list li.active {
+                border: 1px solid #6E76A4;
+                background-color: #4A4A6F; }
+      .popup-poor-analyse .popup-content .analyse-header .area-select .area-radio {
+        float: left;
+        padding-left: 30px;
+        padding-top: 8px; }
+        .popup-poor-analyse .popup-content .analyse-header .area-select .area-radio .radio-tag {
+          display: inline-block;
+          padding-left: 5px; }
+          .popup-poor-analyse .popup-content .analyse-header .area-select .area-radio .radio-tag .radio {
+            width: 12px;
+            height: 12px;
+            display: inline-block;
+            background: url("../../images/fupin_analyse/radio_close.png") no-repeat 0 0; }
+          .popup-poor-analyse .popup-content .analyse-header .area-select .area-radio .radio-tag.active .radio {
+            background: url("../../images/fupin_analyse/radio_on.png") no-repeat 0 0; }
+    .popup-poor-analyse .popup-content .analyse-nav {
+      float: left;
+      width: 220px;
+      margin-top: 36px; }
+      .popup-poor-analyse .popup-content .analyse-nav ul {
+        float: left; }
+        .popup-poor-analyse .popup-content .analyse-nav ul li.nav-active {
+          color: #88E7FB; }
+        .popup-poor-analyse .popup-content .analyse-nav ul li.white {
+          color: #fff !important; }
+        .popup-poor-analyse .popup-content .analyse-nav ul li.nav-current {
+          width: 180px;
+          padding: 15px 10px;
+          border: 1px solid #55577A;
+          background-color: #4A4A6F;
+          margin-top: 1px;
+          box-shadow: 0 6px 6px rgba(29, 30, 34, 0.14), inset 0 0 1px rgba(255, 255, 255, 0.42); }
+        .popup-poor-analyse .popup-content .analyse-nav ul li.nav-current-detail {
+          padding: 10px 20px; }
+          .popup-poor-analyse .popup-content .analyse-nav ul li.nav-current-detail dl dd {
+            padding: 10px 0;
+            cursor: pointer; }
+            .popup-poor-analyse .popup-content .analyse-nav ul li.nav-current-detail dl dd i.icon-point {
+              width: 5px;
+              height: 5px;
+              display: inline-block;
+              position: relative;
+              top: -3px;
+              background: url("../../images/fupin_analyse/point_white.png") no-repeat 0 0;
+              margin-right: 10px; }
+            .popup-poor-analyse .popup-content .analyse-nav ul li.nav-current-detail dl dd.active {
+              color: #88E7FB; }
+              .popup-poor-analyse .popup-content .analyse-nav ul li.nav-current-detail dl dd.active i {
+                background: url("../../images/fupin_analyse/point_blue.png") no-repeat 0 0; }
+    .popup-poor-analyse .popup-content .analyse-content {
+      float: left;
+      margin-top: 36px;
+      width: 1065px; }
+
+.analyse-poor-reason .poor-reason-header {
+  width: 379px;
+  height: 71px;
+  background: url("../../images/fupin_analyse/poor_reason.png") no-repeat; }
+  .analyse-poor-reason .poor-reason-header .ml {
+    margin-left: 16px; }
+  .analyse-poor-reason .poor-reason-header .poor-reason-item {
+    width: 150px;
+    float: left;
+    padding: 15px;
+    color: #F3E824; }
+    .analyse-poor-reason .poor-reason-header .poor-reason-item span {
+      font-size: 24px;
+      font-family: miNiJian;
+      text-shadow: 0 2px 2px rgba(29, 33, 45, 0.68);
+      padding-right: 6px; }
+    .analyse-poor-reason .poor-reason-header .poor-reason-item p {
+      color: #9DBAFF;
+      margin-top: 6px; }
+
+.analyse-poor-reason .chart-poor-reason {
+  width: 580px;
+  height: 450px;
+  margin: 10px auto; }
+
+.analyse-poor-page .lock-analyse-header {
+  background: rgba(55, 55, 84, 0.2);
+  width: 100%;
+  height: 70px;
+  position: absolute;
+  top: 0;
+  left: 0; }
+
+.analyse-poor-page .poor-page-header {
+  width: 379px;
+  height: 91px;
+  background: url("../../images/fupin_analyse/poor_atrribute_header.png") no-repeat; }
+  .analyse-poor-page .poor-page-header .ml {
+    margin-left: 16px; }
+  .analyse-poor-page .poor-page-header .poor-page-item {
+    width: 150px;
+    float: left;
+    padding: 15px;
+    color: #F3E824; }
+    .analyse-poor-page .poor-page-header .poor-page-item span.amount {
+      font-size: 24px;
+      font-family: miNiJian;
+      text-shadow: 0 2px 2px rgba(29, 33, 45, 0.68);
+      padding-right: 6px; }
+    .analyse-poor-page .poor-page-header .poor-page-item p.poor-name {
+      color: #9DBAFF;
+      margin-top: 6px; }
+    .analyse-poor-page .poor-page-header .poor-page-item .poor-bar {
+      padding-top: 6px; }
+      .analyse-poor-page .poor-page-header .poor-page-item .poor-bar .litem {
+        position: relative;
+        height: 12px;
+        width: 100px;
+        display: inline-block; }
+        .analyse-poor-page .poor-page-header .poor-page-item .poor-bar .litem:before {
+          background: #30507A;
+          display: block;
+          content: " ";
+          position: absolute;
+          z-index: 1;
+          box-sizing: border-box;
+          height: 100%;
+          width: 100%; }
+      .analyse-poor-page .poor-page-header .poor-page-item .poor-bar .vnum {
+        color: #f3e924;
+        font-size: 10px;
+        display: inline-block; }
+      .analyse-poor-page .poor-page-header .poor-page-item .poor-bar .bar {
+        height: 12px;
+        position: absolute;
+        z-index: 10;
+        background-image: linear-gradient(to top, #b39a0e, #ffee5e); }
+
+.analyse-poor-page .poor-one-header {
+  width: 185px; }
+
+.chart-page-content {
+  margin-top: 50px; }
+  .chart-page-content .chart-item {
+    border: 1px solid #414163;
+    position: relative;
+    padding: 25px 20px;
+    float: left;
+    margin-right: 35px; }
+    .chart-page-content .chart-item .chart-item-title {
+      position: absolute;
+      top: -14px;
+      left: 10px;
+      color: #FBDF16;
+      font-size: 16px;
+      min-width: 152px;
+      padding: 0 20px;
+      height: 30px;
+      line-height: 30px;
+      text-align: center;
+      background: url("../../images/fupin_analyse/poor_atrribute_chart_title.png") no-repeat;
+      background-size: 100% 100%; }
+    .chart-page-content .chart-item .poor-chart {
+      width: 450px;
+      height: 310px; }
+    .chart-page-content .chart-item .edu-chart {
+      width: 1000px;
+      height: 175px; }
+    .chart-page-content .chart-item .condition-chart {
+      width: 1000px;
+      height: 291px; }
+
+.data-analyse-tab .tab-title {
+  font-size: 16px;
+  color: #8DAAF1;
+  float: left;
+  margin-top: 12px; }
+
+.data-analyse-tab ul {
+  float: left;
+  margin-left: 15px;
+  border: 1px solid #86E4F8;
+  color: #86E4F8; }
+  .data-analyse-tab ul li {
+    float: left;
+    min-width: 110px;
+    padding: 10px 0;
+    text-align: center;
+    cursor: pointer;
+    white-space: nowrap; }
+    .data-analyse-tab ul li.active {
+      background: #86E4F8;
+      color: #232636; }
+    .data-analyse-tab ul li label {
+      border-right: 1px solid #4E7183;
+      height: 14px;
+      width: 90%;
+      padding: 0 5%;
+      display: inline-block;
+      cursor: pointer; }
+    .data-analyse-tab ul li:last-child label {
+      border: none; }
+
+.square-info-box {
+  width: 164px;
+  height: 79px;
+  background: url("../../images/fupin_analyse/square_box.png") no-repeat;
+  padding: 0 20px;
+  margin-top: 20px;
+  margin-right: 15px; }
+  .square-info-box .money {
+    color: #F3E824;
+    margin-top: 15px; }
+    .square-info-box .money span {
+      font-family: miNiJian;
+      font-size: 26px;
+      padding-right: 10px;
+      text-shadow: 0 2px 2px rgba(29, 33, 45, 0.68); }
+  .square-info-box .money-title {
+    margin-top: 12px; }
+  .square-info-box li {
+    margin-top: 9px; }
+  .square-info-box .info-name {
+    color: #fff; }
+  .square-info-box .yellow {
+    color: #F1E524; }
+  .square-info-box .litem {
+    position: relative;
+    height: 12px;
+    width: 110px;
+    display: inline-block; }
+    .square-info-box .litem:before {
+      background: #30507A;
+      display: block;
+      content: " ";
+      position: absolute;
+      z-index: 1;
+      box-sizing: border-box;
+      height: 100%;
+      width: 100%; }
+  .square-info-box .vnum {
+    color: #f3e924;
+    font-size: 10px;
+    display: inline-block; }
+  .square-info-box .bar {
+    height: 12px;
+    position: absolute;
+    z-index: 10;
+    background-image: linear-gradient(to top, #b39a0e, #ffee5e); }
+
+.analyse-tb {
+  border: 1px solid #5B748C;
+  border-collapse: collapse;
+  color: #fff;
+  font-size: 12px; }
+  .analyse-tb td {
+    border: 1px solid #5B748C;
+    padding: 10px; }
+  .analyse-tb thead {
+    background: #47425C; }
+    .analyse-tb thead span {
+      position: relative;
+      top: 3px; }
+    .analyse-tb thead .ico-quest {
+      width: 16px;
+      height: 16px;
+      display: inline-block;
+      cursor: pointer;
+      position: relative;
+      background: url("../../images/fupin_strategy/file_ico_quest.png") no-repeat 0 0;
+      top: 3px;
+      left: 3px; }
+      .analyse-tb thead .ico-quest.active .tip {
+        display: block; }
+      .analyse-tb thead .ico-quest .tip {
+        z-index: 2;
+        position: absolute;
+        bottom: 100%;
+        right: -88px;
+        width: 251px;
+        background-color: #373755;
+        padding: 14px 16px;
+        box-sizing: border-box;
+        box-shadow: 0 12px 38px rgba(29, 33, 45, 0.39);
+        margin-bottom: 13px;
+        display: none;
+        cursor: default;
+        line-height: 16px; }
+        .analyse-tb thead .ico-quest .tip:after {
+          content: " ";
+          display: block;
+          position: absolute;
+          bottom: -18px;
+          right: 88px;
+          width: 18px;
+          height: 18px;
+          background: url("../../images/fupin_strategy/file_tip_arrow.png") no-repeat 0 0; }
+  .analyse-tb tbody td a {
+    text-decoration: underline; }
+
+.data-search-box .return-main {
+  position: absolute;
+  right: 0;
+  top: -30px;
+  color: #D2C820;
+  cursor: pointer; }
+  .data-search-box .return-main .icon-back {
+    display: inline-block;
+    width: 27px;
+    height: 19px;
+    position: relative;
+    top: 2px;
+    left: -5px;
+    background: url("../../images/fupin_analyse/icon_return.png") no-repeat; }
+
+.data-search-box .data-search-header {
+  border: 1px solid #88E7FB;
+  overflow: hidden;
+  font-size: 12px;
+  margin: 15px 0 20px; }
+  .data-search-box .data-search-header input,
+  .data-search-box .data-search-header button {
+    float: left;
+    height: 30px;
+    background: none;
+    border: 0; }
+  .data-search-box .data-search-header input {
+    width: 545px;
+    color: #88E7FB;
+    padding-left: 20px; }
+  .data-search-box .data-search-header button.btn-search {
+    background: #88E7FB;
+    width: 70px;
+    color: #191821;
+    cursor: pointer; }
+
+.data-search-box .data-search-content {
+  height: 395px;
+  overflow: hidden; }
+  .data-search-box .data-search-content .analyse-tb {
+    width: 100%; }
+  .data-search-box .data-search-content .none-search {
+    text-align: center;
+    padding-top: 160px;
+    display: none; }
+
+.analyse-main-content {
+  width: 100%;
+  height: 580px; }
+  .analyse-main-content .jspHorizontalBar {
+    display: none; }
+
+.average-income {
+  width: 1065px;
+  height: 580px; }
+  .average-income .average-income-count {
+    overflow: hidden; }
+    .average-income .average-income-count .square-info-box {
+      float: left; }
+  .average-income .average-income-tb {
+    width: 862px;
+    margin: 20px 0; }
+    .average-income .average-income-tb .analyse-tb-title {
+      padding-right: 11px; }
+    .average-income .average-income-tb .yellow {
+      color: #F3E824; }
+  .average-income .jspHorizontalBar {
+    display: none; }
+  .average-income .average-income-detail {
+    width: 1065px;
+    height: 185px; }
+    .average-income .average-income-detail .content {
+      width: 1000px;
+      height: 125px; }
+      .average-income .average-income-detail .content .analyse-tb {
+        width: 3000px; }
+      .average-income .average-income-detail .content .jspHorizontalBar {
+        display: block !important; }
+
+.social-policy .social-policy-count {
+  overflow: hidden; }
+  .social-policy .social-policy-count .square-info-box {
+    float: left; }
+
+.search-form {
+  /*搜索框下拉样式*/
+  /*搜索框下拉样式 end*#363654*/ }
+  .search-form .search-field-wrap {
+    border: 1px solid #83dff2;
+    box-shadow: 0 2px 2px rgba(0, 0, 0, 0.55);
+    width: 586px;
+    height: 34px;
+    font-size: 16px;
+    color: #191821;
+    margin-bottom: 26px;
+    position: relative; }
+    .search-form .search-field-wrap .search-field {
+      float: left;
+      margin: 1px 0 0 24px;
+      height: 32px;
+      border: none;
+      width: 460px;
+      font-size: 16px;
+      box-sizing: border-box;
+      background: transparent;
+      color: #83dff2; }
+      .search-form .search-field-wrap .search-field::placeholder {
+        color: #83dff2; }
+    .search-form .search-field-wrap .btn {
+      cursor: pointer;
+      float: right;
+      background-color: #83dff2;
+      box-shadow: 0 2px 2px rgba(0, 0, 0, 0.55);
+      width: 73px;
+      height: 34px;
+      line-height: 34px;
+      text-align: center; }
+  .search-form .search-types {
+    padding-left: 34px; }
+    .search-form .search-types .search-type {
+      display: none; }
+      .search-form .search-types .search-type:checked + label {
+        background: url("../../images/fupin_strategy/search_radio_checked.png") no-repeat left center; }
+      .search-form .search-types .search-type + label {
+        background: url("../../images/fupin_strategy/search_radio_unchecked.png") no-repeat left center; }
+    .search-form .search-types label {
+      font-size: 16px;
+      color: #96b5ff;
+      padding-left: 23px;
+      margin-right: 48px; }
+  .search-form .search-suggest {
+    position: absolute;
+    display: none;
+    z-index: 999;
+    left: 0px;
+    top: 41px;
+    width: 513px;
+    border: none;
+    color: red;
+    background: #363654; }
+  .search-form .search-suggest li {
+    height: 39px;
+    line-height: 39px;
+    width: 472px;
+    overflow: hidden;
+    margin: 7px 9px;
+    padding-left: 21px;
+    cursor: pointer;
+    color: #87E5F9;
+    border: 2px solid #373655; }
+  .search-form .search-suggest li:hover, .search-form .search-suggest li.hover {
+    background: #4A4A6F;
+    border: 2px solid #5A5E84; }
+  .search-form .search-suggest li span {
+    color: #FFF; }
+
+.search-result-wrap {
+  height: auto;
+  min-height: 768px; }
+  .search-result-wrap .search-form-wrap {
+    padding: 20px 0 0 34px;
+    height: 113px; }
+  .search-result-wrap .search-result .no-result {
+    border-bottom: 1px solid rgba(150, 181, 255, 0.2); }
+  .search-result-wrap .search-result .has-result li {
+    border-top: 1px solid rgba(150, 181, 255, 0.2); }
+    .search-result-wrap .search-result .has-result li:hover {
+      background: rgba(93, 93, 136, 0.5);
+      box-shadow: 0px 8px 8px 0px rgba(29, 33, 45, 0.38), inset 0px 1px 0px 0px rgba(220, 236, 251, 0.23);
+      cursor: pointer;
+      z-index: 2; }
+  .search-result-wrap .search-result .has-result h3 {
+    font-size: 16px;
+    color: #83dff2; }
+  .search-result-wrap .search-result li {
+    padding: 14px 36px;
+    font-size: 14px;
+    line-height: 22px;
+    position: relative;
+    z-index: 0; }
+
+.edu-wrap {
+  height: auto; }
+  .edu-wrap section .title {
+    line-height: 54px;
+    padding: 0 35px;
+    font-size: 16px;
+    color: #ede374; }
+  .edu-wrap section.online ul {
+    padding: 0 26px; }
+  .edu-wrap section.online li {
+    width: 643px;
+    height: 220px;
+    margin: 0 7px; }
+    .edu-wrap section.online li img {
+      float: left; }
+    .edu-wrap section.online li .desc {
+      padding-top: 48px;
+      margin-left: 365px; }
+      .edu-wrap section.online li .desc h4 {
+        margin-bottom: 10px; }
+      .edu-wrap section.online li .desc p {
+        line-height: 24px; }
+  .edu-wrap section.past ul {
+    padding: 0 26px; }
+  .edu-wrap section.past li {
+    margin: 0 7px;
+    height: 249px;
+    width: 248px; }
+    .edu-wrap section.past li img {
+      box-shadow: 0 12px 38px rgba(29, 33, 45, 0.51), inset 0 1px rgba(220, 236, 251, 0.23), inset 0 0 8px rgba(139, 171, 255, 0.55); }
+    .edu-wrap section.past li .desc {
+      padding: 12px 14px; }
+      .edu-wrap section.past li .desc h4 {
+        margin-bottom: 6px; }
+      .edu-wrap section.past li .desc p {
+        line-height: 24px; }
+  .edu-wrap section.school ul {
+    padding: 0 26px; }
+  .edu-wrap section.school li {
+    margin: 0 7px 13px;
+    height: 200px;
+    width: 248px; }
+    .edu-wrap section.school li img {
+      box-shadow: 0 12px 38px rgba(29, 33, 45, 0.51), inset 0 1px rgba(220, 236, 251, 0.23), inset 0 0 8px rgba(139, 171, 255, 0.55); }
+    .edu-wrap section.school li .desc {
+      padding: 12px 14px; }
+      .edu-wrap section.school li .desc h4 {
+        margin-bottom: 6px; }
+  .edu-wrap section li {
+    float: left;
+    background-color: rgba(36, 36, 57, 0.7);
+    box-shadow: 0 12px 38px rgba(29, 33, 45, 0.51), inset 0 1px rgba(220, 236, 251, 0.23), inset 0 0 8px rgba(139, 171, 255, 0.55); }
+    .edu-wrap section li img {
+      margin: 6px; }
+    .edu-wrap section li .desc h4 {
+      font-size: 16px;
+      color: #FFF; }
+    .edu-wrap section li .desc p {
+      font-size: 12px;
+      color: #96b5ff; }
+
+.edu-school-wrap {
+  height: auto;
+  padding: 0 0 36px; }
+  .edu-school-wrap header {
+    margin-bottom: 36px; }
+  .edu-school-wrap .crumb {
+    color: #ede374;
+    font-size: 16px;
+    width: 1302px;
+    margin: 0 auto 26px; }
+    .edu-school-wrap .crumb .back {
+      color: #83dff2;
+      padding-left: 36px;
+      line-height: 19px;
+      background: url("../../images/fupin_strategy/edu_school_back_ico.png") no-repeat 0 0; }
+  .edu-school-wrap .pbd {
+    margin: 0 auto; }
+    .edu-school-wrap .pbd ul {
+      width: 1302px;
+      margin: 0 auto;
+      background-color: rgba(36, 36, 57, 0.7);
+      box-shadow: 0 12px 38px rgba(29, 33, 45, 0.51), inset 0 1px rgba(220, 236, 251, 0.23), inset 0 0 8px rgba(139, 171, 255, 0.55); }
+    .edu-school-wrap .pbd li {
+      padding: 0 20px 0 24px;
+      border-bottom: 1px solid #282840; }
+      .edu-school-wrap .pbd li .title {
+        color: #FFF;
+        font-size: 16px;
+        line-height: 69px; }
+      .edu-school-wrap .pbd li .right {
+        float: right; }
+      .edu-school-wrap .pbd li .meta {
+        font-size: 12px;
+        line-height: 24px;
+        width: 150px;
+        color: #96b5ff;
+        float: left;
+        padding-top: 12px; }
+      .edu-school-wrap .pbd li .btn-download {
+        display: block;
+        float: left;
+        text-align: center;
+        line-height: 33px;
+        width: 98px;
+        height: 37px;
+        padding-right: 2px;
+        color: #83dff2;
+        font-size: 16px;
+        margin-top: 20px;
+        box-sizing: border-box;
+        background: url("../../images/fupin_strategy/edu_school_download_btn.png") no-repeat 0 0; }
+      .edu-school-wrap .pbd li:last-child {
+        border: none; }
+
+/* end page */

@@ -1,0 +1,13 @@
+.p-wrap{
+  width:inRem(720);
+  margin:0 auto;
+}
+[v-cloak]{
+  display: none;
+}
+.fl{
+   float:left;
+ }
+.fr{
+  float:right;
+}

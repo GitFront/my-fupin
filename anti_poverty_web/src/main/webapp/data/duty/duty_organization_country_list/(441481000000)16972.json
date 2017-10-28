@@ -1,0 +1,16 @@
+{
+	"data":{
+		"belong_organization":"广州市质监局",
+		"list":[
+			{
+				"id":"441481129206",
+				"order":1,
+				"contact_phone":"13826692626",
+				"contact_name":"陈焕新",
+				"country_name":"陂蓬村委会"
+			}
+		]
+	},
+	"code":0,
+	"msg":"获取信息成功"
+}

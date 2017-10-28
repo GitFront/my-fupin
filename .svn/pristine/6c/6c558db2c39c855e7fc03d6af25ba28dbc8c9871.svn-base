@@ -1,0 +1,44 @@
+//弹出窗口
+.normal-popup-wrap{
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	z-index:99;
+	background: rgba(0,0,0,0.6);
+
+	.normal-popup{
+		@extend %BB;
+		position: absolute;
+		left: 50%;
+		top: 208px;
+		padding:0 24px;
+		font-size: 16px;
+		color: #ebebeb;
+		border: 1px solid #676f8e;
+		background: linear-gradient(#302c3e, #322f42);
+		box-shadow:0 12px 38px rgba(29, 33, 45, 0.51), inset 0 1px rgba(220, 236, 251, 0.23), inset 0 0 8px rgba(139, 171, 255, 0.55);
+		
+		.btn-close {
+			$s: 46px;
+			position: absolute;
+			width: $s;
+			height: $s;
+			cursor: pointer;
+			right: -25px;
+			top: -15px;
+			@include bgPng(file_btn_close);
+			z-index: 80;
+		}
+		.underline-title{
+			$h:42px;
+
+			padding-top: 5px;
+			padding-left: 3px;
+			height: 42px;
+			line-height: 42px;
+			border-bottom: 1px solid #5f5975;
+		}
+	}
+}	

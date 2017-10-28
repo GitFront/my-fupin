@@ -1,0 +1,30 @@
+{
+	"data":{
+		"belong_organization":"兴宁市打私办",
+		"list":[
+			{
+				"id":"441481115221",
+				"order":1,
+				"contact_phone":"13560959768",
+				"contact_name":"谢远番",
+				"country_name":"岩前村委会"
+			},
+			{
+				"id":"441481115214",
+				"order":2,
+				"contact_phone":"13690872232",
+				"contact_name":"杨海雄",
+				"country_name":"东星村委会"
+			},
+			{
+				"id":"441481115224",
+				"order":3,
+				"contact_phone":"15014556363",
+				"contact_name":"巫志中",
+				"country_name":"岭南村委会"
+			}
+		]
+	},
+	"code":0,
+	"msg":"获取信息成功"
+}

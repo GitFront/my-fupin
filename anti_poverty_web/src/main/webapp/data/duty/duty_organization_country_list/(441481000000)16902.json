@@ -1,0 +1,16 @@
+{
+	"data":{
+		"belong_organization":"中国石油化工股份有限公司广州分公司",
+		"list":[
+			{
+				"id":"441481131217",
+				"order":1,
+				"contact_phone":"13549189827",
+				"contact_name":"彭召君",
+				"country_name":"彭洞村委会"
+			}
+		]
+	},
+	"code":0,
+	"msg":"获取信息成功"
+}

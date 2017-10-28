@@ -1,0 +1,37 @@
+{
+	"data":{
+		"belong_organization":"兴宁市人防办",
+		"list":[
+			{
+				"id":"441481123214",
+				"order":1,
+				"contact_phone":"13421007759",
+				"contact_name":"赖新洪",
+				"country_name":"石壁村委会"
+			},
+			{
+				"id":"441481123213",
+				"order":2,
+				"contact_phone":"13826656228",
+				"contact_name":"朱兴平",
+				"country_name":"水陂村委会"
+			},
+			{
+				"id":"441481123211",
+				"order":3,
+				"contact_phone":"15812920897",
+				"contact_name":"吴俊强",
+				"country_name":"高陂村委会"
+			},
+			{
+				"id":"441481123208",
+				"order":4,
+				"contact_phone":"15899987899",
+				"contact_name":"罗仕安",
+				"country_name":"蓼塘村委会"
+			}
+		]
+	},
+	"code":0,
+	"msg":"获取信息成功"
+}

@@ -1,0 +1,16 @@
+{
+	"data":{
+		"belong_organization":"广州市天河区建设工程项目代建局",
+		"list":[
+			{
+				"id":"441481115204",
+				"order":1,
+				"contact_phone":"3456228",
+				"contact_name":"刘启名",
+				"country_name":"浮美村委会"
+			}
+		]
+	},
+	"code":0,
+	"msg":"获取信息成功"
+}

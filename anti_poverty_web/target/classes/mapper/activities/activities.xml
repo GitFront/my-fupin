@@ -1,0 +1,234 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+        
+<mapper namespace="aspire.bi.activities">
+
+ 	<!-- select all the Source List -->
+	<select id="sourceSelect"  parameterType="hashmap"
+       resultType="hashmap">
+ 		SELECT 
+ 			source_bi AS source_id,
+ 			source_name AS source_name 
+ 		FROM m_source
+	</select> 
+	
+	<!-- select the activies -->
+	<select id="activiesSelect"  parameterType="hashmap"
+       resultType="hashmap">
+ 		SELECT  
+ 			act_id_bi AS act_id, 
+ 			act_name AS act_name
+ 		FROM d_act_info 
+ 		WHERE is_effic=1 
+ 		<if test="sourceId != null and sourceId != ''">
+			AND source_bi=#{sourceId}
+		</if>
+ 		order by act_start_time desc
+	</select>
+	
+	<!--  查询默认活动参数 -->
+	<select id="defaultActivityLoad"  parameterType="hashmap"
+       resultType="hashmap">
+		SELECT
+			d.act_id_bi AS act_id,
+			d.act_name AS act_name,
+			d.source_bi AS source_id,
+			date_format(d.act_start_time,'%Y-%m-%d') AS act_start_time,
+			date_format(d.act_end_time,'%Y-%m-%d') AS act_end_time
+		FROM
+			d_act_info d
+			WHERE d.is_effic=1 
+		<if test="actId != null and actId != ''">
+			AND d.act_id_bi=#{actId}
+		</if>
+		order by d.act_start_time desc
+	</select>
+	
+	<!--  查询活动营销信息-->
+	<select id="activity_market_info"  parameterType="hashmap"
+       resultType="hashmap">
+		SELECT
+			r.c_vis_usrcnt AS vis_usrcnt,
+			r.c_vis_cnt AS vis_cnt,
+			r.c_join_usrcnt AS join_usrcnt,
+			r.c_share_usrcnt AS share_usrcnt,
+			r.c_share_cnt AS share_cnt,
+			r.c_adclk_usrcnt AS adclk_usrcnt,
+			r.c_adclk_cnt AS adclk_cnt,
+			round((r.c_join_rate*100),2) AS join_rate,
+			round((r.c_fans_rate*100),2) AS fans_rate,
+			round((r.c_share_rate*100),2) AS share_rete,
+			round((r.c_adclk_rate*100),2) AS adclk_rate
+	   <!-- concat(round((r.c_join_rate *100),2),'%') AS join_rate,
+			concat(round((r.c_fans_rate *100),2),'%') AS fans_rate,
+			concat(round((r.c_share_rate *100),2),'%') AS share_rete,
+			concat(round((r.c_adclk_rate *100),2),'%') AS adclk_rate -->
+		FROM rp_act_market_d r , d_act_info d
+		WHERE r.act_id_bi=d.act_id_bi  AND d.is_effic=1  
+		<if test="actId != null and actId != ''">
+			AND r.act_id_bi=#{actId}
+		</if>
+		<if test="to != null and to != ''">
+			AND r.stat_time &lt;=#{to}
+		</if>
+		ORDER BY r.stat_time
+	</select>
+	
+	<!--  查询营销活动列表信息-->
+	<select id="activity_market_list"  parameterType="hashmap"
+       resultType="hashmap">
+		SELECT
+				r.act_id_bi AS act_id,
+				r.source_name AS source_name,
+				r.act_name AS act_name,
+				date_format(r.act_start_time,'%Y-%m-%d') AS act_start_time,
+				date_format(r.act_end_time,'%Y-%m-%d') AS act_end_time,
+				r.c_vis_usrcnt AS vis_usrcnt,
+				r.c_join_usrcnt AS join_usrcnt,
+				r.c_share_usrcnt AS share_usrcnt,
+				round((r.c_fans_rate *100),2) AS fans_rate,
+				round((r.c_share_rate *100),2) AS share_rate,
+				r.act_status AS act_status,
+				r.snap_time AS snap_time
+			FROM
+				rp_act_market_snap_d r , d_act_info d
+			WHERE
+				 r.act_id_bi=d.act_id_bi  AND d.is_effic=1 
+			<if test="sourceId != null and sourceId != ''">
+				AND r.source_bi=#{sourceId}
+			</if> 
+			<if test="actId != null and actId != ''">
+				AND r.act_id_bi=#{actId}
+			</if>
+			<if test="from != null and from != ''">
+				AND r.act_start_time &gt;=#{from}
+			</if>
+			<if test="to != null and to != ''">
+				AND r.act_start_time &lt;=#{to}
+			</if>
+			ORDER BY r.act_start_time desc
+	</select>
+	
+	<!--  查询营销活动列表信息-->
+	<select id="activity_market_list_count"  parameterType="hashmap"
+       resultType="hashmap">
+		SELECT
+			count(*) AS total
+			FROM
+				rp_act_market_snap_d r , d_act_info d
+			WHERE
+				 r.act_id_bi=d.act_id_bi  AND d.is_effic=1 
+			<if test="sourceId != null and sourceId != ''">
+				AND r.source_bi=#{sourceId}
+			</if> 
+			<if test="actId != null and actId != ''">
+				AND r.act_id_bi=#{actId}
+			</if>
+			<if test="from != null and from != ''">
+				AND r.act_start_time &gt;=#{from}
+			</if>
+			<if test="to != null and to != ''">
+				AND r.act_start_time &lt;=#{to}
+			</if>
+			ORDER BY r.act_start_time desc
+	</select>
+	
+	<!-- 查询活动日变化趋势  -->
+	<select id="activity_market_by_date"  parameterType="hashmap"
+       resultType="hashmap">
+		SELECT
+			date_format(r.stat_time,'%Y-%m-%d') AS start_time,
+			r.vis_usrcnt AS vis_usrcnt,
+			r.vis_cnt AS vis_cnt,
+			r.join_usrcnt AS join_usrcnt,
+			r.share_usrcnt AS share_usrcnt,
+			r.share_cnt AS share_cnt,
+			r.adclk_usrcnt AS adclk_usrcnt,
+			r.adclk_cnt AS adclk_cnt,
+			round((r.join_rate *100),2) AS join_rate,
+			round((r.fans_rate *100),2) AS fans_rate,
+			round((r.share_rate *100),2) AS share_rete,
+			round((r.adclk_rate *100),2) AS adclk_rate
+		FROM rp_act_market_d r , d_act_info d
+		WHERE r.act_id_bi=d.act_id_bi AND d.is_effic=1 
+		<if test="actId != null and actId != ''">
+			AND r.act_id_bi=#{actId}
+		</if>
+		<if test="from != null and from != ''">
+			AND r.stat_time &gt;=#{from}
+		</if>
+		<if test="to != null and to != ''">
+			AND r.stat_time &lt;=#{to}
+		</if>
+		order by r.stat_time
+	</select>
+	
+	<!-- 查询活动日变化趋势  -->
+	<select id="activity_market_by_date_count"  parameterType="hashmap"
+       resultType="hashmap">
+		SELECT
+			count(*) AS total
+		FROM rp_act_market_d r , d_act_info d
+		WHERE r.act_id_bi=d.act_id_bi AND d.is_effic=1 
+		<if test="actId != null and actId != ''">
+			AND r.act_id_bi=#{actId}
+		</if>
+		<if test="from != null and from != ''">
+			AND r.stat_time &gt;=#{from}
+		</if>
+		<if test="to != null and to != ''">
+			AND r.stat_time &lt;=#{to}
+		</if>
+	</select>
+	
+	<!-- 查询活动小时变化趋势  -->
+	<select id="activity_market_by_hour"  parameterType="hashmap"
+       resultType="hashmap">
+		SELECT
+			date_format(r.stat_time_hr,'%Y-%m-%d %H:%i:%s') AS start_time,
+			r.vis_usrcnt AS vis_usrcnt,
+			r.vis_cnt AS vis_cnt,
+			r.join_usrcnt AS join_usrcnt,
+			r.share_usrcnt AS share_usrcnt,
+			r.share_cnt AS share_cnt,
+			r.adclk_usrcnt AS adclk_usrcnt,
+			r.adclk_cnt AS adclk_cnt,
+			round((r.join_rate *100),2) AS join_rate,
+			round((r.fans_rate *100),2) AS fans_rate,
+			round((r.share_rate *100),2) AS share_rete,
+			round((r.adclk_rate *100),2) AS adclk_rate
+		FROM rp_act_market_hr_d r , d_act_info d
+		WHERE r.act_id_bi=d.act_id_bi AND d.is_effic=1 
+		<if test="actId != null and actId != ''">
+			AND r.act_id_bi=#{actId}
+		</if>
+		<if test="from != null and from != ''">
+			AND r.stat_time_hr &gt;=#{from}
+		</if>
+		<if test="to != null and to != ''">
+			AND r.stat_time_hr &lt;=#{to}
+		</if>
+		order by r.stat_time_hr
+	</select>
+	
+	<!-- 查询活动小时变化趋势  -->
+	<select id="activity_market_by_hour_count"  parameterType="hashmap"
+       resultType="hashmap">
+		SELECT
+			count(*) AS total
+		FROM rp_act_market_hr_d r , d_act_info d
+		WHERE r.act_id_bi=d.act_id_bi AND d.is_effic=1 
+		<if test="actId != null and actId != ''">
+			AND r.act_id_bi=#{actId}
+		</if>
+		<if test="from != null and from != ''">
+			AND r.stat_time_hr &gt;=#{from}
+		</if>
+		<if test="to != null and to != ''">
+			AND r.stat_time_hr &lt;=#{to}
+		</if>
+	</select>
+	
+ 	 	
+</mapper>

@@ -1,0 +1,30 @@
+{
+	"data":{
+		"belong_organization":"兴宁市供销社",
+		"list":[
+			{
+				"id":"441481123206",
+				"order":1,
+				"contact_phone":"13450725392",
+				"contact_name":"罗钦伟",
+				"country_name":"鸡公桥村委会"
+			},
+			{
+				"id":"441481123205",
+				"order":2,
+				"contact_phone":"13543227301",
+				"contact_name":"罗红祥",
+				"country_name":"鸳塘村委会"
+			},
+			{
+				"id":"441481123215",
+				"order":3,
+				"contact_phone":"13690870579",
+				"contact_name":"刘天新",
+				"country_name":"环陂村委会"
+			}
+		]
+	},
+	"code":0,
+	"msg":"获取信息成功"
+}

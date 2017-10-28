@@ -1,0 +1,58 @@
+{
+	"code": 0,
+	"msg": "获取信息成功",
+	"data": {
+		"available_years": [
+			{
+				"name": "2016",
+				"value": "2016"
+			},
+			{
+				"name": "2017",
+				"value": "2017"
+			},
+			{
+				"name": "2018",
+				"value": "2018"
+			}
+		],
+		"default_time": {
+			"year": "2016"
+		},
+		"summary": {
+			"projects": {
+				"total": 123,
+				"running": 76,
+				"completed": 47
+			},
+			"invested": 247583,
+			"profit": 23
+		},
+		"table": {
+			"list": [
+				{
+					"type": "",
+					"object": "",
+					"name": "",
+					"amount": 0,
+					"invest_expected": 0,
+					"invest_actual": 0,
+					"profit": 0,
+					"status": "",
+					"time_start": "2016/01/01",
+					"time_completed": "2016/01/01",
+					"album": {
+						"before": "../../../data/images/poor_file/before.jpg",
+						"during": "../../../data/images/poor_file/during.jpg",
+						"after": "../../../data/images/poor_file/after.jpg"
+					}
+				}
+			],
+			"total": {
+				"invest_expected": 0,
+				"invest_actual": 0,
+				"profit": 0
+			}
+		}
+	}
+}

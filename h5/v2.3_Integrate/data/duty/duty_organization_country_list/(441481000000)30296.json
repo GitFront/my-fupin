@@ -1,0 +1,16 @@
+{
+	"data":{
+		"belong_organization":"兴宁市物价局",
+		"list":[
+			{
+				"id":"441481133206",
+				"order":1,
+				"contact_phone":"13430163623",
+				"contact_name":"刘美荣",
+				"country_name":"乐群村委会"
+			}
+		]
+	},
+	"code":0,
+	"msg":"获取信息成功"
+}

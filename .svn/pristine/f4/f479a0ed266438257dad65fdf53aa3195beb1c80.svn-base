@@ -1,0 +1,20 @@
+//base
+@import "base/var";
+@import "base/functions";
+
+@import "base/reset";
+@import "base/base";
+
+//components
+@import "components/header";
+@import "components/dialog";
+@import "components/score_chart";
+
+//pages
+@import "pages/family_file/index";
+@import "pages/family_file/status";
+@import "pages/family_file/eliminate_path";
+@import "pages/family_file/member";
+@import "pages/family_file/invested";
+@import "pages/family_file/implement";
+@import "pages/family_file/plan";

@@ -1,0 +1,53 @@
+{
+	"code": 0,
+	"msg": "获取信息成功",
+	"data": {
+		"area_name": "广东省",
+		"family": {
+			"amount_total": 15851,
+			"amount_diff":574,
+			"percent": 5
+		},
+		"chart_config": [
+			{
+				"name":"2016.06",
+				"group":"数值",
+				"value":1000
+			},
+			{
+				"name":"2016.07",
+				"group":"数值",
+				"value":980
+			},
+			{
+				"name":"2016.08",
+				"group":"数值",
+				"value":860
+			},
+			{
+				"name":"2016.09",
+				"group":"数值",
+				"value":820
+			},
+			{
+				"name":"2016.10",
+				"group":"数值",
+				"value":690
+			},
+			{
+				"name":"2016.11",
+				"group":"数值",
+				"value":502
+			},
+			{
+				"name":"2016.12",
+				"group":"数值",
+				"value":430
+			}
+		],
+		"default_time": {
+			"year": 2016,
+			"month": 5
+		}
+	}
+}

@@ -1,0 +1,186 @@
+{
+    "code": 0,
+    "msg": "获取信息成功",
+    "data": {
+        "area_id": 1,
+        "area_level": "province",
+        "area_name": "广东省",
+        "reach_standard_country": {
+            "complete_num": 22,
+            "province_standard_num": 2277,
+            "chart_config_reach_standard": {
+                "convert_method": "genChartRoundPieConfig",
+                "config": [{
+                    "name": "收入管理",
+                    "group": "户数",
+                    "value": 20
+                }, {
+                    "name": "一般贫困户",
+                    "group": "人数",
+                    "value": 80
+                }]
+            },
+            "country_state": "建设中"
+        },
+        "finish_promote_country": {
+            "complete_num": 12,
+            "province_standard_num": 2277,
+            "chart_config_reach_standard": {
+                "convert_method": "genChartRoundPieConfig",
+                "config": [{
+                    "name": "收入管理",
+                    "group": "户数",
+                    "value": 20
+                }, {
+                    "name": "一般贫困户",
+                    "group": "人数",
+                    "value": 80
+                }]
+            },
+            "country_state": "未启动"
+        },
+        "more20_reach_standard": {
+            "total": 12598,
+            "reach_standard": 65,
+            "bar": {
+                "finish": {
+                    "percent": 12,
+                    "num": 45
+                },
+                "building": {
+                    "percent": 28,
+                    "num": 145
+                },
+                "unstart": {
+                    "percent": 60,
+                    "num": 245
+                }
+            }
+        },
+        "compile_renovate_plan": {
+            "total": 26598,
+            "chart_config_renovate_plan": {
+                "chart_type": "highchart",
+                "convert_method": "FpyHcReports.exampleCountry.Gauge",
+                "config": {},
+                "data": 62
+            }
+        },
+        "renovate_three": {
+            "total": 16598,
+            "chart_config_renovate_three": {
+                "chart_type": "highchart",
+                "convert_method": "Highchart.create.Gauge",
+                "config": { "valueName": "完成改造比例", "yUnit": "%", "gaugeMax": 100, "gaugeMin": 0, "stops": [0, 0.99, 1] },
+                "data": 22
+            }
+        },
+        "base_facility_short": {
+            "chart_config_road": {
+                "chart_type": "D3",
+                "convert_method": "FpyD3Reports.exampleCountry.LiquidFillGauge",
+                "config": {},
+                "data": 62
+            },
+            "chart_config_rubbish": {
+                "chart_type": "D3",
+                "convert_method": "FpyD3Reports.exampleCountry.LiquidFillGauge",
+                "config": {},
+                "data": 42
+            },
+            "chart_config_sewage": {
+                "chart_type": "D3",
+                "convert_method": "loadLiquidFillGauge",
+                "config": {
+                    "minValue": 0,
+                    "maxValue": 100,
+                    "circleThickness": 0.05,
+                    "circleFillGap": 0.05,
+                    "circleColor": "#178BCA",
+                    "waveHeight": 0.05,
+                    "waveCount": 1,
+                    "waveRiseTime": 1000,
+                    "waveAnimateTime": 18000,
+                    "waveRise": true,
+                    "waveHeightScaling": true,
+                    "waveAnimate": true,
+                    "waveColor": "#178BCA",
+                    "waveOffset": 0,
+                    "textVertPosition": 0.5,
+                    "textSize": 1,
+                    "valueCountUp": true,
+                    "displayPercent": true,
+                    "textColor": "#045681",
+                    "waveTextColor": "#A4DBf8"
+                },
+                "data": 11
+            },
+            "chart_config_water_supply": {
+                "chart_type": "D3",
+                "convert_method": "loadLiquidFillGauge",
+                "config": {
+                    "minValue": 0,
+                    "maxValue": 100,
+                    "circleThickness": 0.05,
+                    "circleFillGap": 0.05,
+                    "circleColor": "#178BCA",
+                    "waveHeight": 0.05,
+                    "waveCount": 1,
+                    "waveRiseTime": 1000,
+                    "waveAnimateTime": 18000,
+                    "waveRise": true,
+                    "waveHeightScaling": true,
+                    "waveAnimate": true,
+                    "waveColor": "#178BCA",
+                    "waveOffset": 0,
+                    "textVertPosition": 0.5,
+                    "textSize": 1,
+                    "valueCountUp": true,
+                    "displayPercent": true,
+                    "textColor": "#045681",
+                    "waveTextColor": "#A4DBf8"
+                },
+                "data": 22
+            }
+        },
+        
+        "more20_promote_creation": {
+            "promote_creation": 45,
+            "bar": {
+                "finish": {
+                    "percent": 4.5,
+                    "num": 45
+                },
+                "building": {
+                    "percent": 15.5,
+                    "num": 145
+                },
+                "unstart": {
+                    "percent": 80,
+                    "num": 245
+                }
+            }
+        },
+        
+        "compile_promote_plan": {
+            "total": 1598,
+            "chart_config_compile_promote_plan": {
+                "chart_type": "highchart",
+                "convert_method": "Highchart.create.Gauge",
+                "config": { "valueName": "完成改造比例", "yUnit": "%", "gaugeMax": 100, "gaugeMin": 0, "stops": [0, 0.99, 1] },
+                "data": 32
+            }
+        },
+        
+        "green_beautiful": {
+            "total": 0,
+            "chart_config_green_beautiful": {
+                "chart_type": "highchart",
+                "convert_method": "Highchart.create.Gauge",
+                "config": { "valueName": "完成改造比例", "yUnit": "%", "gaugeMax": 100, "gaugeMin": 0, "stops": [0, 0.99, 1] },
+                "data": 0
+            }
+        }
+    }
+}
+

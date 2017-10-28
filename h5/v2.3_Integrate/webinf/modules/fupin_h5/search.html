@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>帮扶搜索-广东省扶贫云</title>
+	<link rel="stylesheet" href="../../../static/themes/css/fupin/main_strategy.css">
+</head>
+
+<style>
+
+ </style>
+
+<body>
+<div class="main-wrap search-wrap">
+	<!--公共地图部分-->
+	<section id="mapWrap">
+		<div id="map" class="map-con"></div>
+	</section>
+	<div>
+
+		<header>
+			<ul class="nav-ul nav-country">
+				<li class="on"><a class="nav1-a" href="./strategy.html">扶贫概览<em></em></a><i class="nav1-light"></i>
+					<div class="second-nav second-nav-a2 clearfix">
+						<i class="nav2-arrow"></i>
+						<a class="nav2-a" href="./strategy.html">战略地图</a>
+						<a class="nav2-a on" href="javascript:void(0);">扶贫概览</a>
+					</div>
+				</li>
+
+				<li><a class="nav1-a" href="./search.html">扶贫搜索</a><i class="nav1-light"></i>
+				</li>
+				<li><a class="nav1-a" href="javascript:void(0);">扶贫专项<em></em></a><i class="nav1-light"></i>
+					<div class="second-nav second-nav-a2 clearfix">
+						<i class="nav2-arrow"></i>
+						<a class="nav2-a " href="./specific.html">扶贫专项</a>
+						<a class="nav2-a" href="">产业扶持</a>
+						<a class="nav2-a" href="">就业扶持</a>
+						<a class="nav2-a" href="">基建改造</a>
+						<a class="nav2-a" href="">教育扶持</a>
+						<a class="nav2-a" href="">医疗扶持</a>
+						<a class="nav2-a" href="">特色电商</a>
+						<a class="nav2-a" href="">国家帮扶</a>
+					</div>
+				</li>
+				<li><a class="nav1-a" href="javascript:void(0);">精准识别<em></em></a><i class="nav1-light"></i>
+					<div class="second-nav second-nav-a2 clearfix">
+						<i class="nav2-arrow"></i>
+						<a class="nav2-a " href="./accurate.html">精准识别</a>
+						<a class="nav2-a" href="">预警监控</a>
+					</div>
+				</li>
+				<li><a class="nav1-a" href="./apply.html">应用云</a><i class="nav1-light word2" ></i></li>
+			</ul>
+		</header>
+
+
+		<div class="block-search">
+			<div class="search-form-wrap">
+				<div class="search-form">
+					<div class="search-field-wrap">
+						<input type="text" id="searchField" class="search-field" placeholder="请输入搜索关键词">
+						<div class="btn" id="btnSearch">搜索</div>
+						<div class="search-suggest" id="searchsSuggest"><ul></ul></div>
+					</div>
+					<div class="search-types">
+						<input class="search-type" type="radio" id="typeFamily" name="type" value="family" checked>
+						<label for="typeFamily">贫困户</label>
+						<input class="search-type" type="radio" id="typeCountry" name="type" value="country">
+						<label for="typeCountry">贫困村</label>
+						<input class="search-type" type="radio" id="typeHelper" name="type" value="helper">
+						<label for="typeHelper">帮扶人</label>
+						<input class="search-type" type="radio" id="typeProject" name="type" value="project">
+						<label for="typeProject">帮扶项目</label>
+					</div>
+				</div>
+			</div>
+		</div>
+
+
+	</div>
+
+
+
+
+</div> <!-- end main-wrap -->
+
+<script id="tplPreSearch" type="text/html">
+	<ul>
+		<#for(var i = 0, len = result.length; i < len; i++){#>
+		<#var item = result[i];#>
+		<li data-id="<#=item.id#>"><#=item.name#><span> - <#=item.place#></span></li>
+		<#}#>
+	</ul>
+</script>
+
+
+<script src="../../../static/js/modules/fupin/libs/jquery.min.js"></script>
+<script src="../../../static/js/modules/fupin/libs/template-native.js"></script>
+
+<script src="../../../static/js/modules/fupin_strategy/common/common.js"></script>
+
+<script src="../../../static/js/modules/fupin_strategy/search_common.js"></script>
+<script src="../../../static/js/modules/fupin_strategy/search.js"></script>
+
+</body>
+</html>
+
+
+

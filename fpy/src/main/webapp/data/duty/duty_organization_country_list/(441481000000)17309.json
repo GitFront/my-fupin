@@ -1,0 +1,16 @@
+{
+	"data":{
+		"belong_organization":"广州市天河区农业和园林局",
+		"list":[
+			{
+				"id":"441481124227",
+				"order":1,
+				"contact_phone":"13727612877",
+				"contact_name":"谢运宏",
+				"country_name":"洋门村委会"
+			}
+		]
+	},
+	"code":0,
+	"msg":"获取信息成功"
+}

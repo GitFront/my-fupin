@@ -1,0 +1,1 @@
+$(function(){var r=$("#qrAndroidApp").attr("data-src");new QRCode("qrAndroidApp",{text:r,width:93,height:93,colorDark:"#000000",colorLight:"#ffffff",correctLevel:QRCode.CorrectLevel.H})});

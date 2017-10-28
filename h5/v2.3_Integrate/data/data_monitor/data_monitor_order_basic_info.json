@@ -1,0 +1,134 @@
+{
+	"code": 0,
+	"msg": "获取信息成功",
+	"data": {
+		"params": [
+		{
+			"key": "order_type",
+			"label": "排序类型",
+			"type": "radio",
+			"selected_value": "county",
+			"values": [
+				{
+					"label": "地级市",
+					"value": "city",
+					"disabled": false
+				}
+				,{
+					"label": "县（市）",
+					"value": "county",
+					"disabled": false
+				}
+				,{
+					"label": " 镇（乡）",
+					"value": "town",
+					"disabled": false
+				}
+				,{
+					"label": "村",
+					"value": "country",
+					"disabled": false
+				}
+			]
+		}
+		,{
+			"key": "scope",
+			"label": "区域类型",
+			"type": "radio",
+			"selected_value": "1",
+			"values": [
+				{
+					"label": "全部",
+					"value": "1",
+					"disabled": false
+				}
+				,{
+					"label": "相对贫困村",
+					"value": "2",
+					"disabled": true
+				}
+				,{
+					"label": "分散村",
+					"value": "3",
+					"disabled": false
+				}
+				,{
+					"label": "革命老区",
+					"value": "4",
+					"disabled": false
+				}
+				,{
+					"label": "中央苏区",
+					"value": "5",
+					"disabled": true
+				}
+			]
+		}
+		,{
+			"key": "order_index",
+			"label": "排序指标",
+			"type": "check",
+			"selected_value": [
+				"A2","A4"
+			],
+			"values": [
+				{
+					"label": "产业扶贫",
+					"value": "A1",
+					"disabled": false
+				}
+				,{
+					"label": "产业扶贫",
+					"value": "A2",
+					"disabled": false
+				}
+				,{
+					"label": "产业扶贫",
+					"value": "A3",
+					"disabled": false
+				}
+				,{
+					"label": "产业扶贫",
+					"value": "A4",
+					"disabled": false
+				}
+				,{
+					"label": "产业扶贫",
+					"value": "A5",
+					"disabled": false
+				}
+				,{
+					"label": "产业扶贫",
+					"value": "A6",
+					"disabled": false
+				}
+				,{
+					"label": "产业扶贫",
+					"value": "A7",
+					"disabled": false
+				}
+				,{
+					"label": "产业扶贫",
+					"value": "A8",
+					"disabled": false
+				}
+				,{
+					"label": "产业扶贫",
+					"value": "A9",
+					"disabled": false
+				}
+				,{
+					"label": "产业扶贫",
+					"value": "AA",
+					"disabled": false
+				}
+				,{
+					"label": "产业扶贫",
+					"value": "AB",
+					"disabled": false
+				}
+			]
+		}
+	  ]
+	}
+}
